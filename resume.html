@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arpit Yadav — Resume</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --accent-warm: #ea580c;
+            --accent-blue: #0284c7;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --sidebar-bg: #f8fafc;
+            --border-light: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            color: var(--text-dark);
+            background: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        /* Standard A4 Paper Container */
+        .resume-page {
+            width: 210mm;
+            height: 297mm;
+            background: #ffffff;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Top Header Banner (Adam Fletcher / Modern Hybrid Style) */
+        .resume-header {
+            background: linear-gradient(135deg, #090d16 0%, #171d2b 100%);
+            color: #ffffff;
+            padding: 28px 36px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            border-bottom: 4px solid var(--accent-warm);
+        }
+
+        .avatar-container {
+            width: 104px;
+            height: 104px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3.5px solid var(--accent-warm);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+            background: #1e293b;
+        }
+
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-info h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .header-info h1 span {
+            color: var(--accent-warm);
+        }
+
+        .header-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .header-contact-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 20px;
+            font-size: 11px;
+            color: #cbd5e1;
+        }
+
+        .contact-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #cbd5e1;
+        }
+
+        .contact-item i {
+            color: var(--accent-warm);
+            font-size: 12px;
+        }
+
+        /* 2-Column Body Layout */
+        .resume-body {
+            display: grid;
+            grid-template-columns: 70mm 140mm;
+            flex: 1;
+            height: calc(297mm - 160px);
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-light);
+            padding: 24px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .side-section-title {
+            font-size: 11.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--accent-warm);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .side-section-title i {
+            color: var(--accent-warm);
+            font-size: 12px;
+        }
+
+        /* Education Block */
+        .edu-item {
+            margin-bottom: 10px;
+        }
+
+        .edu-degree {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            line-height: 1.3;
+        }
+
+        .edu-field {
+            font-size: 11px;
+            color: var(--accent-warm);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .edu-college {
+            font-size: 10.5px;
+            color: var(--text-dark);
+            line-height: 1.35;
+        }
+
+        .edu-year {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 3px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Skills Tag Groups */
+        .skill-group {
+            margin-bottom: 12px;
+        }
+
+        .skill-group-name {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .skill-tag {
+            font-size: 9.5px;
+            padding: 3px 7px;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* Left Badges / Strengths */
+        .meta-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .meta-list li {
+            font-size: 10.5px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            line-height: 1.35;
+        }
+
+        .meta-list li i {
+            color: #10b981;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        /* Right Content Area */
+        .main-content {
+            padding: 24px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-section-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--primary-dark);
+            border-bottom: 2px solid #090d16;
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-section-title i {
+            color: var(--accent-warm);
+            font-size: 13px;
+        }
+
+        /* Profile Summary */
+        .profile-text {
+            font-size: 10.5px;
+            line-height: 1.55;
+            color: #334155;
+        }
+
+        /* Projects Section with Timeline Bullet Design */
+        .project-entry {
+            position: relative;
+            padding-left: 16px;
+            margin-bottom: 13px;
+            border-left: 2px solid var(--border-light);
+        }
+
+        .project-entry::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 2px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-warm);
+        }
+
+        .project-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+        }
+
+        .project-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .project-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            background: rgba(234, 88, 12, 0.1);
+            color: var(--accent-warm);
+            text-transform: uppercase;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .project-tech {
+            font-size: 9.5px;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .project-bullets {
+            list-style: disc;
+            padding-left: 14px;
+            margin: 0;
+        }
+
+        .project-bullets li {
+            font-size: 10px;
+            line-height: 1.45;
+            color: #475569;
+            margin-bottom: 2px;
+        }
+
+        /* Achievements Row */
+        .achieve-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .achieve-bullet {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .achieve-info h4 {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1px;
+        }
+
+        .achieve-info p {
+            font-size: 9.5px;
+            color: #64748b;
+            line-height: 1.35;
+        }
+
+        /* Print Override */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .resume-page {
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="resume-page">
+        <!-- 1. Header Banner -->
+        <header class="resume-header">
+            <div class="avatar-container">
+                <img src="assets/profile.jpg" alt="Arpit Yadav">
+            </div>
+            <div class="header-info">
+                <h1>Arpit <span>Yadav</span></h1>
+                <div class="header-title">Full Stack Developer & IoT Enthusiast</div>
+                <div class="header-contact-bar">
+                    <span class="contact-item"><i class="fas fa-envelope"></i> arpityadav6794@gmail.com</span>
+                    <span class="contact-item"><i class="fas fa-map-marker-alt"></i> Kanpur, India</span>
+                    <a href="https://linkedin.com/in/arpit-yadav-944983309" class="contact-item" target="_blank">
+                        <i class="fab fa-linkedin"></i> in/arpit-yadav
+                    </a>
+                    <a href="https://github.com/arpityadav626" class="contact-item" target="_blank">
+                        <i class="fab fa-github"></i> github.com/arpityadav626
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. Two-Column Body -->
+        <div class="resume-body">
+            
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                
+                <!-- Education -->
+                <div>
+                    <h3 class="side-section-title"><i class="fas fa-graduation-cap"></i> Education</h3>
+                    <div class="edu-item">
+                        <div class="edu-degree">Bachelor of Technology (B.Tech)</div>
+                        <div class="edu-field">Computer Science & Engineering</div>
+                        <div class="edu-college">Axis Institute of Technology and Management</div>
+                        <div class="edu-year">2025 — 2029 (Expected)</div>
+                    </div>
+                </div>
+
+                <!-- Technical Skills -->
+                <div>
+                    <h3 class="side-section-title"><i class="fas fa-laptop-code"></i> Technical Skills</h3>
+                    
+                    <div class="skill-group">
+                        <div class="skill-group-name">Languages</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">C</span>
+                            <span class="skill-tag">C++</span>
+                            <span class="skill-tag">JavaScript (ES6+)</span>
+                            <span class="skill-tag">Python</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-group">
+                        <div class="skill-group-name">Frontend & Backend</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">FastAPI</span>
+                            <span class="skill-tag">HTML5 / CSS3</span>
+                            <span class="skill-tag">Tailwind CSS</span>
+                            <span class="skill-tag">REST APIs</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-group">
+                        <div class="skill-group-name">IoT & Embedded</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Arduino</span>
+                            <span class="skill-tag">ESP32</span>
+                            <span class="skill-tag">Sensors & Actuators</span>
+                            <span class="skill-tag">Serial Comms</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-group">
+                        <div class="skill-group-name">Tools & Workflow</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">GitHub</span>
+                            <span class="skill-tag">VS Code</span>
+                            <span class="skill-tag">Postman</span>
+                            <span class="skill-tag">GitHub Pages</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Competencies -->
+                <div>
+                    <h3 class="side-section-title"><i class="fas fa-star"></i> Core Strengths</h3>
+                    <ul class="meta-list">
+                        <li><i class="fas fa-check-circle"></i> Hardware + Web Synergy</li>
+                        <li><i class="fas fa-check-circle"></i> Rapid Prototyping (0 to 1)</li>
+                        <li><i class="fas fa-check-circle"></i> Problem Solving & Logic</li>
+                        <li><i class="fas fa-check-circle"></i> Team Collaboration & Git</li>
+                    </ul>
+                </div>
+
+            </aside>
+
+            <!-- Right Main Content -->
+            <main class="main-content">
+                
+                <!-- Profile Summary -->
+                <section>
+                    <h2 class="main-section-title"><i class="fas fa-user"></i> Professional Profile</h2>
+                    <p class="profile-text">
+                        Computer Science undergraduate passionate about building impactful technology at the intersection of full-stack web development and IoT hardware integration. Experienced in prototyping end-to-end safety devices for nationwide hackathons (SIH) and architecting responsive web applications with clean, production-ready code.
+                    </p>
+                </section>
+
+                <!-- Key Projects -->
+                <section>
+                    <h2 class="main-section-title"><i class="fas fa-code-branch"></i> Technical Projects</h2>
+                    
+                    <!-- Smart Helmet -->
+                    <div class="project-entry">
+                        <div class="project-header-row">
+                            <span class="project-name">Smart Helmet (SIH Project)</span>
+                            <span class="project-badge">Hardware + IoT</span>
+                        </div>
+                        <div class="project-tech">Arduino/ESP32, Alcohol Sensor, Impact Sensor, C++, GSM/GPS</div>
+                        <ul class="project-bullets">
+                            <li>Designed an intelligent road safety helmet enforcing rider helmet compliance before vehicle ignition.</li>
+                            <li>Engineered real-time alcohol detection and automated emergency SOS dispatch with location via GSM/GPS.</li>
+                            <li>Shortlisted and developed for the prestigious Smart India Hackathon (SIH) prototype showcase.</li>
+                        </ul>
+                    </div>
+
+                    <!-- ChronoFact -->
+                    <div class="project-entry">
+                        <div class="project-header-row">
+                            <span class="project-name">ChronoFact Web Platform</span>
+                            <span class="project-badge">Web Application</span>
+                        </div>
+                        <div class="project-tech">React, Node.js, REST APIs, Modern CSS, GitHub Pages</div>
+                        <ul class="project-bullets">
+                            <li>Built a curated historical fact-checking and timeline discovery engine with sub-second querying.</li>
+                            <li>Implemented dynamic timeline visualization and interactive responsive cards for seamless exploration.</li>
+                            <li>Successfully deployed live on GitHub Pages with clean cross-device mobile responsiveness.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Smart Kitchen System -->
+                    <div class="project-entry">
+                        <div class="project-header-row">
+                            <span class="project-name">Smart Kitchen Safety & Automation</span>
+                            <span class="project-badge">Full-Stack IoT</span>
+                        </div>
+                        <div class="project-tech">Python (FastAPI), Arduino, Gas & Flame Sensors, Web Telemetry</div>
+                        <ul class="project-bullets">
+                            <li>Engineered an IoT hazard prevention system featuring MQ-2 gas leakage and flame detection.</li>
+                            <li>Integrated Python FastAPI backend reading serial telemetry to drive automatic exhaust relay safety actions.</li>
+                            <li>Designed an interactive live status dashboard providing real-time visual telemetry and alerts.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Developer Portfolio -->
+                    <div class="project-entry">
+                        <div class="project-header-row">
+                            <span class="project-name">Personal Developer Architecture</span>
+                            <span class="project-badge">Frontend Architecture</span>
+                        </div>
+                        <div class="project-tech">Semantic HTML5, Vanilla JavaScript, Web Audio API, Modern CSS</div>
+                        <ul class="project-bullets">
+                            <li>Crafted an Awwwards-inspired portfolio with synthesizer-driven acoustic audio feedback and custom cursor.</li>
+                            <li>Integrated Formspree serverless email handling with zero page refreshes and asynchronous validation.</li>
+                        </ul>
+                    </div>
+
+                </section>
+
+                <!-- Achievements & Honors -->
+                <section>
+                    <h2 class="main-section-title"><i class="fas fa-award"></i> Honors & Highlights</h2>
+                    
+                    <div class="achieve-row">
+                        <div class="achieve-bullet"><i class="fas fa-trophy"></i></div>
+                        <div class="achieve-info">
+                            <h4>Smart India Hackathon (SIH) Participant</h4>
+                            <p>Selected to build hardware-integrated safety innovations under intense competition constraints.</p>
+                        </div>
+                    </div>
+
+                    <div class="achieve-row">
+                        <div class="achieve-bullet"><i class="fas fa-code"></i></div>
+                        <div class="achieve-info">
+                            <h4>Continuous Problem Solving & DSA</h4>
+                            <p>Active learner tackling data structures, algorithmic puzzles, and core CS on LeetCode & GeeksforGeeks.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>
