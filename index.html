@@ -52,26 +52,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Lenis Buttery Smooth Inertia Scroll (from noth.in) -->
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-theme">
 
-    <!-- 0. Opening Splash Preloader Animation -->
+    <!-- 0. Opening Splash Preloader with ArpitOS Boot Console (eddy-naboulet.dev + noth.in) -->
     <div id="preloader" class="preloader">
         <div class="preloader-content">
             <div class="preloader-tag">
-                <span class="preloader-pulse"></span> SYSTEM READY // INITIALIZING
+                <span class="preloader-pulse"></span> ARPIT-OS v2.6 // BOOT SEQUENCE
             </div>
             <h1 class="preloader-title">
                 Arpit<span class="preloader-accent">.dev</span>
             </h1>
-            <p class="preloader-subtitle">PORTFOLIO '26 &bull; FULL STACK &bull; IOT SYSTEMS</p>
+            <p class="preloader-subtitle">FULL STACK &bull; IOT SYSTEMS &bull; AI RESEARCH</p>
+            
+            <!-- Terminal Boot Log (from eddy-naboulet.dev) -->
+            <div class="preloader-terminal">
+                <div class="terminal-bar">
+                    <span class="term-dot red"></span>
+                    <span class="term-dot yellow"></span>
+                    <span class="term-dot green"></span>
+                    <span class="term-title">arpit@system:~/boot.sys</span>
+                </div>
+                <div class="terminal-body" id="preloader-logs">
+                    <div class="log-line"><span class="log-ok">[ OK ]</span> kernel.sys: ArpitOS v2.6 mounted</div>
+                    <div class="log-line"><span class="log-ok">[ OK ]</span> sensors.drv: ESP32 & MQ-3 Alcohol Hub active</div>
+                    <div class="log-line"><span class="log-ok">[ OK ]</span> stack.mod: React, Node.js & PyTorch online</div>
+                    <div class="log-line"><span class="log-ok">[ OK ]</span> cdn.net: Google Cloud Edge nodes linked</div>
+                </div>
+            </div>
+
             <div class="preloader-bar-wrap">
                 <div class="preloader-progress" id="preloader-progress"></div>
             </div>
             <div class="preloader-stats">
-                <span class="preloader-status">LOADING EXPERIENCE...</span>
-                <span class="preloader-num" id="preloader-count">0%</span>
+                <span class="preloader-status" id="preloader-status">INITIALIZING SYSTEM MODULES...</span>
+                <span class="preloader-num" id="preloader-count">000%</span>
             </div>
         </div>
     </div>
@@ -93,6 +113,12 @@
         </nav>
 
         <div class="header-right">
+            <!-- Developer Command Palette Button (from eddy-naboulet.dev) -->
+            <button id="cmd-btn" class="cmd-trigger-btn sound-hover" title="Command Palette (Ctrl + K)">
+                <i class="fas fa-terminal"></i>
+                <span class="cmd-badge">⌘K</span>
+            </button>
+
             <!-- Cozy UI Sound Toggle Button -->
             <button id="sound-btn" class="sound-toggle-btn sound-hover" title="Toggle UI Sound">
                 <i class="fas fa-volume-up" id="sound-icon"></i>
@@ -135,6 +161,21 @@
 
             <div class="hero-right">
                 <div class="hero-visual-card tilt-card" data-tilt>
+                    <!-- Pacome Pertant style Circular Rotating SVG Badge -->
+                    <div class="curved-badge-wrapper sound-hover" title="Arpit Yadav • Innovator 2026">
+                        <svg class="curved-badge-svg" viewBox="0 0 200 200">
+                            <path id="badge-path" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" fill="none" />
+                            <text class="badge-text">
+                                <textPath href="#badge-path" startOffset="0%">
+                                    • ARPIT YADAV • FULL STACK & IOT • 2026 •
+                                </textPath>
+                            </text>
+                        </svg>
+                        <div class="badge-center-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                    </div>
+
                     <div class="visual-badge">01 / CREATIVE ARCHITECTURE</div>
                     <div class="visual-content">
                         <div class="code-preview">
@@ -149,6 +190,33 @@
                 </div>
             </div>
         </section>
+
+        <!-- Infinite Skills Ticker Marquee (from antriksh.me & noth.in) -->
+        <div class="ticker-wrapper">
+            <div class="ticker-track">
+                <div class="ticker-item"><i class="fas fa-microchip"></i> ESP32 & ARDUINO</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fab fa-react"></i> REACT & FULL-STACK</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fas fa-shield-alt"></i> SIH SMART HELMET INNOVATION</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fab fa-python"></i> PYTHON & EMBEDDED C++</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fas fa-cloud"></i> GOOGLE CLOUD CDN & REST APIS</div>
+                <div class="ticker-dot">•</div>
+                <!-- Duplicate for continuous infinite loop -->
+                <div class="ticker-item"><i class="fas fa-microchip"></i> ESP32 & ARDUINO</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fab fa-react"></i> REACT & FULL-STACK</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fas fa-shield-alt"></i> SIH SMART HELMET INNOVATION</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fab fa-python"></i> PYTHON & EMBEDDED C++</div>
+                <div class="ticker-dot">•</div>
+                <div class="ticker-item"><i class="fas fa-cloud"></i> GOOGLE CLOUD CDN & REST APIS</div>
+                <div class="ticker-dot">•</div>
+            </div>
+        </div>
 
         <!-- 3. Projects Section (TOP PRIORITY) -->
         <section class="section projects-section reveal" id="projects">
@@ -341,12 +409,95 @@
                 <div class="education-card">
                     <span class="edu-badge"><i class="fas fa-graduation-cap"></i> Higher Education</span>
                     <h4 class="degree">Bachelor of Technology (B.Tech)</h4>
-                    <p class="field">Computer Science & Engineering</p>
+                    <p class="field">Computer Science & Engineering (AI & ML)</p>
                     <p class="college"><i class="fas fa-university"></i> Axis Institute of Technology and Management</p>
                     <p class="year"><i class="fas fa-calendar-alt"></i> 2025 — 2029</p>
                     <div class="edu-footer">
                         <span>Coursework: Data Structures, Web Architecture, IoT, Database Systems</span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Git Branch Architecture Timeline (inspired by eddy-naboulet.dev) -->
+            <div class="git-journey-card">
+                <div class="git-terminal-header">
+                    <div class="git-dots">
+                        <span class="g-dot red"></span>
+                        <span class="g-dot yellow"></span>
+                        <span class="g-dot green"></span>
+                    </div>
+                    <span class="git-cmd-text">arpit@workspace:~$ git log --graph --all --oneline</span>
+                    <span class="git-branch-badge"><i class="fas fa-code-branch"></i> git:main</span>
+                </div>
+                <div class="git-graph-tree">
+                    
+                    <!-- Commit 1: Axis Institute -->
+                    <div class="git-commit-node active-branch">
+                        <div class="git-line-col">
+                            <span class="git-node-circle main-circle"></span>
+                            <span class="git-stem"></span>
+                        </div>
+                        <div class="git-info">
+                            <div class="git-meta">
+                                <span class="git-hash">250310a</span>
+                                <span class="git-tag tag-main">branch: main</span>
+                                <span class="git-date">2025 — Present</span>
+                            </div>
+                            <h4 class="git-msg">init(academy): B.Tech CSE (AI & ML) @ Axis Institute</h4>
+                            <p class="git-desc">Mastering computer science foundations, algorithmic problem-solving, and AI & ML specialization at Axis Institute of Technology & Management, Kanpur.</p>
+                        </div>
+                    </div>
+
+                    <!-- Commit 2: SIH Smart Helmet -->
+                    <div class="git-commit-node branch-node">
+                        <div class="git-line-col">
+                            <span class="git-node-circle branch-circle sih-color"></span>
+                            <span class="git-stem"></span>
+                        </div>
+                        <div class="git-info">
+                            <div class="git-meta">
+                                <span class="git-hash">sih2025</span>
+                                <span class="git-tag tag-feat">feat/smart-helmet</span>
+                                <span class="git-badge sih-pill">National Hackathon</span>
+                            </div>
+                            <h4 class="git-msg">feat(iot): Smart Helmet Accident & Alcohol Ignition Protocol</h4>
+                            <p class="git-desc">Built for Smart India Hackathon — engineered safety hardware integrating MQ-3 alcohol sensor, crash gyro detection, and bike ignition relay lockout.</p>
+                        </div>
+                    </div>
+
+                    <!-- Commit 3: ChronoFact -->
+                    <div class="git-commit-node branch-node">
+                        <div class="git-line-col">
+                            <span class="git-node-circle branch-circle chrono-color"></span>
+                            <span class="git-stem"></span>
+                        </div>
+                        <div class="git-info">
+                            <div class="git-meta">
+                                <span class="git-hash">cf2026b</span>
+                                <span class="git-tag tag-feat">feat/chronofact</span>
+                                <span class="git-badge live-pill">Production Live</span>
+                            </div>
+                            <h4 class="git-msg">release(web): ChronoFact Live Fact-Checking & Timeline Engine</h4>
+                            <p class="git-desc">Interactive React web architecture delivering timeline queries, responsive modern UI, and REST query pipeline.</p>
+                        </div>
+                    </div>
+
+                    <!-- Commit 4: Merge to Production -->
+                    <div class="git-commit-node merge-node">
+                        <div class="git-line-col">
+                            <span class="git-node-circle merge-circle"></span>
+                        </div>
+                        <div class="git-info">
+                            <div class="git-meta">
+                                <span class="git-hash">merge26</span>
+                                <span class="git-tag tag-merge">merge: feat/production</span>
+                                <span class="git-badge active-pill">Available for Roles</span>
+                            </div>
+                            <h4 class="git-msg">merge(prod): Production-Ready Full Stack & Hardware Engineer</h4>
+                            <p class="git-desc">Portfolio deployed on Google Cloud Firebase CDN with zero-latency Web Audio engine, SEO Schema, and global availability.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -450,6 +601,76 @@
             <a href="#home" class="back-top sound-hover">Back to top ↑</a>
         </div>
     </footer>
+
+    <!-- 8. Developer Command Palette Modal (Ctrl+K) (from eddy-naboulet.dev) -->
+    <div id="cmd-palette" class="cmd-palette" aria-hidden="true">
+        <div class="cmd-palette-backdrop" id="cmd-backdrop"></div>
+        <div class="cmd-palette-dialog">
+            <div class="cmd-header">
+                <i class="fas fa-terminal cmd-search-icon"></i>
+                <input type="text" id="cmd-input" placeholder="Type a command or jump to... (e.g. Helmet, Resume, Sound)" autocomplete="off">
+                <span class="cmd-esc-badge" id="cmd-close-btn">ESC</span>
+            </div>
+            <div class="cmd-list" id="cmd-list">
+                <div class="cmd-group-label">PROJECTS & SECTIONS</div>
+                <div class="cmd-item" data-action="goto" data-target="#projects">
+                    <span class="cmd-item-icon"><i class="fas fa-folder-open"></i></span>
+                    <span class="cmd-item-title">Featured Projects Grid</span>
+                    <span class="cmd-item-shortcut">P</span>
+                </div>
+                <div class="cmd-item" data-action="goto" data-target=".card-sih">
+                    <span class="cmd-item-icon"><i class="fas fa-shield-alt"></i></span>
+                    <span class="cmd-item-title">Smart Helmet (SIH Project)</span>
+                    <span class="cmd-item-shortcut">H</span>
+                </div>
+                <div class="cmd-item" data-action="goto" data-target=".card-chronofact">
+                    <span class="cmd-item-icon"><i class="fas fa-history"></i></span>
+                    <span class="cmd-item-title">ChronoFact Platform</span>
+                    <span class="cmd-item-shortcut">C</span>
+                </div>
+                <div class="cmd-item" data-action="goto" data-target=".card-kitchen">
+                    <span class="cmd-item-icon"><i class="fas fa-utensils"></i></span>
+                    <span class="cmd-item-title">Smart Kitchen System</span>
+                    <span class="cmd-item-shortcut">K</span>
+                </div>
+                <div class="cmd-item" data-action="goto" data-target="#about">
+                    <span class="cmd-item-icon"><i class="fas fa-code-branch"></i></span>
+                    <span class="cmd-item-title">Git Career Journey & About</span>
+                    <span class="cmd-item-shortcut">G</span>
+                </div>
+                <div class="cmd-item" data-action="goto" data-target="#contact">
+                    <span class="cmd-item-icon"><i class="fas fa-paper-plane"></i></span>
+                    <span class="cmd-item-title">Send Message / Contact Form</span>
+                    <span class="cmd-item-shortcut">M</span>
+                </div>
+
+                <div class="cmd-group-label">SYSTEM ACTIONS</div>
+                <div class="cmd-item" data-action="resume">
+                    <span class="cmd-item-icon"><i class="fas fa-file-pdf"></i></span>
+                    <span class="cmd-item-title">Download 1-Page Vector Resume (PDF)</span>
+                    <span class="cmd-item-shortcut">R</span>
+                </div>
+                <div class="cmd-item" data-action="toggle-sound">
+                    <span class="cmd-item-icon"><i class="fas fa-volume-up"></i></span>
+                    <span class="cmd-item-title">Toggle Cozy UI Sound Engine</span>
+                    <span class="cmd-item-shortcut">S</span>
+                </div>
+                <div class="cmd-item" data-action="copy-link">
+                    <span class="cmd-item-icon"><i class="fas fa-link"></i></span>
+                    <span class="cmd-item-title">Copy Portfolio Official URL</span>
+                    <span class="cmd-item-shortcut">L</span>
+                </div>
+            </div>
+            <div class="cmd-footer">
+                <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
+                <span>Run <kbd>↵</kbd></span>
+                <span>Exit <kbd>ESC</kbd></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Toast Notification -->
+    <div id="toast-notify" class="toast-notify">Link copied to clipboard!</div>
 
     <script src="script.js"></script>
 </body>

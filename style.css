@@ -1177,3 +1177,529 @@ body::before {
         display: none;
     }
 }
+
+/* ========================================================
+   LENIS SMOOTH SCROLL (from noth.in)
+======================================================== */
+html.lenis, html.lenis body {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+}
+
+/* ========================================================
+   ARPIT-OS TERMINAL BOOT CONSOLE (from eddy-naboulet.dev)
+======================================================== */
+.preloader-terminal {
+    background: #0d0f14;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    margin: 18px 0;
+    overflow: hidden;
+    text-align: left;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+}
+.terminal-bar {
+    background: rgba(255, 255, 255, 0.04);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.term-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+.term-dot.red { background: #ef4444; }
+.term-dot.yellow { background: #eab308; }
+.term-dot.green { background: #22c55e; }
+.term-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-left: 8px;
+    letter-spacing: 1px;
+}
+.terminal-body {
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    line-height: 1.7;
+    max-height: 120px;
+    overflow-y: hidden;
+}
+.log-line {
+    color: #cbd5e1;
+    opacity: 0.35;
+    transform: translateY(4px);
+    transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
+}
+.log-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.log-ok {
+    color: #22c55e;
+    font-weight: 700;
+    margin-right: 6px;
+}
+
+/* ========================================================
+   COMMAND PALETTE BUTTON IN NAVBAR (from eddy-naboulet.dev)
+======================================================== */
+.cmd-trigger-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: 100px;
+    padding: 7px 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.cmd-trigger-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+.cmd-badge {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    letter-spacing: 0.5px;
+}
+
+/* ========================================================
+   ROTATING CURVED SVG BADGE (from pacomepertant.com)
+======================================================== */
+.curved-badge-wrapper {
+    position: absolute;
+    top: -24px;
+    right: -24px;
+    width: 105px;
+    height: 105px;
+    z-index: 10;
+    pointer-events: auto;
+    cursor: pointer;
+}
+.curved-badge-svg {
+    width: 100%;
+    height: 100%;
+    animation: spinBadge 18s linear infinite;
+    transform-origin: center;
+}
+.badge-text {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    fill: var(--accent-cyan);
+    text-transform: uppercase;
+}
+.badge-center-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #181b24;
+    border: 1px solid var(--border-highlight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    font-size: 14px;
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.35);
+    transition: var(--transition);
+}
+.curved-badge-wrapper:hover .badge-center-icon {
+    transform: translate(-50%, -50%) scale(1.15);
+    color: var(--accent-cyan);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+}
+@keyframes spinBadge {
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================================
+   INFINITE SKILLS TICKER MARQUEE (from antriksh.me & noth.in)
+======================================================== */
+.ticker-wrapper {
+    width: 100%;
+    overflow: hidden;
+    background: rgba(18, 20, 26, 0.7);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 0;
+    backdrop-filter: blur(8px);
+    margin: 40px 0 20px;
+}
+.ticker-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: 28px;
+    animation: tickerLoop 28s linear infinite;
+}
+.ticker-track:hover {
+    animation-play-state: paused;
+}
+.ticker-item {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+.ticker-item i {
+    color: var(--accent-primary);
+}
+.ticker-item:hover {
+    color: var(--text-primary);
+}
+.ticker-dot {
+    color: var(--accent-cyan);
+    font-weight: 700;
+}
+@keyframes tickerLoop {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ========================================================
+   GIT BRANCH CAREER JOURNEY (from eddy-naboulet.dev)
+======================================================== */
+.git-journey-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+.git-terminal-header {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+.git-dots {
+    display: flex;
+    gap: 6px;
+}
+.g-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+.g-dot.red { background: #ef4444; }
+.g-dot.yellow { background: #eab308; }
+.g-dot.green { background: #22c55e; }
+.git-cmd-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    flex-grow: 1;
+}
+.git-branch-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent-cyan);
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+.git-graph-tree {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+.git-commit-node {
+    display: flex;
+    gap: 20px;
+    position: relative;
+}
+.git-line-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 24px;
+    flex-shrink: 0;
+}
+.git-node-circle {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 3px solid #64748b;
+    z-index: 2;
+    transition: var(--transition);
+}
+.git-commit-node:hover .git-node-circle {
+    transform: scale(1.3);
+}
+.git-node-circle.main-circle {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+}
+.git-node-circle.sih-color {
+    border-color: #eab308;
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+}
+.git-node-circle.chrono-color {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+.git-node-circle.merge-circle {
+    border-color: var(--accent-emerald);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+.git-stem {
+    width: 2px;
+    flex-grow: 1;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 4px 0;
+}
+.git-info {
+    padding-bottom: 28px;
+    flex-grow: 1;
+}
+.git-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    flex-wrap: wrap;
+}
+.git-hash {
+    color: var(--accent-primary);
+    background: rgba(249, 115, 22, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.git-tag {
+    color: var(--text-muted);
+}
+.git-date, .git-badge {
+    margin-left: auto;
+    font-size: 10px;
+    border-radius: 100px;
+    padding: 2px 8px;
+}
+.sih-pill {
+    background: rgba(234, 179, 8, 0.12);
+    color: #facc15;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+}
+.live-pill {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--accent-cyan);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.active-pill {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--accent-emerald);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.git-msg {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.git-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ========================================================
+   COMMAND PALETTE MODAL (from eddy-naboulet.dev)
+======================================================== */
+.cmd-palette {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 14vh;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.cmd-palette.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+.cmd-palette-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 7, 10, 0.75);
+    backdrop-filter: blur(12px);
+}
+.cmd-palette-dialog {
+    position: relative;
+    width: 90%;
+    max-width: 580px;
+    background: #141720;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 18px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(249, 115, 22, 0.15);
+    overflow: hidden;
+    transform: translateY(-15px) scale(0.97);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cmd-palette.open .cmd-palette-dialog {
+    transform: translateY(0) scale(1);
+}
+.cmd-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    gap: 12px;
+}
+.cmd-search-icon {
+    color: var(--accent-primary);
+    font-size: 16px;
+}
+#cmd-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    font-size: 15px;
+    width: 100%;
+}
+#cmd-input::placeholder {
+    color: var(--text-muted);
+}
+.cmd-esc-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 3px 7px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.cmd-list {
+    max-height: 330px;
+    overflow-y: auto;
+    padding: 10px;
+}
+.cmd-group-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    padding: 8px 12px 4px;
+}
+.cmd-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    gap: 12px;
+    transition: background 0.15s ease;
+}
+.cmd-item:hover, .cmd-item.selected {
+    background: rgba(255, 255, 255, 0.08);
+}
+.cmd-item-icon {
+    width: 24px;
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+.cmd-item-title {
+    font-size: 14px;
+    color: var(--text-primary);
+    flex-grow: 1;
+}
+.cmd-item-shortcut {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+.cmd-footer {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 10px 18px;
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid var(--border-subtle);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+}
+.cmd-footer kbd {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: var(--text-secondary);
+}
+
+/* Toast Notification */
+.toast-notify {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid var(--accent-emerald);
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 9999999;
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    pointer-events: none;
+}
+.toast-notify.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
