@@ -1,29 +1,31 @@
 /* ========================================================
-   1. STUDIO-GRADE ZERO-GLITCH SOUND ENGINE (Web Audio API)
-   With Dynamics Compressor, Anti-Click Envelopes & Debounce!
+   1. STUDIO-GRADE ZERO-GLITCH AUDIO ENGINE (Web Audio API)
+   Ultra-Crisp Tactile Feedback, Zero Latency & Dynamic Limiting
 ======================================================== */
 let audioCtx = null;
 let masterCompressor = null;
 let masterGain = null;
 let soundEnabled = true;
 let lastHoverTime = 0;
+let lastScrollTickTime = 0;
 
 function initAudio() {
     if (!audioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
         audioCtx = new AudioContextClass();
 
         // 1. Dynamics Compressor (Limiter) - 100% eliminates distortion & crackling
         masterCompressor = audioCtx.createDynamicsCompressor();
-        masterCompressor.threshold.setValueAtTime(-18, audioCtx.currentTime);
-        masterCompressor.knee.setValueAtTime(30, audioCtx.currentTime);
-        masterCompressor.ratio.setValueAtTime(12, audioCtx.currentTime);
-        masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
-        masterCompressor.release.setValueAtTime(0.15, audioCtx.currentTime);
+        masterCompressor.threshold.setValueAtTime(-14, audioCtx.currentTime);
+        masterCompressor.knee.setValueAtTime(24, audioCtx.currentTime);
+        masterCompressor.ratio.setValueAtTime(8, audioCtx.currentTime);
+        masterCompressor.attack.setValueAtTime(0.002, audioCtx.currentTime);
+        masterCompressor.release.setValueAtTime(0.1, audioCtx.currentTime);
 
         // 2. Master Gain
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
 
         masterCompressor.connect(masterGain);
         masterGain.connect(audioCtx.destination);
@@ -33,166 +35,229 @@ function initAudio() {
     }
 }
 
-// Unlock audio seamlessly on first user interaction
-['click', 'touchstart', 'keydown'].forEach(evt => {
-    window.addEventListener(evt, () => initAudio(), { once: true, passive: true });
+// Proactively unlock AudioContext on ANY user gesture
+function unlockAudio() {
+    initAudio();
+}
+['pointerdown', 'pointermove', 'mousedown', 'wheel', 'touchstart', 'keydown', 'click', 'scroll'].forEach(evt => {
+    window.addEventListener(evt, unlockAudio, { once: true, passive: true });
 });
 
-// Sound 1: Soft Button Hover (Ultra-crisp micro-air tick, zero click pop)
-function playButtonHover() {
+// Resilient sound execution helper
+function ensureAudio(callback) {
     if (!soundEnabled) return;
+    initAudio();
+    if (!audioCtx) return;
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume().then(() => {
+            if (callback) callback(audioCtx.currentTime);
+        }).catch(() => {});
+    } else {
+        if (callback) callback(audioCtx.currentTime);
+    }
+}
+
+// Sound 1: Soft Button Hover (Ultra-crisp tactile micro-tick)
+function playButtonHover() {
     const now = performance.now();
-    if (now - lastHoverTime < 50) return; // Anti-glitch debounce
+    if (now - lastHoverTime < 45) return;
     lastHoverTime = now;
 
-    initAudio();
-    const t = audioCtx.currentTime;
+    ensureAudio(t => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
 
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1600, t);
+        filter.Q.setValueAtTime(2.5, t);
 
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(1200, t);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1400, t);
+        osc.frequency.exponentialRampToValueAtTime(450, t + 0.02);
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(750, t);
-    osc.frequency.exponentialRampToValueAtTime(520, t + 0.025);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.09, t + 0.002);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.02);
 
-    // Smooth zero-crossing envelope (eliminates popping glitch)
-    gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.linearRampToValueAtTime(0.02, t + 0.003);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterCompressor);
 
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterCompressor);
-
-    osc.start(t);
-    osc.stop(t + 0.025);
+        osc.start(t);
+        osc.stop(t + 0.02);
+    });
 }
 
 // Sound 2: Deep Warm Card Hover (Acoustic marimba / soft wooden thud)
 function playCardHover() {
-    if (!soundEnabled) return;
     const now = performance.now();
-    if (now - lastHoverTime < 70) return;
+    if (now - lastHoverTime < 60) return;
     lastHoverTime = now;
 
-    initAudio();
-    const t = audioCtx.currentTime;
+    ensureAudio(t => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
 
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(700, t);
 
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(400, t);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(320, t);
+        osc.frequency.exponentialRampToValueAtTime(140, t + 0.045);
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(260, t);
-    osc.frequency.exponentialRampToValueAtTime(130, t + 0.07);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.11, t + 0.003);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
 
-    gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.linearRampToValueAtTime(0.05, t + 0.005);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterCompressor);
 
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterCompressor);
-
-    osc.start(t);
-    osc.stop(t + 0.07);
+        osc.start(t);
+        osc.stop(t + 0.045);
+    });
 }
 
-// Sound 3: Mechanical Haptic Button Click (Satisfying dual-stage switch)
+// Sound 3: Mechanical Haptic Button Click (Satisfying tactile dual-stage switch)
 function playButtonClick() {
-    if (!soundEnabled) return;
-    initAudio();
-    const t = audioCtx.currentTime;
+    ensureAudio(t => {
+        // High click transient
+        const oscClick = audioCtx.createOscillator();
+        const gainClick = audioCtx.createGain();
+        oscClick.type = 'triangle';
+        oscClick.frequency.setValueAtTime(1050, t);
+        oscClick.frequency.exponentialRampToValueAtTime(280, t + 0.035);
 
-    // Transient click
-    const oscClick = audioCtx.createOscillator();
-    const gainClick = audioCtx.createGain();
-    oscClick.type = 'triangle';
-    oscClick.frequency.setValueAtTime(950, t);
-    oscClick.frequency.exponentialRampToValueAtTime(280, t + 0.04);
+        gainClick.gain.setValueAtTime(0.0001, t);
+        gainClick.gain.linearRampToValueAtTime(0.15, t + 0.002);
+        gainClick.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
 
-    gainClick.gain.setValueAtTime(0.0001, t);
-    gainClick.gain.linearRampToValueAtTime(0.06, t + 0.002);
-    gainClick.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+        oscClick.connect(gainClick);
+        gainClick.connect(masterCompressor);
+        oscClick.start(t);
+        oscClick.stop(t + 0.035);
 
-    oscClick.connect(gainClick);
-    gainClick.connect(masterCompressor);
+        // Warm resonant body
+        const oscBody = audioCtx.createOscillator();
+        const gainBody = audioCtx.createGain();
+        oscBody.type = 'sine';
+        oscBody.frequency.setValueAtTime(210, t);
+        oscBody.frequency.exponentialRampToValueAtTime(80, t + 0.05);
 
-    oscClick.start(t);
-    oscClick.stop(t + 0.04);
+        gainBody.gain.setValueAtTime(0.0001, t);
+        gainBody.gain.linearRampToValueAtTime(0.12, t + 0.003);
+        gainBody.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
 
-    // Warm resonant body
-    const oscBody = audioCtx.createOscillator();
-    const gainBody = audioCtx.createGain();
-    oscBody.type = 'sine';
-    oscBody.frequency.setValueAtTime(190, t);
-    oscBody.frequency.exponentialRampToValueAtTime(80, t + 0.06);
-
-    gainBody.gain.setValueAtTime(0.0001, t);
-    gainBody.gain.linearRampToValueAtTime(0.08, t + 0.004);
-    gainBody.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
-
-    oscBody.connect(gainBody);
-    gainBody.connect(masterCompressor);
-
-    oscBody.start(t);
-    oscBody.stop(t + 0.06);
+        oscBody.connect(gainBody);
+        gainBody.connect(masterCompressor);
+        oscBody.start(t);
+        oscBody.stop(t + 0.05);
+    });
 }
 
 // Sound 4: Liquid Bubble Tone (For Navigation links)
 function playNavClick() {
-    if (!soundEnabled) return;
-    initAudio();
-    const t = audioCtx.currentTime;
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(540, t);
-    osc.frequency.exponentialRampToValueAtTime(780, t + 0.04);
-
-    gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.linearRampToValueAtTime(0.05, t + 0.003);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
-
-    osc.connect(gain);
-    gain.connect(masterCompressor);
-
-    osc.start(t);
-    osc.stop(t + 0.05);
-}
-
-// Sound 5: Crystalline Melodic Welcome Chime
-function playCozyChime() {
-    if (!soundEnabled) return;
-    initAudio();
-    const t = audioCtx.currentTime;
-
-    const chords = [523.25, 659.25, 783.99]; // C5, E5, G5 Major Chord
-    chords.forEach((freq, idx) => {
+    ensureAudio(t => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, t + idx * 0.08);
+        osc.frequency.setValueAtTime(520, t);
+        osc.frequency.exponentialRampToValueAtTime(820, t + 0.045);
 
-        gain.gain.setValueAtTime(0.0001, t + idx * 0.08);
-        gain.gain.linearRampToValueAtTime(0.035, t + idx * 0.08 + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + idx * 0.08 + 0.45);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.12, t + 0.003);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
 
         osc.connect(gain);
         gain.connect(masterCompressor);
 
-        osc.start(t + idx * 0.08);
-        osc.stop(t + idx * 0.08 + 0.45);
+        osc.start(t);
+        osc.stop(t + 0.045);
+    });
+}
+
+// Sound 5: Minimal Precision Scroll Ratchet Tick
+function playScrollTick() {
+    const now = performance.now();
+    if (now - lastScrollTickTime < 130) return;
+    lastScrollTickTime = now;
+
+    ensureAudio(t => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        filter.type = 'highpass';
+        filter.frequency.setValueAtTime(1200, t);
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1500, t);
+        osc.frequency.exponentialRampToValueAtTime(550, t + 0.014);
+
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.05, t + 0.001);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.014);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterCompressor);
+
+        osc.start(t);
+        osc.stop(t + 0.014);
+    });
+}
+
+// Sound 6: Modal State Transition Sound
+function playModalSound(isOpen) {
+    ensureAudio(t => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        if (isOpen) {
+            osc.frequency.setValueAtTime(320, t);
+            osc.frequency.exponentialRampToValueAtTime(680, t + 0.08);
+        } else {
+            osc.frequency.setValueAtTime(600, t);
+            osc.frequency.exponentialRampToValueAtTime(260, t + 0.07);
+        }
+
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.11, t + 0.003);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + (isOpen ? 0.08 : 0.07));
+
+        osc.connect(gain);
+        gain.connect(masterCompressor);
+
+        osc.start(t);
+        osc.stop(t + (isOpen ? 0.08 : 0.07));
+    });
+}
+
+// Sound 7: Crystalline Melodic Welcome Chime
+function playCozyChime() {
+    ensureAudio(t => {
+        const chords = [523.25, 659.25, 783.99]; // C5, E5, G5 Major Chord
+        chords.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, t + idx * 0.07);
+
+            gain.gain.setValueAtTime(0.0001, t + idx * 0.07);
+            gain.gain.linearRampToValueAtTime(0.08, t + idx * 0.07 + 0.008);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + idx * 0.07 + 0.45);
+
+            osc.connect(gain);
+            gain.connect(masterCompressor);
+
+            osc.start(t + idx * 0.07);
+            osc.stop(t + idx * 0.07 + 0.45);
+        });
     });
 }
 
@@ -244,20 +309,19 @@ function bindSounds() {
 bindSounds();
 
 /* ========================================================
-   2. OPENING INTRO PRELOADER RUNNER
+   2. OPENING MINIMALIST BRAND PRELOADER
+   Fast, elegant brand mark reveal with zero delay
 ======================================================== */
 const preloader = document.getElementById('preloader');
-const preloaderCount = document.getElementById('preloader-count');
 const preloaderProgress = document.getElementById('preloader-progress');
 
 if (preloader) {
     let progress = 0;
     const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 8) + 5;
+        progress += Math.floor(Math.random() * 12) + 12;
         if (progress >= 100) {
             progress = 100;
             clearInterval(interval);
-            if (preloaderCount) preloaderCount.textContent = '100%';
             if (preloaderProgress) preloaderProgress.style.width = '100%';
             
             setTimeout(() => {
@@ -267,9 +331,8 @@ if (preloader) {
                 // Cascading reveal for Hero Section
                 const hero = document.getElementById('home');
                 if (hero) hero.classList.add('active');
-            }, 300);
+            }, 240);
         } else {
-            if (preloaderCount) preloaderCount.textContent = `${progress}%`;
             if (preloaderProgress) preloaderProgress.style.width = `${progress}%`;
         }
     }, 35);
@@ -317,36 +380,6 @@ const revealObserver = new IntersectionObserver((entries, observer) => {
 
 revealElements.forEach(el => revealObserver.observe(el));
 
-/* ========================================================
-   4. CUSTOM INTERACTIVE CURSOR
-======================================================== */
-const cursorDot = document.getElementById('cursor-dot');
-const cursorOutline = document.getElementById('cursor-outline');
-
-if (cursorDot && cursorOutline && window.innerWidth > 768) {
-    window.addEventListener('mousemove', (e) => {
-        const { clientX: x, clientY: y } = e;
-        
-        cursorDot.style.left = `${x}px`;
-        cursorDot.style.top = `${y}px`;
-
-        cursorOutline.animate({
-            left: `${x}px`,
-            top: `${y}px`
-        }, { duration: 220, fill: "forwards" });
-    });
-
-    document.querySelectorAll('a, button, input, textarea, .project-card').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.6)';
-            cursorOutline.style.borderColor = 'var(--accent-primary)';
-        });
-        el.addEventListener('mouseleave', () => {
-            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
-            cursorOutline.style.borderColor = 'rgba(249, 115, 22, 0.5)';
-        });
-    });
-}
 
 /* ========================================================
    5. 3D TILT EFFECT ON CARDS
@@ -665,7 +698,7 @@ function openProjectModal(projectId) {
     projectModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
-    playButtonClick();
+    playModalSound(true);
 }
 
 function closeProjectModal() {
@@ -674,7 +707,7 @@ function closeProjectModal() {
     projectModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     if (lenis) lenis.start();
-    playButtonClick();
+    playModalSound(false);
 }
 
 // Bind clicks on cards and Details buttons
@@ -713,14 +746,23 @@ if (projectModal) {
 }
 
 /* ========================================================
-   9. SMART AUTO-HIDE HEADER ON SCROLL
+   9. SMART AUTO-HIDE HEADER & SCROLL HAPTIC TICK
    Hides on scroll down to clear view, reveals on scroll up
 ======================================================== */
 let lastScrollY = window.scrollY;
+let scrollTickAccumulator = 0;
 const header = document.querySelector('.header');
 
 window.addEventListener('scroll', () => {
     const currentScrollY = window.scrollY;
+    const delta = Math.abs(currentScrollY - lastScrollY);
+    scrollTickAccumulator += delta;
+
+    if (scrollTickAccumulator > 240) {
+        playScrollTick();
+        scrollTickAccumulator = 0;
+    }
+
     if (header) {
         if (currentScrollY > 120) {
             if (currentScrollY > lastScrollY + 8) {
@@ -782,19 +824,19 @@ if (typeof Lenis !== 'undefined') {
     const spotlight = document.getElementById('spotlight');
     if (!spotlight || !window.matchMedia('(pointer: fine)').matches) return;
 
-    let targetX = -1000;
-    let targetY = -1000;
-    let currentX = -1000;
-    let currentY = -1000;
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight / 2;
+    let currentX = targetX;
+    let currentY = targetY;
     let isMoving = false;
     let rafId = null;
 
     function updateSpotlight() {
         // Silky smooth lerp smoothing
-        currentX += (targetX - currentX) * 0.12;
-        currentY += (targetY - currentY) * 0.12;
+        currentX += (targetX - currentX) * 0.1;
+        currentY += (targetY - currentY) * 0.1;
 
-        spotlight.style.transform = `translate3d(${currentX - 300}px, ${currentY - 300}px, 0)`;
+        spotlight.style.transform = `translate3d(${currentX - 325}px, ${currentY - 325}px, 0)`;
 
         if (isMoving) {
             rafId = requestAnimationFrame(updateSpotlight);
