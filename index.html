@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arpit Yadav — Full Stack Developer & IoT Enthusiast</title>
     
+    <!-- Favicon & Brand Icons -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="theme-color" content="#0d111a">
+
     <!-- Google SEO & Metadata -->
     <meta name="description" content="Official developer portfolio of Arpit Yadav — Full Stack Developer & IoT Enthusiast based in Kanpur, India. Prototyping smart hardware systems and modern web applications.">
     <meta name="keywords" content="Arpit Yadav, Arpit Yadav Developer, Arpit Yadav Kanpur, Full Stack Developer, IoT Enthusiast, Smart Helmet SIH, ChronoFact, Smart Kitchen">
@@ -76,7 +84,17 @@
 
     <!-- 1. Floating Pill Navbar -->
     <header class="header">
-        <a href="#home" class="logo sound-hover">Arpit<span>.dev</span></a>
+        <a href="#home" class="logo sound-hover" aria-label="Arpit Yadav Home">
+            <span class="logo-mark" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="5" y="5" width="118" height="118" rx="32" fill="#0d111a" stroke="var(--accent-primary)" stroke-width="7"/>
+                    <path d="M 38 90 L 53 38 L 68 90 M 43 74 L 63 74" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 66 50 L 78 68 L 90 50 M 78 68 L 78 90" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="53" cy="38" r="4" fill="#ffffff"/>
+                </svg>
+            </span>
+            <span>Arpit<span class="logo-accent">.dev</span></span>
+        </a>
         
         <nav class="navbar" id="navbar">
             <a href="#projects" class="nav-link sound-hover">Projects</a>

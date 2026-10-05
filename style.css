@@ -258,10 +258,33 @@ main, .header, .footer {
     text-decoration: none;
     color: var(--text-primary);
     letter-spacing: -0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    transition: opacity 0.25s ease;
 }
 
-.logo span {
+.logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(var(--accent-primary-rgb), 0.35));
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.logo-mark svg {
+    display: block;
+}
+
+.logo:hover .logo-mark {
+    transform: rotate(-10deg) scale(1.12);
+    filter: drop-shadow(0 0 12px rgba(var(--accent-primary-rgb), 0.6));
+}
+
+.logo-accent {
     color: var(--accent-primary);
+    transition: color 0.3s ease;
 }
 
 .navbar {
