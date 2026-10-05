@@ -210,6 +210,24 @@ function playScrollTick() {
     });
 }
 
+// Sound 5b: Subtle Mechanical Keyclick Tick
+function playKeyTick() {
+    ensureAudio(t => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1600, t);
+        osc.frequency.exponentialRampToValueAtTime(750, t + 0.012);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.04, t + 0.001);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
+        osc.connect(gain);
+        gain.connect(masterCompressor);
+        osc.start(t);
+        osc.stop(t + 0.012);
+    });
+}
+
 // Sound 6: Modal State Transition Sound
 function playModalSound(isOpen) {
     ensureAudio(t => {
@@ -936,3 +954,306 @@ if (paletteBtn && paletteWrap) {
         }
     });
 }
+
+/* ========================================================
+   13. HERO CODE PLAYGROUND & MICRO-TERMINAL ENGINE
+======================================================== */
+const termBody = document.getElementById('terminal-body');
+const termForm = document.getElementById('terminal-form');
+const termInput = document.getElementById('terminal-input');
+const termChips = document.querySelectorAll('.t-chip');
+
+const initialTerminalContent = `
+    <div class="term-line banner-line">
+        <span class="term-accent">Arpit Yadav</span> Terminal v2.6.0 &bull; Architecture &amp; IoT Engine
+    </div>
+    <div class="term-line">
+        <span class="term-comment">// Click chips above or type commands below</span>
+    </div>
+    <div class="term-code-block">
+        <span class="t-kw">const</span> <span class="t-var">developer</span> = {<br>
+        &nbsp;&nbsp;name: <span class="t-str">"Arpit Yadav"</span>,<br>
+        &nbsp;&nbsp;mission: <span class="t-str">"0-to-1 Production Engineering"</span>,<br>
+        &nbsp;&nbsp;hardware: <span class="t-str">"ESP32 &bull; Arduino &bull; Relays"</span>,<br>
+        &nbsp;&nbsp;software: <span class="t-str">"React &bull; Node &bull; C++ &bull; Python"</span><br>
+        };
+    </div>
+`;
+
+function writeTerminalLine(html) {
+    if (!termBody) return;
+    const div = document.createElement('div');
+    div.className = 'term-line';
+    div.innerHTML = html;
+    termBody.appendChild(div);
+    termBody.scrollTop = termBody.scrollHeight;
+}
+
+function runTerminalCommand(cmdRaw) {
+    const cmd = (cmdRaw || '').trim().toLowerCase();
+    if (!cmd) return;
+
+    writeTerminalLine(`<span class="term-prompt">arpit@dev:~$</span> <span class="term-cyan">${cmd}</span>`);
+
+    if (cmd === 'clear' || cmd === 'cls') {
+        if (termBody) termBody.innerHTML = initialTerminalContent;
+        playButtonClick();
+        return;
+    }
+
+    if (cmd === 'help') {
+        writeTerminalLine(`
+            <span class="term-accent">Available Commands:</span><br>
+            &bull; <span class="term-cyan">sih</span> &mdash; Run Smart Helmet interlock telemetry<br>
+            &bull; <span class="term-cyan">kitchen</span> &mdash; Run Smart Kitchen hazard mitigation loop<br>
+            &bull; <span class="term-cyan">chronofact</span> &mdash; Verify Section 63(4) BSA cryptographic engine<br>
+            &bull; <span class="term-cyan">projects</span> &mdash; Inspect and scroll to featured projects<br>
+            &bull; <span class="term-cyan">skills</span> &mdash; Display technical stack competencies<br>
+            &bull; <span class="term-cyan">bio</span> &mdash; Engineering education and background<br>
+            &bull; <span class="term-cyan">contact</span> &mdash; Display direct communication endpoints<br>
+            &bull; <span class="term-cyan">theme</span> &mdash; Cycle ambient color palette<br>
+            &bull; <span class="term-cyan">resume</span> &mdash; Open verified technical resume<br>
+            &bull; <span class="term-cyan">clear</span> &mdash; Reset terminal screen
+        `);
+    } else if (cmd.includes('sih')) {
+        writeTerminalLine(`
+            <span class="term-accent">[SIH 2026 // SMART RIDER TELEMETRY]</span><br>
+            <span class="term-success">[OK]</span> Connecting to ESP32 Helmet Unit (MAC: 4A:2F:90:E1)...<br>
+            <span class="term-success">[OK]</span> MQ-3 Alcohol Sensor: 0.02 mg/L (BAC clean - PASS)<br>
+            <span class="term-success">[OK]</span> FSR Interlock: Helmet Buckled (100% CONTACT)<br>
+            <span class="term-accent">[RELAY]</span> Local Ignition Interlock: UNLOCKED (Start ENABLED)<br>
+            <span class="term-comment">&rarr; SIH 2026 Problem SIH26220 Verified at Internal Hackathon.</span>
+        `);
+    } else if (cmd.includes('kitchen')) {
+        writeTerminalLine(`
+            <span class="term-accent">[SAFETY-FI 96X // INDUSTRIAL KITCHEN IOT]</span><br>
+            <span class="term-success">[OK]</span> Sampling ATmega328P ADC registers @ 16 MHz...<br>
+            <span class="term-success">[OK]</span> MQ-2 Hydrocarbon Level: 142 / 1024 (Within Safe Baseline)<br>
+            <span class="term-success">[OK]</span> Optical IR Flame Sensor: CLEAR (No Thermal Breach)<br>
+            <span class="term-cyan">[TWIN]</span> Three.js 3D Cooktop synced at 60 FPS.<br>
+            <span class="term-comment">&rarr; Closed-loop emergency solenoids fully armed.</span>
+        `);
+    } else if (cmd.includes('chrono')) {
+        writeTerminalLine(`
+            <span class="term-accent">[CHRONOFACT 2.0 // BSA &sect;63(4) FORENSICS]</span><br>
+            <span class="term-success">[NIST FIPS 180-4]</span> SHA-256: e3b0c44298fc1c149afbf4c8996fb92427...<br>
+            <span class="term-success">[NIST FIPS 202]</span> SHA3-256: a7ffc6f8bf1ed76651c14756a061d662f5...<br>
+            <span class="term-cyan">[VERIFIED]</span> Dual-hash Merkle Chain: UNTAMPERED.<br>
+            <span class="term-comment">&rarr; Mechanical byte-level citation grounding: 100%.</span>
+        `);
+    } else if (cmd.includes('project')) {
+        writeTerminalLine(`
+            <span class="term-accent">[FEATURED PRODUCTION PROJECTS]</span><br>
+            1. Smart Helmet (SIH 2026 Problem SIH26220)<br>
+            2. ChronoFact 2.0 (BSA Forensic Investigation Workbench)<br>
+            3. SAFETY-FI 96X (Smart Kitchen Safety Platform)<br>
+            4. Developer Portfolio (Semantic Web & Web Audio API)<br>
+            <span class="term-comment">&rarr; Gliding to Projects section...</span>
+        `);
+        const pSec = document.getElementById('projects');
+        if (pSec && typeof lenis !== 'undefined' && lenis) {
+            setTimeout(() => lenis.scrollTo(pSec, { offset: -30 }), 400);
+        }
+    } else if (cmd.includes('skill')) {
+        writeTerminalLine(`
+            <span class="term-accent">[TECHNICAL COMPETENCIES]</span><br>
+            &bull; Languages: C, C++, Python, JavaScript<br>
+            &bull; Embedded: ESP32, Arduino Uno, Sensors, Relays, C++<br>
+            &bull; Frontend: React, Modern CSS3, HTML5, Tailwind CSS<br>
+            &bull; Backend: Node.js, Express, REST APIs, MongoDB<br>
+            &bull; Tooling: Git, GitHub, VS Code, Postman
+        `);
+    } else if (cmd.includes('bio') || cmd.includes('about')) {
+        writeTerminalLine(`
+            <span class="term-accent">Arpit Yadav</span> &mdash; Full Stack Developer &amp; IoT Enthusiast<br>
+            &bull; B.Tech Computer Science &amp; Engineering ('25 - '29)<br>
+            &bull; Axis Institute of Technology and Management, Kanpur<br>
+            &bull; Mission: Architecting zero-to-one scalable web applications &amp; connected hardware prototypes.
+        `);
+    } else if (cmd.includes('contact')) {
+        writeTerminalLine(`
+            <span class="term-accent">[CONTACT CHANNELS]</span><br>
+            Email: <span class="term-cyan">arpityadav6794@gmail.com</span><br>
+            LinkedIn: linkedin.com/in/arpit-yadav-944983309<br>
+            GitHub: github.com/arpityadav626<br>
+            Location: Kanpur, Uttar Pradesh, India
+        `);
+    } else if (cmd.includes('resume')) {
+        writeTerminalLine(`<span class="term-success">Opening resume PDF in new tab...</span>`);
+        window.open('assets/Arpit_Yadav_Resume.pdf', '_blank');
+    } else if (cmd.includes('theme')) {
+        const themes = ['amber', 'cyan', 'emerald', 'violet'];
+        const current = document.body.getAttribute('data-theme') || 'amber';
+        const next = themes[(themes.indexOf(current) + 1) % themes.length];
+        if (typeof setAccentTheme === 'function') {
+            setAccentTheme(next);
+        }
+        writeTerminalLine(`<span class="term-accent">[THEME]</span> Switched accent theme to: <span class="term-cyan">${next.toUpperCase()}</span>`);
+    } else {
+        writeTerminalLine(`
+            <span class="term-error">Command not recognized: '${cmd}'</span><br>
+            <span class="term-comment">Type <span class="term-cyan">'help'</span> or click the action chips above.</span>
+        `);
+    }
+
+    playButtonClick();
+}
+
+if (termForm && termInput) {
+    termInput.addEventListener('keydown', () => {
+        playKeyTick();
+    });
+
+    termForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = termInput.value;
+        termInput.value = '';
+        runTerminalCommand(val);
+    });
+}
+
+termChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+        const cmd = chip.getAttribute('data-cmd');
+        if (cmd) runTerminalCommand(cmd);
+    });
+});
+
+/* ========================================================
+   14. TECH STACK ↔ PROJECT INTERACTIVE HIGHLIGHTING ENGINE
+======================================================== */
+const skillPills = document.querySelectorAll('.skill-pill[data-skill]');
+const projectCards = document.querySelectorAll('.project-card[data-skills]');
+const hintElement = document.getElementById('skills-interactive-hint');
+const hintText = document.getElementById('hint-text');
+
+let lockedSkill = null;
+
+function highlightProjectsBySkill(skillKey, isClick = false) {
+    if (!skillKey) {
+        resetSkillHighlights();
+        return;
+    }
+
+    let matchCount = 0;
+    const matchedTitles = [];
+
+    projectCards.forEach(card => {
+        const skillsAttr = card.getAttribute('data-skills') || '';
+        const isMatch = skillsAttr.split(' ').includes(skillKey);
+
+        if (isMatch) {
+            matchCount++;
+            card.classList.add('skill-matched');
+            card.classList.remove('skill-dimmed');
+            const title = card.querySelector('.project-title');
+            if (title) matchedTitles.push(title.textContent.trim());
+
+            // Highlight specific tech pills inside matched project card
+            card.querySelectorAll('.tech-stack-pills span').forEach(tag => {
+                if (tag.getAttribute('data-skill') === skillKey) {
+                    tag.classList.add('matched-tech-tag');
+                } else {
+                    tag.classList.remove('matched-tech-tag');
+                }
+            });
+        } else {
+            card.classList.remove('skill-matched');
+            card.classList.add('skill-dimmed');
+            card.querySelectorAll('.tech-stack-pills span').forEach(tag => tag.classList.remove('matched-tech-tag'));
+        }
+    });
+
+    // Update active state on skill pill
+    skillPills.forEach(pill => {
+        if (pill.getAttribute('data-skill') === skillKey) {
+            pill.classList.add('active');
+        } else {
+            pill.classList.remove('active');
+        }
+    });
+
+    // Update hint feedback bar
+    if (hintElement && hintText) {
+        hintElement.classList.add('hint-active');
+        if (matchCount > 0) {
+            hintText.innerHTML = `<strong>${skillKey.toUpperCase()}</strong> is implemented in <strong>${matchCount} Project${matchCount > 1 ? 's' : ''}</strong>: ${matchedTitles.join(', ')} &mdash; ${isClick ? 'Gliding to projects...' : 'Click pill to jump!'}`;
+        } else {
+            hintText.innerHTML = `<strong>${skillKey.toUpperCase()}</strong> is a core foundation competency.`;
+        }
+    }
+
+    if (isClick && matchCount > 0) {
+        lockedSkill = skillKey;
+        const pSection = document.getElementById('projects');
+        if (pSection && typeof lenis !== 'undefined' && lenis) {
+            lenis.scrollTo(pSection, { offset: -30 });
+        }
+        playButtonClick();
+
+        // Release locked highlight after 4 seconds
+        setTimeout(() => {
+            if (lockedSkill === skillKey) {
+                resetSkillHighlights();
+                lockedSkill = null;
+            }
+        }, 4000);
+    }
+}
+
+function resetSkillHighlights() {
+    if (lockedSkill) return;
+    projectCards.forEach(card => {
+        card.classList.remove('skill-matched');
+        card.classList.remove('skill-dimmed');
+        card.querySelectorAll('.tech-stack-pills span').forEach(tag => tag.classList.remove('matched-tech-tag'));
+    });
+    skillPills.forEach(pill => pill.classList.remove('active'));
+    if (hintElement && hintText) {
+        hintElement.classList.remove('hint-active');
+        hintText.textContent = 'Hover or click any skill to highlight linked projects';
+    }
+}
+
+skillPills.forEach(pill => {
+    const skill = pill.getAttribute('data-skill');
+
+    pill.addEventListener('mouseenter', () => {
+        if (!lockedSkill) {
+            highlightProjectsBySkill(skill, false);
+            playButtonHover();
+        }
+    });
+
+    pill.addEventListener('mouseleave', () => {
+        if (!lockedSkill) {
+            resetSkillHighlights();
+        }
+    });
+
+    pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (lockedSkill === skill) {
+            lockedSkill = null;
+            resetSkillHighlights();
+        } else {
+            highlightProjectsBySkill(skill, true);
+        }
+    });
+});
+
+// Reverse Highlight: Hovering tech pill inside project card highlights corresponding skill pill in skills section!
+document.querySelectorAll('.tech-stack-pills span[data-skill]').forEach(tag => {
+    const sKey = tag.getAttribute('data-skill');
+    tag.addEventListener('mouseenter', () => {
+        skillPills.forEach(p => {
+            if (p.getAttribute('data-skill') === sKey) {
+                p.classList.add('skill-highlighted');
+            }
+        });
+        playButtonHover();
+    });
+    tag.addEventListener('mouseleave', () => {
+        skillPills.forEach(p => p.classList.remove('skill-highlighted'));
+    });
+});
