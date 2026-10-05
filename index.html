@@ -655,7 +655,14 @@
     <!-- Project Details Modal Lightbox (Root Level - Completely Above All Navbars) -->
     <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details" data-lenis-prevent="true">
         <div class="project-modal-card" data-lenis-prevent="true">
-            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close details modal">&times;</button>
+            <!-- Dedicated Pinned Header Bar: Isolates close button so it never overlaps text -->
+            <div class="modal-card-top-bar">
+                <div class="modal-top-meta">
+                    <span class="modal-top-tag"><i class="fas fa-layer-group"></i> Project Deep Dive</span>
+                    <span class="modal-esc-hint"><kbd>ESC</kbd> to close</span>
+                </div>
+                <button class="modal-close-btn sound-hover" id="modal-close-btn" aria-label="Close details modal">&times;</button>
+            </div>
             <div id="modal-dynamic-content" class="modal-body-content">
                 <!-- Populated dynamically with staggered cascade animations -->
             </div>

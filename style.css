@@ -1842,22 +1842,37 @@ body.modal-open .header {
     opacity: 0;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     scrollbar-width: thin;
-    scrollbar-color: var(--accent-primary) rgba(255, 255, 255, 0.05);
+    scrollbar-color: var(--accent-primary) transparent;
 }
 
 .project-modal-card::-webkit-scrollbar {
-    width: 7px;
+    width: 6px;
 }
 
 .project-modal-card::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    margin: 14px 0;
+    background: transparent;
 }
 
 .project-modal-card::-webkit-scrollbar-thumb {
     background: var(--accent-primary);
-    border-radius: 8px;
+    border-radius: 10px;
+}
+
+.project-modal-card::-webkit-scrollbar-thumb:hover {
+    filter: brightness(1.2);
+}
+
+/* Hide native Windows scrollbar arrow steppers */
+.project-modal-card::-webkit-scrollbar-button,
+*::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+}
+
+.project-modal-card::-webkit-scrollbar-corner {
+    background: transparent !important;
 }
 
 .project-modal-backdrop.active .project-modal-card {
@@ -1865,36 +1880,86 @@ body.modal-open .header {
     opacity: 1;
 }
 
-.modal-close-btn {
+/* Pinned Glassmorphic Top Bar - Isolates close button so text never overlaps */
+.modal-card-top-bar {
     position: sticky;
-    top: 18px;
-    float: right;
-    margin-right: 18px;
-    margin-top: 18px;
-    width: 38px;
-    height: 38px;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: rgba(18, 21, 29, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-top-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-top-tag {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-esc-hint {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.modal-esc-hint kbd {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+.modal-close-btn {
+    position: static;
+    float: none;
+    margin: 0;
+    width: 32px;
+    height: 32px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid var(--border-subtle);
     border-radius: 50%;
     color: var(--text-primary);
-    font-size: 24px;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 10;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-close-btn:hover {
-    background: rgba(var(--accent-primary-rgb), 0.2);
+    background: rgba(var(--accent-primary-rgb), 0.25);
     border-color: var(--accent-primary);
     color: var(--accent-primary);
     transform: rotate(90deg) scale(1.1);
 }
 
 .modal-body-content {
-    padding: 36px;
+    padding: 28px 36px 36px;
     clear: both;
 }
 
