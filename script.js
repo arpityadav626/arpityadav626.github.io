@@ -429,15 +429,33 @@ const menuToggle = document.getElementById('menu-toggle');
 const navbar = document.getElementById('navbar');
 
 if (menuToggle && navbar) {
-    menuToggle.addEventListener('click', () => {
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
         navbar.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+        const isActive = navbar.classList.contains('active');
+        menuToggle.innerHTML = isActive ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        menuToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
         playButtonClick();
     });
 
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             navbar.classList.remove('active');
+            menuToggle.classList.remove('active');
+            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            menuToggle.setAttribute('aria-expanded', 'false');
         });
+    });
+
+    // Close mobile menu when tapping anywhere outside
+    document.addEventListener('click', (e) => {
+        if (navbar.classList.contains('active') && !navbar.contains(e.target) && !menuToggle.contains(e.target)) {
+            navbar.classList.remove('active');
+            menuToggle.classList.remove('active');
+            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
     });
 }
 

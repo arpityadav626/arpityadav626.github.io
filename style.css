@@ -305,6 +305,10 @@ main, .header, .footer {
     color: var(--text-primary);
 }
 
+.mobile-nav-resume {
+    display: none;
+}
+
 .header-right {
     display: flex;
     align-items: center;
@@ -1772,38 +1776,6 @@ main, .header, .footer {
     }
 }
 
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-    }
-
-    .navbar {
-        position: absolute;
-        top: 65px;
-        left: 0;
-        width: 100%;
-        background: #12141a;
-        flex-direction: column;
-        padding: 24px;
-        gap: 16px;
-        border-radius: 20px;
-        border: 1px solid var(--border-subtle);
-        display: none;
-    }
-
-    .navbar.active {
-        display: flex;
-    }
-
-    .hero-title {
-        font-size: 40px;
-    }
-
-    .section-title {
-        font-size: 30px;
-    }
-}
-
 /* ========================================================
    PROJECT EXPANDED DETAILS MODAL (SAME DARK THEME & ANIMATION)
 ======================================================== */
@@ -2244,47 +2216,496 @@ body.modal-open .header {
     to { opacity: 1; transform: scale(1); }
 }
 
-@media (max-width: 768px) {
+/* ========================================================
+   RESPONSIVE DESIGN SUITE: MOBILE, TABLET & TOUCH DEVICES
+======================================================== */
+
+/* Touch Ergonomics (All Touchscreens: iPad, iPhone, Android) */
+@media (hover: none), (pointer: coarse) {
+    .linear-spotlight {
+        display: none !important;
+    }
+
+    .tilt-card {
+        transform: none !important;
+        transition: border-color 0.25s ease, background 0.25s ease !important;
+    }
+
+    .tilt-card:active {
+        border-color: rgba(var(--accent-primary-rgb), 0.5) !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+    }
+
+    .btn:active,
+    .card-btn:active,
+    .palette-toggle-btn:active,
+    .sound-toggle-btn:active,
+    .menu-toggle:active {
+        transform: scale(0.96) !important;
+    }
+}
+
+/* 1. TABLET SCREENS (769px to 1024px: iPads, Android Tablets) */
+@media (max-width: 1024px) {
+    .header {
+        width: 94%;
+        max-width: 900px;
+        padding: 12px 20px;
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 36px;
+        margin-top: 100px;
+        padding-bottom: 40px;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .social-bar {
+        justify-content: center;
+    }
+
     .hero-studio-card {
+        max-width: 580px;
         margin: 0 auto;
-        max-width: 500px;
     }
-    .studio-tabs {
-        justify-content: flex-start;
-        overflow-x: auto;
+
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
     }
-    .s-tab {
-        padding: 5px 10px;
-        font-size: 11.5px;
+
+    .skills-categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
     }
-    .code-editor-box {
-        font-size: 11px;
-        padding: 10px 12px;
+
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
     }
-    .studio-body {
-        padding: 14px 14px;
-        min-height: auto;
+
+    .about-grid,
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
     }
-    .project-modal-backdrop {
-        padding: 14px;
+}
+
+/* 2. MOBILE LANDSCAPE & SMALL TABLETS (max-width: 768px) */
+@media (max-width: 768px) {
+    /* Safe viewport constraints */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
     }
-    .modal-body-content {
-        padding: 22px 18px;
+
+    /* Fixed Pill Header on Mobile */
+    .header {
+        top: 10px;
+        width: calc(100% - 20px);
+        padding: 10px 14px;
+        border-radius: 99px;
     }
-    .modal-title {
-        font-size: 22px;
+
+    .logo {
+        font-size: 17px;
+        gap: 7px;
     }
-    .modal-media-img {
-        max-height: 220px;
+
+    .logo-mark svg {
+        width: 20px;
+        height: 20px;
     }
-    .modal-corner-close-btn {
-        top: 12px;
-        right: 12px;
+
+    .header-right {
+        gap: 7px;
+    }
+
+    .header-right .btn-pill {
+        display: none !important; /* Moved to mobile dropdown */
+    }
+
+    .palette-toggle-btn {
         width: 34px;
         height: 34px;
         font-size: 13px;
     }
+
+    .sound-toggle-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    #sound-text {
+        display: none !important; /* Icon-only on mobile */
+    }
+
+    .menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border-subtle);
+        border-radius: 50%;
+        color: var(--text-primary);
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    .menu-toggle.active {
+        background: rgba(var(--accent-primary-rgb), 0.2);
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+    /* Mobile Slide-down Navigation Panel */
+    .navbar {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        width: 100%;
+        background: rgba(14, 18, 25, 0.98);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        flex-direction: column;
+        padding: 18px 16px;
+        gap: 8px;
+        border-radius: 20px;
+        border: 1px solid var(--border-subtle);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(var(--accent-primary-rgb), 0.12);
+        display: none;
+        animation: mobileMenuDrop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        z-index: 1000;
+    }
+
+    .navbar.active {
+        display: flex !important;
+    }
+
+    .nav-link {
+        font-size: 15px;
+        font-weight: 600;
+        padding: 11px 14px;
+        border-radius: 12px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        color: var(--text-secondary);
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link:active {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--accent-primary);
+    }
+
+    .mobile-nav-resume {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary, #fb923c)) !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        padding: 13px !important;
+        border-radius: 14px !important;
+        margin-top: 6px;
+        box-shadow: 0 4px 18px rgba(var(--accent-primary-rgb), 0.4);
+    }
+
+    /* Hero Section Responsive */
+    .hero {
+        margin-top: 80px;
+        padding: 16px 0;
+        width: 100%;
+        min-height: auto;
+        gap: 28px;
+    }
+
+    .hero-title {
+        font-size: clamp(28px, 7.8vw, 38px);
+        letter-spacing: -0.8px;
+        line-height: 1.18;
+        word-break: break-word;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(16px, 4.4vw, 20px);
+        line-height: 1.35;
+        margin-bottom: 12px;
+    }
+
+    .hero-tagline {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 22px;
+        padding: 0 4px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 18px;
+        font-size: 14px;
+    }
+
+    /* Hero Developer Studio Card */
+    .hero-studio-card {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 18px;
+    }
+
+    .studio-header {
+        padding: 10px 14px;
+    }
+
+    .studio-tabs {
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 4px;
+    }
+
+    .studio-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .s-tab {
+        padding: 5px 9px;
+        font-size: 11px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .studio-body {
+        padding: 12px;
+        min-height: auto;
+    }
+
+    .code-editor-box {
+        font-size: 11px;
+        line-height: 1.6;
+        padding: 10px 12px;
+        max-height: 220px;
+        overflow-x: auto;
+    }
+
+    .studio-actions-bar {
+        padding: 10px 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .studio-btn-primary,
+    .studio-btn-outline {
+        padding: 7px 10px;
+        font-size: 11px;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .studio-meta-bar {
+        padding: 8px 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    /* Grids & Sections on Mobile */
+    .section {
+        padding: 44px 0;
+        width: 92%;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        font-size: clamp(24px, 6vw, 30px);
+    }
+
+    .section-desc {
+        font-size: 13.5px;
+        margin-bottom: 24px;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .project-card {
+        border-radius: 18px;
+    }
+
+    .project-img {
+        height: 180px;
+    }
+
+    .project-content {
+        padding: 18px 16px;
+    }
+
+    .skills-categories-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .achievements-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .about-grid,
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .contact-info,
+    .contact-form {
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        font-size: 16px; /* Prevents auto-zoom on iOS Safari */
+    }
+
+    /* Project Modal Mobile Polish */
+    .project-modal-backdrop {
+        padding: 12px 8px;
+    }
+
+    .modal-dialog-container {
+        width: 100%;
+        max-height: 94vh;
+    }
+
+    .project-modal-card {
+        max-height: 94vh;
+        border-radius: 18px;
+    }
+
+    .modal-body-content {
+        padding: 20px 16px 26px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        line-height: 1.25;
+        margin-bottom: 10px;
+    }
+
+    .modal-subtitle {
+        font-size: 13.5px;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+    }
+
+    .modal-corner-close-btn {
+        top: 10px;
+        right: 10px;
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
     .modal-header-tag {
         padding-right: 44px;
+        gap: 8px;
+    }
+
+    .modal-media-img {
+        max-height: 190px;
+    }
+
+    .modal-block {
+        padding: 14px 14px;
+    }
+
+    .modal-code-diagram code {
+        font-size: 11px;
+    }
+
+    .modal-footer-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-footer-actions .card-btn {
+        max-width: 100% !important;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* 3. SMALL PHONES (max-width: 480px: iPhone SE, Galaxy S, older Androids) */
+@media (max-width: 480px) {
+    .header {
+        top: 8px;
+        width: calc(100% - 16px);
+        padding: 8px 12px;
+    }
+
+    .logo {
+        font-size: 16px;
+    }
+
+    .hero-title {
+        font-size: clamp(26px, 8vw, 32px);
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+    }
+
+    .tag-label {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+
+    .skills-categories-grid .category-title {
+        font-size: 15px;
+    }
+
+    .skill-pill {
+        font-size: 11.5px;
+        padding: 5px 9px;
+    }
+}
+
+@keyframes mobileMenuDrop {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
