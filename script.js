@@ -773,3 +773,147 @@ if (typeof Lenis !== 'undefined') {
         });
     });
 }
+
+/* ========================================================
+   11. INTERACTIVE AI & ML NEURAL SYNAPSE BACKGROUND CANVAS
+   Dynamic cursor-following spotlight with synaptic node bridges
+======================================================== */
+const neuralCanvas = document.getElementById('neural-canvas');
+
+if (neuralCanvas && window.innerWidth > 640) {
+    const ctx = neuralCanvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    let mouse = {
+        x: -1000,
+        y: -1000,
+        targetX: -1000,
+        targetY: -1000,
+        active: false,
+        radius: 170
+    };
+
+    function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        neuralCanvas.width = width * dpr;
+        neuralCanvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+
+    // Track mouse coordinates
+    window.addEventListener('mousemove', (e) => {
+        mouse.targetX = e.clientX;
+        mouse.targetY = e.clientY;
+        mouse.active = true;
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+        mouse.active = false;
+    });
+
+    // Neural Nodes Configuration
+    const nodeCount = Math.floor(Math.min(width * height / 18000, 52));
+    const nodes = [];
+    const colors = [
+        'rgba(249, 115, 22, 0.7)',  // Amber (Primary)
+        'rgba(56, 189, 248, 0.7)',  // Cyan (Telemetry)
+        'rgba(203, 213, 225, 0.5)'  // Slate white
+    ];
+
+    for (let i = 0; i < nodeCount; i++) {
+        nodes.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.42,
+            vy: (Math.random() - 0.5) * 0.42,
+            radius: Math.random() * 1.5 + 1.2,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            baseAlpha: Math.random() * 0.35 + 0.25
+        });
+    }
+
+    function animateNeuralNet() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Smooth mouse lerp
+        if (mouse.active) {
+            mouse.x += (mouse.targetX - mouse.x) * 0.08;
+            mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+            // 1. Dynamic Cursor Ambient Dual-Tone Glow Spotlight
+            const auraGrad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 320);
+            auraGrad.addColorStop(0, 'rgba(249, 115, 22, 0.09)');
+            auraGrad.addColorStop(0.45, 'rgba(56, 189, 248, 0.045)');
+            auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = auraGrad;
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        // 2. Update and Draw Nodes
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+
+            // Float nodes
+            node.x += node.vx;
+            node.y += node.vy;
+
+            // Screen edge bounce
+            if (node.x < 0 || node.x > width) node.vx *= -1;
+            if (node.y < 0 || node.y > height) node.vy *= -1;
+
+            // Mouse proximity attraction & synaptic activation
+            let distToMouse = 9999;
+            if (mouse.active) {
+                const dx = mouse.x - node.x;
+                const dy = mouse.y - node.y;
+                distToMouse = Math.hypot(dx, dy);
+
+                if (distToMouse < mouse.radius) {
+                    const force = (mouse.radius - distToMouse) / mouse.radius;
+                    node.x += (dx / distToMouse) * force * 0.6;
+                    node.y += (dy / distToMouse) * force * 0.6;
+
+                    // Draw Synaptic Connection Line from Cursor to Node
+                    ctx.beginPath();
+                    ctx.moveTo(mouse.x, mouse.y);
+                    ctx.lineTo(node.x, node.y);
+                    const lineAlpha = (1 - distToMouse / mouse.radius) * 0.35;
+                    ctx.strokeStyle = `rgba(249, 115, 22, ${lineAlpha})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+
+            // Draw Node Particle
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+            ctx.fillStyle = node.color;
+            ctx.fill();
+
+            // Connect neighboring nodes (Neural Network Mesh)
+            for (let j = i + 1; j < nodes.length; j++) {
+                const other = nodes[j];
+                const dNodes = Math.hypot(node.x - other.x, node.y - other.y);
+
+                if (dNodes < 110) {
+                    ctx.beginPath();
+                    ctx.moveTo(node.x, node.y);
+                    ctx.lineTo(other.x, other.y);
+                    const connAlpha = (1 - dNodes / 110) * 0.12;
+                    ctx.strokeStyle = `rgba(148, 163, 184, ${connAlpha})`;
+                    ctx.lineWidth = 0.75;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        requestAnimationFrame(animateNeuralNet);
+    }
+
+    requestAnimationFrame(animateNeuralNet);
+}
