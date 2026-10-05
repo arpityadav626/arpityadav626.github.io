@@ -157,55 +157,185 @@
             </div>
 
             <div class="hero-right">
-                <div class="hero-terminal-card" id="hero-terminal">
-                    <!-- Terminal Top Bar -->
-                    <div class="terminal-header">
-                        <div class="terminal-dots">
-                            <span class="t-dot dot-red"></span>
-                            <span class="t-dot dot-yellow"></span>
-                            <span class="t-dot dot-green"></span>
+                <div class="hero-studio-card" id="hero-studio">
+                    <!-- Studio Top Bar with macOS Window Dots & Status -->
+                    <div class="studio-header">
+                        <div class="studio-dots">
+                            <span class="s-dot dot-red"></span>
+                            <span class="s-dot dot-yellow"></span>
+                            <span class="s-dot dot-green"></span>
                         </div>
-                        <div class="terminal-title">
-                            <i class="fas fa-terminal"></i> arpit@workstation: ~
+                        <div class="studio-title" id="studio-title-bar">
+                            <i class="fas fa-code-branch"></i> arpit.config.ts
                         </div>
-                        <div class="terminal-status">
-                            <span class="t-pulse"></span> zsh
-                        </div>
-                    </div>
-
-                    <!-- Quick Command Chips Bar -->
-                    <div class="terminal-quick-chips">
-                        <button class="t-chip sound-hover" data-cmd="sih --run"><i class="fas fa-play"></i> sih --run</button>
-                        <button class="t-chip sound-hover" data-cmd="kitchen"><i class="fas fa-fire"></i> kitchen</button>
-                        <button class="t-chip sound-hover" data-cmd="skills"><i class="fas fa-code"></i> skills</button>
-                        <button class="t-chip sound-hover" data-cmd="bio"><i class="fas fa-user-astronaut"></i> bio</button>
-                        <button class="t-chip sound-hover" data-cmd="clear"><i class="fas fa-trash-alt"></i> clear</button>
-                    </div>
-
-                    <!-- Terminal Output Window -->
-                    <div class="terminal-body" id="terminal-body">
-                        <div class="term-line banner-line">
-                            <span class="term-accent">Arpit Yadav</span> Terminal v2.6.0 &bull; Architecture &amp; IoT Engine
-                        </div>
-                        <div class="term-line">
-                            <span class="term-comment">// Click chips above or type commands below</span>
-                        </div>
-                        <div class="term-code-block">
-                            <span class="t-kw">const</span> <span class="t-var">developer</span> = {<br>
-                            &nbsp;&nbsp;name: <span class="t-str">"Arpit Yadav"</span>,<br>
-                            &nbsp;&nbsp;mission: <span class="t-str">"0-to-1 Production Engineering"</span>,<br>
-                            &nbsp;&nbsp;hardware: <span class="t-str">"ESP32 &bull; Arduino &bull; Relays"</span>,<br>
-                            &nbsp;&nbsp;software: <span class="t-str">"React &bull; Node &bull; C++ &bull; Python"</span><br>
-                            };
+                        <div class="studio-status">
+                            <span class="s-pulse"></span> Open to Roles
                         </div>
                     </div>
 
-                    <!-- Interactive Command Input Bar -->
-                    <form class="terminal-input-bar" id="terminal-form" autocomplete="off">
-                        <span class="term-prompt">arpit@dev:~$</span>
-                        <input type="text" id="terminal-input" class="term-input" placeholder="type 'help', 'sih', 'projects'..." spellcheck="false" autocomplete="off">
-                        <button type="submit" class="term-send-btn sound-hover" title="Execute command"><i class="fas fa-arrow-turn-down"></i></button>
-                    </form>
+                    <!-- 1-Click Interactive Navigation Tabs -->
+                    <div class="studio-tabs" role="tablist">
+                        <button class="s-tab active sound-hover" data-tab="bio" role="tab" aria-selected="true">
+                            <i class="fas fa-user-astronaut"></i> Bio
+                        </button>
+                        <button class="s-tab sound-hover" data-tab="projects" role="tab" aria-selected="false">
+                            <i class="fas fa-rocket"></i> Projects <span class="tab-badge">4</span>
+                        </button>
+                        <button class="s-tab sound-hover" data-tab="skills" role="tab" aria-selected="false">
+                            <i class="fas fa-layer-group"></i> Stack
+                        </button>
+                        <button class="s-tab sound-hover" data-tab="contact" role="tab" aria-selected="false">
+                            <i class="fas fa-envelope"></i> Connect
+                        </button>
+                    </div>
+
+                    <!-- Studio Body (Zero Scrollbars - Clean & Sized) -->
+                    <div class="studio-body">
+                        <!-- Panel 1: Bio / Overview (Default) -->
+                        <div class="studio-panel active" id="panel-bio">
+                            <div class="code-editor-box">
+                                <div class="code-line"><span class="token-keyword">const</span> <span class="token-var">engineer</span> = {</div>
+                                <div class="code-line indent"><span class="token-prop">name:</span> <span class="token-string">"Arpit Yadav"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">role:</span> <span class="token-string">"Full-Stack &amp; IoT Systems"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">college:</span> <span class="token-string">"AITM Kanpur ('25 - '29)"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">mission:</span> <span class="token-string">"Hardware + Web Synergy"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">status:</span> <span class="token-accent-text">"Open for Internships"</span></div>
+                                <div class="code-line">};</div>
+                            </div>
+                            <div class="panel-actions">
+                                <button class="panel-action-btn primary sound-hover" id="btn-studio-explore">
+                                    <i class="fas fa-arrow-down"></i> Explore Work
+                                </button>
+                                <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="panel-action-btn secondary sound-hover">
+                                    <i class="fas fa-file-pdf"></i> Resume ↗
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: Projects (Instant Access to all 4) -->
+                        <div class="studio-panel" id="panel-projects">
+                            <div class="mini-projects-list">
+                                <div class="mini-project-row sound-hover" data-open-project="smart-helmet">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">01</span>
+                                        <div>
+                                            <span class="mini-p-title">Smart Helmet Telemetry</span>
+                                            <span class="mini-p-sub">SIH 2026 // ESP32 &bull; MQ-3 &bull; Interlock</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                                <div class="mini-project-row sound-hover" data-open-project="chronofact">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">02</span>
+                                        <div>
+                                            <span class="mini-p-title">ChronoFact 2.0 Forensics</span>
+                                            <span class="mini-p-sub">BSA Legal &bull; Merkle Hash &bull; Multi-Agent</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                                <div class="mini-project-row sound-hover" data-open-project="smart-kitchen">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">03</span>
+                                        <div>
+                                            <span class="mini-p-title">SAFETY-FI 96X Platform</span>
+                                            <span class="mini-p-sub">Kitchen IoT &bull; Three.js 3D Cooktop Twin</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                                <div class="mini-project-row sound-hover" data-open-project="portfolio">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">04</span>
+                                        <div>
+                                            <span class="mini-p-title">Developer Portfolio</span>
+                                            <span class="mini-p-sub">Web Audio Engine &bull; Fluid Micro-UI</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Stack (Categorized Interactive Pills) -->
+                        <div class="studio-panel" id="panel-skills">
+                            <div class="studio-skills-wrap">
+                                <div class="studio-skill-group">
+                                    <span class="group-label">Languages</span>
+                                    <div class="group-pills">
+                                        <span class="s-pill sound-hover" data-skill="c">C</span>
+                                        <span class="s-pill sound-hover" data-skill="cpp">C++</span>
+                                        <span class="s-pill sound-hover" data-skill="python">Python</span>
+                                        <span class="s-pill sound-hover" data-skill="js">JavaScript</span>
+                                    </div>
+                                </div>
+                                <div class="studio-skill-group">
+                                    <span class="group-label">Embedded &amp; IoT</span>
+                                    <div class="group-pills">
+                                        <span class="s-pill sound-hover" data-skill="esp32">ESP32</span>
+                                        <span class="s-pill sound-hover" data-skill="arduino">Arduino</span>
+                                        <span class="s-pill sound-hover" data-skill="sensors">Sensors</span>
+                                        <span class="s-pill sound-hover" data-skill="embedded-c">Embedded C</span>
+                                    </div>
+                                </div>
+                                <div class="studio-skill-group">
+                                    <span class="group-label">Web &amp; Backend</span>
+                                    <div class="group-pills">
+                                        <span class="s-pill sound-hover" data-skill="react">React</span>
+                                        <span class="s-pill sound-hover" data-skill="nodejs">Node.js</span>
+                                        <span class="s-pill sound-hover" data-skill="express">Express</span>
+                                        <span class="s-pill sound-hover" data-skill="mongodb">MongoDB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 4: Connect (Direct Actions) -->
+                        <div class="studio-panel" id="panel-contact">
+                            <div class="studio-contact-list">
+                                <div class="studio-contact-item">
+                                    <div class="sc-left">
+                                        <i class="fas fa-envelope"></i>
+                                        <span class="sc-val" id="studio-email-text">arpityadav6794@gmail.com</span>
+                                    </div>
+                                    <button class="sc-copy-btn sound-hover" id="studio-copy-email-btn" title="Copy email address">
+                                        <i class="fas fa-copy"></i> <span id="copy-btn-label">Copy</span>
+                                    </button>
+                                </div>
+                                <a href="https://linkedin.com/in/arpit-yadav-944983309" target="_blank" class="studio-contact-item sound-hover link-item">
+                                    <div class="sc-left">
+                                        <i class="fab fa-linkedin"></i>
+                                        <span class="sc-val">linkedin.com/in/arpit-yadav</span>
+                                    </div>
+                                    <span class="sc-ext"><i class="fas fa-external-link-alt"></i></span>
+                                </a>
+                                <a href="https://github.com/arpityadav626" target="_blank" class="studio-contact-item sound-hover link-item">
+                                    <div class="sc-left">
+                                        <i class="fab fa-github"></i>
+                                        <span class="sc-val">github.com/arpityadav626</span>
+                                    </div>
+                                    <span class="sc-ext"><i class="fas fa-external-link-alt"></i></span>
+                                </a>
+                                <div class="studio-contact-item info-only">
+                                    <div class="sc-left">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span class="sc-val">Kanpur, Uttar Pradesh, India</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Live Telemetry Bar -->
+                    <div class="studio-footer">
+                        <div class="sf-status" id="simulation-status">
+                            <i class="fas fa-shield-alt"></i> <span id="sim-status-text">SIH 2026 Telemetry Ready</span>
+                        </div>
+                        <button class="sf-sim-btn sound-hover" id="btn-run-simulation" title="Run instant safety interlock test">
+                            <i class="fas fa-play"></i> Simulate SIH
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>

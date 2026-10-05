@@ -956,168 +956,136 @@ if (paletteBtn && paletteWrap) {
 }
 
 /* ========================================================
-   13. HERO CODE PLAYGROUND & MICRO-TERMINAL ENGINE
+   13. HERO INTERACTIVE DEVELOPER STUDIO ENGINE
+   Ultra-clean, zero-friction 1-click tabs & SIH live telemetry
 ======================================================== */
-const termBody = document.getElementById('terminal-body');
-const termForm = document.getElementById('terminal-form');
-const termInput = document.getElementById('terminal-input');
-const termChips = document.querySelectorAll('.t-chip');
+const studioTabs = document.querySelectorAll('.s-tab[data-tab]');
+const studioPanels = document.querySelectorAll('.studio-panel');
+const studioTitleBar = document.getElementById('studio-title-bar');
 
-const initialTerminalContent = `
-    <div class="term-line banner-line">
-        <span class="term-accent">Arpit Yadav</span> Terminal v2.6.0 &bull; Architecture &amp; IoT Engine
-    </div>
-    <div class="term-line">
-        <span class="term-comment">// Click chips above or type commands below</span>
-    </div>
-    <div class="term-code-block">
-        <span class="t-kw">const</span> <span class="t-var">developer</span> = {<br>
-        &nbsp;&nbsp;name: <span class="t-str">"Arpit Yadav"</span>,<br>
-        &nbsp;&nbsp;mission: <span class="t-str">"0-to-1 Production Engineering"</span>,<br>
-        &nbsp;&nbsp;hardware: <span class="t-str">"ESP32 &bull; Arduino &bull; Relays"</span>,<br>
-        &nbsp;&nbsp;software: <span class="t-str">"React &bull; Node &bull; C++ &bull; Python"</span><br>
-        };
-    </div>
-`;
+const tabTitles = {
+    bio: '<i class="fas fa-code-branch"></i> arpit.config.ts',
+    projects: '<i class="fas fa-rocket"></i> featured-work.json',
+    skills: '<i class="fas fa-layer-group"></i> tech-stack.yaml',
+    contact: '<i class="fas fa-terminal"></i> connect.sh'
+};
 
-function writeTerminalLine(html) {
-    if (!termBody) return;
-    const div = document.createElement('div');
-    div.className = 'term-line';
-    div.innerHTML = html;
-    termBody.appendChild(div);
-    termBody.scrollTop = termBody.scrollHeight;
+if (studioTabs.length > 0) {
+    studioTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+            if (!targetTab) return;
+
+            studioTabs.forEach(t => {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            studioPanels.forEach(p => p.classList.remove('active'));
+
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+
+            const activePanel = document.getElementById(`panel-${targetTab}`);
+            if (activePanel) activePanel.classList.add('active');
+
+            if (studioTitleBar && tabTitles[targetTab]) {
+                studioTitleBar.innerHTML = tabTitles[targetTab];
+            }
+
+            playButtonClick();
+        });
+    });
 }
 
-function runTerminalCommand(cmdRaw) {
-    const cmd = (cmdRaw || '').trim().toLowerCase();
-    if (!cmd) return;
-
-    writeTerminalLine(`<span class="term-prompt">arpit@dev:~$</span> <span class="term-cyan">${cmd}</span>`);
-
-    if (cmd === 'clear' || cmd === 'cls') {
-        if (termBody) termBody.innerHTML = initialTerminalContent;
-        playButtonClick();
-        return;
-    }
-
-    if (cmd === 'help') {
-        writeTerminalLine(`
-            <span class="term-accent">Available Commands:</span><br>
-            &bull; <span class="term-cyan">sih</span> &mdash; Run Smart Helmet interlock telemetry<br>
-            &bull; <span class="term-cyan">kitchen</span> &mdash; Run Smart Kitchen hazard mitigation loop<br>
-            &bull; <span class="term-cyan">chronofact</span> &mdash; Verify Section 63(4) BSA cryptographic engine<br>
-            &bull; <span class="term-cyan">projects</span> &mdash; Inspect and scroll to featured projects<br>
-            &bull; <span class="term-cyan">skills</span> &mdash; Display technical stack competencies<br>
-            &bull; <span class="term-cyan">bio</span> &mdash; Engineering education and background<br>
-            &bull; <span class="term-cyan">contact</span> &mdash; Display direct communication endpoints<br>
-            &bull; <span class="term-cyan">theme</span> &mdash; Cycle ambient color palette<br>
-            &bull; <span class="term-cyan">resume</span> &mdash; Open verified technical resume<br>
-            &bull; <span class="term-cyan">clear</span> &mdash; Reset terminal screen
-        `);
-    } else if (cmd.includes('sih')) {
-        writeTerminalLine(`
-            <span class="term-accent">[SIH 2026 // SMART RIDER TELEMETRY]</span><br>
-            <span class="term-success">[OK]</span> Connecting to ESP32 Helmet Unit (MAC: 4A:2F:90:E1)...<br>
-            <span class="term-success">[OK]</span> MQ-3 Alcohol Sensor: 0.02 mg/L (BAC clean - PASS)<br>
-            <span class="term-success">[OK]</span> FSR Interlock: Helmet Buckled (100% CONTACT)<br>
-            <span class="term-accent">[RELAY]</span> Local Ignition Interlock: UNLOCKED (Start ENABLED)<br>
-            <span class="term-comment">&rarr; SIH 2026 Problem SIH26220 Verified at Internal Hackathon.</span>
-        `);
-    } else if (cmd.includes('kitchen')) {
-        writeTerminalLine(`
-            <span class="term-accent">[SAFETY-FI 96X // INDUSTRIAL KITCHEN IOT]</span><br>
-            <span class="term-success">[OK]</span> Sampling ATmega328P ADC registers @ 16 MHz...<br>
-            <span class="term-success">[OK]</span> MQ-2 Hydrocarbon Level: 142 / 1024 (Within Safe Baseline)<br>
-            <span class="term-success">[OK]</span> Optical IR Flame Sensor: CLEAR (No Thermal Breach)<br>
-            <span class="term-cyan">[TWIN]</span> Three.js 3D Cooktop synced at 60 FPS.<br>
-            <span class="term-comment">&rarr; Closed-loop emergency solenoids fully armed.</span>
-        `);
-    } else if (cmd.includes('chrono')) {
-        writeTerminalLine(`
-            <span class="term-accent">[CHRONOFACT 2.0 // BSA &sect;63(4) FORENSICS]</span><br>
-            <span class="term-success">[NIST FIPS 180-4]</span> SHA-256: e3b0c44298fc1c149afbf4c8996fb92427...<br>
-            <span class="term-success">[NIST FIPS 202]</span> SHA3-256: a7ffc6f8bf1ed76651c14756a061d662f5...<br>
-            <span class="term-cyan">[VERIFIED]</span> Dual-hash Merkle Chain: UNTAMPERED.<br>
-            <span class="term-comment">&rarr; Mechanical byte-level citation grounding: 100%.</span>
-        `);
-    } else if (cmd.includes('project')) {
-        writeTerminalLine(`
-            <span class="term-accent">[FEATURED PRODUCTION PROJECTS]</span><br>
-            1. Smart Helmet (SIH 2026 Problem SIH26220)<br>
-            2. ChronoFact 2.0 (BSA Forensic Investigation Workbench)<br>
-            3. SAFETY-FI 96X (Smart Kitchen Safety Platform)<br>
-            4. Developer Portfolio (Semantic Web & Web Audio API)<br>
-            <span class="term-comment">&rarr; Gliding to Projects section...</span>
-        `);
+// 1-Click Explore Work button
+const studioExploreBtn = document.getElementById('btn-studio-explore');
+if (studioExploreBtn) {
+    studioExploreBtn.addEventListener('click', () => {
         const pSec = document.getElementById('projects');
         if (pSec && typeof lenis !== 'undefined' && lenis) {
-            setTimeout(() => lenis.scrollTo(pSec, { offset: -30 }), 400);
+            lenis.scrollTo(pSec, { offset: -30 });
         }
-    } else if (cmd.includes('skill')) {
-        writeTerminalLine(`
-            <span class="term-accent">[TECHNICAL COMPETENCIES]</span><br>
-            &bull; Languages: C, C++, Python, JavaScript<br>
-            &bull; Embedded: ESP32, Arduino Uno, Sensors, Relays, C++<br>
-            &bull; Frontend: React, Modern CSS3, HTML5, Tailwind CSS<br>
-            &bull; Backend: Node.js, Express, REST APIs, MongoDB<br>
-            &bull; Tooling: Git, GitHub, VS Code, Postman
-        `);
-    } else if (cmd.includes('bio') || cmd.includes('about')) {
-        writeTerminalLine(`
-            <span class="term-accent">Arpit Yadav</span> &mdash; Full Stack Developer &amp; IoT Enthusiast<br>
-            &bull; B.Tech Computer Science &amp; Engineering ('25 - '29)<br>
-            &bull; Axis Institute of Technology and Management, Kanpur<br>
-            &bull; Mission: Architecting zero-to-one scalable web applications &amp; connected hardware prototypes.
-        `);
-    } else if (cmd.includes('contact')) {
-        writeTerminalLine(`
-            <span class="term-accent">[CONTACT CHANNELS]</span><br>
-            Email: <span class="term-cyan">arpityadav6794@gmail.com</span><br>
-            LinkedIn: linkedin.com/in/arpit-yadav-944983309<br>
-            GitHub: github.com/arpityadav626<br>
-            Location: Kanpur, Uttar Pradesh, India
-        `);
-    } else if (cmd.includes('resume')) {
-        writeTerminalLine(`<span class="term-success">Opening resume PDF in new tab...</span>`);
-        window.open('assets/Arpit_Yadav_Resume.pdf', '_blank');
-    } else if (cmd.includes('theme')) {
-        const themes = ['amber', 'cyan', 'emerald', 'violet'];
-        const current = document.body.getAttribute('data-theme') || 'amber';
-        const next = themes[(themes.indexOf(current) + 1) % themes.length];
-        if (typeof setAccentTheme === 'function') {
-            setAccentTheme(next);
-        }
-        writeTerminalLine(`<span class="term-accent">[THEME]</span> Switched accent theme to: <span class="term-cyan">${next.toUpperCase()}</span>`);
-    } else {
-        writeTerminalLine(`
-            <span class="term-error">Command not recognized: '${cmd}'</span><br>
-            <span class="term-comment">Type <span class="term-cyan">'help'</span> or click the action chips above.</span>
-        `);
-    }
-
-    playButtonClick();
-}
-
-if (termForm && termInput) {
-    termInput.addEventListener('keydown', () => {
-        playKeyTick();
-    });
-
-    termForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const val = termInput.value;
-        termInput.value = '';
-        runTerminalCommand(val);
+        playButtonClick();
     });
 }
 
-termChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-        const cmd = chip.getAttribute('data-cmd');
-        if (cmd) runTerminalCommand(cmd);
+// 1-Click Direct Project Modal Launch from Hero Card
+document.querySelectorAll('.mini-project-row[data-open-project]').forEach(row => {
+    row.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const projectId = row.getAttribute('data-open-project');
+        if (projectId && typeof openProjectModal === 'function') {
+            openProjectModal(projectId);
+        }
     });
 });
+
+// Interactive Skill Pills inside Studio Card
+document.querySelectorAll('.s-pill[data-skill]').forEach(pill => {
+    pill.addEventListener('click', () => {
+        const skill = pill.getAttribute('data-skill');
+        if (skill && typeof highlightProjectsBySkill === 'function') {
+            highlightProjectsBySkill(skill, true);
+        }
+    });
+});
+
+// 1-Click Copy Email button
+const studioCopyBtn = document.getElementById('studio-copy-email-btn');
+const studioCopyLabel = document.getElementById('copy-btn-label');
+if (studioCopyBtn) {
+    studioCopyBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await navigator.clipboard.writeText('arpityadav6794@gmail.com');
+            if (studioCopyLabel) studioCopyLabel.textContent = 'Copied! ✓';
+            studioCopyBtn.style.background = 'rgba(16, 185, 129, 0.2)';
+            studioCopyBtn.style.borderColor = '#10b981';
+            studioCopyBtn.style.color = '#10b981';
+            playKeyTick();
+            setTimeout(() => {
+                if (studioCopyLabel) studioCopyLabel.textContent = 'Copy';
+                studioCopyBtn.style.background = '';
+                studioCopyBtn.style.borderColor = '';
+                studioCopyBtn.style.color = '';
+            }, 2200);
+        } catch (err) {
+            console.error('Copy failed', err);
+        }
+    });
+}
+
+// Interactive Live SIH Telemetry Diagnostic Simulator
+const btnSimulate = document.getElementById('btn-run-simulation');
+const simStatusText = document.getElementById('sim-status-text');
+let simRunning = false;
+
+if (btnSimulate && simStatusText) {
+    btnSimulate.addEventListener('click', () => {
+        if (simRunning) return;
+        simRunning = true;
+        btnSimulate.disabled = true;
+        playButtonClick();
+
+        simStatusText.innerHTML = '<span style="color:#10b981;">[1/3] Interlock: Helmet Buckled ✓</span>';
+
+        setTimeout(() => {
+            playKeyTick();
+            simStatusText.innerHTML = '<span style="color:#10b981;">[2/3] MQ-3: BAC 0.00% Clean ✓</span>';
+        }, 900);
+
+        setTimeout(() => {
+            playModalSound(true);
+            simStatusText.innerHTML = '<span style="color:var(--accent-primary); font-weight:700;">[3/3] Ignition UNLOCKED • Safe to Ride! 🚀</span>';
+        }, 1800);
+
+        setTimeout(() => {
+            simStatusText.innerHTML = 'SIH 2026 Telemetry Ready';
+            btnSimulate.disabled = false;
+            simRunning = false;
+        }, 4500);
+    });
+}
 
 /* ========================================================
    14. TECH STACK ↔ PROJECT INTERACTIVE HIGHLIGHTING ENGINE
