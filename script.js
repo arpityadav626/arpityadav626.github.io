@@ -235,8 +235,8 @@ function bindSounds() {
         link.addEventListener('click', playNavClick);
     });
 
-    // 4. Skills, Socials & New Tech Badges
-    document.querySelectorAll('.skill-pill, .social-link, .git-commit-node, .curved-badge-wrapper, .cmd-item, .sound-hover:not(.nav-link):not(.btn):not(.card-btn)').forEach(item => {
+    // 4. Skills & Socials
+    document.querySelectorAll('.skill-pill, .social-link, .sound-hover:not(.nav-link):not(.btn):not(.card-btn)').forEach(item => {
         item.addEventListener('mouseenter', playButtonHover);
         item.addEventListener('click', playButtonClick);
     });
@@ -244,93 +244,22 @@ function bindSounds() {
 bindSounds();
 
 /* ========================================================
-   2. LENIS BUTTERY SMOOTH SCROLL (from noth.in)
-======================================================== */
-let lenis = null;
-try {
-    if (typeof Lenis !== 'undefined') {
-        lenis = new Lenis({
-            duration: 1.25,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
-            infinite: false,
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
-        // Intercept anchor clicks for buttery smooth target scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href');
-                if (targetId && targetId !== '#') {
-                    const targetEl = document.querySelector(targetId);
-                    if (targetEl) {
-                        e.preventDefault();
-                        lenis.scrollTo(targetEl, { offset: -70, duration: 1.2 });
-                    }
-                }
-            });
-        });
-    }
-} catch (err) {
-    console.warn('Lenis smooth scroll fallback:', err);
-}
-
-/* ========================================================
-   3. ARPIT-OS TERMINAL BOOT PRELOADER RUNNER (eddy + noth.in)
+   2. OPENING INTRO PRELOADER RUNNER
 ======================================================== */
 const preloader = document.getElementById('preloader');
 const preloaderCount = document.getElementById('preloader-count');
 const preloaderProgress = document.getElementById('preloader-progress');
-const preloaderStatus = document.getElementById('preloader-status');
-const logLines = document.querySelectorAll('.log-line');
 
 if (preloader) {
     let progress = 0;
-    let logIndex = 0;
-
     const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 7) + 4;
-        
-        // Sequentially reveal terminal boot lines
-        if (progress > 20 && logIndex === 0 && logLines[0]) {
-            logLines[0].classList.add('visible');
-            playButtonHover();
-            logIndex = 1;
-        } else if (progress > 45 && logIndex === 1 && logLines[1]) {
-            logLines[1].classList.add('visible');
-            playButtonHover();
-            logIndex = 2;
-        } else if (progress > 70 && logIndex === 2 && logLines[2]) {
-            logLines[2].classList.add('visible');
-            playButtonHover();
-            logIndex = 3;
-        } else if (progress > 90 && logIndex === 3 && logLines[3]) {
-            logLines[3].classList.add('visible');
-            playButtonHover();
-            logIndex = 4;
-        }
-
+        progress += Math.floor(Math.random() * 8) + 5;
         if (progress >= 100) {
             progress = 100;
             clearInterval(interval);
-            
-            // Format as three digit kinetic counter (e.g. 100%)
             if (preloaderCount) preloaderCount.textContent = '100%';
             if (preloaderProgress) preloaderProgress.style.width = '100%';
-            if (preloaderStatus) preloaderStatus.textContent = 'ARPIT-OS ONLINE // READY';
             
-            // Make all logs fully visible
-            logLines.forEach(l => l.classList.add('visible'));
-
             setTimeout(() => {
                 playCozyChime();
                 preloader.classList.add('preloader-hidden');
@@ -338,14 +267,12 @@ if (preloader) {
                 // Cascading reveal for Hero Section
                 const hero = document.getElementById('home');
                 if (hero) hero.classList.add('active');
-            }, 350);
+            }, 300);
         } else {
-            // Three digit kinetic formatting: 004%, 042%, etc.
-            const formatted = String(progress).padStart(3, '0');
-            if (preloaderCount) preloaderCount.textContent = `${formatted}%`;
+            if (preloaderCount) preloaderCount.textContent = `${progress}%`;
             if (preloaderProgress) preloaderProgress.style.width = `${progress}%`;
         }
-    }, 40);
+    }, 35);
 }
 
 /* ========================================================
@@ -510,174 +437,3 @@ if (contactForm) {
         }
     });
 }
-
-/* ========================================================
-   8. DEVELOPER COMMAND PALETTE ENGINE (Ctrl+K / ⌘K)
-   (from eddy-naboulet.dev)
-======================================================== */
-const cmdPalette = document.getElementById('cmd-palette');
-const cmdBackdrop = document.getElementById('cmd-backdrop');
-const cmdInput = document.getElementById('cmd-input');
-const cmdList = document.getElementById('cmd-list');
-const cmdCloseBtn = document.getElementById('cmd-close-btn');
-const cmdTriggerBtn = document.getElementById('cmd-btn');
-const toastNotify = document.getElementById('toast-notify');
-
-function showToast(msg) {
-    if (!toastNotify) return;
-    toastNotify.textContent = msg;
-    toastNotify.classList.add('show');
-    setTimeout(() => {
-        toastNotify.classList.remove('show');
-    }, 2800);
-}
-
-function openCommandPalette() {
-    if (!cmdPalette) return;
-    cmdPalette.classList.add('open');
-    cmdPalette.setAttribute('aria-hidden', 'false');
-    playButtonClick();
-    if (cmdInput) {
-        cmdInput.value = '';
-        cmdInput.focus();
-        filterCommands('');
-    }
-}
-
-function closeCommandPalette() {
-    if (!cmdPalette) return;
-    cmdPalette.classList.remove('open');
-    cmdPalette.setAttribute('aria-hidden', 'true');
-    playButtonHover();
-}
-
-if (cmdTriggerBtn) {
-    cmdTriggerBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openCommandPalette();
-    });
-}
-
-if (cmdBackdrop) {
-    cmdBackdrop.addEventListener('click', closeCommandPalette);
-}
-
-if (cmdCloseBtn) {
-    cmdCloseBtn.addEventListener('click', closeCommandPalette);
-}
-
-// Global Keyboard Shortcut: Ctrl + K or Cmd + K & Esc
-window.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        if (cmdPalette && cmdPalette.classList.contains('open')) {
-            closeCommandPalette();
-        } else {
-            openCommandPalette();
-        }
-    } else if (e.key === 'Escape' && cmdPalette && cmdPalette.classList.contains('open')) {
-        closeCommandPalette();
-    }
-});
-
-// Realtime command filter
-function filterCommands(query) {
-    const q = query.toLowerCase().trim();
-    const items = document.querySelectorAll('.cmd-item');
-
-    items.forEach(item => {
-        const title = item.querySelector('.cmd-item-title').textContent.toLowerCase();
-        const shortcut = (item.querySelector('.cmd-item-shortcut')?.textContent || '').toLowerCase();
-        if (!q || title.includes(q) || shortcut.includes(q)) {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-
-    const visibleItems = document.querySelectorAll('.cmd-item:not([style*="display: none"])');
-    items.forEach(i => i.classList.remove('selected'));
-    if (visibleItems.length > 0) {
-        visibleItems[0].classList.add('selected');
-    }
-}
-
-if (cmdInput) {
-    cmdInput.addEventListener('input', (e) => {
-        filterCommands(e.target.value);
-    });
-
-    // Keyboard navigation (Arrow keys + Enter)
-    cmdInput.addEventListener('keydown', (e) => {
-        const visibleItems = Array.from(document.querySelectorAll('.cmd-item:not([style*="display: none"])'));
-        if (!visibleItems.length) return;
-
-        let currentIndex = visibleItems.findIndex(i => i.classList.contains('selected'));
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            playButtonHover();
-            if (currentIndex >= 0) visibleItems[currentIndex].classList.remove('selected');
-            currentIndex = (currentIndex + 1) % visibleItems.length;
-            visibleItems[currentIndex].classList.add('selected');
-            visibleItems[currentIndex].scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            playButtonHover();
-            if (currentIndex >= 0) visibleItems[currentIndex].classList.remove('selected');
-            currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
-            visibleItems[currentIndex].classList.add('selected');
-            visibleItems[currentIndex].scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (currentIndex >= 0) {
-                executeCommand(visibleItems[currentIndex]);
-            }
-        }
-    });
-}
-
-// Action executor
-function executeCommand(item) {
-    const action = item.getAttribute('data-action');
-    const target = item.getAttribute('data-target');
-    closeCommandPalette();
-    playButtonClick();
-
-    if (action === 'goto' && target) {
-        const targetEl = document.querySelector(target);
-        if (targetEl) {
-            if (lenis) {
-                lenis.scrollTo(targetEl, { offset: -70, duration: 1.2 });
-            } else {
-                targetEl.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    } else if (action === 'resume') {
-        window.open('assets/Arpit_Yadav_Resume.pdf', '_blank');
-        showToast('📄 Opening 1-Page Vector Resume...');
-    } else if (action === 'toggle-sound') {
-        soundEnabled = !soundEnabled;
-        const soundIcon = document.getElementById('sound-icon');
-        const soundText = document.getElementById('sound-text');
-        if (soundIcon && soundText) {
-            soundIcon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
-            soundText.textContent = soundEnabled ? 'COZY SFX' : 'SFX MUTED';
-        }
-        showToast(soundEnabled ? '🔊 Sound Engine: Enabled' : '🔇 Sound Engine: Muted');
-    } else if (action === 'copy-link') {
-        navigator.clipboard.writeText('https://arpit-portfolio-2026.web.app').then(() => {
-            showToast('📋 Copied portfolio link to clipboard!');
-        }).catch(() => {
-            showToast('https://arpit-portfolio-2026.web.app');
-        });
-    }
-}
-
-document.querySelectorAll('.cmd-item').forEach(item => {
-    item.addEventListener('click', () => executeCommand(item));
-    item.addEventListener('mouseenter', () => {
-        document.querySelectorAll('.cmd-item').forEach(i => i.classList.remove('selected'));
-        item.classList.add('selected');
-    });
-});
