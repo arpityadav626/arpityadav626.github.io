@@ -87,6 +87,35 @@
         </nav>
 
         <div class="header-right">
+            <!-- Ambient Theme Accent Switcher -->
+            <div class="theme-palette-wrap" id="theme-palette-wrap">
+                <button class="palette-toggle-btn sound-hover" id="palette-btn" title="Customize Theme Glow" aria-label="Customize Theme Glow">
+                    <span class="palette-current-dot" id="palette-current-dot"></span>
+                    <i class="fas fa-palette"></i>
+                </button>
+                <div class="palette-dropdown" id="palette-dropdown">
+                    <span class="palette-label">Theme Accent</span>
+                    <div class="palette-swatches">
+                        <button class="palette-swatch active sound-hover" data-theme="amber" title="Amber Orange">
+                            <span class="swatch-circle" style="background: #f97316; box-shadow: 0 0 8px #f97316;"></span>
+                            <span class="swatch-name">Amber</span>
+                        </button>
+                        <button class="palette-swatch sound-hover" data-theme="cyan" title="Electric Cyan">
+                            <span class="swatch-circle" style="background: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></span>
+                            <span class="swatch-name">Cyan</span>
+                        </button>
+                        <button class="palette-swatch sound-hover" data-theme="emerald" title="Matrix Emerald">
+                            <span class="swatch-circle" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                            <span class="swatch-name">Emerald</span>
+                        </button>
+                        <button class="palette-swatch sound-hover" data-theme="violet" title="Linear Violet">
+                            <span class="swatch-circle" style="background: #a855f7; box-shadow: 0 0 8px #a855f7;"></span>
+                            <span class="swatch-name">Violet</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Cozy UI Sound Toggle Button -->
             <button id="sound-btn" class="sound-toggle-btn sound-hover" title="Toggle UI Sound">
                 <i class="fas fa-volume-up" id="sound-icon"></i>
@@ -264,8 +293,8 @@
         </section>
 
         <!-- Project Details Modal Lightbox (Same Dark Theme & Aesthetic) -->
-        <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details">
-            <div class="project-modal-card">
+        <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details" data-lenis-prevent="true">
+            <div class="project-modal-card" data-lenis-prevent="true">
                 <button class="modal-close-btn" id="modal-close-btn" aria-label="Close details modal">&times;</button>
                 <div id="modal-dynamic-content" class="modal-body-content">
                     <!-- Populated dynamically -->

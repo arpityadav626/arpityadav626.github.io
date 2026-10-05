@@ -691,6 +691,8 @@ function renderProjectDetails(projectId) {
     });
 }
 
+const projectModalCard = document.querySelector('.project-modal-card');
+
 function openProjectModal(projectId) {
     if (!projectModal) return;
     renderProjectDetails(projectId);
@@ -698,6 +700,7 @@ function openProjectModal(projectId) {
     projectModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
+    if (projectModalCard) projectModalCard.scrollTop = 0;
     playModalSound(true);
 }
 
@@ -708,6 +711,13 @@ function closeProjectModal() {
     document.body.style.overflow = '';
     if (lenis) lenis.start();
     playModalSound(false);
+}
+
+// Ensure fluid wheel scrolling inside modal card by preventing Lenis cancellation
+if (projectModalCard) {
+    projectModalCard.addEventListener('wheel', (e) => {
+        e.stopPropagation();
+    }, { passive: true });
 }
 
 // Bind clicks on cards and Details buttons
@@ -864,3 +874,65 @@ if (typeof Lenis !== 'undefined') {
         spotlight.style.opacity = '1';
     });
 })();
+
+/* ========================================================
+   12. AMBIENT THEME PALETTE CUSTOMIZER
+======================================================== */
+const paletteWrap = document.getElementById('theme-palette-wrap');
+const paletteBtn = document.getElementById('palette-btn');
+const paletteCurrentDot = document.getElementById('palette-current-dot');
+const paletteSwatches = document.querySelectorAll('.palette-swatch');
+
+const themeColors = {
+    'amber': '#f97316',
+    'cyan': '#38bdf8',
+    'emerald': '#10b981',
+    'violet': '#a855f7'
+};
+
+function setAccentTheme(themeName) {
+    if (!themeColors[themeName]) themeName = 'amber';
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('arpit-accent-theme', themeName);
+
+    if (paletteCurrentDot) {
+        paletteCurrentDot.style.background = themeColors[themeName];
+        paletteCurrentDot.style.boxShadow = `0 0 8px ${themeColors[themeName]}`;
+    }
+
+    paletteSwatches.forEach(swatch => {
+        if (swatch.getAttribute('data-theme') === themeName) {
+            swatch.classList.add('active');
+        } else {
+            swatch.classList.remove('active');
+        }
+    });
+}
+
+// Restore saved theme on initial load
+const savedTheme = localStorage.getItem('arpit-accent-theme') || 'amber';
+setAccentTheme(savedTheme);
+
+if (paletteBtn && paletteWrap) {
+    paletteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        paletteWrap.classList.toggle('open');
+        playButtonHover();
+    });
+
+    paletteSwatches.forEach(swatch => {
+        swatch.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const theme = swatch.getAttribute('data-theme');
+            setAccentTheme(theme);
+            paletteWrap.classList.remove('open');
+            playButtonClick();
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (paletteWrap && !paletteWrap.contains(e.target)) {
+            paletteWrap.classList.remove('open');
+        }
+    });
+}
