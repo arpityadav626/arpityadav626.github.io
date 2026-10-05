@@ -26,7 +26,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scroll-behavior: smooth;
     cursor: default;
 }
 
@@ -218,6 +217,13 @@ body::before {
     align-items: center;
     z-index: 1000;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.header.header-hidden {
+    transform: translateY(-90px);
+    opacity: 0;
+    pointer-events: none;
 }
 
 .logo {

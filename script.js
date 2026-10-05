@@ -664,6 +664,7 @@ function openProjectModal(projectId) {
     projectModal.classList.add('active');
     projectModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    if (lenis) lenis.stop();
     playButtonClick();
 }
 
@@ -672,6 +673,7 @@ function closeProjectModal() {
     projectModal.classList.remove('active');
     projectModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (lenis) lenis.start();
     playButtonClick();
 }
 
@@ -707,5 +709,67 @@ if (projectModal) {
         if (e.key === 'Escape' && projectModal.classList.contains('active')) {
             closeProjectModal();
         }
+    });
+}
+
+/* ========================================================
+   9. SMART AUTO-HIDE HEADER ON SCROLL
+   Hides on scroll down to clear view, reveals on scroll up
+======================================================== */
+let lastScrollY = window.scrollY;
+const header = document.querySelector('.header');
+
+window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+    if (header) {
+        if (currentScrollY > 120) {
+            if (currentScrollY > lastScrollY + 8) {
+                // Scrolling down -> hide navbar
+                header.classList.add('header-hidden');
+            } else if (currentScrollY < lastScrollY - 8) {
+                // Scrolling up -> reveal navbar
+                header.classList.remove('header-hidden');
+            }
+        } else {
+            // Near top -> always visible
+            header.classList.remove('header-hidden');
+        }
+    }
+    lastScrollY = currentScrollY;
+}, { passive: true });
+
+/* ========================================================
+   10. NEXT-LEVEL INERTIA SMOOTH SCROLL (LENIS ENGINE)
+   Silky, physics-based glide with zero jitter
+======================================================== */
+let lenis = null;
+if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({
+        duration: 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.5,
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Smooth anchor link gliding
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId !== '#') {
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) {
+                    e.preventDefault();
+                    lenis.scrollTo(targetEl, { offset: -30 });
+                }
+            }
+        });
     });
 }
