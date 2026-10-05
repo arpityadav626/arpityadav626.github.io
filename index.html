@@ -161,7 +161,7 @@
             <div class="projects-grid">
                 
                 <!-- Project 01: Smart Helmet (SIH Project) -->
-                <div class="project-card tilt-card card-sih" data-tilt>
+                <div class="project-card tilt-card card-sih" data-tilt data-project="smart-helmet">
                     <div class="card-top">
                         <span class="project-num">01</span>
                         <span class="badge sih-badge"><i class="fas fa-trophy"></i> SIH Project</span>
@@ -178,14 +178,17 @@
                         <span>GSM/GPS</span>
                     </div>
                     <div class="card-links">
-                        <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn primary sound-hover ripple-btn">
-                            View on LinkedIn <i class="fab fa-linkedin-in"></i>
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-helmet">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            LinkedIn <i class="fab fa-linkedin-in"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Project 02: ChronoFact -->
-                <div class="project-card tilt-card card-chronofact" data-tilt>
+                <div class="project-card tilt-card card-chronofact" data-tilt data-project="chronofact">
                     <div class="card-top">
                         <span class="project-num">02</span>
                         <span class="badge live-badge"><i class="fas fa-circle"></i> Live Platform</span>
@@ -201,14 +204,17 @@
                         <span>Modern CSS</span>
                     </div>
                     <div class="card-links">
-                        <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn primary sound-hover ripple-btn">
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="chronofact">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn outline sound-hover ripple-btn">
                             Live Site <i class="fas fa-external-link-alt"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Project 03: Smart Kitchen System -->
-                <div class="project-card tilt-card card-kitchen" data-tilt>
+                <div class="project-card tilt-card card-kitchen" data-tilt data-project="smart-kitchen">
                     <div class="card-top">
                         <span class="project-num">03</span>
                         <span class="badge progress-badge"><i class="fas fa-sync-alt fa-spin"></i> Active Development</span>
@@ -224,17 +230,17 @@
                         <span>Web Dashboard</span>
                     </div>
                     <div class="card-links">
-                        <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn primary sound-hover ripple-btn">
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-kitchen">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn outline sound-hover ripple-btn">
                             Live Demo <i class="fas fa-external-link-alt"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                            LinkedIn <i class="fab fa-linkedin-in"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Project 04: Developer Portfolio (Self) -->
-                <div class="project-card tilt-card card-portfolio" data-tilt>
+                <div class="project-card tilt-card card-portfolio" data-tilt data-project="portfolio">
                     <div class="card-top">
                         <span class="project-num">04</span>
                         <span class="badge live-badge"><i class="fas fa-star"></i> Personal Architecture</span>
@@ -251,14 +257,27 @@
                         <span>GitHub Pages</span>
                     </div>
                     <div class="card-links">
-                        <a href="#home" class="card-btn primary sound-hover ripple-btn">
-                            Current Page <i class="fas fa-arrow-up"></i>
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="portfolio">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://github.com/arpityadav626/arpityadav626.github.io" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            GitHub <i class="fab fa-github"></i>
                         </a>
                     </div>
                 </div>
 
             </div>
         </section>
+
+        <!-- Project Details Modal Lightbox (Same Dark Theme & Aesthetic) -->
+        <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details">
+            <div class="project-modal-card">
+                <button class="modal-close-btn" id="modal-close-btn" aria-label="Close details modal">&times;</button>
+                <div id="modal-dynamic-content" class="modal-body-content">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
 
         <!-- 4. Technical Skills Section -->
         <section class="section skills-section reveal" id="skills">
