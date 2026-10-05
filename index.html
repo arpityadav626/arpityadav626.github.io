@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arpit Yadav — Full Stack Developer & IoT Product Builder</title>
+    <title>Arpit Yadav — Full Stack Developer & IoT Enthusiast</title>
     
     <!-- Google SEO & Metadata -->
-    <meta name="description" content="Portfolio of Arpit Yadav — B.Tech Computer Science student building connected products, IoT hardware prototypes (Smart Rider, SAFETY-FI 96X), and full-stack forensic systems (ChronoFact 2.0).">
-    <meta name="keywords" content="Arpit Yadav, Arpit Yadav Developer, Arpit Yadav Kanpur, IoT Product Builder, Full Stack Developer, Smart Rider SIH, ChronoFact, SAFETY-FI 96X">
+    <meta name="description" content="Official developer portfolio of Arpit Yadav — Full Stack Developer & IoT Enthusiast based in Kanpur, India. Prototyping smart hardware systems and modern web applications.">
+    <meta name="keywords" content="Arpit Yadav, Arpit Yadav Developer, Arpit Yadav Kanpur, Full Stack Developer, IoT Enthusiast, Smart Helmet SIH, ChronoFact, Smart Kitchen">
     <meta name="author" content="Arpit Yadav">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://arpit-portfolio-2026.web.app/">
+    <link rel="canonical" href="https://arpityadav626.github.io/">
 
     <!-- Open Graph / LinkedIn & Social Preview -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://arpit-portfolio-2026.web.app/">
-    <meta property="og:title" content="Arpit Yadav — Full Stack Developer & IoT Product Builder">
-    <meta property="og:description" content="Explore physical hardware prototypes, digital forensic workbenches, and full-stack systems by Arpit Yadav.">
-    <meta property="og:image" content="https://arpit-portfolio-2026.web.app/assets/profile.jpg">
+    <meta property="og:url" content="https://arpityadav626.github.io/">
+    <meta property="og:title" content="Arpit Yadav — Full Stack Developer & IoT Enthusiast">
+    <meta property="og:description" content="Explore live projects, IoT hardware innovations (SIH Smart Helmet), and full-stack architecture by Arpit Yadav.">
+    <meta property="og:image" content="https://arpityadav626.github.io/assets/profile.jpg">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Arpit Yadav — Full Stack Developer & IoT Product Builder">
-    <meta name="twitter:description" content="Explore physical hardware prototypes, digital forensic workbenches, and full-stack systems by Arpit Yadav.">
-    <meta name="twitter:image" content="https://arpit-portfolio-2026.web.app/assets/profile.jpg">
+    <meta name="twitter:title" content="Arpit Yadav — Full Stack Developer & IoT Enthusiast">
+    <meta name="twitter:description" content="Explore live projects, IoT hardware innovations, and full-stack architecture by Arpit Yadav.">
+    <meta name="twitter:image" content="https://arpityadav626.github.io/assets/profile.jpg">
 
     <!-- Google Structured Data (JSON-LD) for Search Rich Results -->
     <script type="application/ld+json">
@@ -31,27 +31,18 @@
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Arpit Yadav",
-      "url": "https://arpit-portfolio-2026.web.app/",
-      "image": "https://arpit-portfolio-2026.web.app/assets/profile.jpg",
-      "jobTitle": "Full Stack Developer & IoT Product Builder",
-      "alumniOf": {
-        "@type": "CollegeOrUniversity",
-        "name": "Axis Institute of Technology and Management, Kanpur"
+      "url": "https://arpityadav626.github.io/",
+      "image": "https://arpityadav626.github.io/assets/profile.jpg",
+      "jobTitle": "Full Stack Developer & IoT Enthusiast",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Axis Institute of Technology and Management"
       },
       "sameAs": [
         "https://www.linkedin.com/in/arpit-yadav-944983309/",
         "https://github.com/arpityadav626"
       ],
-      "knowsAbout": [
-        "Internet of Things (IoT)",
-        "Embedded C++",
-        "Arduino & ESP32",
-        "Full Stack Web Development",
-        "Python 3",
-        "Three.js & 3D Web",
-        "Digital Forensics & Cryptography",
-        "Sensor Telemetry & Hardware Interlocks"
-      ]
+      "knowsAbout": ["Full Stack Web Development", "IoT", "Arduino", "ESP32", "Python", "React", "JavaScript", "C++"]
     }
     </script>
     
@@ -64,6 +55,30 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-theme">
+
+    <!-- 0. Opening Splash Preloader Animation -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-tag">
+                <span class="preloader-pulse"></span> SYSTEM READY // INITIALIZING
+            </div>
+            <h1 class="preloader-title">
+                Arpit<span class="preloader-accent">.dev</span>
+            </h1>
+            <p class="preloader-subtitle">PORTFOLIO '26 &bull; FULL STACK &bull; IOT SYSTEMS</p>
+            <div class="preloader-bar-wrap">
+                <div class="preloader-progress" id="preloader-progress"></div>
+            </div>
+            <div class="preloader-stats">
+                <span class="preloader-status">LOADING EXPERIENCE...</span>
+                <span class="preloader-num" id="preloader-count">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
 
     <!-- 1. Floating Pill Navbar -->
     <header class="header">
@@ -79,16 +94,12 @@
 
         <div class="header-right">
             <!-- Cozy UI Sound Toggle Button -->
-            <button id="sound-btn" class="sound-toggle-btn sound-hover" title="Toggle UI Sound" aria-label="Toggle Cozy Audio Feedback">
+            <button id="sound-btn" class="sound-toggle-btn sound-hover" title="Toggle UI Sound">
                 <i class="fas fa-volume-up" id="sound-icon"></i>
                 <span id="sound-text">COZY SFX</span>
             </button>
-            <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="btn btn-pill sound-hover ripple-btn">
-                <i class="fas fa-file-pdf"></i> Resume ↗
-            </a>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navbar">
-                <i class="fas fa-bars"></i>
-            </button>
+            <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="btn btn-pill sound-hover ripple-btn">Resume ↗</a>
+            <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
         </div>
     </header>
 
@@ -97,35 +108,21 @@
         <section class="hero reveal" id="home">
             <div class="hero-left">
                 <div class="tag-label">
-                    <span class="pulse-dot"></span> Available for Opportunities // Seeking SWE & IoT Internships (2026)
+                    <span class="pulse-dot"></span> Available for Opportunities
                 </div>
                 <h1 class="hero-title">
                     Hi, I'm <span class="text-gradient">Arpit Yadav</span>
                 </h1>
                 <h2 class="hero-subtitle">
-                    B.Tech CSE Student & Connected Product Builder
+                    Full Stack Developer & IoT Enthusiast
                 </h2>
                 <p class="hero-tagline">
-                    Building connected products from physical hardware prototypes (ESP32, Arduino, Sensors) to full-stack web applications and digital forensic systems.
+                    Building tech-driven solutions from hardware-integrated systems to scalable, modern web applications.
                 </p>
 
-                <!-- Concrete Proof Strip -->
-                <div class="hero-proof-strip">
-                    <span class="proof-chip"><i class="fas fa-microchip"></i> Physical Hardware & Sensors</span>
-                    <span class="proof-chip"><i class="fas fa-laptop-code"></i> Full Stack & 3D Web</span>
-                    <span class="proof-chip"><i class="fas fa-shield-alt"></i> Digital Forensics (BSA §63(4))</span>
-                </div>
-
                 <div class="hero-actions">
-                    <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="btn btn-primary sound-hover ripple-btn">
-                        <i class="fas fa-file-pdf"></i> Download Résumé
-                    </a>
-                    <a href="#projects" class="btn btn-outline sound-hover ripple-btn">
-                        <i class="fas fa-layer-group"></i> View Flagship Work
-                    </a>
-                    <a href="#contact" class="btn btn-ghost sound-hover ripple-btn">
-                        <i class="fas fa-envelope"></i> Contact
-                    </a>
+                    <a href="#projects" class="btn btn-primary sound-hover ripple-btn">View Projects <i class="fas fa-arrow-down"></i></a>
+                    <a href="#contact" class="btn btn-outline sound-hover ripple-btn">Get In Touch</a>
                 </div>
 
                 <div class="social-bar">
@@ -138,371 +135,180 @@
 
             <div class="hero-right">
                 <div class="hero-visual-card tilt-card" data-tilt>
-                    <div class="visual-badge">LIVE LAB TELEMETRY // 2026</div>
+                    <div class="visual-badge">01 / CREATIVE ARCHITECTURE</div>
                     <div class="visual-content">
-                        <div class="telemetry-grid">
-                            <div class="telemetry-node active-node">
-                                <span class="node-status"><i class="fas fa-circle"></i> ONLINE</span>
-                                <h4>SAFETY-FI 96X</h4>
-                                <p>Dual-Hazard IoT System & 3D Twin (Arduino Uno @ 16MHz)</p>
-                            </div>
-                            <div class="telemetry-node active-node">
-                                <span class="node-status"><i class="fas fa-circle"></i> VALIDATED</span>
-                                <h4>Smart Rider (SIH 2026)</h4>
-                                <p>Safety Helmet & Ignition Interlock (ESP32 + 433MHz RF)</p>
-                            </div>
-                            <div class="telemetry-node active-node">
-                                <span class="node-status"><i class="fas fa-circle"></i> LIVE BENCHMARK</span>
-                                <h4>CHRONOFACT 2.0</h4>
-                                <p>BSA §63(4) Digital Forensic Workbench (Zero-Hallucination Gate)</p>
-                            </div>
+                        <div class="code-preview">
+                            <span class="token-keyword">const</span> <span class="token-var">engineer</span> = {<br>
+                            &nbsp;&nbsp;name: <span class="token-string">"Arpit Yadav"</span>,<br>
+                            &nbsp;&nbsp;passion: <span class="token-string">["Full-Stack", "IoT"]</span>,<br>
+                            &nbsp;&nbsp;status: <span class="token-string">"Crafting 0 to Production"</span><br>
+                            };
                         </div>
-                        <div class="hero-chip"><i class="fas fa-check-double"></i> Tested With Verifiable Artifacts</div>
+                        <div class="hero-chip"><i class="fas fa-microchip"></i> Hardware + Web Synergy</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. Projects Section (FLAGSHIP CASE STUDIES) -->
+        <!-- 3. Projects Section (TOP PRIORITY) -->
         <section class="section projects-section reveal" id="projects">
             <div class="section-header">
-                <span class="mono-tag">( 01 // EVIDENCE & CASE STUDIES )</span>
-                <h2 class="section-title">Featured Engineering Work</h2>
-                <p class="section-desc">Three technical systems demonstrating physical hardware prototyping, digital forensics, and full-stack software.</p>
+                <span class="mono-tag">( 01 // SELECTED WORK )</span>
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-desc">Four technical solutions engineered with purpose and performance.</p>
             </div>
 
-            <div class="case-studies-container">
+            <div class="projects-grid">
                 
-                <!-- CASE STUDY 01: Smart Rider (Smart Safety Helmet) -->
-                <article class="case-study-card tilt-card" data-tilt id="project-smart-rider">
-                    <div class="case-study-grid">
-                        <div class="case-visual-col">
-                            <div class="prototype-img-frame">
-                                <img src="assets/smart-helmet-prototype.jpg" alt="Smart Rider Smart Safety Helmet Prototype & Test Bench" class="prototype-img" loading="lazy">
-                                <div class="img-badge"><i class="fas fa-microchip"></i> Hardware Prototype & Test Bench</div>
-                            </div>
-                            <div class="quick-facts-box">
-                                <div class="fact-row">
-                                    <span class="fact-label">Event:</span>
-                                    <span class="fact-val">SIH 2026 Internal Hackathon</span>
-                                </div>
-                                <div class="fact-row">
-                                    <span class="fact-label">Role:</span>
-                                    <span class="fact-val">Team Member (Concept, Sensor & System Design)</span>
-                                </div>
-                                <div class="fact-row">
-                                    <span class="fact-label">Status:</span>
-                                    <span class="fact-val cert-verified"><i class="fas fa-check-circle"></i> Verified Participation</span>
-                                </div>
-                            </div>
-                            <div class="case-actions">
-                                <button type="button" class="card-btn primary sound-hover open-cert-btn" data-cert="assets/sih-certificate.jpg">
-                                    <i class="fas fa-certificate"></i> View SIH 2026 Certificate
-                                </button>
-                                <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover">
-                                    LinkedIn Project <i class="fab fa-linkedin-in"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="case-content-col">
-                            <div class="case-header">
-                                <span class="case-index">CASE 01 // CONNECTED HARDWARE</span>
-                                <span class="badge sih-badge"><i class="fas fa-trophy"></i> SIH 2026 Problem SIH26220</span>
-                            </div>
-                            <h3 class="case-title">Smart Rider: Connected Safety Helmet & Ignition Interlock</h3>
-                            
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-bullseye"></i> Problem Statement</h4>
-                                <p>
-                                    Two-wheeler riders represent a disproportionate share of road fatalities due to riding without helmets, alcohol impairment, and delayed post-crash rescue dispatch. Traditional helmets act as passive gear without active prevention or emergency alerting.
-                                </p>
-                            </div>
-
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-user-cog"></i> My Contribution & Role</h4>
-                                <p>
-                                    As a core member of <strong>Team Smart Rider</strong>, I contributed to the technical concept development, dual-unit system partitioning, sensor evaluation (FSR, MQ-3 alcohol, MPU6050 accelerometer/gyro), and local fail-safe interlock evaluation logic.
-                                </p>
-                            </div>
-
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-project-diagram"></i> Architecture & Signal Flow</h4>
-                                <div class="flow-diagram-box">
-                                    <code>
-[HELMET UNIT: ESP32]<br>
-├── FSR (Helmet Worn Check)<br>
-├── MQ-3 (Alcohol Threshold)<br>
-└── MPU6050 (Impact & Tilt)<br>
-        │ (433 MHz RF Packet)<br>
-        ▼<br>
-[BIKE CONTROLLER: ESP32]<br>
-├── Safe Pre-Checks ──► Ignition Interlock Relay<br>
-└── Impact Detected ──► Buzzer Alert Window ──► GPS + Cellular Emergency SMS
-                                    </code>
-                                </div>
-                            </div>
-
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-sliders-h"></i> Engineering Decisions</h4>
-                                <ul class="case-bullets">
-                                    <li><strong>Edge-First Processing:</strong> Core start interlock decisions run locally on ESP32 microcontrollers—zero dependency on internet connectivity for basic rider safety.</li>
-                                    <li><strong>False-Alert Reset Window:</strong> Potholes or dropped helmets trigger an audible buzzer window allowing riders to cancel false emergency dispatches before cellular SMS alerts fire.</li>
-                                </ul>
-                            </div>
-
-                            <div class="transparency-banner">
-                                <i class="fas fa-info-circle"></i>
-                                <span><strong>Verification Status:</strong> Concept architecture & test bench evaluated at SIH 2026 Internal Hackathon (Axis Institute of Technology & Management).</span>
-                            </div>
-
-                            <div class="tech-stack-pills">
-                                <span>ESP32</span>
-                                <span>Embedded C++</span>
-                                <span>433 MHz RF</span>
-                                <span>MQ-3 Alcohol Sensor</span>
-                                <span>FSR Sensor</span>
-                                <span>MPU6050 Accelerometer</span>
-                                <span>Relay Interlock</span>
-                            </div>
-                        </div>
+                <!-- Project 01: Smart Helmet (SIH Project) -->
+                <div class="project-card tilt-card card-sih" data-tilt>
+                    <div class="card-top">
+                        <span class="project-num">01</span>
+                        <span class="badge sih-badge"><i class="fas fa-trophy"></i> SIH Project</span>
                     </div>
-                </article>
-
-                <!-- CASE STUDY 02: ChronoFact 2.0 -->
-                <article class="case-study-card tilt-card" data-tilt id="project-chronofact">
-                    <div class="case-study-grid">
-                        <div class="case-visual-col">
-                            <div class="prototype-img-frame forensic-frame">
-                                <div class="forensic-display">
-                                    <div class="forensic-header">
-                                        <span class="forensic-dot"></span> CHRONOFACT 2.0 // FORENSIC WORKBENCH
-                                    </div>
-                                    <div class="forensic-code-preview">
-                                        <div class="code-line"><span class="c-key">STATUTE:</span> BSA 2023 §63(4) Certified</div>
-                                        <div class="code-line"><span class="c-key">DUAL-HASH:</span> SHA-256 + SHA3-256 (Keccak)</div>
-                                        <div class="code-line"><span class="c-key">MERKLE ROOT:</span> 90ebf0e585bae35df919842...</div>
-                                        <div class="code-line"><span class="c-key">Q&A GATE:</span> Mechanical Byte Span (Zero Hallucination)</div>
-                                        <div class="code-line"><span class="c-pass">TEST SUITE:</span> 10/10 Passed (0.073s)</div>
-                                    </div>
-                                </div>
-                                <div class="img-badge"><i class="fas fa-shield-alt"></i> BSA §63(4) Investigation Platform</div>
-                            </div>
-                            <div class="quick-facts-box">
-                                <div class="fact-row">
-                                    <span class="fact-label">Role:</span>
-                                    <span class="fact-val">Project Lead & System Architect</span>
-                                </div>
-                                <div class="fact-row">
-                                    <span class="fact-label">Compliance:</span>
-                                    <span class="fact-val">Section 63(4) BSA 2023 & NIST FIPS</span>
-                                </div>
-                                <div class="fact-row">
-                                    <span class="fact-label">Testing:</span>
-                                    <span class="fact-val cert-verified"><i class="fas fa-check-circle"></i> 100% Automated Coverage</span>
-                                </div>
-                            </div>
-                            <div class="case-actions">
-                                <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn primary sound-hover">
-                                    Live Interactive Preview <i class="fas fa-external-link-alt"></i>
-                                </a>
-                                <a href="https://github.com/arpityadav626/chronofact" target="_blank" class="card-btn outline sound-hover">
-                                    GitHub Repository <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="case-content-col">
-                            <div class="case-header">
-                                <span class="case-index">CASE 02 // DIGITAL FORENSICS</span>
-                                <span class="badge live-badge"><i class="fas fa-circle"></i> Live Platform & Automated Tests</span>
-                            </div>
-                            <h3 class="case-title">CHRONOFACT 2.0: Forensic Investigation Workbench & Grounded Timeline</h3>
-                            
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-bullseye"></i> Problem Statement</h4>
-                                <p>
-                                    Modern cybercrime investigations handle disparate digital logs (server CSVs, WhatsApp messages, SMTP headers, cellular tower CDRs). In court, standard Large Language Models hallucinate timestamps and invent citations, breaching evidentiary admissibility under Indian and international law.
-                                </p>
-                            </div>
-
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-user-cog"></i> My Contribution & Role</h4>
-                                <p>
-                                    Served as <strong>Project Lead and System Architect</strong> for the hackathon project. I engineered the dual-hash Merkle tree engine, Allen's interval algebra implementation, zero-hallucination mechanical verifier, and the automated Section 63(4) BSA statutory certificate generator.
-                                </p>
-                            </div>
-
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-cogs"></i> Core Algorithmic Engines</h4>
-                                <ul class="case-bullets">
-                                    <li><strong>Dual-Hash & Merkle Engine:</strong> Computes concurrent NIST FIPS 180-4 SHA-256 and FIPS 202 SHA3-256 digests over 64KB streams. Enforces 1-bit tamper interception via <code>ForensicIntegrityViolationError</code>.</li>
-                                    <li><strong>Allen's Temporal Interval Algebra:</strong> Implements James Allen's 13 interval relations with dual-clock NTP drift calibration (<code>[t_min, t_max]</code>).</li>
-                                    <li><strong>Inconsistency Radar:</strong> Automatically flags geospatial velocity impossibilities (e.g. 496 km/h Noida-Delhi movement within 3 minutes) while generating 4 benign alternative hypotheses to prevent confirmation bias.</li>
-                                    <li><strong>Mechanical Citation Gate:</strong> Grounds every finding in exact byte spans <code>(byte_start, byte_end)</code>. Unsubstantiated prompts are rejected with a strict 0.0% Grounding Score.</li>
-                                </ul>
-                            </div>
-
-                            <div class="transparency-banner">
-                                <i class="fas fa-shield-alt"></i>
-                                <span><strong>Transparency Notice:</strong> Live demo is an interactive simulation preloaded with synthetic benchmark exhibits to demonstrate court-admissible forensic workflow safely.</span>
-                            </div>
-
-                            <div class="tech-stack-pills">
-                                <span>Python 3.12</span>
-                                <span>FastAPI</span>
-                                <span>SHA-256 / SHA3-256</span>
-                                <span>Merkle Trees</span>
-                                <span>JavaScript ES6+</span>
-                                <span>Tailwind CSS</span>
-                                <span>Web Audio API</span>
-                                <span>SQLite FTS5</span>
-                            </div>
-                        </div>
+                    <h3 class="project-title">Smart Helmet</h3>
+                    <p class="project-summary">
+                        IoT-enabled safety helmet engineered to detect accidents, alcohol presence, and enforce helmet wear before two-wheeler ignition.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span>Arduino / ESP32</span>
+                        <span>Sensors</span>
+                        <span>Embedded C++</span>
+                        <span>IoT Cloud</span>
+                        <span>GSM/GPS</span>
                     </div>
-                </article>
-
-                <!-- CASE STUDY 03: SAFETY-FI 96X (Smart Kitchen Safety System) -->
-                <article class="case-study-card tilt-card" data-tilt id="project-smart-kitchen">
-                    <div class="case-study-grid">
-                        <div class="case-visual-col">
-                            <div class="prototype-img-frame">
-                                <img src="assets/smart-kitchen-prototype.jpg" alt="SAFETY-FI 96X Smart Kitchen Safety Physical Hardware Model" class="prototype-img" loading="lazy">
-                                <div class="img-badge"><i class="fas fa-fire-extinguisher"></i> Physical Hardware Model + 3D Twin</div>
-                            </div>
-                            <div class="quick-facts-box">
-                                <div class="fact-row">
-                                    <span class="fact-label">Hardware:</span>
-                                    <span class="fact-val">Arduino Uno (ATmega328P @ 16 MHz)</span>
-                                </div>
-                                <div class="fact-row">
-                                    <span class="fact-label">Actuation:</span>
-                                    <span class="fact-val">Exhaust Fan & Sprinkler Relays, Buzzer, LCD</span>
-                                </div>
-                                <div class="fact-row">
-                                    <span class="fact-label">Frontend:</span>
-                                    <span class="fact-val cert-verified"><i class="fas fa-cube"></i> Three.js 3D Digital Twin</span>
-                                </div>
-                            </div>
-                            <div class="case-actions">
-                                <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn primary sound-hover">
-                                    Live 3D Digital Twin <i class="fas fa-external-link-alt"></i>
-                                </a>
-                                <a href="https://github.com/arpityadav626/smart-kitchen" target="_blank" class="card-btn outline sound-hover">
-                                    GitHub Repository <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="case-content-col">
-                            <div class="case-header">
-                                <span class="case-index">CASE 03 // EMBEDDED & 3D WEB</span>
-                                <span class="badge progress-badge"><i class="fas fa-microchip"></i> Physical Hardware + Web Twin</span>
-                            </div>
-                            <h3 class="case-title">SAFETY-FI 96X: Industrial-Grade Kitchen IoT Safety Platform</h3>
-                            
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-bullseye"></i> Problem Statement</h4>
-                                <p>
-                                    Undetected LPG gas leaks and runaway domestic fires cause devastating kitchen explosions. Typical domestic alarms provide passive beeps without automatic physical containment (ventilation fan actuation, fire suppression, or remote telemetry).
-                                </p>
-                            </div>
-
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-user-cog"></i> My Contribution & Role</h4>
-                                <p>
-                                    As sole builder, I engineered the complete working physical model: assembled the Arduino Uno circuit with isolated 5V relays, wrote non-blocking C++ firmware (<code>smart_kitchen.ino</code>), developed the asynchronous Python serial telemetry server (<code>app.py</code>), and created the Three.js 3D digital twin web dashboard.
-                                </p>
-                            </div>
-
-                            <div class="case-block">
-                                <h4 class="block-label"><i class="fas fa-tools"></i> Firmware & Backend Engineering</h4>
-                                <ul class="case-bullets">
-                                    <li><strong>Instant 5-Second One-Shot Flame Timer:</strong> Optical IR flame detection activates the water pump relay and acoustic alarm for exactly 5,000 ms before deterministic auto shut-off.</li>
-                                    <li><strong>Anti-Loop Lockout (<code>flameMustClear</code>):</strong> Prevents infinite alarm cycling during sensor exposure by requiring the flame to clear before re-arming the actuator trigger.</li>
-                                    <li><strong>Calibrated Gas Threshold (300 ADC):</strong> Tuned the MQ-2 hydrocarbon trigger to 300 ADC units, eliminating ambient indoor drift while reacting instantly to butane/LPG concentrations.</li>
-                                    <li><strong>Reentrant Lock Concurrency (<code>threading.RLock</code>):</strong> Eliminated server thread starvation in Python, allowing continuous 9600-Baud USB serial polling and REST API requests concurrently.</li>
-                                    <li><strong>Three.js 3D Digital Twin:</strong> Client-side 3D cooktop rendering with dynamic particle fluids, electric blue (<code>#38BDF8</code>) gas alert lighting, and live hardware register telemetry.</li>
-                                </ul>
-                            </div>
-
-                            <div class="transparency-banner">
-                                <i class="fas fa-info-circle"></i>
-                                <span><strong>Deployment Architecture:</strong> Physical model operates with Arduino Uno & local Python telemetry server. The GitHub Pages deployment provides an interactive Three.js 3D digital twin and hybrid simulation engine.</span>
-                            </div>
-
-                            <div class="tech-stack-pills">
-                                <span>Arduino Uno (ATmega328P)</span>
-                                <span>Embedded C++</span>
-                                <span>MQ-2 Gas Sensor</span>
-                                <span>Optical IR Flame Sensor</span>
-                                <span>Three.js 3D</span>
-                                <span>Python 3 (app.py)</span>
-                                <span>Serial UART (9600 Baud)</span>
-                                <span>I2C LCD 16x2</span>
-                            </div>
-                        </div>
+                    <div class="card-links">
+                        <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn primary sound-hover ripple-btn">
+                            View on LinkedIn <i class="fab fa-linkedin-in"></i>
+                        </a>
                     </div>
-                </article>
+                </div>
+
+                <!-- Project 02: ChronoFact -->
+                <div class="project-card tilt-card card-chronofact" data-tilt>
+                    <div class="card-top">
+                        <span class="project-num">02</span>
+                        <span class="badge live-badge"><i class="fas fa-circle"></i> Live Platform</span>
+                    </div>
+                    <h3 class="project-title">ChronoFact</h3>
+                    <p class="project-summary">
+                        Web platform providing curated fact-checking and timeline-based information discovery with high-speed querying.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span>React</span>
+                        <span>Node.js</span>
+                        <span>REST APIs</span>
+                        <span>Modern CSS</span>
+                    </div>
+                    <div class="card-links">
+                        <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn primary sound-hover ripple-btn">
+                            Live Site <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 03: Smart Kitchen System -->
+                <div class="project-card tilt-card card-kitchen" data-tilt>
+                    <div class="card-top">
+                        <span class="project-num">03</span>
+                        <span class="badge progress-badge"><i class="fas fa-sync-alt fa-spin"></i> Active Development</span>
+                    </div>
+                    <h3 class="project-title">Smart Kitchen System</h3>
+                    <p class="project-summary">
+                        Automated IoT solution for real-time pantry monitoring, LPG gas leakage detection, and smart inventory notification alerts.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span>Microcontrollers</span>
+                        <span>Sensors</span>
+                        <span>MQTT / HTTP</span>
+                        <span>Web Dashboard</span>
+                    </div>
+                    <div class="card-links">
+                        <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn primary sound-hover ripple-btn">
+                            Live Demo <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            LinkedIn <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 04: Developer Portfolio (Self) -->
+                <div class="project-card tilt-card card-portfolio" data-tilt>
+                    <div class="card-top">
+                        <span class="project-num">04</span>
+                        <span class="badge live-badge"><i class="fas fa-star"></i> Personal Architecture</span>
+                    </div>
+                    <h3 class="project-title">Developer Portfolio</h3>
+                    <p class="project-summary">
+                        High-performance, responsive personal portfolio crafted with custom cozy audio synthesizer engine and fluid micro-interactions.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span>HTML5</span>
+                        <span>Modern CSS3</span>
+                        <span>Vanilla JS</span>
+                        <span>Web Audio API</span>
+                        <span>GitHub Pages</span>
+                    </div>
+                    <div class="card-links">
+                        <a href="#home" class="card-btn primary sound-hover ripple-btn">
+                            Current Page <i class="fas fa-arrow-up"></i>
+                        </a>
+                    </div>
+                </div>
 
             </div>
         </section>
 
-        <!-- 4. Technical Skills Section (CONTEXTUALIZED) -->
+        <!-- 4. Technical Skills Section -->
         <section class="section skills-section reveal" id="skills">
             <div class="section-header">
-                <span class="mono-tag">( 02 // CAPABILITIES IN CONTEXT )</span>
-                <h2 class="section-title">Technical Skills & Tools</h2>
-                <p class="section-desc">Technologies grounded in actual project implementations and prototypes.</p>
+                <span class="mono-tag">( 02 // CAPABILITIES )</span>
+                <h2 class="section-title">Technical Skills</h2>
+                <p class="section-desc">Categorized stack used for software engineering & hardware integration.</p>
             </div>
 
             <div class="skills-categories-grid">
                 
                 <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-microchip"></i> IoT & Embedded Systems</div>
-                    <p class="category-context">Grounded in Smart Rider & SAFETY-FI 96X physical test benches</p>
+                    <div class="category-title"><i class="fas fa-terminal"></i> Languages</div>
                     <div class="pill-group">
-                        <span class="skill-pill sound-hover"><i class="fas fa-memory"></i> ESP32 (433MHz RF, Fail-Safe Logic)</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-microchip"></i> Arduino Uno (ATmega328P @ 16MHz)</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-wave-square"></i> MQ-2 & MQ-3 Gas Sensors</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-fire"></i> Optical IR Flame Sensor</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-compass"></i> MPU6050 (Gyro & Accelerometer)</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-bolt"></i> 5V Isolated Relay Actuation</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-code"></i> C</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-code"></i> C++</span>
+                        <span class="skill-pill sound-hover"><i class="fab fa-js"></i> JavaScript</span>
+                        <span class="skill-pill sound-hover"><i class="fab fa-python"></i> Python</span>
                     </div>
                 </div>
 
                 <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-code"></i> Programming Languages</div>
-                    <p class="category-context">Used for hardware firmware, backend servers & mathematical engines</p>
-                    <div class="pill-group">
-                        <span class="skill-pill sound-hover"><i class="fas fa-terminal"></i> Embedded C++ (Non-blocking superloop)</span>
-                        <span class="skill-pill sound-hover"><i class="fab fa-python"></i> Python 3.12 (FastAPI, Merkle trees, Serial)</span>
-                        <span class="skill-pill sound-hover"><i class="fab fa-js"></i> JavaScript ES6+ (Three.js, Web Audio)</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-code"></i> C Language (Memory & Pointers)</span>
-                    </div>
-                </div>
-
-                <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-layer-group"></i> Full Stack & 3D Web</div>
-                    <p class="category-context">Used across ChronoFact 2.0 & SAFETY-FI Digital Twin</p>
+                    <div class="category-title"><i class="fas fa-layer-group"></i> Frontend & Backend</div>
                     <div class="pill-group">
                         <span class="skill-pill sound-hover"><i class="fab fa-react"></i> React</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-cube"></i> Three.js (3D Shaders & Particles)</span>
-                        <span class="skill-pill sound-hover"><i class="fab fa-node-js"></i> Node.js & Express</span>
+                        <span class="skill-pill sound-hover"><i class="fab fa-node-js"></i> Node.js</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-server"></i> Express</span>
+                        <span class="skill-pill sound-hover"><i class="fab fa-html5"></i> HTML5 & CSS3</span>
                         <span class="skill-pill sound-hover"><i class="fas fa-wind"></i> Tailwind CSS</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-volume-up"></i> Web Audio API (Procedural SFX)</span>
                     </div>
                 </div>
 
                 <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-tools"></i> Protocols & Tools</div>
-                    <p class="category-context">Development, testing, communication & version control</p>
+                    <div class="category-title"><i class="fas fa-microchip"></i> IoT & Hardware</div>
                     <div class="pill-group">
-                        <span class="skill-pill sound-hover"><i class="fas fa-network-wired"></i> UART Serial (9600 Baud)</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-broadcast-tower"></i> I2C Protocol (LCD 0x27)</span>
-                        <span class="skill-pill sound-hover"><i class="fab fa-git-alt"></i> Git & GitHub Actions</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-shield-alt"></i> SHA-256 / SHA3-256 Cryptography</span>
-                        <span class="skill-pill sound-hover"><i class="fas fa-paper-plane"></i> Postman & REST APIs</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-memory"></i> ESP32</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-microchip"></i> Arduino</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-wave-square"></i> Sensors & Actuators</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-laptop-code"></i> Embedded C</span>
+                    </div>
+                </div>
+
+                <div class="skill-category-card">
+                    <div class="category-title"><i class="fas fa-tools"></i> Tools & Databases</div>
+                    <div class="pill-group">
+                        <span class="skill-pill sound-hover"><i class="fas fa-database"></i> MongoDB</span>
+                        <span class="skill-pill sound-hover"><i class="fab fa-git-alt"></i> Git</span>
+                        <span class="skill-pill sound-hover"><i class="fab fa-github"></i> GitHub</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-code"></i> VS Code</span>
+                        <span class="skill-pill sound-hover"><i class="fas fa-paper-plane"></i> Postman</span>
                     </div>
                 </div>
 
@@ -518,17 +324,17 @@
 
             <div class="about-grid">
                 <div class="about-narrative">
-                    <h3>Engineering with Passion & Verifiable Evidence</h3>
+                    <h3>Engineering with Passion & Grit</h3>
                     <p>
-                        I'm a Computer Science undergraduate focused on the intersection of physical hardware engineering and scalable web software. Rather than building generic tutorial clones, I gravitate towards problems requiring real sensors, embedded microcontrollers, mathematical integrity, and production-ready code.
+                        I'm a Computer Science undergraduate passionate about solving real-world challenges through technology. My interests span across full-stack web development and IoT hardware integration.
                     </p>
                     <p>
-                        From testing ignition interlocks for Team Smart Rider at SIH 2026, to architecting Section 63(4) BSA compliance in ChronoFact, and building physical kitchen safety models with Three.js digital twins—I enjoy taking ideas from breadboard wiring all the way to deployed products.
+                        Whether it's prototyping a Smart Helmet for road safety at Smart India Hackathon or architecting web platforms, I love taking ideas from zero to production. Constantly learning, building, and exploring new tech stacks.
                     </p>
                     <div class="focus-bullets">
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Target Roles:</strong> Software Engineering, Full-Stack & IoT Internships</div>
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Current Status:</strong> Actively preparing for 2026 Technical Opportunities</div>
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Core Philosophy:</strong> Evidence over buzzwords, zero-hallucination logic, clean architecture</div>
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Focus:</strong> Full-Stack Web Development & IoT Integration</div>
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Currently Building:</strong> ChronoFact & Smart Kitchen System</div>
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Hackathons:</strong> Smart India Hackathon (SIH) Participant</div>
                     </div>
                 </div>
 
@@ -539,54 +345,39 @@
                     <p class="college"><i class="fas fa-university"></i> Axis Institute of Technology and Management</p>
                     <p class="year"><i class="fas fa-calendar-alt"></i> 2025 — 2029</p>
                     <div class="edu-footer">
-                        <span>Coursework: Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Microcontrollers & IoT</span>
+                        <span>Coursework: Data Structures, Web Architecture, IoT, Database Systems</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 6. Achievements & Verifiable Evidence -->
+        <!-- 6. Achievements & Certifications -->
         <section class="section achievements-section reveal" id="achievements">
             <div class="section-header">
-                <span class="mono-tag">( 04 // VERIFIABLE HONORS )</span>
-                <h2 class="section-title">Achievements & Milestones</h2>
-                <p class="section-desc">Documented proof of hackathon participation, technical leadership, and engineering practice.</p>
+                <span class="mono-tag">( 04 // HONORS )</span>
+                <h2 class="section-title">Achievements</h2>
             </div>
 
             <div class="achievements-container">
                 <div class="achievement-item">
                     <div class="achieve-icon"><i class="fas fa-trophy"></i></div>
                     <div class="achieve-content">
-                        <h4>Smart India Hackathon (SIH) 2026 — Internal Hackathon Participant</h4>
-                        <p>
-                            Represented Axis Institute of Technology & Management (Kanpur) on 25/08/2026 as part of <strong>Team Smart Rider</strong> (Problem Statement SIH26220, Theme: Smart Vehicle). Co-developed connected safety helmet and ignition interlock concept.
-                        </p>
-                        <button type="button" class="btn-cert-link sound-hover open-cert-btn" data-cert="assets/sih-certificate.jpg">
-                            <i class="fas fa-certificate"></i> View Official Participation Certificate ↗
-                        </button>
+                        <h4>Smart India Hackathon (SIH) Participant</h4>
+                        <p>Designed and built an end-to-end IoT Smart Helmet system for accident prevention and road safety innovation.</p>
                     </div>
                 </div>
-
-                <div class="achievement-item">
-                    <div class="achieve-icon"><i class="fas fa-sitemap"></i></div>
-                    <div class="achieve-content">
-                        <h4>Project Lead & System Architect — CHRONOFACT 2.0</h4>
-                        <p>
-                            Led architecture and development of an electronic evidence verification workbench compliant with Section 63(4) of Bharatiya Sakshya Adhiniyam, 2023. Engineered Merkle tree algorithms and zero-hallucination validation with 100% automated test coverage.
-                        </p>
-                        <a href="https://github.com/arpityadav626/chronofact" target="_blank" class="btn-cert-link sound-hover">
-                            <i class="fab fa-github"></i> Inspect Test Suites & Codebase ↗
-                        </a>
-                    </div>
-                </div>
-
                 <div class="achievement-item">
                     <div class="achieve-icon"><i class="fas fa-code"></i></div>
                     <div class="achieve-content">
-                        <h4>Continuous Algorithmic Problem Solving</h4>
-                        <p>
-                            Practicing core data structures, graph theory, dynamic programming, and algorithmic design patterns on LeetCode and GeeksforGeeks to maintain sharp problem-solving instincts.
-                        </p>
+                        <h4>Competitive Coding & Platforms</h4>
+                        <p>Active problem solver practicing core data structures and algorithmic thinking on GeeksforGeeks & LeetCode.</p>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achieve-icon"><i class="fas fa-certificate"></i></div>
+                    <div class="achieve-content">
+                        <h4>Technical Certifications & Badges</h4>
+                        <p>Full-Stack Web Development, Git/GitHub Version Control & Modern Database Foundations.</p>
                     </div>
                 </div>
             </div>
@@ -597,13 +388,13 @@
             <div class="section-header">
                 <span class="mono-tag">( 05 // LET'S TALK )</span>
                 <h2 class="section-title">Get In Touch</h2>
-                <p class="section-desc">Interested in discussing an engineering internship, IoT prototype, or project collaboration?</p>
+                <p class="section-desc">Have a project idea, opportunity, or simply want to connect?</p>
             </div>
 
             <div class="contact-grid">
                 <div class="contact-card">
-                    <h3>Contact Information</h3>
-                    <p>I typically respond within 24 hours. Feel free to reach out directly via email or LinkedIn:</p>
+                    <h3>Contact Details</h3>
+                    <p>Feel free to reach out directly through email or socials:</p>
 
                     <div class="contact-detail-row">
                         <i class="fas fa-envelope"></i>
@@ -617,15 +408,7 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <span class="label">Location</span>
-                            <span class="val">Kanpur, Uttar Pradesh, India (Open to Remote & Relocation)</span>
-                        </div>
-                    </div>
-
-                    <div class="contact-detail-row">
-                        <i class="fas fa-file-pdf"></i>
-                        <div>
-                            <span class="label">Résumé / CV</span>
-                            <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="val sound-hover">Download Official PDF ↗</a>
+                            <span class="val">Kanpur, Uttar Pradesh, India</span>
                         </div>
                     </div>
 
@@ -643,49 +426,27 @@
 
                 <form class="contact-form" id="contact-form" action="https://formspree.io/f/moevgzjw" method="POST">
                     <div class="form-group">
-                        <label for="name" class="sr-only">Your Name</label>
                         <input type="text" id="name" name="name" placeholder="Your Name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="sr-only">Your Email Address</label>
                         <input type="email" id="email" name="email" placeholder="Your Email Address" required>
                     </div>
                     <div class="form-group">
-                        <label for="message" class="sr-only">Your Message</label>
                         <textarea id="message" name="message" rows="5" placeholder="Your Message..." required></textarea>
                     </div>
                     <button type="submit" id="submit-btn" class="btn btn-primary btn-submit sound-hover ripple-btn">
                         <span>Send Message</span> <i class="fas fa-paper-plane"></i>
                     </button>
-                    <p id="form-msg" class="form-msg" role="status" aria-live="polite"></p>
+                    <p id="form-msg" class="form-msg"></p>
                 </form>
             </div>
         </section>
     </main>
 
-    <!-- Certificate Modal Lightbox (Zero Bloat, Accessible) -->
-    <div id="cert-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Official Certificate Preview">
-        <div class="modal-card">
-            <button class="modal-close-btn" id="modal-close" aria-label="Close certificate modal">&times;</button>
-            <div class="modal-header">
-                <h4>Smart India Hackathon 2026 — Official Participation Certificate</h4>
-                <p>Axis Institute of Technology & Management, Kanpur &bull; Date: 25/08/2026</p>
-            </div>
-            <div class="modal-img-wrap">
-                <img id="cert-modal-img" src="assets/sih-certificate.jpg" alt="Smart India Hackathon 2026 Certificate - Arpit Yadav" class="modal-img">
-            </div>
-            <div class="modal-footer">
-                <a href="assets/sih-certificate.jpg" target="_blank" class="btn btn-outline sound-hover" download="Arpit_Yadav_SIH_Certificate.jpg">
-                    <i class="fas fa-download"></i> Download High-Res Certificate
-                </a>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2026 <strong>Arpit Yadav</strong>. Engineered with semantic HTML5, modern CSS & Web Audio synthesis.</p>
+            <p>&copy; 2026 <strong>Arpit Yadav</strong>. Built with precision, semantic code & Web Audio.</p>
             <a href="#home" class="back-top sound-hover">Back to top ↑</a>
         </div>
     </footer>

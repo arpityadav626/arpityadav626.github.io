@@ -1,13 +1,5 @@
 /* ========================================================
-   ARPIT YADAV PORTFOLIO ENGINE — ZERO-CRASH ARCHITECTURE
-   Progressive Enhancement, Web Audio Synthesis & Modal Lightbox
-======================================================== */
-
-// 1. Enable Progressive Enhancement for CSS Reveals
-document.documentElement.classList.add('js-enabled');
-
-/* ========================================================
-   2. STUDIO-GRADE ZERO-GLITCH SOUND ENGINE (Web Audio API)
+   1. STUDIO-GRADE ZERO-GLITCH SOUND ENGINE (Web Audio API)
    With Dynamics Compressor, Anti-Click Envelopes & Debounce!
 ======================================================== */
 let audioCtx = null;
@@ -19,10 +11,9 @@ let lastHoverTime = 0;
 function initAudio() {
     if (!audioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
         audioCtx = new AudioContextClass();
 
-        // Dynamics Compressor (Limiter) - eliminates distortion & popping
+        // 1. Dynamics Compressor (Limiter) - 100% eliminates distortion & crackling
         masterCompressor = audioCtx.createDynamicsCompressor();
         masterCompressor.threshold.setValueAtTime(-18, audioCtx.currentTime);
         masterCompressor.knee.setValueAtTime(30, audioCtx.currentTime);
@@ -30,32 +21,31 @@ function initAudio() {
         masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
         masterCompressor.release.setValueAtTime(0.15, audioCtx.currentTime);
 
-        // Master Gain
+        // 2. Master Gain
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
 
         masterCompressor.connect(masterGain);
         masterGain.connect(audioCtx.destination);
     }
-    if (audioCtx && audioCtx.state === 'suspended') {
+    if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
 }
 
-// Unlock audio on first interaction
+// Unlock audio seamlessly on first user interaction
 ['click', 'touchstart', 'keydown'].forEach(evt => {
     window.addEventListener(evt, () => initAudio(), { once: true, passive: true });
 });
 
-// Sound: Soft Button Hover (Micro-air tick)
+// Sound 1: Soft Button Hover (Ultra-crisp micro-air tick, zero click pop)
 function playButtonHover() {
     if (!soundEnabled) return;
     const now = performance.now();
-    if (now - lastHoverTime < 50) return;
+    if (now - lastHoverTime < 50) return; // Anti-glitch debounce
     lastHoverTime = now;
 
     initAudio();
-    if (!audioCtx) return;
     const t = audioCtx.currentTime;
 
     const osc = audioCtx.createOscillator();
@@ -69,6 +59,7 @@ function playButtonHover() {
     osc.frequency.setValueAtTime(750, t);
     osc.frequency.exponentialRampToValueAtTime(520, t + 0.025);
 
+    // Smooth zero-crossing envelope (eliminates popping glitch)
     gain.gain.setValueAtTime(0.0001, t);
     gain.gain.linearRampToValueAtTime(0.02, t + 0.003);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
@@ -81,7 +72,7 @@ function playButtonHover() {
     osc.stop(t + 0.025);
 }
 
-// Sound: Deep Acoustic Card Hover
+// Sound 2: Deep Warm Card Hover (Acoustic marimba / soft wooden thud)
 function playCardHover() {
     if (!soundEnabled) return;
     const now = performance.now();
@@ -89,7 +80,6 @@ function playCardHover() {
     lastHoverTime = now;
 
     initAudio();
-    if (!audioCtx) return;
     const t = audioCtx.currentTime;
 
     const osc = audioCtx.createOscillator();
@@ -104,7 +94,7 @@ function playCardHover() {
     osc.frequency.exponentialRampToValueAtTime(130, t + 0.07);
 
     gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.linearRampToValueAtTime(0.04, t + 0.005);
+    gain.gain.linearRampToValueAtTime(0.05, t + 0.005);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
 
     osc.connect(filter);
@@ -115,13 +105,13 @@ function playCardHover() {
     osc.stop(t + 0.07);
 }
 
-// Sound: Crisp Switch Click
+// Sound 3: Mechanical Haptic Button Click (Satisfying dual-stage switch)
 function playButtonClick() {
     if (!soundEnabled) return;
     initAudio();
-    if (!audioCtx) return;
     const t = audioCtx.currentTime;
 
+    // Transient click
     const oscClick = audioCtx.createOscillator();
     const gainClick = audioCtx.createGain();
     oscClick.type = 'triangle';
@@ -129,7 +119,7 @@ function playButtonClick() {
     oscClick.frequency.exponentialRampToValueAtTime(280, t + 0.04);
 
     gainClick.gain.setValueAtTime(0.0001, t);
-    gainClick.gain.linearRampToValueAtTime(0.05, t + 0.002);
+    gainClick.gain.linearRampToValueAtTime(0.06, t + 0.002);
     gainClick.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
 
     oscClick.connect(gainClick);
@@ -137,6 +127,73 @@ function playButtonClick() {
 
     oscClick.start(t);
     oscClick.stop(t + 0.04);
+
+    // Warm resonant body
+    const oscBody = audioCtx.createOscillator();
+    const gainBody = audioCtx.createGain();
+    oscBody.type = 'sine';
+    oscBody.frequency.setValueAtTime(190, t);
+    oscBody.frequency.exponentialRampToValueAtTime(80, t + 0.06);
+
+    gainBody.gain.setValueAtTime(0.0001, t);
+    gainBody.gain.linearRampToValueAtTime(0.08, t + 0.004);
+    gainBody.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+
+    oscBody.connect(gainBody);
+    gainBody.connect(masterCompressor);
+
+    oscBody.start(t);
+    oscBody.stop(t + 0.06);
+}
+
+// Sound 4: Liquid Bubble Tone (For Navigation links)
+function playNavClick() {
+    if (!soundEnabled) return;
+    initAudio();
+    const t = audioCtx.currentTime;
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(540, t);
+    osc.frequency.exponentialRampToValueAtTime(780, t + 0.04);
+
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.linearRampToValueAtTime(0.05, t + 0.003);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+
+    osc.connect(gain);
+    gain.connect(masterCompressor);
+
+    osc.start(t);
+    osc.stop(t + 0.05);
+}
+
+// Sound 5: Crystalline Melodic Welcome Chime
+function playCozyChime() {
+    if (!soundEnabled) return;
+    initAudio();
+    const t = audioCtx.currentTime;
+
+    const chords = [523.25, 659.25, 783.99]; // C5, E5, G5 Major Chord
+    chords.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t + idx * 0.08);
+
+        gain.gain.setValueAtTime(0.0001, t + idx * 0.08);
+        gain.gain.linearRampToValueAtTime(0.035, t + idx * 0.08 + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + idx * 0.08 + 0.45);
+
+        osc.connect(gain);
+        gain.connect(masterCompressor);
+
+        osc.start(t + idx * 0.08);
+        osc.stop(t + idx * 0.08 + 0.45);
+    });
 }
 
 // Sound Toggle Handler
@@ -159,89 +216,169 @@ if (soundBtn) {
     });
 }
 
-// Event Bindings for Sounds
-function bindAudioTriggers() {
-    document.querySelectorAll('.case-study-card, .hero-visual-card, .skill-category-card').forEach(card => {
+// Smart Glitch-Free Event Bindings
+function bindSounds() {
+    // 1. Project Cards
+    document.querySelectorAll('.project-card').forEach(card => {
         card.addEventListener('mouseenter', playCardHover);
     });
 
-    document.querySelectorAll('.btn, .card-btn, .btn-pill, .open-cert-btn, .btn-cert-link').forEach(btn => {
+    // 2. Buttons & Actions
+    document.querySelectorAll('.btn, .card-btn, .btn-pill').forEach(btn => {
         btn.addEventListener('mouseenter', playButtonHover);
         btn.addEventListener('click', playButtonClick);
     });
 
+    // 3. Navigation Links
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('mouseenter', playButtonHover);
-        link.addEventListener('click', playButtonClick);
+        link.addEventListener('click', playNavClick);
     });
 
-    document.querySelectorAll('.skill-pill, .social-link').forEach(item => {
+    // 4. Skills & Socials
+    document.querySelectorAll('.skill-pill, .social-link, .sound-hover:not(.nav-link):not(.btn):not(.card-btn)').forEach(item => {
         item.addEventListener('mouseenter', playButtonHover);
+        item.addEventListener('click', playButtonClick);
     });
 }
-bindAudioTriggers();
+bindSounds();
+
+/* ========================================================
+   2. OPENING INTRO PRELOADER RUNNER
+======================================================== */
+const preloader = document.getElementById('preloader');
+const preloaderCount = document.getElementById('preloader-count');
+const preloaderProgress = document.getElementById('preloader-progress');
+
+if (preloader) {
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 8) + 5;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            if (preloaderCount) preloaderCount.textContent = '100%';
+            if (preloaderProgress) preloaderProgress.style.width = '100%';
+            
+            setTimeout(() => {
+                playCozyChime();
+                preloader.classList.add('preloader-hidden');
+                
+                // Cascading reveal for Hero Section
+                const hero = document.getElementById('home');
+                if (hero) hero.classList.add('active');
+            }, 300);
+        } else {
+            if (preloaderCount) preloaderCount.textContent = `${progress}%`;
+            if (preloaderProgress) preloaderProgress.style.width = `${progress}%`;
+        }
+    }, 35);
+}
+
+/* ========================================================
+   3. BUTTON CLICK FLUID RIPPLE WAVE EFFECT
+======================================================== */
+document.querySelectorAll('.ripple-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const circle = document.createElement('span');
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+
+        const rect = this.getBoundingClientRect();
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${e.clientX - rect.left - radius}px`;
+        circle.style.top = `${e.clientY - rect.top - radius}px`;
+        circle.classList.add('ripple');
+
+        const ripple = this.querySelector('.ripple');
+        if (ripple) {
+            ripple.remove();
+        }
+
+        this.appendChild(circle);
+    });
+});
 
 /* ========================================================
    3. SCROLL REVEAL ANIMATIONS (Intersection Observer)
 ======================================================== */
 const revealElements = document.querySelectorAll('.reveal');
 
-if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.12,
-        rootMargin: '0px 0px -40px 0px'
+const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+        }
     });
+}, {
+    threshold: 0.15
+});
 
-    revealElements.forEach(el => revealObserver.observe(el));
-} else {
-    // Fallback for older browsers
-    revealElements.forEach(el => el.classList.add('active'));
-}
+revealElements.forEach(el => revealObserver.observe(el));
 
 /* ========================================================
-   4. 3D TILT EFFECT ON CARDS (Respects Reduced Motion)
+   4. CUSTOM INTERACTIVE CURSOR
 ======================================================== */
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cursorDot = document.getElementById('cursor-dot');
+const cursorOutline = document.getElementById('cursor-outline');
 
-if (!prefersReducedMotion && window.innerWidth > 992) {
-    document.querySelectorAll('.tilt-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -4;
-            const rotateY = ((x - centerX) / centerX) * 4;
+if (cursorDot && cursorOutline && window.innerWidth > 768) {
+    window.addEventListener('mousemove', (e) => {
+        const { clientX: x, clientY: y } = e;
+        
+        cursorDot.style.left = `${x}px`;
+        cursorDot.style.top = `${y}px`;
 
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+        cursorOutline.animate({
+            left: `${x}px`,
+            top: `${y}px`
+        }, { duration: 220, fill: "forwards" });
+    });
+
+    document.querySelectorAll('a, button, input, textarea, .project-card').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.6)';
+            cursorOutline.style.borderColor = 'var(--accent-primary)';
         });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+        el.addEventListener('mouseleave', () => {
+            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursorOutline.style.borderColor = 'rgba(249, 115, 22, 0.5)';
         });
     });
 }
 
 /* ========================================================
-   5. MOBILE NAVIGATION (Accessible ARIA Toggle)
+   5. 3D TILT EFFECT ON CARDS
+======================================================== */
+document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -6;
+        const rotateY = ((x - centerX) / centerX) * 6;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+    });
+});
+
+/* ========================================================
+   6. MOBILE NAVIGATION
 ======================================================== */
 const menuToggle = document.getElementById('menu-toggle');
 const navbar = document.getElementById('navbar');
 
 if (menuToggle && navbar) {
     menuToggle.addEventListener('click', () => {
-        const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-        menuToggle.setAttribute('aria-expanded', !isExpanded);
         navbar.classList.toggle('active');
         playButtonClick();
     });
@@ -249,57 +386,7 @@ if (menuToggle && navbar) {
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             navbar.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
         });
-    });
-}
-
-/* ========================================================
-   6. OFFICIAL CERTIFICATE LIGHTBOX MODAL
-======================================================== */
-const certModal = document.getElementById('cert-modal');
-const modalClose = document.getElementById('modal-close');
-const openCertButtons = document.querySelectorAll('.open-cert-btn');
-
-function openCertificateModal() {
-    if (certModal) {
-        certModal.classList.add('active');
-        certModal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden'; // Prevent background scroll
-        playButtonClick();
-    }
-}
-
-function closeCertificateModal() {
-    if (certModal) {
-        certModal.classList.remove('active');
-        certModal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        playButtonClick();
-    }
-}
-
-openCertButtons.forEach(btn => {
-    btn.addEventListener('click', openCertificateModal);
-});
-
-if (modalClose) {
-    modalClose.addEventListener('click', closeCertificateModal);
-}
-
-if (certModal) {
-    // Close on backdrop click
-    certModal.addEventListener('click', (e) => {
-        if (e.target === certModal) {
-            closeCertificateModal();
-        }
-    });
-
-    // Close on Escape key
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && certModal.classList.contains('active')) {
-            closeCertificateModal();
-        }
     });
 }
 
@@ -310,9 +397,9 @@ const contactForm = document.getElementById('contact-form');
 const formMsg = document.getElementById('form-msg');
 const submitBtn = document.getElementById('submit-btn');
 
-if (contactForm && formMsg && submitBtn) {
+if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Page reload hone se rokna
         playButtonClick();
 
         const originalBtnContent = submitBtn.innerHTML;
@@ -332,21 +419,21 @@ if (contactForm && formMsg && submitBtn) {
 
             if (response.ok) {
                 formMsg.style.color = 'var(--accent-emerald)';
-                formMsg.textContent = "🎉 Thank you! Your message has been sent successfully. I will get back to you within 24 hours.";
+                formMsg.textContent = "🎉 Thank you! Your message has been sent successfully. I'll get back to you soon.";
                 contactForm.reset();
             } else {
                 formMsg.style.color = '#f43f5e';
-                formMsg.textContent = "Oops! Something went wrong. Please reach out directly to arpityadav6794@gmail.com";
+                formMsg.textContent = "Oops! Something went wrong. Please reach out directly via email.";
             }
         } catch (error) {
             formMsg.style.color = '#f43f5e';
-            formMsg.textContent = "Network error. Please check your internet connection or email directly.";
+            formMsg.textContent = "Network error. Please check your internet connection.";
         } finally {
             submitBtn.innerHTML = originalBtnContent;
             submitBtn.disabled = false;
             setTimeout(() => {
                 formMsg.textContent = '';
-            }, 8000);
+            }, 7000);
         }
     });
 }
