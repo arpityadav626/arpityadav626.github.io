@@ -773,3 +773,53 @@ if (typeof Lenis !== 'undefined') {
         });
     });
 }
+
+/* ========================================================
+   11. LINEAR.APP / VERCEL HIGH-PERFORMANCE SPOTLIGHT TRACKER
+   Smooth lerp physics, zero lag, direct GPU property injection
+======================================================== */
+(function initSpotlight() {
+    const spotlight = document.getElementById('spotlight');
+    if (!spotlight || !window.matchMedia('(pointer: fine)').matches) return;
+
+    let targetX = -1000;
+    let targetY = -1000;
+    let currentX = -1000;
+    let currentY = -1000;
+    let isMoving = false;
+    let rafId = null;
+
+    function updateSpotlight() {
+        // Silky smooth lerp smoothing
+        currentX += (targetX - currentX) * 0.12;
+        currentY += (targetY - currentY) * 0.12;
+
+        document.documentElement.style.setProperty('--mouse-x', `${currentX}px`);
+        document.documentElement.style.setProperty('--mouse-y', `${currentY}px`);
+
+        if (isMoving) {
+            rafId = requestAnimationFrame(updateSpotlight);
+        }
+    }
+
+    window.addEventListener('pointermove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+
+        if (!isMoving) {
+            isMoving = true;
+            spotlight.style.opacity = '1';
+            rafId = requestAnimationFrame(updateSpotlight);
+        }
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => {
+        isMoving = false;
+        if (rafId) cancelAnimationFrame(rafId);
+        spotlight.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+        spotlight.style.opacity = '1';
+    });
+})();

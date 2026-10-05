@@ -46,9 +46,36 @@ body::before {
     right: -100px;
     width: 650px;
     height: 650px;
-    background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
+}
+
+/* Linear.app / Vercel Ambient Spotlight Layer */
+.linear-spotlight {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    background: radial-gradient(
+        680px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+        rgba(249, 115, 22, 0.12) 0%,
+        rgba(56, 189, 248, 0.04) 40%,
+        transparent 75%
+    );
+}
+
+@media (pointer: coarse) {
+    .linear-spotlight {
+        display: none !important;
+    }
+}
+
+main, .header, .footer {
+    position: relative;
+    z-index: 1;
 }
 
 /* ========================================================
