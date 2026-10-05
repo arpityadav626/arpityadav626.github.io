@@ -2254,4 +2254,14 @@ body.modal-open .header {
     .modal-media-img {
         max-height: 220px;
     }
+    .modal-corner-close-btn {
+        top: 12px;
+        right: 12px;
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+    .modal-header-tag {
+        padding-right: 44px;
+    }
 }

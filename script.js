@@ -774,7 +774,7 @@ if (modalCloseBtn) {
 
 if (projectModal) {
     projectModal.addEventListener('click', (e) => {
-        if (e.target === projectModal) {
+        if (!e.target.closest('#project-modal-card') && !e.target.closest('#modal-close-btn')) {
             closeProjectModal();
         }
     });
