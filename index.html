@@ -327,13 +327,13 @@
                         </div>
                     </div>
 
-                    <!-- Interactive Live Telemetry Bar -->
+                    <!-- Studio Multi-Project & Stack Status Footer -->
                     <div class="studio-footer">
-                        <div class="sf-status" id="simulation-status">
-                            <i class="fas fa-shield-alt"></i> <span id="sim-status-text">SIH 2026 Telemetry Ready</span>
+                        <div class="sf-status">
+                            <span class="s-pulse"></span> <span id="studio-footer-status">Full-Stack Web &bull; IoT &bull; AI Systems</span>
                         </div>
-                        <button class="sf-sim-btn sound-hover" id="btn-run-simulation" title="Run instant safety interlock test">
-                            <i class="fas fa-play"></i> Simulate SIH
+                        <button class="sf-sim-btn sound-hover" id="btn-studio-explore-footer" title="Explore all 4 featured projects">
+                            <i class="fas fa-layer-group"></i> All Projects (4) ↓
                         </button>
                     </div>
                 </div>
@@ -350,11 +350,11 @@
 
             <div class="projects-grid">
                 
-                <!-- Project 01: Smart Helmet (SIH Project) -->
+                <!-- Project 01: Smart Helmet (Connected Hardware IoT) -->
                 <div class="project-card tilt-card card-sih" data-tilt data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c">
                     <div class="card-top">
                         <span class="project-num">01</span>
-                        <span class="badge sih-badge"><i class="fas fa-trophy"></i> SIH Project</span>
+                        <span class="badge sih-badge"><i class="fas fa-microchip"></i> Hardware IoT</span>
                     </div>
                     <h3 class="project-title">Smart Helmet</h3>
                     <p class="project-summary">
@@ -457,16 +457,6 @@
 
             </div>
         </section>
-
-        <!-- Project Details Modal Lightbox (Same Dark Theme & Aesthetic) -->
-        <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details" data-lenis-prevent="true">
-            <div class="project-modal-card" data-lenis-prevent="true">
-                <button class="modal-close-btn" id="modal-close-btn" aria-label="Close details modal">&times;</button>
-                <div id="modal-dynamic-content" class="modal-body-content">
-                    <!-- Populated dynamically -->
-                </div>
-            </div>
-        </div>
 
         <!-- 4. Technical Skills Section -->
         <section class="section skills-section reveal" id="skills">
@@ -661,6 +651,16 @@
             <a href="#home" class="back-top sound-hover">Back to top ↑</a>
         </div>
     </footer>
+
+    <!-- Project Details Modal Lightbox (Root Level - Completely Above All Navbars) -->
+    <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details" data-lenis-prevent="true">
+        <div class="project-modal-card" data-lenis-prevent="true">
+            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close details modal">&times;</button>
+            <div id="modal-dynamic-content" class="modal-body-content">
+                <!-- Populated dynamically with staggered cascade animations -->
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

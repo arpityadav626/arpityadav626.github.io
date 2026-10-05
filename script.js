@@ -716,6 +716,7 @@ function openProjectModal(projectId) {
     renderProjectDetails(projectId);
     projectModal.classList.add('active');
     projectModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
     if (projectModalCard) projectModalCard.scrollTop = 0;
@@ -726,6 +727,7 @@ function closeProjectModal() {
     if (!projectModal) return;
     projectModal.classList.remove('active');
     projectModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
     if (lenis) lenis.start();
     playModalSound(false);
@@ -1055,35 +1057,16 @@ if (studioCopyBtn) {
     });
 }
 
-// Interactive Live SIH Telemetry Diagnostic Simulator
-const btnSimulate = document.getElementById('btn-run-simulation');
-const simStatusText = document.getElementById('sim-status-text');
-let simRunning = false;
-
-if (btnSimulate && simStatusText) {
-    btnSimulate.addEventListener('click', () => {
-        if (simRunning) return;
-        simRunning = true;
-        btnSimulate.disabled = true;
+// 1-Click Studio Footer View All Projects button
+const studioExploreFooterBtn = document.getElementById('btn-studio-explore-footer');
+if (studioExploreFooterBtn) {
+    studioExploreFooterBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pSec = document.getElementById('projects');
+        if (pSec && typeof lenis !== 'undefined' && lenis) {
+            lenis.scrollTo(pSec, { offset: -30 });
+        }
         playButtonClick();
-
-        simStatusText.innerHTML = '<span style="color:#10b981;">[1/3] Interlock: Helmet Buckled ✓</span>';
-
-        setTimeout(() => {
-            playKeyTick();
-            simStatusText.innerHTML = '<span style="color:#10b981;">[2/3] MQ-3: BAC 0.00% Clean ✓</span>';
-        }, 900);
-
-        setTimeout(() => {
-            playModalSound(true);
-            simStatusText.innerHTML = '<span style="color:var(--accent-primary); font-weight:700;">[3/3] Ignition UNLOCKED • Safe to Ride! 🚀</span>';
-        }, 1800);
-
-        setTimeout(() => {
-            simStatusText.innerHTML = 'SIH 2026 Telemetry Ready';
-            btnSimulate.disabled = false;
-            simRunning = false;
-        }, 4500);
     });
 }
 
