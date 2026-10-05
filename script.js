@@ -794,8 +794,7 @@ if (typeof Lenis !== 'undefined') {
         currentX += (targetX - currentX) * 0.12;
         currentY += (targetY - currentY) * 0.12;
 
-        document.documentElement.style.setProperty('--mouse-x', `${currentX}px`);
-        document.documentElement.style.setProperty('--mouse-y', `${currentY}px`);
+        spotlight.style.transform = `translate3d(${currentX - 300}px, ${currentY - 300}px, 0)`;
 
         if (isMoving) {
             rafId = requestAnimationFrame(updateSpotlight);
