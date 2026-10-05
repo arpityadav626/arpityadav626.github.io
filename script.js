@@ -720,6 +720,8 @@ function openProjectModal(projectId) {
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
     if (projectModalCard) projectModalCard.scrollTop = 0;
+    const progressBar = document.getElementById('modal-scroll-bar');
+    if (progressBar) progressBar.style.setProperty('--modal-scroll-pct', '0%');
     playModalSound(true);
 }
 
@@ -733,10 +735,19 @@ function closeProjectModal() {
     playModalSound(false);
 }
 
-// Ensure fluid wheel scrolling inside modal card by preventing Lenis cancellation
+// Ensure fluid wheel scrolling inside modal card and update reading progress bar
 if (projectModalCard) {
     projectModalCard.addEventListener('wheel', (e) => {
         e.stopPropagation();
+    }, { passive: true });
+
+    projectModalCard.addEventListener('scroll', () => {
+        const total = projectModalCard.scrollHeight - projectModalCard.clientHeight;
+        const pct = total > 0 ? (projectModalCard.scrollTop / total) * 100 : 0;
+        const progressBar = document.getElementById('modal-scroll-bar');
+        if (progressBar) {
+            progressBar.style.setProperty('--modal-scroll-pct', `${pct}%`);
+        }
     }, { passive: true });
 }
 
