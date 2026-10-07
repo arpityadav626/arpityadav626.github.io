@@ -555,8 +555,41 @@ const projectDetailsData = {
             { label: 'LinkedIn Project', icon: 'fab fa-linkedin-in', href: 'https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/', external: true }
         ]
     },
+    'smart-kitchen': {
+        index: '02 // EMBEDDED & 3D DIGITAL TWIN',
+        badge: '<span class="badge progress-badge"><i class="fas fa-microchip"></i> Physical Hardware + 3D Twin</span>',
+        title: 'SAFETY-FI 96X: Industrial-Grade Kitchen IoT Safety Platform',
+        subtitle: 'A dual-action closed-loop hazard mitigation platform engineered to prevent catastrophic kitchen accidents from LPG gas leaks and uncontrolled cooking fires.',
+        image: 'assets/smart-kitchen-prototype.jpg',
+        imageCaption: 'Physical Hardware Test Bench with Arduino Uno, Sensors, Relays & Laptop 3D Twin',
+        blocks: [
+            {
+                title: '<i class="fas fa-bullseye"></i> Problem Statement',
+                content: 'Undetected LPG gas leaks and unattended cooking fires result in severe explosions and domestic damage. Typical standalone alarms beep passively without triggering physical ventilation or automated suppression.'
+            },
+            {
+                title: '<i class="fas fa-user-cog"></i> My Contribution & Role',
+                content: 'As sole builder, engineered the complete working physical model: assembled the Arduino Uno circuit with isolated 5V relays, wrote non-blocking C++ firmware (<code>smart_kitchen.ino</code>), developed the asynchronous Python serial telemetry server (<code>app.py</code>), and created the Three.js 3D digital twin dashboard.'
+            },
+            {
+                title: '<i class="fas fa-tools"></i> Firmware & Telemetry Architecture',
+                bullets: [
+                    '<strong>5-Second One-Shot Flame Timer:</strong> Optical IR flame detection activates the water pump relay and acoustic alarm for exactly 5,000 ms before deterministic auto shut-off.',
+                    '<strong>Anti-Loop Lockout (<code>flameMustClear</code>):</strong> Prevents infinite alarm cycling during continuous sensor exposure by requiring the flame to clear before re-arming the actuator trigger.',
+                    '<strong>Calibrated Gas Threshold (300 ADC):</strong> Tuned the MQ-2 hydrocarbon trigger to 300 ADC units, eliminating ambient indoor drift while reacting instantly to butane/LPG concentrations.',
+                    '<strong>Reentrant Lock Concurrency (<code>threading.RLock</code>):</strong> Eliminated server thread starvation in Python, allowing continuous 9600-Baud USB serial polling and REST API requests concurrently.',
+                    '<strong>Three.js 3D Digital Twin:</strong> Client-side 3D cooktop rendering with dynamic particle fluids, electric blue (<code>#38BDF8</code>) gas alert lighting, and live hardware register telemetry.'
+                ]
+            }
+        ],
+        notice: '<strong>Deployment Note:</strong> Physical working prototype built with Arduino Uno & sensors. The web dashboard provides an interactive Three.js 3D digital twin and hybrid simulation engine.',
+        actions: [
+            { label: 'Live 3D Digital Twin', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/smart-kitchen/', external: true, primary: true },
+            { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/smart-kitchen', external: true }
+        ]
+    },
     'chronofact': {
-        index: '02 // DIGITAL FORENSIC INVESTIGATION',
+        index: '03 // DIGITAL FORENSIC INVESTIGATION',
         badge: '<span class="badge live-badge"><i class="fas fa-circle"></i> Section 63(4) BSA 2023 Compliant</span>',
         title: 'CHRONOFACT 2.0: Digital Forensic Investigation Workbench',
         subtitle: 'An enterprise-grade forensic investigation platform engineered for cybercrime units, forensic examiners, and judicial officers under Section 63(4) of Bharatiya Sakshya Adhiniyam, 2023.',
@@ -589,39 +622,6 @@ const projectDetailsData = {
         actions: [
             { label: 'Live Interactive Preview', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/chronofact/', external: true, primary: true },
             { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/chronofact', external: true }
-        ]
-    },
-    'smart-kitchen': {
-        index: '03 // EMBEDDED & 3D DIGITAL TWIN',
-        badge: '<span class="badge progress-badge"><i class="fas fa-microchip"></i> Physical Hardware + 3D Twin</span>',
-        title: 'SAFETY-FI 96X: Industrial-Grade Kitchen IoT Safety Platform',
-        subtitle: 'A dual-action closed-loop hazard mitigation platform engineered to prevent catastrophic kitchen accidents from LPG gas leaks and uncontrolled cooking fires.',
-        image: 'assets/smart-kitchen-prototype.jpg',
-        imageCaption: 'Physical Hardware Test Bench with Arduino Uno, Sensors, Relays & Laptop 3D Twin',
-        blocks: [
-            {
-                title: '<i class="fas fa-bullseye"></i> Problem Statement',
-                content: 'Undetected LPG gas leaks and unattended cooking fires result in severe explosions and domestic damage. Typical standalone alarms beep passively without triggering physical ventilation or automated suppression.'
-            },
-            {
-                title: '<i class="fas fa-user-cog"></i> My Contribution & Role',
-                content: 'As sole builder, engineered the complete working physical model: assembled the Arduino Uno circuit with isolated 5V relays, wrote non-blocking C++ firmware (<code>smart_kitchen.ino</code>), developed the asynchronous Python serial telemetry server (<code>app.py</code>), and created the Three.js 3D digital twin dashboard.'
-            },
-            {
-                title: '<i class="fas fa-tools"></i> Firmware & Telemetry Architecture',
-                bullets: [
-                    '<strong>5-Second One-Shot Flame Timer:</strong> Optical IR flame detection activates the water pump relay and acoustic alarm for exactly 5,000 ms before deterministic auto shut-off.',
-                    '<strong>Anti-Loop Lockout (<code>flameMustClear</code>):</strong> Prevents infinite alarm cycling during continuous sensor exposure by requiring the flame to clear before re-arming the actuator trigger.',
-                    '<strong>Calibrated Gas Threshold (300 ADC):</strong> Tuned the MQ-2 hydrocarbon trigger to 300 ADC units, eliminating ambient indoor drift while reacting instantly to butane/LPG concentrations.',
-                    '<strong>Reentrant Lock Concurrency (<code>threading.RLock</code>):</strong> Eliminated server thread starvation in Python, allowing continuous 9600-Baud USB serial polling and REST API requests concurrently.',
-                    '<strong>Three.js 3D Digital Twin:</strong> Client-side 3D cooktop rendering with dynamic particle fluids, electric blue (<code>#38BDF8</code>) gas alert lighting, and live hardware register telemetry.'
-                ]
-            }
-        ],
-        notice: '<strong>Deployment Note:</strong> Physical working prototype built with Arduino Uno & sensors. The web dashboard provides an interactive Three.js 3D digital twin and hybrid simulation engine.',
-        actions: [
-            { label: 'Live 3D Digital Twin', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/smart-kitchen/', external: true, primary: true },
-            { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/smart-kitchen', external: true }
         ]
     },
     'portfolio': {
