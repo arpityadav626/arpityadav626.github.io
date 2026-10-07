@@ -698,6 +698,7 @@ const projectDetailsData = {
                     '<strong>Dark Obsidian Motion Design:</strong> Tailwind CSS styling with cyan/violet atmospheric glows, dynamic search filtering, and zero-flicker glassmorphic surfaces.',
                     '<strong>Global Streaming Omniverse (54+ Platforms):</strong> Comprehensive film & video directory indexing Free/FAST, Global Premium, Arthouse, Anime, Indian Cinema, and Public Archives with 1-click deep search dispatch.',
                     '<strong>Global Audio Omniverse (38+ Networks):</strong> Multi-platform audio discovery across Hi-Res FLAC, Indie hubs, 3D interactive radio (Radio Garden), and 24/7 in-app ambient live streams.',
+                    '<strong>Global Books Omniverse (42+ Platforms):</strong> Federated literature search indexing Free Public Domain, Kindle, Google Books, Library networks (Libby/Hoopla), DOAB, and Goodreads with in-app reader.',
                     '<strong>Cloud CDN Deployment:</strong> Multi-target automated CI/CD pipeline deploying to Google Firebase Hosting and GitHub Pages simultaneously.'
                 ]
             }
