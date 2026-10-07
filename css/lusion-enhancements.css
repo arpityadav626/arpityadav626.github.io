@@ -1,0 +1,491 @@
+/* ==========================================================================
+   LUSION ARCHITECTURAL SUITE — ENHANCEMENTS & VIDEO ENGINE INTEGRATION
+   Works seamlessly with Lusion's authentic styles.css
+   ========================================================================== */
+
+/* Fullscreen Background Video & Particle Canvas */
+#bg-video-stage {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#bg-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    opacity: 0.85;
+}
+
+#canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Ensure UI is above the video */
+#ui {
+    position: relative;
+    z-index: 10;
+}
+
+/* Zero Blur on Header: Crisp Luxury Glass */
+#header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(6, 7, 9, 0.95) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Audio Canvas Visualizer */
+#header-right-sound-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#header-right-sound-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.08);
+}
+
+#sound-canvas {
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+}
+
+/* Hero Custom Title Tweaks */
+#home-hero-title {
+    font-size: clamp(2rem, 5vw, 5.5rem);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+.hero-gold-accent {
+    color: #e5c46b;
+    text-shadow: 0 0 30px rgba(229, 196, 107, 0.35);
+}
+
+/* Home Reel Video Container Preview */
+#home-reel-video-container {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#home-reel-video-container:hover {
+    transform: scale(1.02);
+}
+
+.reel-video-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.reel-play-hud {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.45);
+    transition: background-color 0.3s;
+}
+
+#home-reel-video-container:hover .reel-play-hud {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.reel-play-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#home-reel-video-container:hover .reel-play-circle {
+    transform: scale(1.15);
+}
+
+.reel-play-label {
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Home Featured: 3 Ancient Masterpieces Showcase Grid */
+#home-featured {
+    padding: 10vh var(--grid-gap) 15vh;
+}
+
+.relics-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 48px;
+}
+
+.relic-showcase-card {
+    position: relative;
+    background: #0f1115;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.relic-showcase-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(229, 196, 107, 0.6);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(229, 196, 107, 0.15);
+}
+
+.relic-card-media {
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    position: relative;
+}
+
+.relic-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.relic-showcase-card:hover .relic-card-img {
+    transform: scale(1.08);
+}
+
+.relic-card-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e5c46b;
+    border-radius: 2px;
+}
+
+.relic-card-body {
+    padding: 24px;
+}
+
+.relic-card-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: #8c92a4;
+    text-transform: uppercase;
+}
+
+.relic-card-title {
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    margin: 6px 0 10px;
+    text-transform: uppercase;
+}
+
+.relic-card-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+.relic-card-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: #e5c46b;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* 3D Relic Inspector Modal */
+#lusion-relic-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(4, 5, 7, 0.94);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s;
+}
+
+#lusion-relic-modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lusion-modal-frame {
+    position: relative;
+    width: 90vw;
+    max-width: 1150px;
+    height: 82vh;
+    background: #090b0e;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    overflow: hidden;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95);
+}
+
+.lusion-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+}
+
+.lusion-modal-close:hover {
+    background: #ffffff;
+    color: #000000;
+    transform: rotate(90deg);
+}
+
+.lusion-modal-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #151821 0%, #06070a 80%);
+    cursor: grab;
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+.lusion-modal-stage:active {
+    cursor: grabbing;
+}
+
+.lusion-modal-img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+    transition: transform 0.08s linear, filter 0.3s;
+}
+
+.lusion-modal-img.mode-warm { filter: contrast(1.15) brightness(1.05); }
+.lusion-modal-img.mode-uv { filter: contrast(1.35) brightness(0.92) hue-rotate(220deg) saturate(1.9); }
+.lusion-modal-img.mode-gold { filter: contrast(1.25) brightness(1.18) sepia(0.65) saturate(1.9); }
+
+.lusion-modal-info {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lusion-modal-num {
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    color: #e5c46b;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.lusion-modal-title {
+    font-size: 26px;
+    letter-spacing: 0.06em;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.lusion-modal-sub {
+    font-size: 12px;
+    color: #8c92a4;
+    margin-bottom: 16px;
+}
+
+.lusion-modal-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 24px;
+    font-weight: 300;
+}
+
+.lusion-modal-modes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.lusion-mode-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    color: #ffffff;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lusion-mode-btn.active, .lusion-mode-btn:hover {
+    background: #e5c46b;
+    color: #000000;
+    border-color: #e5c46b;
+}
+
+/* Video Overlay Modal Styling */
+#video-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    background: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#video-overlay__video-container {
+    width: 85vw;
+    max-width: 1200px;
+    height: 70vh;
+    position: relative;
+    background: #050608;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+}
+
+#video-overlay-player {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#video-overlay__mobile-close-btn {
+    position: absolute;
+    top: 28px;
+    right: 36px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#video-overlay__mobile-close-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#video-overlay__controls {
+    width: 85vw;
+    max-width: 1200px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#video-overlay__play-btn, #video-overlay__mute-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    cursor: pointer;
+}
+
+#video-overlay__progress-container {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+}
+
+#video-overlay__progress-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: #e5c46b;
+    border-radius: 3px;
+}
+
+/* Responsive Rules */
+@media (max-width: 1024px) {
+    .relics-showcase-grid { grid-template-columns: 1fr; }
+    .lusion-modal-frame { grid-template-columns: 1fr; height: 90vh; }
+}

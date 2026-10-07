@@ -1,3 +1,6 @@
-.firebase/
+server.py
+__pycache__/
+*.pyc
 .DS_Store
 Thumbs.db
+assets/codes/
