@@ -658,6 +658,48 @@ const projectDetailsData = {
         actions: [
             { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/arpityadav626.github.io', external: true, primary: true }
         ]
+    },
+    'ai-hub': {
+        index: '05 // FRONTIER AI & MEDIA ECOSYSTEM',
+        badge: '<span class="badge live-badge"><i class="fas fa-bolt"></i> Live on Google Cloud &amp; GitHub</span>',
+        title: 'AI Hub ✲ Minimalist AI Intelligence & Media Suite',
+        subtitle: 'A high-speed, dark obsidian AI tools ecosystem with 3D discovery cards, in-app 4K cinema theater, ambient lofi radio, and Project Gutenberg literature intelligence.',
+        image: null,
+        imageCaption: null,
+        blocks: [
+            {
+                title: '<i class="fas fa-bullseye"></i> Vision & Architecture',
+                content: 'Engineered as an all-in-one dark aesthetic workspace unifying curated frontier AI tools, instant media streaming, and educational literature synthesis without context-switching or intrusive ads.'
+            },
+            {
+                title: '<i class="fas fa-project-diagram"></i> System Flow & Modules',
+                diagram: `[AI HUB WEB APPLICATION: REACT 19 + VITE 8]
+├── Curated Intelligence Hub (Frontier LLMs, Image Gen, Agents, Code Synthesizers)
+├── 4K Cinema Theater (In-App Modal Streamer & YouTube Player)
+├── Live Ambient Audio (Procedural Focus Radio for Deep Work)
+└── Project Gutenberg Reader (Classic Literature & Philosophical Prompting)
+        │
+        ▼ (Automated CI/CD Dual-Cloud Pipeline)
+[DEPLOYMENTS]
+├── Google Firebase Hosting ──► https://arpit-fun.web.app/
+└── GitHub Pages Pipeline   ──► https://arpityadav626.github.io/arpit.fun/`
+            },
+            {
+                title: '<i class="fas fa-laptop-code"></i> Engineering Highlights',
+                bullets: [
+                    '<strong>React 19 & Vite 8 Core:</strong> Built on modern React with zero build latency, sub-second HMR, and ultra-optimized chunk compression.',
+                    '<strong>Dark Obsidian Motion Design:</strong> Tailwind CSS styling with cyan/violet atmospheric glows, dynamic search filtering, and zero-flicker glassmorphic surfaces.',
+                    '<strong>In-App 4K Cinema & Video Hub:</strong> Seamless embedded player playing trailers, public domain movies, and video streams directly without leaving the app.',
+                    '<strong>Procedural & Live Ambient Radio:</strong> Built-in audio streamer tuned for focus and deep coding sessions.',
+                    '<strong>Cloud CDN Deployment:</strong> Multi-target automated CI/CD pipeline deploying to Google Firebase Hosting and GitHub Pages simultaneously.'
+                ]
+            }
+        ],
+        notice: '<strong>Live Production:</strong> Fully deployed on Google Firebase Hosting (<code>arpit-fun.web.app</code>) and GitHub Pages with automated CI/CD workflows and SEO sitemap indexing.',
+        actions: [
+            { label: 'Live App (Google Cloud)', icon: 'fas fa-external-link-alt', href: 'https://arpit-fun.web.app/', external: true, primary: true },
+            { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/arpit.fun', external: true }
+        ]
     }
 };
 
