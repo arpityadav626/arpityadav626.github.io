@@ -75,6 +75,12 @@ label[for] {
     cursor: pointer;
 }
 
+html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: auto;
+}
+
 body {
     background-color: var(--bg-page);
     color: var(--text-primary);
@@ -83,6 +89,9 @@ body {
     overflow-x: hidden;
     position: relative;
     transition: color 0.3s ease;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: auto;
+    touch-action: pan-y;
 }
 
 /* Background Atmosphere Glow */

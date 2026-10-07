@@ -883,17 +883,19 @@ window.addEventListener('scroll', () => {
 
 /* ========================================================
    10. NEXT-LEVEL INERTIA SMOOTH SCROLL (LENIS ENGINE)
-   Silky, physics-based glide with zero jitter
+   Silky, physics-based glide on desktop; native 120Hz acceleration on mobile
 ======================================================== */
+const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches;
 let lenis = null;
-if (typeof Lenis !== 'undefined') {
+
+if (!isTouchDevice && typeof Lenis !== 'undefined') {
     lenis = new Lenis({
         duration: 1.15,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         smoothWheel: true,
         wheelMultiplier: 1.0,
-        touchMultiplier: 1.5,
+        syncTouch: false,
     });
 
     function raf(time) {
@@ -901,21 +903,31 @@ if (typeof Lenis !== 'undefined') {
         requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
-
-    // Smooth anchor link gliding
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId && targetId !== '#') {
-                const targetEl = document.querySelector(targetId);
-                if (targetEl) {
-                    e.preventDefault();
-                    lenis.scrollTo(targetEl, { offset: -30 });
-                }
-            }
-        });
-    });
 }
+
+function smoothScrollToElement(targetEl, offset = -30) {
+    if (!targetEl) return;
+    if (lenis) {
+        lenis.scrollTo(targetEl, { offset });
+    } else {
+        const top = targetEl.getBoundingClientRect().top + window.scrollY + offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+    }
+}
+
+// Smooth anchor link gliding (Works seamlessly on desktop Lenis & mobile native)
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId && targetId !== '#') {
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+                e.preventDefault();
+                smoothScrollToElement(targetEl, -30);
+            }
+        }
+    });
+});
 
 /* ========================================================
    11. LINEAR.APP / VERCEL HIGH-PERFORMANCE SPOTLIGHT TRACKER
@@ -1075,9 +1087,7 @@ const studioExploreBtn = document.getElementById('btn-studio-explore');
 if (studioExploreBtn) {
     studioExploreBtn.addEventListener('click', () => {
         const pSec = document.getElementById('projects');
-        if (pSec && typeof lenis !== 'undefined' && lenis) {
-            lenis.scrollTo(pSec, { offset: -30 });
-        }
+        smoothScrollToElement(pSec, -30);
         playButtonClick();
     });
 }
@@ -1134,9 +1144,7 @@ if (studioExploreFooterBtn) {
     studioExploreFooterBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const pSec = document.getElementById('projects');
-        if (pSec && typeof lenis !== 'undefined' && lenis) {
-            lenis.scrollTo(pSec, { offset: -30 });
-        }
+        smoothScrollToElement(pSec, -30);
         playButtonClick();
     });
 }
@@ -1208,9 +1216,7 @@ function highlightProjectsBySkill(skillKey, isClick = false) {
     if (isClick && matchCount > 0) {
         lockedSkill = skillKey;
         const pSection = document.getElementById('projects');
-        if (pSection && typeof lenis !== 'undefined' && lenis) {
-            lenis.scrollTo(pSection, { offset: -30 });
-        }
+        smoothScrollToElement(pSection, -30);
         playButtonClick();
 
         // Release locked highlight after 4 seconds
