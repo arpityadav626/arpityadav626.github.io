@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "arpit-portfolio-2026",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

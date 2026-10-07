@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141824"/>
+      <stop offset="100%" stop-color="#080a10"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="50%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#fed7aa"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Outer Squircle Container -->
+  <rect x="5" y="5" width="118" height="118" rx="32" fill="url(#bgGrad)"/>
+  <rect x="5" y="5" width="118" height="118" rx="32" stroke="url(#glowGrad)" stroke-width="4"/>
+  
+  <!-- Circuit Grid Micro-Nodes -->
+  <circle cx="28" cy="28" r="3" fill="#f97316" fill-opacity="0.8"/>
+  <circle cx="100" cy="28" r="3" fill="#38bdf8" fill-opacity="0.8"/>
+  <circle cx="28" cy="100" r="3" fill="#f97316" fill-opacity="0.5"/>
+  <circle cx="100" cy="100" r="3" fill="#38bdf8" fill-opacity="0.5"/>
+  <path d="M 28 28 L 38 28 M 100 28 L 90 28" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+
+  <!-- Geometric AY Monogram -->
+  <path d="M 38 90 L 53 38 L 68 90 M 43 74 L 63 74" 
+        stroke="url(#textGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 66 50 L 78 68 L 90 50 M 78 68 L 78 90" 
+        stroke="#38bdf8" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Apex Pulse Dot -->
+  <circle cx="53" cy="38" r="3.5" fill="#ffffff" filter="url(#softGlow)"/>
+</svg>

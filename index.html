@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arpit Yadav — Full Stack Developer & IoT Enthusiast</title>
+    
+    <!-- Favicon & Brand Icons -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="theme-color" content="#0d111a">
+
+    <!-- Google SEO & Metadata -->
+    <meta name="description" content="Official developer portfolio of Arpit Yadav — Full Stack Developer & IoT Enthusiast based in Kanpur, India. Prototyping smart hardware systems and modern web applications.">
+    <meta name="keywords" content="Arpit Yadav, Arpit Yadav Developer, Arpit Yadav Kanpur, Full Stack Developer, IoT Enthusiast, Smart Helmet SIH, ChronoFact, Smart Kitchen">
+    <meta name="author" content="Arpit Yadav">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://arpity.me/">
+
+    <!-- Open Graph / LinkedIn & Social Preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arpity.me/">
+    <meta property="og:title" content="Arpit Yadav — Full Stack Developer & IoT Enthusiast">
+    <meta property="og:description" content="Explore live projects, IoT hardware innovations (SIH Smart Helmet), and full-stack architecture by Arpit Yadav.">
+    <meta property="og:image" content="https://arpity.me/assets/profile.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Arpit Yadav — Full Stack Developer & IoT Enthusiast">
+    <meta name="twitter:description" content="Explore live projects, IoT hardware innovations, and full-stack architecture by Arpit Yadav.">
+    <meta name="twitter:image" content="https://arpity.me/assets/profile.jpg">
+
+    <!-- Google Structured Data (JSON-LD) for Search Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Arpit Yadav",
+      "url": "https://arpity.me/",
+      "image": "https://arpity.me/assets/profile.jpg",
+      "jobTitle": "Full Stack Developer & IoT Enthusiast",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Axis Institute of Technology and Management"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/in/arpit-yadav-944983309/",
+        "https://github.com/arpityadav626"
+      ],
+      "knowsAbout": ["Full Stack Web Development", "IoT", "Arduino", "ESP32", "Python", "React", "JavaScript", "C++"]
+    }
+    </script>
+    
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Ultra-Smooth Inertia Scroll Engine (Lenis) -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+</head>
+<body class="dark-theme">
+
+    <!-- Linear.app / Vercel Ambient Spotlight Glow Layer -->
+    <div class="linear-spotlight" id="spotlight" aria-hidden="true"></div>
+
+    <!-- 0. Opening Minimalist Brand Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <h1 class="preloader-brand">
+                <span class="preloader-dot"></span>arpityadav<span class="preloader-accent">.dev</span>
+            </h1>
+            <div class="preloader-line-wrap">
+                <div class="preloader-line" id="preloader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. Floating Pill Navbar -->
+    <header class="header">
+        <a href="#home" class="logo sound-hover" aria-label="Arpit Yadav Home">
+            <span class="logo-mark" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="5" y="5" width="118" height="118" rx="32" fill="#0d111a" stroke="var(--accent-primary)" stroke-width="7"/>
+                    <path d="M 38 90 L 53 38 L 68 90 M 43 74 L 63 74" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 66 50 L 78 68 L 90 50 M 78 68 L 78 90" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="53" cy="38" r="4" fill="#ffffff"/>
+                </svg>
+            </span>
+            <span>Arpit<span class="logo-accent">.dev</span></span>
+        </a>
+        
+        <nav class="navbar" id="navbar">
+            <a href="#projects" class="nav-link sound-hover">Projects</a>
+            <a href="#skills" class="nav-link sound-hover">Skills</a>
+            <a href="#about" class="nav-link sound-hover">About</a>
+            <a href="#achievements" class="nav-link sound-hover">Achievements</a>
+            <a href="#contact" class="nav-link sound-hover">Contact</a>
+            <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="nav-link sound-hover mobile-nav-resume"><i class="fas fa-file-alt"></i> Resume ↗</a>
+        </nav>
+
+        <div class="header-right">
+            <!-- Ambient Theme Accent Switcher -->
+            <div class="theme-palette-wrap" id="theme-palette-wrap">
+                <button class="palette-toggle-btn sound-hover" id="palette-btn" title="Customize Theme Glow" aria-label="Customize Theme Glow">
+                    <span class="palette-current-dot" id="palette-current-dot"></span>
+                    <i class="fas fa-palette"></i>
+                </button>
+                <div class="palette-dropdown" id="palette-dropdown">
+                    <span class="palette-label">Theme Accent</span>
+                    <div class="palette-swatches">
+                        <button class="palette-swatch active sound-hover" data-theme="amber" title="Amber Orange">
+                            <span class="swatch-circle" style="background: #f97316; box-shadow: 0 0 8px #f97316;"></span>
+                            <span class="swatch-name">Amber</span>
+                        </button>
+                        <button class="palette-swatch sound-hover" data-theme="cyan" title="Electric Cyan">
+                            <span class="swatch-circle" style="background: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></span>
+                            <span class="swatch-name">Cyan</span>
+                        </button>
+                        <button class="palette-swatch sound-hover" data-theme="emerald" title="Matrix Emerald">
+                            <span class="swatch-circle" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                            <span class="swatch-name">Emerald</span>
+                        </button>
+                        <button class="palette-swatch sound-hover" data-theme="violet" title="Linear Violet">
+                            <span class="swatch-circle" style="background: #a855f7; box-shadow: 0 0 8px #a855f7;"></span>
+                            <span class="swatch-name">Violet</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cozy UI Sound Toggle Button -->
+            <button id="sound-btn" class="sound-toggle-btn sound-hover" title="Toggle UI Sound">
+                <i class="fas fa-volume-up" id="sound-icon"></i>
+                <span id="sound-text">COZY SFX</span>
+            </button>
+            <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="btn btn-pill sound-hover ripple-btn">Resume ↗</a>
+            <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. Hero Section (Above the fold) -->
+        <section class="hero reveal" id="home">
+            <div class="hero-left">
+                <div class="tag-label">
+                    <span class="pulse-dot"></span> Available for Opportunities
+                </div>
+                <h1 class="hero-title">
+                    Hi, I'm <span class="text-gradient">Arpit Yadav</span>
+                </h1>
+                <h2 class="hero-subtitle">
+                    Full Stack Developer & IoT Enthusiast
+                </h2>
+                <p class="hero-tagline">
+                    Building tech-driven solutions from hardware-integrated systems to scalable, modern web applications.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#projects" class="btn btn-primary sound-hover ripple-btn">View Projects <i class="fas fa-arrow-down"></i></a>
+                    <a href="#contact" class="btn btn-outline sound-hover ripple-btn">Get In Touch</a>
+                </div>
+
+                <div class="social-bar">
+                    <span class="social-label">Connect:</span>
+                    <a href="https://github.com/arpityadav626" target="_blank" class="social-link sound-hover" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" class="social-link sound-hover" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="mailto:arpityadav6794@gmail.com" class="social-link sound-hover" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="hero-studio-card" id="hero-studio">
+                    <!-- Studio Top Bar with macOS Window Dots & Status -->
+                    <div class="studio-header">
+                        <div class="studio-dots">
+                            <span class="s-dot dot-red"></span>
+                            <span class="s-dot dot-yellow"></span>
+                            <span class="s-dot dot-green"></span>
+                        </div>
+                        <div class="studio-title" id="studio-title-bar">
+                            <i class="fas fa-code-branch"></i> arpit.config.ts
+                        </div>
+                        <div class="studio-status">
+                            <span class="s-pulse"></span> Open to Roles
+                        </div>
+                    </div>
+
+                    <!-- 1-Click Interactive Navigation Tabs -->
+                    <div class="studio-tabs" role="tablist">
+                        <button class="s-tab active sound-hover" data-tab="bio" role="tab" aria-selected="true">
+                            <i class="fas fa-user-astronaut"></i> Bio
+                        </button>
+                        <button class="s-tab sound-hover" data-tab="projects" role="tab" aria-selected="false">
+                            <i class="fas fa-rocket"></i> Projects <span class="tab-badge">5</span>
+                        </button>
+                        <button class="s-tab sound-hover" data-tab="skills" role="tab" aria-selected="false">
+                            <i class="fas fa-layer-group"></i> Stack
+                        </button>
+                        <button class="s-tab sound-hover" data-tab="contact" role="tab" aria-selected="false">
+                            <i class="fas fa-envelope"></i> Connect
+                        </button>
+                    </div>
+
+                    <!-- Studio Body (Zero Scrollbars - Clean & Sized) -->
+                    <div class="studio-body">
+                        <!-- Panel 1: Bio / Overview (Default) -->
+                        <div class="studio-panel active" id="panel-bio">
+                            <div class="code-editor-box">
+                                <div class="code-line"><span class="token-keyword">const</span> <span class="token-var">engineer</span> = {</div>
+                                <div class="code-line indent"><span class="token-prop">name:</span> <span class="token-string">"Arpit Yadav"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">role:</span> <span class="token-string">"Full-Stack &amp; IoT Systems"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">college:</span> <span class="token-string">"AITM Kanpur ('25 - '29)"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">mission:</span> <span class="token-string">"Hardware + Web Synergy"</span>,</div>
+                                <div class="code-line indent"><span class="token-prop">status:</span> <span class="token-accent-text">"Open for Internships"</span></div>
+                                <div class="code-line">};</div>
+                            </div>
+                            <div class="panel-actions">
+                                <button class="panel-action-btn primary sound-hover" id="btn-studio-explore">
+                                    <i class="fas fa-arrow-down"></i> Explore Work
+                                </button>
+                                <a href="assets/Arpit_Yadav_Resume.pdf" target="_blank" class="panel-action-btn secondary sound-hover">
+                                    <i class="fas fa-file-pdf"></i> Resume ↗
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: Projects (Instant Access to all 5) -->
+                        <div class="studio-panel" id="panel-projects">
+                            <div class="mini-projects-list">
+                                <div class="mini-project-row sound-hover" data-open-project="smart-helmet">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">01</span>
+                                        <div>
+                                            <span class="mini-p-title">Smart Helmet Telemetry</span>
+                                            <span class="mini-p-sub">SIH 2026 // ESP32 &bull; MQ-3 &bull; Interlock</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                                <div class="mini-project-row sound-hover" data-open-project="chronofact">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">02</span>
+                                        <div>
+                                            <span class="mini-p-title">ChronoFact 2.0 Forensics</span>
+                                            <span class="mini-p-sub">BSA Legal &bull; Merkle Hash &bull; Multi-Agent</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                                <div class="mini-project-row sound-hover" data-open-project="smart-kitchen">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">03</span>
+                                        <div>
+                                            <span class="mini-p-title">SAFETY-FI 96X Platform</span>
+                                            <span class="mini-p-sub">Kitchen IoT &bull; Three.js 3D Cooktop Twin</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                                <div class="mini-project-row sound-hover" data-open-project="portfolio">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">04</span>
+                                        <div>
+                                            <span class="mini-p-title">Developer Portfolio</span>
+                                            <span class="mini-p-sub">Web Audio Engine &bull; Fluid Micro-UI</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                                <div class="mini-project-row sound-hover" data-open-project="ai-hub">
+                                    <div class="mini-p-info">
+                                        <span class="mini-p-num">05</span>
+                                        <div>
+                                            <span class="mini-p-title">AI Hub ✲ Media Discovery</span>
+                                            <span class="mini-p-sub">React 19 &bull; 4K Theater &bull; Ambient Radio</span>
+                                        </div>
+                                    </div>
+                                    <button class="mini-p-btn" title="View details">Details ↗</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Stack (Categorized Interactive Pills) -->
+                        <div class="studio-panel" id="panel-skills">
+                            <div class="studio-skills-wrap">
+                                <div class="studio-skill-group">
+                                    <span class="group-label">Languages</span>
+                                    <div class="group-pills">
+                                        <span class="s-pill sound-hover" data-skill="c">C</span>
+                                        <span class="s-pill sound-hover" data-skill="cpp">C++</span>
+                                        <span class="s-pill sound-hover" data-skill="python">Python</span>
+                                        <span class="s-pill sound-hover" data-skill="js">JavaScript</span>
+                                    </div>
+                                </div>
+                                <div class="studio-skill-group">
+                                    <span class="group-label">Embedded &amp; IoT</span>
+                                    <div class="group-pills">
+                                        <span class="s-pill sound-hover" data-skill="esp32">ESP32</span>
+                                        <span class="s-pill sound-hover" data-skill="arduino">Arduino</span>
+                                        <span class="s-pill sound-hover" data-skill="sensors">Sensors</span>
+                                        <span class="s-pill sound-hover" data-skill="embedded-c">Embedded C</span>
+                                    </div>
+                                </div>
+                                <div class="studio-skill-group">
+                                    <span class="group-label">Web &amp; Backend</span>
+                                    <div class="group-pills">
+                                        <span class="s-pill sound-hover" data-skill="react">React</span>
+                                        <span class="s-pill sound-hover" data-skill="nodejs">Node.js</span>
+                                        <span class="s-pill sound-hover" data-skill="express">Express</span>
+                                        <span class="s-pill sound-hover" data-skill="mongodb">MongoDB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 4: Connect (Direct Actions) -->
+                        <div class="studio-panel" id="panel-contact">
+                            <div class="studio-contact-list">
+                                <div class="studio-contact-item">
+                                    <div class="sc-left">
+                                        <i class="fas fa-envelope"></i>
+                                        <span class="sc-val" id="studio-email-text">arpityadav6794@gmail.com</span>
+                                    </div>
+                                    <button class="sc-copy-btn sound-hover" id="studio-copy-email-btn" title="Copy email address">
+                                        <i class="fas fa-copy"></i> <span id="copy-btn-label">Copy</span>
+                                    </button>
+                                </div>
+                                <a href="https://linkedin.com/in/arpit-yadav-944983309" target="_blank" class="studio-contact-item sound-hover link-item">
+                                    <div class="sc-left">
+                                        <i class="fab fa-linkedin"></i>
+                                        <span class="sc-val">linkedin.com/in/arpit-yadav</span>
+                                    </div>
+                                    <span class="sc-ext"><i class="fas fa-external-link-alt"></i></span>
+                                </a>
+                                <a href="https://github.com/arpityadav626" target="_blank" class="studio-contact-item sound-hover link-item">
+                                    <div class="sc-left">
+                                        <i class="fab fa-github"></i>
+                                        <span class="sc-val">github.com/arpityadav626</span>
+                                    </div>
+                                    <span class="sc-ext"><i class="fas fa-external-link-alt"></i></span>
+                                </a>
+                                <div class="studio-contact-item info-only">
+                                    <div class="sc-left">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span class="sc-val">Kanpur, Uttar Pradesh, India</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Studio Multi-Project & Stack Status Footer -->
+                    <div class="studio-footer">
+                        <div class="sf-status">
+                            <span class="s-pulse"></span> <span id="studio-footer-status">Full-Stack Web &bull; IoT &bull; AI Systems</span>
+                        </div>
+                        <button class="sf-sim-btn sound-hover" id="btn-studio-explore-footer" title="Explore all 5 featured projects">
+                            <i class="fas fa-layer-group"></i> All Projects (5) ↓
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Projects Section (TOP PRIORITY) -->
+        <section class="section projects-section reveal" id="projects">
+            <div class="section-header">
+                <span class="mono-tag">( 01 // SELECTED WORK )</span>
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-desc">Five technical solutions engineered with purpose and performance.</p>
+            </div>
+
+            <div class="projects-grid">
+                
+                <!-- Project 01: Smart Helmet (Connected Hardware IoT) -->
+                <div class="project-card tilt-card card-sih" data-tilt data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c">
+                    <div class="card-top">
+                        <span class="project-num">01</span>
+                        <span class="badge sih-badge"><i class="fas fa-microchip"></i> Hardware IoT</span>
+                    </div>
+                    <h3 class="project-title">Smart Helmet</h3>
+                    <p class="project-summary">
+                        IoT-enabled safety helmet engineered to detect accidents, alcohol presence, and enforce helmet wear before two-wheeler ignition.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span data-skill="arduino">Arduino / ESP32</span>
+                        <span data-skill="sensors">Sensors</span>
+                        <span data-skill="cpp">Embedded C++</span>
+                        <span>IoT Cloud</span>
+                        <span>GSM/GPS</span>
+                    </div>
+                    <div class="card-links">
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-helmet">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            LinkedIn <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 02: ChronoFact -->
+                <div class="project-card tilt-card card-chronofact" data-tilt data-project="chronofact" data-skills="react nodejs express js html-css tailwind git github python">
+                    <div class="card-top">
+                        <span class="project-num">02</span>
+                        <span class="badge live-badge"><i class="fas fa-circle"></i> Live Platform</span>
+                    </div>
+                    <h3 class="project-title">ChronoFact</h3>
+                    <p class="project-summary">
+                        Web platform providing curated fact-checking and timeline-based information discovery with high-speed querying.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span data-skill="react">React</span>
+                        <span data-skill="nodejs">Node.js</span>
+                        <span>REST APIs</span>
+                        <span data-skill="html-css">Modern CSS</span>
+                    </div>
+                    <div class="card-links">
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="chronofact">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            Live Site <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 03: Smart Kitchen System -->
+                <div class="project-card tilt-card card-kitchen" data-tilt data-project="smart-kitchen" data-skills="arduino esp32 sensors cpp python c microcontrollers">
+                    <div class="card-top">
+                        <span class="project-num">03</span>
+                        <span class="badge progress-badge"><i class="fas fa-sync-alt fa-spin"></i> Active Development</span>
+                    </div>
+                    <h3 class="project-title">Smart Kitchen System</h3>
+                    <p class="project-summary">
+                        Automated IoT solution for real-time pantry monitoring, LPG gas leakage detection, and smart inventory notification alerts.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span data-skill="arduino">Arduino / Microcontrollers</span>
+                        <span data-skill="sensors">Sensors</span>
+                        <span data-skill="python">Python Serial</span>
+                        <span>Web Dashboard</span>
+                    </div>
+                    <div class="card-links">
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-kitchen">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            Live Demo <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 04: Developer Portfolio (Self) -->
+                <div class="project-card tilt-card card-portfolio" data-tilt data-project="portfolio" data-skills="html-css js git github web-audio">
+                    <div class="card-top">
+                        <span class="project-num">04</span>
+                        <span class="badge live-badge"><i class="fas fa-star"></i> Personal Architecture</span>
+                    </div>
+                    <h3 class="project-title">Developer Portfolio</h3>
+                    <p class="project-summary">
+                        High-performance, responsive personal portfolio crafted with custom cozy audio synthesizer engine and fluid micro-interactions.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span data-skill="html-css">HTML5 &amp; CSS3</span>
+                        <span data-skill="js">Vanilla JS</span>
+                        <span>Web Audio API</span>
+                        <span data-skill="github">GitHub Pages</span>
+                    </div>
+                    <div class="card-links">
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="portfolio">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://github.com/arpityadav626/arpityadav626.github.io" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            GitHub <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 05: AI Hub ✲ Media Discovery Suite -->
+                <div class="project-card tilt-card card-aihub" data-tilt data-project="ai-hub" data-skills="react js tailwind html-css github">
+                    <div class="card-top">
+                        <span class="project-num">05</span>
+                        <span class="badge live-badge"><i class="fas fa-circle"></i> Live Platform</span>
+                    </div>
+                    <h3 class="project-title">AI Hub ✲ Media Discovery Suite</h3>
+                    <p class="project-summary">
+                        A fast, motion-rich, dark obsidian AI intelligence workspace featuring 3D tool discovery, in-app 4K cinema theater, ambient lofi radio, and literature synthesis.
+                    </p>
+                    <div class="tech-stack-pills">
+                        <span data-skill="react">React 19</span>
+                        <span data-skill="js">TypeScript</span>
+                        <span>Tailwind CSS</span>
+                        <span>Three.js</span>
+                        <span>Web Audio</span>
+                        <span data-skill="github">Google Cloud &amp; GitHub</span>
+                    </div>
+                    <div class="card-links">
+                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="ai-hub">
+                            Details <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <a href="https://arpit-fun.web.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                            Live Site <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. Technical Skills Section -->
+        <section class="section skills-section reveal" id="skills">
+            <div class="section-header">
+                <span class="mono-tag">( 02 // CAPABILITIES )</span>
+                <h2 class="section-title">Technical Skills</h2>
+                <p class="section-desc">Categorized stack used for software engineering & hardware integration.</p>
+                <div class="skills-interactive-hint" id="skills-interactive-hint">
+                    <span class="hint-pulse"></span> <span id="hint-text">Hover or click any skill to highlight linked projects</span>
+                </div>
+            </div>
+
+            <div class="skills-categories-grid">
+                
+                <div class="skill-category-card">
+                    <div class="category-title"><i class="fas fa-terminal"></i> Languages</div>
+                    <div class="pill-group">
+                        <span class="skill-pill sound-hover" data-skill="c"><i class="fas fa-code"></i> C</span>
+                        <span class="skill-pill sound-hover" data-skill="cpp"><i class="fas fa-code"></i> C++</span>
+                        <span class="skill-pill sound-hover" data-skill="js"><i class="fab fa-js"></i> JavaScript</span>
+                        <span class="skill-pill sound-hover" data-skill="python"><i class="fab fa-python"></i> Python</span>
+                    </div>
+                </div>
+
+                <div class="skill-category-card">
+                    <div class="category-title"><i class="fas fa-layer-group"></i> Frontend & Backend</div>
+                    <div class="pill-group">
+                        <span class="skill-pill sound-hover" data-skill="react"><i class="fab fa-react"></i> React</span>
+                        <span class="skill-pill sound-hover" data-skill="nodejs"><i class="fab fa-node-js"></i> Node.js</span>
+                        <span class="skill-pill sound-hover" data-skill="express"><i class="fas fa-server"></i> Express</span>
+                        <span class="skill-pill sound-hover" data-skill="html-css"><i class="fab fa-html5"></i> HTML5 & CSS3</span>
+                        <span class="skill-pill sound-hover" data-skill="tailwind"><i class="fas fa-wind"></i> Tailwind CSS</span>
+                    </div>
+                </div>
+
+                <div class="skill-category-card">
+                    <div class="category-title"><i class="fas fa-microchip"></i> IoT & Hardware</div>
+                    <div class="pill-group">
+                        <span class="skill-pill sound-hover" data-skill="esp32"><i class="fas fa-memory"></i> ESP32</span>
+                        <span class="skill-pill sound-hover" data-skill="arduino"><i class="fas fa-microchip"></i> Arduino</span>
+                        <span class="skill-pill sound-hover" data-skill="sensors"><i class="fas fa-wave-square"></i> Sensors & Actuators</span>
+                        <span class="skill-pill sound-hover" data-skill="embedded-c"><i class="fas fa-laptop-code"></i> Embedded C</span>
+                    </div>
+                </div>
+
+                <div class="skill-category-card">
+                    <div class="category-title"><i class="fas fa-tools"></i> Tools & Databases</div>
+                    <div class="pill-group">
+                        <span class="skill-pill sound-hover" data-skill="mongodb"><i class="fas fa-database"></i> MongoDB</span>
+                        <span class="skill-pill sound-hover" data-skill="git"><i class="fab fa-git-alt"></i> Git</span>
+                        <span class="skill-pill sound-hover" data-skill="github"><i class="fab fa-github"></i> GitHub</span>
+                        <span class="skill-pill sound-hover" data-skill="vscode"><i class="fas fa-code"></i> VS Code</span>
+                        <span class="skill-pill sound-hover" data-skill="postman"><i class="fas fa-paper-plane"></i> Postman</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. About Me & Education -->
+        <section class="section about-section reveal" id="about">
+            <div class="section-header">
+                <span class="mono-tag">( 03 // BACKGROUND )</span>
+                <h2 class="section-title">About & Education</h2>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-narrative">
+                    <h3>Engineering with Passion & Grit</h3>
+                    <p>
+                        I'm a Computer Science undergraduate passionate about solving real-world challenges through technology. My interests span across full-stack web development and IoT hardware integration.
+                    </p>
+                    <p>
+                        Whether it's prototyping a Smart Helmet for road safety at Smart India Hackathon or architecting web platforms, I love taking ideas from zero to production. Constantly learning, building, and exploring new tech stacks.
+                    </p>
+                    <div class="focus-bullets">
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Focus:</strong> Full-Stack Web Development & IoT Integration</div>
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Currently Building:</strong> ChronoFact & Smart Kitchen System</div>
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Hackathons:</strong> Smart India Hackathon (SIH) Participant</div>
+                    </div>
+                </div>
+
+                <div class="education-card">
+                    <span class="edu-badge"><i class="fas fa-graduation-cap"></i> Higher Education</span>
+                    <h4 class="degree">Bachelor of Technology (B.Tech)</h4>
+                    <p class="field">Computer Science & Engineering</p>
+                    <p class="college"><i class="fas fa-university"></i> Axis Institute of Technology and Management</p>
+                    <p class="year"><i class="fas fa-calendar-alt"></i> 2025 — 2029</p>
+                    <div class="edu-footer">
+                        <span>Coursework: Data Structures, Web Architecture, IoT, Database Systems</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Achievements & Certifications -->
+        <section class="section achievements-section reveal" id="achievements">
+            <div class="section-header">
+                <span class="mono-tag">( 04 // HONORS )</span>
+                <h2 class="section-title">Achievements</h2>
+            </div>
+
+            <div class="achievements-container">
+                <div class="achievement-item">
+                    <div class="achieve-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="achieve-content">
+                        <h4>Smart India Hackathon (SIH) Participant</h4>
+                        <p>Designed and built an end-to-end IoT Smart Helmet system for accident prevention and road safety innovation.</p>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achieve-icon"><i class="fas fa-code"></i></div>
+                    <div class="achieve-content">
+                        <h4>Competitive Coding & Platforms</h4>
+                        <p>Active problem solver practicing core data structures and algorithmic thinking on GeeksforGeeks & LeetCode.</p>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achieve-icon"><i class="fas fa-certificate"></i></div>
+                    <div class="achieve-content">
+                        <h4>Technical Certifications & Badges</h4>
+                        <p>Full-Stack Web Development, Git/GitHub Version Control & Modern Database Foundations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Contact Section -->
+        <section class="section contact-section reveal" id="contact">
+            <div class="section-header">
+                <span class="mono-tag">( 05 // LET'S TALK )</span>
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-desc">Have a project idea, opportunity, or simply want to connect?</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h3>Contact Details</h3>
+                    <p>Feel free to reach out directly through email or socials:</p>
+
+                    <div class="contact-detail-row">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <span class="label">Direct Email</span>
+                            <a href="mailto:arpityadav6794@gmail.com" class="val sound-hover">arpityadav6794@gmail.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-detail-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <span class="label">Location</span>
+                            <span class="val">Kanpur, Uttar Pradesh, India</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-detail-row">
+                        <i class="fas fa-link"></i>
+                        <div>
+                            <span class="label">Social Handles</span>
+                            <div class="social-links-inline">
+                                <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" class="sound-hover">LinkedIn ↗</a>
+                                <a href="https://github.com/arpityadav626" target="_blank" class="sound-hover">GitHub ↗</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form" id="contact-form" action="https://formspree.io/f/moevgzjw" method="POST">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Your Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="5" placeholder="Your Message..." required></textarea>
+                    </div>
+                    <button type="submit" id="submit-btn" class="btn btn-primary btn-submit sound-hover ripple-btn">
+                        <span>Send Message</span> <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <p id="form-msg" class="form-msg"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 <strong>Arpit Yadav</strong>. Built with precision, semantic code & Web Audio.</p>
+            <a href="#home" class="back-top sound-hover">Back to top ↑</a>
+        </div>
+    </footer>
+
+    <!-- Project Details Modal Lightbox (Root Level - Completely Above All Navbars) -->
+    <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details" data-lenis-prevent="true">
+        <div class="modal-dialog-container">
+            <!-- Sleek Corner Integrated Close Button - Nestled symmetrically into the 24px corner curve -->
+            <button class="modal-corner-close-btn sound-hover" id="modal-close-btn" aria-label="Close details modal" title="Close (ESC)">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="project-modal-card" id="project-modal-card" data-lenis-prevent="true">
+                <!-- Integrated Subtle Gradient Reading Progress Bar -->
+                <div class="modal-scroll-progress-bar" id="modal-scroll-bar"></div>
+                <div id="modal-dynamic-content" class="modal-body-content">
+                    <!-- Populated dynamically with staggered cascade animations -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
