@@ -78,7 +78,6 @@ label[for] {
 html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: auto;
 }
 
 body {
@@ -90,8 +89,6 @@ body {
     position: relative;
     transition: color 0.3s ease;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: auto;
-    touch-action: pan-y;
 }
 
 /* Background Atmosphere Glow */

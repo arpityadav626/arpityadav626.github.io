@@ -61,9 +61,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Ultra-Smooth Inertia Scroll Engine (Lenis) -->
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 </head>
 <body class="dark-theme">
 
@@ -710,13 +707,13 @@
     </footer>
 
     <!-- Project Details Modal Lightbox (Root Level - Completely Above All Navbars) -->
-    <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details" data-lenis-prevent="true">
+    <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details">
         <div class="modal-dialog-container">
             <!-- Sleek Corner Integrated Close Button - Nestled symmetrically into the 24px corner curve -->
             <button class="modal-corner-close-btn sound-hover" id="modal-close-btn" aria-label="Close details modal" title="Close (ESC)">
                 <i class="fas fa-times"></i>
             </button>
-            <div class="project-modal-card" id="project-modal-card" data-lenis-prevent="true">
+            <div class="project-modal-card" id="project-modal-card">
                 <!-- Integrated Subtle Gradient Reading Progress Bar -->
                 <div class="modal-scroll-progress-bar" id="modal-scroll-bar"></div>
                 <div id="modal-dynamic-content" class="modal-body-content">

@@ -778,7 +778,6 @@ function openProjectModal(projectId) {
     projectModal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
-    if (lenis) lenis.stop();
     if (projectModalCard) projectModalCard.scrollTop = 0;
     const progressBar = document.getElementById('modal-scroll-bar');
     if (progressBar) progressBar.style.setProperty('--modal-scroll-pct', '0%');
@@ -791,7 +790,6 @@ function closeProjectModal() {
     projectModal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
-    if (lenis) lenis.start();
     playModalSound(false);
 }
 
@@ -882,40 +880,16 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ========================================================
-   10. NEXT-LEVEL INERTIA SMOOTH SCROLL (LENIS ENGINE)
-   Silky, physics-based glide on desktop; native 120Hz acceleration on mobile
+   10. RELIABLE NATIVE SMOOTH SCROLL & ANCHOR GLIDE
+   Uses native browser scrolling with zero lockups on any device
 ======================================================== */
-const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches;
-let lenis = null;
-
-if (!isTouchDevice && typeof Lenis !== 'undefined') {
-    lenis = new Lenis({
-        duration: 1.15,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1.0,
-        syncTouch: false,
-    });
-
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-}
-
 function smoothScrollToElement(targetEl, offset = -30) {
     if (!targetEl) return;
-    if (lenis) {
-        lenis.scrollTo(targetEl, { offset });
-    } else {
-        const top = targetEl.getBoundingClientRect().top + window.scrollY + offset;
-        window.scrollTo({ top, behavior: 'smooth' });
-    }
+    const top = targetEl.getBoundingClientRect().top + window.scrollY + offset;
+    window.scrollTo({ top, behavior: 'smooth' });
 }
 
-// Smooth anchor link gliding (Works seamlessly on desktop Lenis & mobile native)
+// Smooth anchor link gliding
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         const targetId = this.getAttribute('href');
