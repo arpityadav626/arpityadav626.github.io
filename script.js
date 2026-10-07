@@ -689,8 +689,8 @@ const projectDetailsData = {
                 bullets: [
                     '<strong>React 19 & Vite 8 Core:</strong> Built on modern React with zero build latency, sub-second HMR, and ultra-optimized chunk compression.',
                     '<strong>Dark Obsidian Motion Design:</strong> Tailwind CSS styling with cyan/violet atmospheric glows, dynamic search filtering, and zero-flicker glassmorphic surfaces.',
-                    '<strong>In-App 4K Cinema & Video Hub:</strong> Seamless embedded player playing trailers, public domain movies, and video streams directly without leaving the app.',
-                    '<strong>Procedural & Live Ambient Radio:</strong> Built-in audio streamer tuned for focus and deep coding sessions.',
+                    '<strong>Global Streaming Omniverse (54+ Platforms):</strong> Comprehensive film & video directory indexing Free/FAST, Global Premium, Arthouse, Anime, Indian Cinema, and Public Archives with 1-click deep search dispatch.',
+                    '<strong>Global Audio Omniverse (38+ Networks):</strong> Multi-platform audio discovery across Hi-Res FLAC, Indie hubs, 3D interactive radio (Radio Garden), and 24/7 in-app ambient live streams.',
                     '<strong>Cloud CDN Deployment:</strong> Multi-target automated CI/CD pipeline deploying to Google Firebase Hosting and GitHub Pages simultaneously.'
                 ]
             }
