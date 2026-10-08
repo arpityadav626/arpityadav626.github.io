@@ -1141,6 +1141,36 @@ const hintText = document.getElementById('hint-text');
 
 let lockedSkill = null;
 
+function formatSkillName(key) {
+    const map = {
+        'ai': 'Generative AI & LLMs',
+        'threejs': 'Three.js / WebGL',
+        'web-audio': 'Web Audio API',
+        'firebase': 'Google Firebase',
+        'typescript': 'TypeScript',
+        'ts': 'TypeScript',
+        'js': 'JavaScript',
+        'html-css': 'HTML5 & CSS3',
+        'tailwind': 'Tailwind CSS',
+        'react': 'React 19',
+        'nodejs': 'Node.js',
+        'express': 'Express',
+        'mongodb': 'MongoDB',
+        'esp32': 'ESP32',
+        'arduino': 'Arduino',
+        'sensors': 'Sensors & Actuators',
+        'embedded-c': 'Embedded C',
+        'c': 'C',
+        'cpp': 'C++',
+        'python': 'Python',
+        'git': 'Git',
+        'github': 'GitHub',
+        'vscode': 'VS Code',
+        'postman': 'Postman'
+    };
+    return map[key] || (key ? key.toUpperCase() : '');
+}
+
 function highlightProjectsBySkill(skillKey, isClick = false) {
     if (!skillKey) {
         resetSkillHighlights();
@@ -1188,10 +1218,11 @@ function highlightProjectsBySkill(skillKey, isClick = false) {
     // Update hint feedback bar
     if (hintElement && hintText) {
         hintElement.classList.add('hint-active');
+        const formattedName = formatSkillName(skillKey);
         if (matchCount > 0) {
-            hintText.innerHTML = `<strong>${skillKey.toUpperCase()}</strong> is implemented in <strong>${matchCount} Project${matchCount > 1 ? 's' : ''}</strong>: ${matchedTitles.join(', ')} &mdash; ${isClick ? 'Gliding to projects...' : 'Click pill to jump!'}`;
+            hintText.innerHTML = `<strong>${formattedName}</strong> is implemented in <strong>${matchCount} Project${matchCount > 1 ? 's' : ''}</strong>: ${matchedTitles.join(', ')} &mdash; ${isClick ? 'Gliding to projects...' : 'Click pill to jump!'}`;
         } else {
-            hintText.innerHTML = `<strong>${skillKey.toUpperCase()}</strong> is a core foundation competency.`;
+            hintText.innerHTML = `<strong>${formattedName}</strong> is a core foundation competency.`;
         }
     }
 
@@ -1265,5 +1296,14 @@ document.querySelectorAll('.tech-stack-pills span[data-skill]').forEach(tag => {
     });
     tag.addEventListener('mouseleave', () => {
         skillPills.forEach(p => p.classList.remove('skill-highlighted'));
+    });
+    tag.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const skillsSection = document.getElementById('skills');
+        if (skillsSection) {
+            smoothScrollToElement(skillsSection, -30);
+            playButtonClick();
+            highlightProjectsBySkill(sKey, false);
+        }
     });
 });

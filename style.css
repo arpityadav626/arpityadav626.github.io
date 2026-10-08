@@ -1408,8 +1408,19 @@ main, .header, .footer {
 ======================================================== */
 .skills-categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(6, 1fr);
     gap: 24px;
+}
+
+.skills-categories-grid .skill-category-card:nth-child(1),
+.skills-categories-grid .skill-category-card:nth-child(2),
+.skills-categories-grid .skill-category-card:nth-child(3) {
+    grid-column: span 2;
+}
+
+.skills-categories-grid .skill-category-card:nth-child(4),
+.skills-categories-grid .skill-category-card:nth-child(5) {
+    grid-column: span 3;
 }
 
 .skill-category-card {
@@ -2296,6 +2307,14 @@ body.modal-open .header {
         gap: 20px;
     }
 
+    .skills-categories-grid .skill-category-card {
+        grid-column: span 1 !important;
+    }
+
+    .skills-categories-grid .skill-category-card:last-child {
+        grid-column: span 2 !important;
+    }
+
     .achievements-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
@@ -2584,6 +2603,10 @@ body.modal-open .header {
     .skills-categories-grid {
         grid-template-columns: 1fr;
         gap: 16px;
+    }
+
+    .skills-categories-grid .skill-category-card {
+        grid-column: auto !important;
     }
 
     .achievements-grid {
