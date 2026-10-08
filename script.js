@@ -893,8 +893,9 @@ window.addEventListener('scroll', () => {
 ======================================================== */
 function smoothScrollToElement(targetEl, offset = -30) {
     if (!targetEl) return;
-    const top = targetEl.getBoundingClientRect().top + window.scrollY + offset;
-    window.scrollTo({ top, behavior: 'smooth' });
+    const scrollY = window.pageYOffset !== undefined ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    const top = targetEl.getBoundingClientRect().top + scrollY + offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 }
 
 // Smooth anchor link gliding
@@ -1179,6 +1180,7 @@ function highlightProjectsBySkill(skillKey, isClick = false) {
 
     let matchCount = 0;
     const matchedTitles = [];
+    const matchedCards = [];
 
     projectCards.forEach(card => {
         const skillsAttr = card.getAttribute('data-skills') || '';
@@ -1186,6 +1188,7 @@ function highlightProjectsBySkill(skillKey, isClick = false) {
 
         if (isMatch) {
             matchCount++;
+            matchedCards.push(card);
             card.classList.add('skill-matched');
             card.classList.remove('skill-dimmed');
             const title = card.querySelector('.project-title');
@@ -1220,7 +1223,7 @@ function highlightProjectsBySkill(skillKey, isClick = false) {
         hintElement.classList.add('hint-active');
         const formattedName = formatSkillName(skillKey);
         if (matchCount > 0) {
-            hintText.innerHTML = `<strong>${formattedName}</strong> is implemented in <strong>${matchCount} Project${matchCount > 1 ? 's' : ''}</strong>: ${matchedTitles.join(', ')} &mdash; ${isClick ? 'Gliding to projects...' : 'Click pill to jump!'}`;
+            hintText.innerHTML = `<strong>${formattedName}</strong> is implemented in <strong>${matchCount} Project${matchCount > 1 ? 's' : ''}</strong>: ${matchedTitles.join(', ')} &mdash; ${isClick ? 'Gliding to project...' : 'Click pill to jump!'}`;
         } else {
             hintText.innerHTML = `<strong>${formattedName}</strong> is a core foundation competency.`;
         }
@@ -1228,17 +1231,26 @@ function highlightProjectsBySkill(skillKey, isClick = false) {
 
     if (isClick && matchCount > 0) {
         lockedSkill = skillKey;
-        const pSection = document.getElementById('projects');
-        smoothScrollToElement(pSection, -30);
         playButtonClick();
 
-        // Release locked highlight after 4 seconds
+        // Target the dedicated matched project card directly!
+        const targetCard = matchedCards[0];
+        if (targetCard) {
+            const headerEl = document.querySelector('.header');
+            const headerOffset = headerEl ? (headerEl.offsetHeight + 24) : 80;
+            smoothScrollToElement(targetCard, -headerOffset);
+        } else {
+            const pSection = document.getElementById('projects');
+            smoothScrollToElement(pSection, -30);
+        }
+
+        // Release locked highlight after 5 seconds
         setTimeout(() => {
             if (lockedSkill === skillKey) {
                 resetSkillHighlights();
                 lockedSkill = null;
             }
-        }, 4000);
+        }, 5000);
     }
 }
 
