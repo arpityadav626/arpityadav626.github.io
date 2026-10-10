@@ -712,15 +712,15 @@ const projectDetailsData = {
     },
     'monolith-villa': {
         index: '06 // SPATIAL COMPUTING & 3D ARCHVIZ',
-        badge: '<span class="badge live-badge"><i class="fas fa-cube"></i> Live on Vercel &bull; Apex Intelligence</span>',
+        badge: '<span class="badge live-badge"><i class="fas fa-cube"></i> Live Sample Project &bull; Built by Arpit</span>',
         title: 'Monolith Villa ⬡ Bespoke 3D Architectural Walkthrough',
-        subtitle: 'A cinematic, high-performance WebGL 3D virtual residence engineered for Apex Intelligence (Founded by Antriksh, Co-founded by Arpit Yadav) featuring scroll-driven camera interpolation, spatial HUD beacons, and ambient acoustic soundscapes.',
+        subtitle: 'A sample photorealistic WebGL 3D architectural virtual residence built & engineered by Arpit Yadav for Apex Intelligence (Founded by Antriksh, Co-founded by Arpit Yadav) featuring scroll-driven camera interpolation, spatial HUD beacons, and ambient acoustic soundscapes.',
         image: null,
         imageCaption: null,
         blocks: [
             {
                 title: '<i class="fas fa-bullseye"></i> Vision & Partnership',
-                content: 'Engineered as a flagship spatial digital twin and luxury virtual showcase for <strong>Apex Intelligence</strong> (Founded by Antriksh, Co-founded by Arpit Yadav). Monolith Villa bridges modern brutalist-minimalist architecture with bleeding-edge web graphics, allowing prospective buyers and architects to tour a 14,200 sq.ft ultra-luxury residence with zero downloads or plug-ins.'
+                content: 'Sample showcase project designed & built by Arpit Yadav as a flagship spatial digital twin and luxury virtual showcase for <strong>Apex Intelligence</strong> (Founded by Antriksh, Co-founded by Arpit Yadav). Monolith Villa bridges modern brutalist-minimalist architecture with bleeding-edge web graphics, allowing prospective buyers and architects to tour a 14,200 sq.ft ultra-luxury residence with zero downloads or plug-ins.'
             },
             {
                 title: '<i class="fas fa-project-diagram"></i> System Flow & 3D Pipeline',
@@ -746,7 +746,7 @@ const projectDetailsData = {
                 ]
             }
         ],
-        notice: '<strong>Apex Intelligence Showcase:</strong> Sample bespoke architectural digital twin engineered for Apex Intelligence (Founded by Antriksh, Co-founded by Arpit Yadav).',
+        notice: '<strong>Sample Project Built by Arpit:</strong> Bespoke architectural digital twin prototype built & engineered by Arpit Yadav for Apex Intelligence (Founded by Antriksh, Co-founded by Arpit Yadav).',
         actions: [
             { label: 'Live 3D Walkthrough', icon: 'fas fa-external-link-alt', href: 'https://monolith-villa.vercel.app/', external: true, primary: true }
         ]
