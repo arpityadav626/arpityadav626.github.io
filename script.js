@@ -585,6 +585,7 @@ const projectDetailsData = {
                     '<strong>Anti-Loop Lockout (<code>flameMustClear</code>):</strong> Prevents infinite alarm cycling during continuous sensor exposure by requiring the flame to clear before re-arming the actuator trigger.',
                     '<strong>Calibrated Gas Threshold (300 ADC):</strong> Tuned the MQ-2 hydrocarbon trigger to 300 ADC units, eliminating ambient indoor drift while reacting instantly to butane/LPG concentrations.',
                     '<strong>Reentrant Lock Concurrency (<code>threading.RLock</code>):</strong> Eliminated server thread starvation in Python, allowing continuous 9600-Baud USB serial polling and REST API requests concurrently.',
+                    '<strong>IoT Cloud Email Sentinel:</strong> Dispatches real-time emergency hazard notifications and system diagnostics directly to user\'s smartphone via Formspree API without fragile GSM hardware dependencies.',
                     '<strong>Three.js 3D Digital Twin:</strong> Client-side 3D cooktop rendering with dynamic particle fluids, electric blue (<code>#38BDF8</code>) gas alert lighting, and live hardware register telemetry.'
                 ]
             }
