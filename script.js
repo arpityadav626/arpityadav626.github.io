@@ -709,6 +709,47 @@ const projectDetailsData = {
             { label: 'Live App (Google Cloud)', icon: 'fas fa-external-link-alt', href: 'https://arpit-fun.web.app/', external: true, primary: true },
             { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/arpit.fun', external: true }
         ]
+    },
+    'monolith-villa': {
+        index: '06 // SPATIAL COMPUTING & 3D ARCHVIZ',
+        badge: '<span class="badge live-badge"><i class="fas fa-cube"></i> Live on Vercel &bull; Apex Intelligence</span>',
+        title: 'Monolith Villa ⬡ Bespoke 3D Architectural Walkthrough',
+        subtitle: 'A cinematic, high-performance WebGL 3D virtual residence engineered for Apex Intelligence (Co-founded by Arpit Yadav) featuring scroll-driven camera interpolation, spatial HUD beacons, and ambient acoustic soundscapes.',
+        image: null,
+        imageCaption: null,
+        blocks: [
+            {
+                title: '<i class="fas fa-bullseye"></i> Vision & Partnership',
+                content: 'Engineered as a flagship spatial digital twin and luxury virtual showcase for <strong>Apex Intelligence</strong> (Co-founded by Arpit Yadav). Monolith Villa bridges modern brutalist-minimalist architecture with bleeding-edge web graphics, allowing prospective buyers and architects to tour a 14,200 sq.ft ultra-luxury residence with zero downloads or plug-ins.'
+            },
+            {
+                title: '<i class="fas fa-project-diagram"></i> System Flow & 3D Pipeline',
+                diagram: `[MONOLITH VILLA: THREE.JS 0.160 + WEBGL PIPELINE]
+├── 480vh Continuous Scroll Timeline (Camera Spline Interpolation & Damping)
+├── Interactive Spatial Beacons (3D-to-2D Matrix Projection & Real-Time Tracking)
+├── Free Drone Mode (OrbitControls with Pitch/Yaw Clamp & Live GPS HUD Coordinates)
+├── Lighting Engine (ACESFilmic Tone Mapping + PCFSoftShadows + PBR Shaders)
+└── Procedural Ambient Engine (Web Audio API Synthesizer with Audio Reactive Bars)
+        │
+        ▼ (Production Edge CI/CD Pipeline)
+[DEPLOYMENTS]
+└── Vercel High-Performance Edge ──► https://monolith-villa.vercel.app/`
+            },
+            {
+                title: '<i class="fas fa-laptop-code"></i> Engineering Highlights',
+                bullets: [
+                    '<strong>Photorealistic WebGL Rendering:</strong> Powered by Three.js 0.160 with ACESFilmic Tone Mapping (1.6 exposure) and PCF Soft Shadows calibrated to multi-tier interior and exterior lighting.',
+                    '<strong>480vh Scroll-Driven Cinematic Camera:</strong> Continuous scroll timeline driving smooth camera coordinates across exterior facades, living pavilions, infinity reflection pool, and upper cantilever suites.',
+                    '<strong>Interactive Spatial HUD & Drone Mode:</strong> Custom 3D vector-projected beacons tracking real-time architectural details, complete with a toggleable Free Drone Orbit mode and live coordinate telemetry.',
+                    '<strong>Atmospheric Ambient Soundscape:</strong> Custom Web Audio API ambient engine with responsive audio visualizer bars, creating an acoustic sensory experience.',
+                    '<strong>Lusion Spotlight & Glassmorphism:</strong> Dynamic mouse-tracked spotlight shader effects, ambient glow orbs, and bespoke luxury typography.'
+                ]
+            }
+        ],
+        notice: '<strong>Apex Intelligence Showcase:</strong> Sample bespoke architectural digital twin engineered for Apex Intelligence. Co-founded by Arpit Yadav.',
+        actions: [
+            { label: 'Live 3D Walkthrough', icon: 'fas fa-external-link-alt', href: 'https://monolith-villa.vercel.app/', external: true, primary: true }
+        ]
     }
 };
 
@@ -1168,7 +1209,9 @@ function formatSkillName(key) {
         'git': 'Git',
         'github': 'GitHub',
         'vscode': 'VS Code',
-        'postman': 'Postman'
+        'postman': 'Postman',
+        'shaders': 'GLSL Shaders & PBR',
+        'vercel': 'Vercel Edge Cloud'
     };
     return map[key] || (key ? key.toUpperCase() : '');
 }
