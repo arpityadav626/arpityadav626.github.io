@@ -5,6 +5,19 @@
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  */
 
+/* ======================================================================
+   🧠 ARPIT'S JAVASCRIPT GUIDE (WEBSITE KA BRAIN & INTERACTION)
+   ======================================================================
+   HTML se skeleton banta hai, CSS se look & feel, aur JavaScript website
+   me interactive jaan daalti hai:
+   1. Audio Engine (Web Audio API) -> Button hover & click par soothing sounds
+   2. Theme Switcher              -> Amber, Cyan, Emerald, Violet color switcher
+   3. Interactive Skills Filter   -> Skill click karne par related project highlight
+   4. Project Details Modal       -> "Details" click karne par popup window khulna
+   5. 3D Tilt Card Effects        -> Mouse hover par cards ka 3D angle me move karna
+   6. Contact Form Logic          -> Formspree ke through direct messages bhejna
+   ====================================================================== */
+
 /* ========================================================
    1. STUDIO-GRADE ZERO-GLITCH AUDIO ENGINE (Web Audio API)
    Ultra-Crisp Tactile Feedback, Zero Latency & Dynamic Limiting
@@ -516,7 +529,10 @@ if (contactForm) {
 
 /* ========================================================
    8. PROJECT EXPANDED DETAILS MODAL ENGINE
-   Same cozy theme, haptic audio triggers, deep engineering proof
+   (Yahan har project ke popup window ka data hai:
+    - title, subtitle, image, badge
+    - problem statement, contribution, system flow diagrams
+    - live demo links aur GitHub repositories)
 ======================================================== */
 const projectDetailsData = {
     'smart-helmet': {

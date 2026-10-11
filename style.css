@@ -1,6 +1,15 @@
-/* ========================================================
-   DESIGN SYSTEM - DARK AESTHETIC WITH CRISP GLOW
-======================================================== */
+/* ======================================================================
+   🎨 ARPIT'S CSS STYLE GUIDE (WEBSITE KA DESIGN AUR RANG-ROOP)
+   ======================================================================
+   HTML se website ka structure banta hai, aur CSS se uski styling hoti hai:
+   - :root               -> Main colors, fonts aur animations ke variables
+   - body[data-theme]    -> Amber, Cyan, Emerald, Violet color switcher rules
+   - .header / .navbar   -> Upar ke floating menu bar ki styling
+   - .hero               -> Main "Hi, I'm Arpit" banner & interactive studio card
+   - .project-card       -> Project cards, 3D tilt effect, glow borders & tags
+   - .skills-grid        -> Technical skills ke categorized boxes
+   - .modal              -> Project "Details" dabane par khulne wali popup window
+   ====================================================================== */
 :root {
     --bg-page: #0a0b0e;
     --bg-surface: #12141a;
