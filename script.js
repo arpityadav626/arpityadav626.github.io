@@ -619,7 +619,19 @@ const projectDetailsData = {
         subtitle: 'An enterprise-grade forensic investigation platform engineered for cybercrime units, forensic examiners, and judicial officers under Section 63(4) of Bharatiya Sakshya Adhiniyam, 2023.',
         image: null,
         imageCaption: null,
+        videoEmbed: 'https://www.youtube.com/embed/J8VqyTlGd5w',
+        videoCaption: 'Official 3-Minute Video Walkthrough & Spatial-Temporal Alibi Buster Demonstration',
         blocks: [
+            {
+                title: '<i class="fab fa-youtube" style="color:#ef4444;"></i> Video Demonstration & Shot Breakdown',
+                content: 'A comprehensive 3-minute video presentation demonstrating ChronoFact\'s end-to-end statutory investigative workflow, air-gapped forensic hashing, and real-time alibi busting (<a href="https://youtu.be/J8VqyTlGd5w" target="_blank" style="color:var(--accent-primary); font-weight:600; text-decoration:underline;">Watch on YouTube ↗</a>).',
+                bullets: [
+                    '<strong>[0:00 - 0:40] Judicial Evidentiary Crisis:</strong> Why electronic logs get dismissed in Indian courts under strict Bharatiya Sakshya Adhiniyam standards.',
+                    '<strong>[0:40 - 1:20] Sealed Evidence Ledger:</strong> Live demonstration of dual NIST FIPS (SHA-256 + SHA3-512) hashing and Lead Examiner digital attribution.',
+                    '<strong>[1:20 - 2:15] Spatial-Temporal Alibi Buster:</strong> Instant multi-stream correlation uncovering a +24.8 km telecom cell-tower conflict against suspect Vikram Malhotra\'s fabricated medical claim.',
+                    '<strong>[2:15 - 3:00] BSA 2023 §63(4) Statutory Certificate:</strong> 1-click court certificate generation with Merkle inclusion tree proof and sealed dossier ZIP export.'
+                ]
+            },
             {
                 title: '<i class="fas fa-bullseye"></i> Problem Statement',
                 content: 'Modern cybercrime investigations handle disparate non-standardized digital logs (server CSVs, WhatsApp chats, MIME emails, cellular tower CDR azimuths). In court trials, standard Large Language Models hallucinate timestamps and invent citations, breaching statutory evidentiary admissibility rules.'
@@ -644,7 +656,8 @@ const projectDetailsData = {
         ],
         notice: '<strong>Transparency Notice:</strong> Live preview is an interactive simulation preloaded with synthetic benchmark exhibits for forensic demonstration. 100% automated test coverage in Python (<code>test_forensic_integrity.py</code>).',
         actions: [
-            { label: 'Live Interactive Preview', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/chronofact/', external: true, primary: true },
+            { label: 'Watch Video Walkthrough', icon: 'fab fa-youtube', href: 'https://youtu.be/J8VqyTlGd5w', external: true, primary: true },
+            { label: 'Live Interactive Preview', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/chronofact/', external: true },
             { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/chronofact', external: true }
         ]
     },
@@ -786,7 +799,16 @@ function renderProjectDetails(projectId) {
         <p class="modal-subtitle">${data.subtitle}</p>
     `;
 
-    if (data.image) {
+    if (data.videoEmbed) {
+        html += `
+            <div class="modal-media-frame video-frame">
+                <div class="modal-video-container">
+                    <iframe src="${data.videoEmbed}" title="${data.title} Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                ${data.videoCaption ? `<div class="modal-media-caption"><i class="fab fa-youtube" style="color:#ef4444;"></i> ${data.videoCaption}</div>` : ''}
+            </div>
+        `;
+    } else if (data.image) {
         html += `
             <div class="modal-media-frame">
                 <img src="${data.image}" alt="${data.title}" class="modal-media-img" loading="lazy">
@@ -857,6 +879,11 @@ function closeProjectModal() {
     document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
     playModalSound(false);
+    // Pause any playing iframe
+    const iframe = projectModal.querySelector('iframe');
+    if (iframe) {
+        iframe.src = iframe.src;
+    }
 }
 
 // Ensure fluid wheel scrolling inside modal card and update reading progress bar

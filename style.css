@@ -2093,6 +2093,45 @@ body.modal-open .header {
     color: var(--accent-primary);
 }
 
+/* Modal Responsive Video Frame */
+.modal-media-frame.video-frame {
+    padding: 0;
+    background: #000;
+}
+
+.modal-video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    background: #090a0f;
+    border-radius: 14px;
+}
+
+.modal-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 14px;
+}
+
+.card-btn.youtube-btn {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444 !important;
+}
+
+.card-btn.youtube-btn:hover {
+    background: #ef4444;
+    color: #ffffff !important;
+    border-color: #ef4444;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
 /* Deep Engineering Grid with Cascade Animations */
 .modal-sections-grid {
     display: flex;
