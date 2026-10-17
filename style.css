@@ -1947,16 +1947,20 @@ body.modal-open .header {
 }
 
 .card-btn.youtube-btn {
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #ef4444 !important;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+}
+
+.card-btn.youtube-btn i {
+    color: #ef4444;
 }
 
 .card-btn.youtube-btn:hover {
-    background: #ef4444;
-    color: #ffffff !important;
+    background: rgba(239, 68, 68, 0.12);
     border-color: #ef4444;
-    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    color: #ef4444;
+    transform: translateY(-2px);
 }
 
 /* Deep Engineering Grid with Cascade Animations */
@@ -2877,6 +2881,11 @@ body[data-mode="light"] {
     --text-secondary: #334155;
     --text-muted: #64748b;
     
+    /* Monochrome Black Accent for Light Mode */
+    --accent-primary: #0f172a;
+    --accent-primary-light: #334155;
+    --accent-primary-rgb: 15, 23, 42;
+    
     color-scheme: light;
 }
 
@@ -2887,6 +2896,207 @@ body[data-mode="light"] .header {
     border-color: rgba(15, 23, 42, 0.08);
 }
 
+/* 1. Hero Name Visibility ("Arpit Yadav" matches "Hi, I'm" in bold solid black) */
+body[data-mode="light"] .text-gradient {
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #0f172a !important;
+    color: #0f172a !important;
+}
+
+body[data-mode="light"] .tag-label {
+    background: rgba(16, 185, 129, 0.08);
+    color: #047857;
+    border-color: rgba(16, 185, 129, 0.25);
+}
+
+/* 2. Hero Studio Card (Refined light terminal matching theme without being blinding white) */
+body[data-mode="light"] .hero-studio-card {
+    background: #f1f5f9;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06), 0 0 30px rgba(0, 0, 0, 0.02);
+}
+
+body[data-mode="light"] .hero-studio-card:hover {
+    border-color: rgba(15, 23, 42, 0.25);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.09);
+}
+
+body[data-mode="light"] .studio-header {
+    background: #e2e8f0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.09);
+}
+
+body[data-mode="light"] .studio-title {
+    color: #334155;
+}
+
+body[data-mode="light"] .studio-tabs {
+    background: #f1f5f9;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body[data-mode="light"] .s-tab {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    color: #475569;
+}
+
+body[data-mode="light"] .s-tab:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, 0.2);
+}
+
+body[data-mode="light"] .s-tab.active {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+}
+
+body[data-mode="light"] .s-tab.active .tab-badge {
+    background: #ffffff;
+    color: #0f172a;
+}
+
+body[data-mode="light"] .code-editor-box {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+body[data-mode="light"] .code-line .token-prop {
+    color: #334155;
+}
+
+body[data-mode="light"] .code-line .token-string {
+    color: #047857;
+}
+
+body[data-mode="light"] .code-line .token-keyword {
+    color: #e11d48;
+}
+
+body[data-mode="light"] .code-line .token-var {
+    color: #2563eb;
+}
+
+body[data-mode="light"] .code-line .token-accent-text {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+body[data-mode="light"] .panel-action-btn.primary {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body[data-mode="light"] .panel-action-btn.primary:hover {
+    background: #1e293b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body[data-mode="light"] .panel-action-btn.secondary {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    color: #334155;
+}
+
+body[data-mode="light"] .panel-action-btn.secondary:hover {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+body[data-mode="light"] .mini-project-row {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body[data-mode="light"] .mini-project-row:hover {
+    background: #f8fafc;
+    border-color: rgba(15, 23, 42, 0.25);
+}
+
+body[data-mode="light"] .mini-p-num {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .mini-p-title {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .mini-p-sub {
+    color: #64748b;
+}
+
+body[data-mode="light"] .group-title {
+    color: #64748b;
+}
+
+body[data-mode="light"] .s-pill {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    color: #334155;
+}
+
+body[data-mode="light"] .s-pill:hover {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+}
+
+body[data-mode="light"] .studio-contact-item {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    color: #334155;
+}
+
+body[data-mode="light"] .studio-contact-item.link-item:hover {
+    background: #f8fafc;
+    border-color: rgba(15, 23, 42, 0.25);
+    color: #0f172a;
+}
+
+body[data-mode="light"] .sc-left i {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .sc-val {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .sc-copy-btn {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.15);
+    color: #0f172a;
+}
+
+body[data-mode="light"] .sc-copy-btn:hover {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body[data-mode="light"] .studio-footer {
+    background: #e2e8f0;
+    border-top: 1px solid rgba(15, 23, 42, 0.09);
+}
+
+body[data-mode="light"] .sf-status {
+    color: #475569;
+}
+
+body[data-mode="light"] .sf-sim-btn {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    color: #0f172a;
+}
+
+body[data-mode="light"] .sf-sim-btn:hover {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+/* 3. Project Cards & Links */
 body[data-mode="light"] .project-card {
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.09);
@@ -2898,21 +3108,66 @@ body[data-mode="light"] .project-card:hover {
     border-color: rgba(15, 23, 42, 0.28);
 }
 
-body[data-mode="light"] .studio-card {
+body[data-mode="light"] .project-title {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .project-summary {
+    color: #334155;
+}
+
+body[data-mode="light"] .card-btn.primary {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body[data-mode="light"] .card-btn.primary:hover {
+    background: #1e293b;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+body[data-mode="light"] .card-btn.outline {
     background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.07);
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    color: #0f172a;
 }
 
-body[data-mode="light"] .code-editor-box {
+body[data-mode="light"] .card-btn.outline:hover {
+    background: #f8fafc;
+    border-color: #0f172a;
+    color: #0f172a;
+}
+
+body[data-mode="light"] .card-btn.youtube-btn {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    color: #0f172a;
+}
+
+body[data-mode="light"] .card-btn.youtube-btn i {
+    color: #dc2626;
+}
+
+body[data-mode="light"] .card-btn.youtube-btn:hover {
+    background: #fef2f2;
+    border-color: #dc2626;
+    color: #dc2626;
+}
+
+body[data-mode="light"] .tech-stack-pills span {
     background: #f1f5f9;
-    border-color: rgba(15, 23, 42, 0.08);
+    color: #334155;
+    border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
-body[data-mode="light"] .code-line .token-prop {
-    color: #475569;
+body[data-mode="light"] .sih-badge {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, 0.15);
 }
 
+/* 4. Skills, Education & Achievements */
 body[data-mode="light"] .skill-category-card {
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
@@ -2926,8 +3181,9 @@ body[data-mode="light"] .skill-pill {
 }
 
 body[data-mode="light"] .skill-pill:hover {
-    background: rgba(var(--accent-primary-rgb), 0.12);
-    color: var(--accent-primary);
+    background: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+    border-color: #0f172a;
 }
 
 body[data-mode="light"] .education-card {
@@ -2943,6 +3199,7 @@ body[data-mode="light"] .contact-card {
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.04);
 }
 
+/* 5. Modals */
 body[data-mode="light"] .project-modal-card {
     background: #ffffff;
     color: #0f172a;
@@ -2960,33 +3217,52 @@ body[data-mode="light"] .modal-corner-close-btn {
     border: 1px solid rgba(15, 23, 42, 0.1);
 }
 
-body[data-mode="light"] .footer {
-    border-top: 1px solid rgba(15, 23, 42, 0.08);
-    background: #f8fafc;
-}
-
-body[data-mode="light"] .tech-stack-pills span {
-    background: #f1f5f9;
-    color: #334155;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-body[data-mode="light"] .social-link {
-    background: #f1f5f9;
-    color: #334155;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-body[data-mode="light"] .social-link:hover {
-    color: var(--accent-primary);
-    border-color: var(--accent-primary);
-    background: rgba(var(--accent-primary-rgb), 0.1);
-}
-
-body[data-mode="light"] .card-btn.outline {
-    background: #f8fafc;
-    border: 1px solid rgba(15, 23, 42, 0.12);
+body[data-mode="light"] .modal-title {
     color: #0f172a;
+}
+
+body[data-mode="light"] .modal-subtitle {
+    color: #475569;
+}
+
+body[data-mode="light"] .modal-block-title {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .modal-block-text,
+body[data-mode="light"] .modal-list-item {
+    color: #334155;
+}
+
+body[data-mode="light"] .modal-metric-card {
+    background: #f8fafc;
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body[data-mode="light"] .modal-metric-val {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .modal-metric-lbl {
+    color: #64748b;
+}
+
+body[data-mode="light"] .modal-tech-pill {
+    background: #f1f5f9;
+    color: #334155;
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+/* 6. Buttons, Inputs & Micro-interactions */
+body[data-mode="light"] .btn-primary {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body[data-mode="light"] .btn-primary:hover {
+    background: #1e293b;
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 body[data-mode="light"] .btn-outline {
@@ -2996,26 +3272,59 @@ body[data-mode="light"] .btn-outline {
 }
 
 body[data-mode="light"] .btn-outline:hover {
-    background: rgba(var(--accent-primary-rgb), 0.1);
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+    background: rgba(15, 23, 42, 0.06);
+    border-color: #0f172a;
+    color: #0f172a;
+}
+
+body[data-mode="light"] .btn-pill {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    color: #0f172a;
+}
+
+body[data-mode="light"] .btn-pill:hover {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body[data-mode="light"] .social-link {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body[data-mode="light"] .social-link:hover {
+    color: #0f172a;
+    border-color: #0f172a;
+    background: rgba(15, 23, 42, 0.08);
+}
+
+body[data-mode="light"] .lab-input-box {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.12);
 }
 
 body[data-mode="light"] .lab-input-box input {
-    background: #f8fafc;
-    border-color: rgba(15, 23, 42, 0.12);
+    background: transparent;
+    border: none;
     color: #0f172a;
 }
 
 body[data-mode="light"] .lab-btn {
-    background: #f1f5f9;
-    border-color: rgba(15, 23, 42, 0.1);
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.12);
     color: #334155;
 }
 
 body[data-mode="light"] .lab-btn:hover {
-    background: rgba(var(--accent-primary-rgb), 0.12);
-    color: var(--accent-primary);
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+body[data-mode="light"] .smooth-caret {
+    background: #0f172a !important;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.35) !important;
 }
 
 body[data-mode="light"] .form-group input,
@@ -3023,6 +3332,17 @@ body[data-mode="light"] .form-group textarea {
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.12);
     color: #0f172a;
+}
+
+body[data-mode="light"] .form-group input:focus,
+body[data-mode="light"] .form-group textarea:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 12px rgba(15, 23, 42, 0.12);
+}
+
+body[data-mode="light"] .footer {
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
 }
 
 body[data-mode="light"] .logo-mark rect {
