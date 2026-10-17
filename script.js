@@ -1395,13 +1395,13 @@ function initHeroLiquidSimulation() {
                     }
                 }
 
-                // Gentle organic ambient droplets when mouse is idle
-                float dropCycle = mod(time, 3.4);
+                // Gentle organic ambient droplets across the full hero backdrop
+                float dropCycle = mod(time, 2.8);
                 if (dropCycle < 0.045) {
-                    vec2 dropPos = vec2(0.5 + 0.32 * sin(time * 1.3), 0.5 + 0.28 * cos(time * 1.8));
+                    vec2 dropPos = vec2(0.5 + 0.38 * sin(time * 1.3), 0.5 + 0.35 * cos(time * 1.7));
                     float d = distance(uv, dropPos);
                     if (d < 0.035) {
-                        pressure += 1.2 * (1.0 - d / 0.035);
+                        pressure += 1.3 * (1.0 - d / 0.035);
                     }
                 }
 
@@ -1410,7 +1410,7 @@ function initHeroLiquidSimulation() {
         `
     });
 
-    // Background Canvas Texture (Dark monochrome with subtle blueprint grid)
+    // Background Canvas Texture (Dark monochrome with subtle blueprint grid across full hero)
     const bgCanvas = document.createElement('canvas');
     bgCanvas.width = W;
     bgCanvas.height = H;
@@ -1421,16 +1421,16 @@ function initHeroLiquidSimulation() {
 
     function renderBackgroundPattern() {
         const grad = bgCtx.createLinearGradient(0, 0, W, H);
-        grad.addColorStop(0, '#090a0f');
-        grad.addColorStop(0.5, '#141724');
-        grad.addColorStop(1, '#0c0e15');
+        grad.addColorStop(0, '#07080b');
+        grad.addColorStop(0.5, '#0e111a');
+        grad.addColorStop(1, '#090a0f');
         bgCtx.fillStyle = grad;
         bgCtx.fillRect(0, 0, W, H);
 
-        // Subtle dark grid
-        bgCtx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+        // Subtle dark grid across the entire hero backdrop
+        bgCtx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
         bgCtx.lineWidth = 1;
-        const step = 28 * dpr;
+        const step = 32 * dpr;
         for (let x = 0; x < W; x += step) {
             bgCtx.beginPath(); bgCtx.moveTo(x, 0); bgCtx.lineTo(x, H); bgCtx.stroke();
         }
@@ -1491,23 +1491,19 @@ function initHeroLiquidSimulation() {
     simScene.add(simMesh);
     scene.add(renderMesh);
 
-    // Mouse & Touch Interaction
+    // Mouse & Touch Interaction mapped directly to canvas bounds
     function updateMouse(clientX, clientY) {
         if (!isRunning) return;
-        const r = container.getBoundingClientRect();
+        const r = canvas.getBoundingClientRect();
         const px = clientX - r.left;
         const py = clientY - r.top;
-        if (px >= -80 && px <= r.width + 80 && py >= -80 && py <= r.height + 80) {
-            mouse.x = Math.max(0, Math.min(px, r.width)) * dpr;
-            mouse.y = (r.height - Math.max(0, Math.min(py, r.height))) * dpr;
+        if (px >= 0 && px <= r.width && py >= 0 && py <= r.height) {
+            mouse.x = px * dpr;
+            mouse.y = (r.height - py) * dpr;
         } else {
             mouse.set(-10, -10);
         }
     }
-
-    container.addEventListener('mousemove', (e) => {
-        updateMouse(e.clientX, e.clientY);
-    });
 
     const heroSection = document.getElementById('home');
     if (heroSection) {
@@ -1517,28 +1513,30 @@ function initHeroLiquidSimulation() {
         heroSection.addEventListener('mouseleave', () => {
             mouse.set(-10, -10);
         });
+        heroSection.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+        heroSection.addEventListener('touchend', () => {
+            mouse.set(-10, -10);
+        });
     }
 
-    container.addEventListener('mouseleave', () => {
-        mouse.set(-10, -10);
-    });
-
-    container.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) {
-            updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+    window.addEventListener('mousemove', (e) => {
+        if (!isRunning || !heroSection) return;
+        const hr = heroSection.getBoundingClientRect();
+        if (e.clientY >= hr.top - 50 && e.clientY <= hr.bottom + 50) {
+            updateMouse(e.clientX, e.clientY);
         }
-    }, { passive: true });
-
-    container.addEventListener('touchend', () => {
-        mouse.set(-10, -10);
     });
 
     // Resize handler
     function handleResize() {
         const newRect = container.getBoundingClientRect();
         if (newRect.width === 0 || newRect.height === 0) return;
-        const newW = Math.max(Math.floor(newRect.width), 260);
-        const newH = Math.max(Math.floor(newRect.height), 220);
+        const newW = Math.max(Math.floor(newRect.width), window.innerWidth || 300);
+        const newH = Math.max(Math.floor(newRect.height), 350);
         if (newW === width && newH === height) return;
 
         width = newW;
