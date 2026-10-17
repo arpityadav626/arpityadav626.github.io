@@ -854,8 +854,8 @@ function renderProjectDetails(projectId) {
                 <div class="modal-video-container">
                     <iframe src="${data.videoEmbed}" title="${data.title} Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
-                ${data.videoCaption ? `<div class="modal-media-caption"><i class="fab fa-youtube" style="color:#ef4444;"></i> ${data.videoCaption}</div>` : ''}
             </div>
+            ${data.videoCaption ? `<div class="modal-video-caption"><i class="fab fa-youtube" style="color:#ef4444;"></i> ${data.videoCaption}</div>` : ''}
         `;
     } else if (data.image) {
         html += `
