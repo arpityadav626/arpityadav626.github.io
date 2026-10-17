@@ -517,12 +517,22 @@ main, .header, .footer {
 .social-link {
     color: var(--text-secondary);
     font-size: 18px;
+    background: transparent !important;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: var(--transition);
+}
+
+.social-link::before {
+    display: none !important;
 }
 
 .social-link:hover {
     color: var(--accent-primary);
     transform: translateY(-2px);
+    background: transparent !important;
 }
 
 /* ========================================================
@@ -3313,15 +3323,16 @@ body[data-mode="light"] .btn-pill:hover {
 }
 
 body[data-mode="light"] .social-link {
-    background: #f1f5f9;
-    color: #334155;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: transparent !important;
+    color: #475569;
+    border: none !important;
 }
 
 body[data-mode="light"] .social-link:hover {
     color: #0f172a;
-    border-color: #0f172a;
-    background: rgba(15, 23, 42, 0.08);
+    border: none !important;
+    background: transparent !important;
+    transform: translateY(-2px);
 }
 
 body[data-mode="light"] .lab-input-box {
