@@ -237,21 +237,23 @@ main, .header, .footer {
 ======================================================== */
 .header {
     position: sticky;
-    top: 20px;
-    width: 90%;
-    max-width: 1200px;
+    top: 16px;
+    width: 92%;
+    max-width: 1024px;
+    height: 48px;
     margin: 0 auto;
-    padding: 12px 24px;
-    background: rgba(18, 20, 26, 0.88);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--border-subtle);
-    border-radius: 40px;
+    padding: 0 16px;
+    background: rgba(11, 13, 19, 0.78);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .header.header-hidden {
@@ -261,15 +263,17 @@ main, .header, .footer {
 }
 
 .logo {
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 14.5px;
+    font-weight: 600;
     text-decoration: none;
     color: var(--text-primary);
-    letter-spacing: -0.5px;
+    letter-spacing: -0.02em;
     display: inline-flex;
     align-items: center;
-    gap: 9px;
+    gap: 8px;
     transition: opacity 0.25s ease;
+    user-select: none;
+    flex-shrink: 0;
 }
 
 .logo-mark {
@@ -277,17 +281,19 @@ main, .header, .footer {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    filter: drop-shadow(0 0 6px rgba(var(--accent-primary-rgb), 0.35));
+    filter: drop-shadow(0 0 5px rgba(var(--accent-primary-rgb), 0.3));
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .logo-mark svg {
+    width: 20px;
+    height: 20px;
     display: block;
 }
 
 .logo:hover .logo-mark {
-    transform: rotate(-10deg) scale(1.12);
-    filter: drop-shadow(0 0 12px rgba(var(--accent-primary-rgb), 0.6));
+    transform: rotate(-10deg) scale(1.1);
+    filter: drop-shadow(0 0 10px rgba(var(--accent-primary-rgb), 0.6));
 }
 
 .logo-accent {
@@ -297,25 +303,29 @@ main, .header, .footer {
 
 .navbar {
     display: flex;
-    gap: 26px;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
 }
 
 .nav-link {
     text-decoration: none;
     color: var(--text-secondary);
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     position: relative;
     display: inline-flex;
     align-items: center;
-    padding: 4px 0;
-    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 6px 2px;
+    transition: color 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
 }
 
 .nav-link::before {
     content: '';
     position: absolute;
-    bottom: -1px;
+    bottom: 0px;
     left: 0;
     width: 100%;
     height: 1.5px;
@@ -328,7 +338,7 @@ main, .header, .footer {
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--text-primary);
+    color: #ffffff;
 }
 
 .nav-link:hover::before,
@@ -344,54 +354,65 @@ main, .header, .footer {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .sound-toggle-btn {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-subtle);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-secondary);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 11px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    font-size: 10px;
     font-family: var(--font-mono);
-    display: flex;
+    letter-spacing: 0.02em;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     transition: var(--transition);
+    cursor: pointer;
 }
 
 .sound-toggle-btn:hover {
-    color: var(--text-primary);
-    border-color: var(--border-highlight);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.09);
 }
 
 .btn-pill {
-    padding: 7px 18px;
-    border-radius: 20px;
-    background: var(--text-primary);
-    color: var(--bg-page) !important;
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 9999px;
+    background: #ffffff;
+    color: #0b0d13 !important;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .btn-pill:hover {
-    background: #ffffff;
-    color: var(--bg-page) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.22);
+    background: #f1f5f9;
+    color: #000000 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
 }
 
 .btn-pill .roll-char,
 .btn-pill .skiper-arrow {
-    color: var(--bg-page) !important;
+    color: #0b0d13 !important;
 }
 
 .btn-pill:hover .roll-char,
 .btn-pill:hover .skiper-arrow {
-    color: #0d111a !important;
+    color: #000000 !important;
 }
 
 .menu-toggle {
@@ -1866,7 +1887,8 @@ body.modal-open .header {
     .header {
         width: 94%;
         max-width: 900px;
-        padding: 12px 20px;
+        height: 46px;
+        padding: 0 16px;
     }
 
     .hero {
@@ -1933,22 +1955,23 @@ body.modal-open .header {
     .header {
         top: 10px;
         width: calc(100% - 20px);
-        padding: 10px 14px;
-        border-radius: 99px;
+        height: 44px;
+        padding: 0 12px;
+        border-radius: 9999px;
     }
 
     .logo {
-        font-size: 17px;
+        font-size: 14px;
         gap: 7px;
     }
 
     .logo-mark svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
 
     .header-right {
-        gap: 7px;
+        gap: 6px;
     }
 
     .header-right .btn-pill {
@@ -1956,14 +1979,14 @@ body.modal-open .header {
     }
 
     .theme-mode-btn {
-        width: 34px;
-        height: 34px;
-        font-size: 13px;
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
     }
 
     .sound-toggle-btn {
-        width: 34px;
-        height: 34px;
+        width: 30px;
+        height: 30px;
         padding: 0;
         justify-content: center;
         border-radius: 50%;
@@ -1977,13 +2000,13 @@ body.modal-open .header {
         display: flex !important;
         align-items: center;
         justify-content: center;
-        width: 34px;
-        height: 34px;
+        width: 30px;
+        height: 30px;
         background: rgba(255, 255, 255, 0.06);
         border: 1px solid var(--border-subtle);
         border-radius: 50%;
         color: var(--text-primary);
-        font-size: 14px;
+        font-size: 12px;
         cursor: pointer;
         transition: all 0.25s ease;
     }
@@ -2242,7 +2265,8 @@ body.modal-open .header {
     .header {
         top: 8px;
         width: calc(100% - 16px);
-        padding: 8px 12px;
+        height: 42px;
+        padding: 0 10px;
     }
 
     .logo {
@@ -2531,9 +2555,43 @@ body[data-mode="light"] {
 
 /* Light mode specific element adjustments */
 body[data-mode="light"] .header {
-    background: rgba(255, 255, 255, 0.88);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-    border-color: rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.84);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.04) inset;
+    border-color: rgba(15, 23, 42, 0.07);
+}
+
+body[data-mode="light"] .nav-link {
+    color: #475569;
+}
+
+body[data-mode="light"] .nav-link:hover,
+body[data-mode="light"] .nav-link.active {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .theme-mode-btn,
+body[data-mode="light"] .sound-toggle-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(15, 23, 42, 0.09);
+    color: #475569;
+}
+
+body[data-mode="light"] .theme-mode-btn:hover,
+body[data-mode="light"] .sound-toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, 0.2);
+}
+
+body[data-mode="light"] .btn-pill {
+    background: #0f172a;
+    color: #ffffff !important;
+}
+
+body[data-mode="light"] .btn-pill:hover {
+    background: #000000;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 /* 1. Hero Name Visibility ("Arpit Yadav" matches "Hi, I'm" in bold solid black) */
@@ -2912,26 +2970,26 @@ body[data-mode="light"] .logo-mark circle {
    🔘 THEME MODE TOGGLE BUTTON (Pure Luxury Black & White)
    ====================================================================== */
 .theme-mode-btn {
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     transition: all 0.25s ease;
     position: relative;
     flex-shrink: 0;
 }
 
 .theme-mode-btn:hover {
-    border-color: var(--text-primary);
-    color: var(--text-primary);
-    box-shadow: 0 0 14px rgba(var(--accent-primary-rgb), 0.25);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
     transform: rotate(15deg) scale(1.05);
 }
 
