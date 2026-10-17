@@ -379,18 +379,114 @@ function bindSounds() {
 bindSounds();
 
 /* ========================================================
-   2. HERO IMMEDIATE REVEAL (Preloader Cleanly Removed)
+   2. SKIPER8 WORDS PRELOADER (Dennis Snellenberg Inspired)
+   Multilingual Greetings Cycle with Organic Liquid SVG Curtain
 ======================================================== */
-function initHeroReveal() {
-    document.body.style.overflow = '';
-    const hero = document.getElementById('home');
-    if (hero) hero.classList.add('active');
+function initWordsPreloader() {
+    const preloader = document.getElementById('preloader');
+    const wordEl = document.getElementById('preloader-word');
+    const curvePath = document.getElementById('preloader-curve-path');
+    if (!preloader || !wordEl) return;
+
+    const words = [
+        "Hello",          // English
+        "Bonjour",        // French
+        "Ciao",           // Italian
+        "Olà",            // Portuguese
+        "やあ",           // Japanese
+        "Hallå",          // Swedish
+        "Guten Tag",      // German
+        "Hallo",          // Dutch
+        "Namaste"         // Hindi
+    ];
+
+    let currentIndex = 0;
+    const wordIntervalTime = 180; // ms per word
+
+    // Prevent background scrolling while preloader is active
+    document.body.style.overflow = 'hidden';
+
+    function showNextWord() {
+        if (currentIndex < words.length - 1) {
+            currentIndex++;
+            wordEl.classList.add('word-switching');
+
+            setTimeout(() => {
+                wordEl.innerHTML = words[currentIndex];
+                wordEl.classList.remove('word-switching');
+            }, 65);
+
+            // If we reached the final word, hold briefly then smoothly peel up the curtain!
+            if (currentIndex === words.length - 1) {
+                setTimeout(startExitAnimation, 380);
+            } else {
+                setTimeout(showNextWord, wordIntervalTime);
+            }
+        }
+    }
+
+    function startExitAnimation() {
+        if (!curvePath) {
+            preloader.classList.add('preloader-exiting');
+            setTimeout(finishPreloader, 850);
+            return;
+        }
+
+        const startTime = performance.now();
+        const duration = 850; // matches CSS transition duration
+
+        function stepCurve(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Dennis Snellenberg curve morphing:
+            // First 35%: curve pulls down into an organic liquid arch
+            // Next 65%: curve flattens seamlessly to 0 as preloader slides off
+            let curveY;
+            if (progress < 0.35) {
+                curveY = 100 + (progress / 0.35) * 25;
+            } else {
+                const t = (progress - 0.35) / 0.65;
+                curveY = 125 * Math.pow(1 - t, 2.2);
+            }
+
+            curvePath.setAttribute('d', `M0 0 L100 0 Q50 ${curveY.toFixed(1)} 0 0 Z`);
+
+            if (progress < 1) {
+                requestAnimationFrame(stepCurve);
+            } else {
+                finishPreloader();
+            }
+        }
+
+        preloader.classList.add('preloader-exiting');
+        requestAnimationFrame(stepCurve);
+
+        // Play chime audio as curtain begins to lift
+        setTimeout(() => {
+            if (typeof playCozyChime === 'function') {
+                playCozyChime();
+            }
+        }, 220);
+    }
+
+    function finishPreloader() {
+        document.body.style.overflow = '';
+        preloader.style.display = 'none';
+
+        // Trigger Hero Section active cascade
+        const hero = document.getElementById('home');
+        if (hero) hero.classList.add('active');
+    }
+
+    // Start words flipping after initial short pause
+    setTimeout(showNextWord, wordIntervalTime);
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHeroReveal);
+    document.addEventListener('DOMContentLoaded', initWordsPreloader);
 } else {
-    initHeroReveal();
+    initWordsPreloader();
 }
 
 /* ========================================================
@@ -1144,8 +1240,8 @@ function setDisplayMode(mode) {
         themeModeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
     }
 
-    if (typeof window.updateStudioLiquidTheme === 'function') {
-        window.updateStudioLiquidTheme();
+    if (typeof window.updateHeroLiquidTheme === 'function') {
+        window.updateHeroLiquidTheme();
     }
 }
 
@@ -1171,125 +1267,16 @@ if (themeModeBtn) {
 }
 
 /* ========================================================
-   13. HERO INTERACTIVE DEVELOPER STUDIO ENGINE
-   Ultra-clean, zero-friction 1-click tabs & SIH live telemetry
+   13. HERO LIQUID SIMULATION ENGINE (Skiper12 WebGL Fluid Dynamics)
+   Borderless, Organic Liquid Simulation behind Hero Right Section
+   Strictly runs in Black (Dark) Mode; 100% disabled in Light Mode
 ======================================================== */
-const studioTabs = document.querySelectorAll('.s-tab[data-tab]');
-const studioPanels = document.querySelectorAll('.studio-panel');
-const studioTitleBar = document.getElementById('studio-title-bar');
+function initHeroLiquidSimulation() {
+    const container = document.getElementById('hero-liquid-backdrop');
+    const canvas = document.getElementById('hero-liquid-canvas');
+    if (!container || !canvas || !window.THREE) return;
 
-const tabTitles = {
-    bio: '<i class="fas fa-code-branch"></i> arpit.config.ts',
-    projects: '<i class="fas fa-rocket"></i> featured-work.json',
-    skills: '<i class="fas fa-layer-group"></i> tech-stack.yaml',
-    lab: '<i class="fas fa-i-cursor"></i> smooth-input.tsx',
-    contact: '<i class="fas fa-terminal"></i> connect.sh'
-};
-
-if (studioTabs.length > 0) {
-    studioTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const targetTab = tab.getAttribute('data-tab');
-            if (!targetTab) return;
-
-            studioTabs.forEach(t => {
-                t.classList.remove('active');
-                t.setAttribute('aria-selected', 'false');
-            });
-            studioPanels.forEach(p => p.classList.remove('active'));
-
-            tab.classList.add('active');
-            tab.setAttribute('aria-selected', 'true');
-
-            const activePanel = document.getElementById(`panel-${targetTab}`);
-            if (activePanel) activePanel.classList.add('active');
-
-            if (studioTitleBar && tabTitles[targetTab]) {
-                studioTitleBar.innerHTML = tabTitles[targetTab];
-            }
-
-            playButtonClick();
-        });
-    });
-}
-
-// 1-Click Explore Work button
-const studioExploreBtn = document.getElementById('btn-studio-explore');
-if (studioExploreBtn) {
-    studioExploreBtn.addEventListener('click', () => {
-        const pSec = document.getElementById('projects');
-        smoothScrollToElement(pSec, -30);
-        playButtonClick();
-    });
-}
-
-// 1-Click Direct Project Modal Launch from Hero Card
-document.querySelectorAll('.mini-project-row[data-open-project]').forEach(row => {
-    row.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const projectId = row.getAttribute('data-open-project');
-        if (projectId && typeof openProjectModal === 'function') {
-            openProjectModal(projectId);
-        }
-    });
-});
-
-// Interactive Skill Pills inside Studio Card
-document.querySelectorAll('.s-pill[data-skill]').forEach(pill => {
-    pill.addEventListener('click', () => {
-        const skill = pill.getAttribute('data-skill');
-        if (skill && typeof highlightProjectsBySkill === 'function') {
-            highlightProjectsBySkill(skill, true);
-        }
-    });
-});
-
-// 1-Click Copy Email button
-const studioCopyBtn = document.getElementById('studio-copy-email-btn');
-const studioCopyLabel = document.getElementById('copy-btn-label');
-if (studioCopyBtn) {
-    studioCopyBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        try {
-            await navigator.clipboard.writeText('arpityadav6794@gmail.com');
-            if (studioCopyLabel) studioCopyLabel.textContent = 'Copied! ✓';
-            studioCopyBtn.style.background = 'rgba(16, 185, 129, 0.2)';
-            studioCopyBtn.style.borderColor = '#10b981';
-            studioCopyBtn.style.color = '#10b981';
-            playKeyTick();
-            setTimeout(() => {
-                if (studioCopyLabel) studioCopyLabel.textContent = 'Copy';
-                studioCopyBtn.style.background = '';
-                studioCopyBtn.style.borderColor = '';
-                studioCopyBtn.style.color = '';
-            }, 2200);
-        } catch (err) {
-            console.error('Copy failed', err);
-        }
-    });
-}
-
-// 1-Click Studio Footer View All Projects button
-const studioExploreFooterBtn = document.getElementById('btn-studio-explore-footer');
-if (studioExploreFooterBtn) {
-    studioExploreFooterBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const pSec = document.getElementById('projects');
-        smoothScrollToElement(pSec, -30);
-        playButtonClick();
-    });
-}
-
-/* ========================================================
-   13B. SKIPER12 VERCEL LIQUID SIMULATION ENGINE
-   Real WebGL 2-Pass Shader Fluid Dynamics on Hero Studio Card
-   Supports Dark and Light Monochrome Modes with Specular Reflection
-======================================================== */
-function initHeroStudioLiquidSimulation() {
-    const card = document.getElementById('hero-studio');
-    if (!card || !window.THREE) return;
-
-    // Check if WebGL is available
+    // Check WebGL availability
     try {
         const testCanvas = document.createElement('canvas');
         const testGl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
@@ -1303,6 +1290,7 @@ function initHeroStudioLiquidSimulation() {
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
         antialias: true,
         alpha: true,
         preserveDrawingBuffer: false,
@@ -1310,20 +1298,16 @@ function initHeroStudioLiquidSimulation() {
     });
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let rect = card.getBoundingClientRect();
+    let rect = container.getBoundingClientRect();
     let width = Math.max(Math.floor(rect.width), 300);
-    let height = Math.max(Math.floor(rect.height), 220);
+    let height = Math.max(Math.floor(rect.height), 280);
 
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height);
-    renderer.domElement.className = 'studio-liquid-canvas';
-    renderer.domElement.setAttribute('aria-hidden', 'true');
-    card.insertBefore(renderer.domElement, card.firstChild);
 
     let W = Math.floor(width * dpr);
     let H = Math.floor(height * dpr);
 
-    // Support HalfFloatType fallback if FloatType is not supported
     let targetType = THREE.FloatType;
     const gl = renderer.getContext();
     if (!gl.getExtension('OES_texture_float') && !gl.getExtension('EXT_color_buffer_float')) {
@@ -1344,6 +1328,8 @@ function initHeroStudioLiquidSimulation() {
 
     const mouse = new THREE.Vector2(-10, -10);
     let frame = 0;
+    let animId = null;
+    let isRunning = false;
 
     const simMaterial = new THREE.ShaderMaterial({
         uniforms: {
@@ -1404,18 +1390,18 @@ function initHeroStudioLiquidSimulation() {
                 if (mouse.x > 0.0) {
                     vec2 mouseUV = mouse / resolution;
                     float dist = distance(uv, mouseUV);
-                    if (dist <= 0.045) {
-                        pressure += 2.4 * (1.0 - dist / 0.045);
+                    if (dist <= 0.05) {
+                        pressure += 2.6 * (1.0 - dist / 0.05);
                     }
                 }
 
                 // Gentle organic ambient droplets when mouse is idle
-                float dropCycle = mod(time, 3.2);
+                float dropCycle = mod(time, 3.4);
                 if (dropCycle < 0.045) {
-                    vec2 dropPos = vec2(0.5 + 0.3 * sin(time * 1.4), 0.5 + 0.28 * cos(time * 1.9));
+                    vec2 dropPos = vec2(0.5 + 0.32 * sin(time * 1.3), 0.5 + 0.28 * cos(time * 1.8));
                     float d = distance(uv, dropPos);
-                    if (d < 0.03) {
-                        pressure += 1.1 * (1.0 - d / 0.03);
+                    if (d < 0.035) {
+                        pressure += 1.2 * (1.0 - d / 0.035);
                     }
                 }
 
@@ -1424,7 +1410,7 @@ function initHeroStudioLiquidSimulation() {
         `
     });
 
-    // Background Canvas Texture with Grid
+    // Background Canvas Texture (Dark monochrome with subtle blueprint grid)
     const bgCanvas = document.createElement('canvas');
     bgCanvas.width = W;
     bgCanvas.height = H;
@@ -1434,55 +1420,31 @@ function initHeroStudioLiquidSimulation() {
     bgTexture.magFilter = THREE.LinearFilter;
 
     function renderBackgroundPattern() {
-        const isLight = document.body.getAttribute('data-mode') === 'light';
-        if (isLight) {
-            const grad = bgCtx.createLinearGradient(0, 0, W, H);
-            grad.addColorStop(0, '#f8fafc');
-            grad.addColorStop(0.5, '#f1f5f9');
-            grad.addColorStop(1, '#e2e8f0');
-            bgCtx.fillStyle = grad;
-            bgCtx.fillRect(0, 0, W, H);
+        const grad = bgCtx.createLinearGradient(0, 0, W, H);
+        grad.addColorStop(0, '#090a0f');
+        grad.addColorStop(0.5, '#141724');
+        grad.addColorStop(1, '#0c0e15');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, W, H);
 
-            // Subtle luminous grid
-            bgCtx.strokeStyle = 'rgba(15, 23, 42, 0.04)';
-            bgCtx.lineWidth = 1;
-            const step = 28 * dpr;
-            for (let x = 0; x < W; x += step) {
-                bgCtx.beginPath(); bgCtx.moveTo(x, 0); bgCtx.lineTo(x, H); bgCtx.stroke();
-            }
-            for (let y = 0; y < H; y += step) {
-                bgCtx.beginPath(); bgCtx.moveTo(0, y); bgCtx.lineTo(W, y); bgCtx.stroke();
-            }
-        } else {
-            const grad = bgCtx.createLinearGradient(0, 0, W, H);
-            grad.addColorStop(0, '#0c0e15');
-            grad.addColorStop(0.5, '#141724');
-            grad.addColorStop(1, '#090a0f');
-            bgCtx.fillStyle = grad;
-            bgCtx.fillRect(0, 0, W, H);
-
-            // Subtle dark grid
-            bgCtx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-            bgCtx.lineWidth = 1;
-            const step = 28 * dpr;
-            for (let x = 0; x < W; x += step) {
-                bgCtx.beginPath(); bgCtx.moveTo(x, 0); bgCtx.lineTo(x, H); bgCtx.stroke();
-            }
-            for (let y = 0; y < H; y += step) {
-                bgCtx.beginPath(); bgCtx.moveTo(0, y); bgCtx.lineTo(W, y); bgCtx.stroke();
-            }
+        // Subtle dark grid
+        bgCtx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+        bgCtx.lineWidth = 1;
+        const step = 28 * dpr;
+        for (let x = 0; x < W; x += step) {
+            bgCtx.beginPath(); bgCtx.moveTo(x, 0); bgCtx.lineTo(x, H); bgCtx.stroke();
+        }
+        for (let y = 0; y < H; y += step) {
+            bgCtx.beginPath(); bgCtx.moveTo(0, y); bgCtx.lineTo(W, y); bgCtx.stroke();
         }
         bgTexture.needsUpdate = true;
     }
     renderBackgroundPattern();
 
-    const isLightInitial = document.body.getAttribute('data-mode') === 'light' ? 1.0 : 0.0;
-
     const renderMaterial = new THREE.ShaderMaterial({
         uniforms: {
             textureA: { value: null },
-            textureB: { value: bgTexture },
-            isLight: { value: isLightInitial }
+            textureB: { value: bgTexture }
         },
         vertexShader: `
             varying vec2 vUv;
@@ -1494,7 +1456,6 @@ function initHeroStudioLiquidSimulation() {
         fragmentShader: `
             uniform sampler2D textureA;
             uniform sampler2D textureB;
-            uniform float isLight;
             varying vec2 vUv;
 
             void main() {
@@ -1504,7 +1465,7 @@ function initHeroStudioLiquidSimulation() {
                 vec4 color = texture2D(textureB, vUv + distortion);
 
                 // Wave surface normal
-                vec3 normal = normalize(vec3(-data.z * 3.5, 1.0, -data.w * 3.5));
+                vec3 normal = normalize(vec3(-data.z * 3.8, 1.0, -data.w * 3.8));
                 vec3 lightDir = normalize(vec3(-0.4, 0.8, 0.6));
                 vec3 viewDir = vec3(0.0, 0.0, 1.0);
                 vec3 halfDir = normalize(lightDir + viewDir);
@@ -1515,15 +1476,9 @@ function initHeroStudioLiquidSimulation() {
                 // Caustic wave edge glow
                 float waveEdge = length(data.zw) * 12.0;
 
-                if (isLight > 0.5) {
-                    vec3 specColor = vec3(1.0, 1.0, 1.0) * specular * 0.9;
-                    vec3 waveTint = vec3(0.85, 0.9, 0.98) * waveEdge * 0.15;
-                    gl_FragColor = vec4(color.rgb + specColor + waveTint, 1.0);
-                } else {
-                    vec3 specColor = vec3(1.0, 1.0, 1.0) * specular * 1.8;
-                    vec3 waveTint = vec3(0.3, 0.5, 0.9) * waveEdge * 0.3;
-                    gl_FragColor = vec4(color.rgb + specColor + waveTint, 1.0);
-                }
+                vec3 specColor = vec3(1.0, 1.0, 1.0) * specular * 1.8;
+                vec3 waveTint = vec3(0.3, 0.5, 0.9) * waveEdge * 0.3;
+                gl_FragColor = vec4(color.rgb + specColor + waveTint, 1.0);
             }
         `,
         transparent: false
@@ -1536,40 +1491,53 @@ function initHeroStudioLiquidSimulation() {
     simScene.add(simMesh);
     scene.add(renderMesh);
 
-    // Mouse Listeners on Hero Card
-    card.addEventListener('mousemove', (e) => {
-        const r = card.getBoundingClientRect();
-        mouse.x = (e.clientX - r.left) * dpr;
-        mouse.y = (r.height - (e.clientY - r.top)) * dpr;
+    // Mouse & Touch Interaction
+    function updateMouse(clientX, clientY) {
+        if (!isRunning) return;
+        const r = container.getBoundingClientRect();
+        const px = clientX - r.left;
+        const py = clientY - r.top;
+        if (px >= -80 && px <= r.width + 80 && py >= -80 && py <= r.height + 80) {
+            mouse.x = Math.max(0, Math.min(px, r.width)) * dpr;
+            mouse.y = (r.height - Math.max(0, Math.min(py, r.height))) * dpr;
+        } else {
+            mouse.set(-10, -10);
+        }
+    }
+
+    container.addEventListener('mousemove', (e) => {
+        updateMouse(e.clientX, e.clientY);
     });
 
-    card.addEventListener('mouseleave', () => {
+    const heroSection = document.getElementById('home');
+    if (heroSection) {
+        heroSection.addEventListener('mousemove', (e) => {
+            updateMouse(e.clientX, e.clientY);
+        });
+        heroSection.addEventListener('mouseleave', () => {
+            mouse.set(-10, -10);
+        });
+    }
+
+    container.addEventListener('mouseleave', () => {
         mouse.set(-10, -10);
     });
 
-    card.addEventListener('touchmove', (e) => {
+    container.addEventListener('touchmove', (e) => {
         if (e.touches.length > 0) {
-            const r = card.getBoundingClientRect();
-            mouse.x = (e.touches[0].clientX - r.left) * dpr;
-            mouse.y = (r.height - (e.touches[0].clientY - r.top)) * dpr;
+            updateMouse(e.touches[0].clientX, e.touches[0].clientY);
         }
     }, { passive: true });
 
-    card.addEventListener('touchend', () => {
+    container.addEventListener('touchend', () => {
         mouse.set(-10, -10);
     });
 
-    // Theme update hook
-    window.updateStudioLiquidTheme = function() {
-        const isLight = document.body.getAttribute('data-mode') === 'light';
-        renderMaterial.uniforms.isLight.value = isLight ? 1.0 : 0.0;
-        renderBackgroundPattern();
-    };
-
     // Resize handler
     function handleResize() {
-        const newRect = card.getBoundingClientRect();
-        const newW = Math.max(Math.floor(newRect.width), 300);
+        const newRect = container.getBoundingClientRect();
+        if (newRect.width === 0 || newRect.height === 0) return;
+        const newW = Math.max(Math.floor(newRect.width), 260);
         const newH = Math.max(Math.floor(newRect.height), 220);
         if (newW === width && newH === height) return;
 
@@ -1594,14 +1562,15 @@ function initHeroStudioLiquidSimulation() {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(handleResize, 100);
         });
-        ro.observe(card);
+        ro.observe(container);
     } else {
         window.addEventListener('resize', handleResize);
     }
 
     // Animation Loop
     function animate() {
-        requestAnimationFrame(animate);
+        if (!isRunning) return;
+        animId = requestAnimationFrame(animate);
 
         simMaterial.uniforms.frame.value = frame++;
         simMaterial.uniforms.time.value = performance.now() / 1000;
@@ -1619,13 +1588,50 @@ function initHeroStudioLiquidSimulation() {
         targetB = temp;
     }
 
-    animate();
+    function startSimulation() {
+        const isLight = document.body.getAttribute('data-mode') === 'light';
+        if (isLight) {
+            stopSimulation();
+            return;
+        }
+        if (isRunning) return;
+        isRunning = true;
+        handleResize();
+        animate();
+    }
+
+    function stopSimulation() {
+        isRunning = false;
+        if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+        }
+        if (renderer) {
+            renderer.clear();
+        }
+    }
+
+    // Hook to Dark/Light Theme Switching (Strict Dark-Only policy)
+    window.updateHeroLiquidTheme = function() {
+        const isLight = document.body.getAttribute('data-mode') === 'light';
+        if (isLight) {
+            stopSimulation();
+        } else {
+            startSimulation();
+        }
+    };
+
+    // Initial Start if in Dark Mode
+    const isCurrentLight = document.body.getAttribute('data-mode') === 'light';
+    if (!isCurrentLight) {
+        startSimulation();
+    }
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHeroStudioLiquidSimulation);
+    document.addEventListener('DOMContentLoaded', initHeroLiquidSimulation);
 } else {
-    initHeroStudioLiquidSimulation();
+    initHeroLiquidSimulation();
 }
 
 /* ========================================================
@@ -2075,40 +2081,7 @@ document.querySelectorAll('.smooth-input').forEach(inp => {
     smoothInputInstances.push(new SmoothInputController(inp, { stiffness: 500, damping: 30, mass: 0.5 }));
 });
 
-// Hero Studio Lab Toolbar functionality:
-const labSmoothInput = document.getElementById('lab-smooth-input');
-const labTogglePasswordBtn = document.getElementById('lab-toggle-password');
-const labClearBtn = document.getElementById('lab-clear-btn');
 
-if (labTogglePasswordBtn && labSmoothInput) {
-    labTogglePasswordBtn.addEventListener('click', () => {
-        playButtonClick();
-        const isPassword = labSmoothInput.type === 'password';
-        labSmoothInput.type = isPassword ? 'text' : 'password';
-        labTogglePasswordBtn.innerHTML = isPassword 
-            ? '<i class="fas fa-eye"></i> <span>Password Mode</span>' 
-            : '<i class="fas fa-eye-slash"></i> <span>Text Mode</span>';
-        
-        const inst = smoothInputInstances.find(i => i.input === labSmoothInput);
-        if (inst) {
-            inst.syncMeasureStyles();
-            inst.updateCaretPosition(true);
-        }
-        labSmoothInput.focus();
-    });
-}
-
-if (labClearBtn && labSmoothInput) {
-    labClearBtn.addEventListener('click', () => {
-        playButtonClick();
-        labSmoothInput.value = '';
-        const inst = smoothInputInstances.find(i => i.input === labSmoothInput);
-        if (inst) {
-            inst.updateCaretPosition(true);
-        }
-        labSmoothInput.focus();
-    });
-}
 
 /* ========================================================
    17. SKIPER40 ANIMATED HYPERLINK ENGINE (Cursor.com)
