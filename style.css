@@ -3516,3 +3516,71 @@ a.animated-link:hover::before {
         display: none !important;
     }
 }
+
+/* ======================================================================
+   🎭 18. SKIPER58 TEXT-ROLL KINETIC TYPOGRAPHY ENGINE
+   Staggered Character Flip / Vertical Roll Animation on Hover
+   ====================================================================== */
+.roll-text {
+    display: inline-flex;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+    line-height: 1.15;
+}
+
+.roll-track {
+    display: inline-flex;
+    position: relative;
+}
+
+.roll-row {
+    display: inline-flex;
+    white-space: pre;
+}
+
+.roll-clone {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+}
+
+.roll-char {
+    display: inline-block;
+    transition: transform 0.36s cubic-bezier(0.25, 1, 0.5, 1);
+    transition-delay: calc(var(--char-idx, 0) * 0.024s);
+    will-change: transform;
+}
+
+/* Hover Triggers: letter roll cascade */
+.nav-link:hover .roll-primary .roll-char,
+.btn:hover .roll-primary .roll-char,
+.card-btn:hover .roll-primary .roll-char,
+.logo:hover .roll-primary .roll-char,
+.roll-text:hover .roll-primary .roll-char,
+a:hover > .roll-text .roll-primary .roll-char,
+button:hover > .roll-text .roll-primary .roll-char {
+    transform: translateY(-100%);
+}
+
+.nav-link:hover .roll-clone .roll-char,
+.btn:hover .roll-clone .roll-char,
+.card-btn:hover .roll-clone .roll-char,
+.logo:hover .roll-clone .roll-char,
+.roll-text:hover .roll-clone .roll-char,
+a:hover > .roll-text .roll-clone .roll-char,
+button:hover > .roll-text .roll-clone .roll-char {
+    transform: translateY(-100%);
+}
+
+/* Accessibility: respect user prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    .roll-clone {
+        display: none !important;
+    }
+    .roll-char {
+        transition: none !important;
+        transform: none !important;
+    }
+}

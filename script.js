@@ -1807,3 +1807,90 @@ if (document.readyState === 'loading') {
 } else {
     initSkiperAnimatedLinks();
 }
+
+/* ========================================================
+   18. SKIPER58 TEXT-ROLL KINETIC TYPOGRAPHY ENGINE
+   Letter-by-letter Staggered Rolling Text Animation on Hover
+======================================================== */
+function createTextRollMarkup(text) {
+    const chars = Array.from(text);
+    const primaryChars = chars.map((ch, i) => {
+        const displayChar = ch === ' ' ? '&nbsp;' : ch;
+        return `<span class="roll-char" style="--char-idx: ${i}">${displayChar}</span>`;
+    }).join('');
+
+    const cloneChars = chars.map((ch, i) => {
+        const displayChar = ch === ' ' ? '&nbsp;' : ch;
+        return `<span class="roll-char" style="--char-idx: ${i}">${displayChar}</span>`;
+    }).join('');
+
+    return `<span class="roll-text" aria-label="${text}">` +
+           `<span class="roll-track" aria-hidden="true">` +
+           `<span class="roll-row roll-primary">${primaryChars}</span>` +
+           `<span class="roll-row roll-clone">${cloneChars}</span>` +
+           `</span>` +
+           `</span>`;
+}
+
+function initSkiper58TextRoll() {
+    // 1. Navbar Links
+    document.querySelectorAll('.navbar .nav-link').forEach(link => {
+        if (link.dataset.textRolled) return;
+        if (link.classList.contains('mobile-nav-resume')) {
+            link.dataset.textRolled = "true";
+            link.innerHTML = '<i class="fas fa-file-alt"></i> ' + createTextRollMarkup('Resume') + ' <span class="skiper-arrow">↗</span>';
+            return;
+        }
+        const rawText = link.textContent.trim();
+        if (!rawText) return;
+        link.dataset.textRolled = "true";
+        link.innerHTML = createTextRollMarkup(rawText);
+    });
+
+    // 2. Resume button in header
+    const resumeBtn = document.querySelector('.header-right .btn-pill');
+    if (resumeBtn && !resumeBtn.dataset.textRolled) {
+        resumeBtn.dataset.textRolled = "true";
+        resumeBtn.innerHTML = createTextRollMarkup('Resume') + ' <span class="skiper-arrow">↗</span>';
+    }
+
+    // 3. Hero CTA buttons
+    const heroPrimaryBtn = document.querySelector('.hero-actions .btn-primary');
+    if (heroPrimaryBtn && !heroPrimaryBtn.dataset.textRolled) {
+        heroPrimaryBtn.dataset.textRolled = "true";
+        heroPrimaryBtn.innerHTML = createTextRollMarkup('View Projects') + ' <i class="fas fa-arrow-down"></i>';
+    }
+
+    const heroOutlineBtn = document.querySelector('.hero-actions .btn-outline');
+    if (heroOutlineBtn && !heroOutlineBtn.dataset.textRolled) {
+        heroOutlineBtn.dataset.textRolled = "true";
+        heroOutlineBtn.innerHTML = createTextRollMarkup('Get In Touch');
+    }
+
+    // 4. Project Card Primary CTA buttons ("Details")
+    document.querySelectorAll('.card-links .card-btn.primary').forEach(btn => {
+        if (btn.dataset.textRolled) return;
+        btn.dataset.textRolled = "true";
+        btn.innerHTML = createTextRollMarkup('Details') + ' <i class="fas fa-expand-alt"></i>';
+    });
+
+    // 5. Footer "Back to top"
+    const backTop = document.querySelector('.footer-content .back-top');
+    if (backTop && !backTop.dataset.textRolled) {
+        backTop.dataset.textRolled = "true";
+        backTop.innerHTML = createTextRollMarkup('Back to top') + ' <span class="skiper-arrow">↑</span>';
+    }
+
+    // 6. Brand Logo "Arpit"
+    const logoSpan = document.querySelector('.logo > span:last-child');
+    if (logoSpan && !logoSpan.dataset.textRolled) {
+        logoSpan.dataset.textRolled = "true";
+        logoSpan.innerHTML = createTextRollMarkup('Arpit') + '<span class="logo-accent">.dev</span>';
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSkiper58TextRoll);
+} else {
+    initSkiper58TextRoll();
+}
