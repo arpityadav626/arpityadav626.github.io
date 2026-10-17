@@ -394,14 +394,14 @@ function initWordsPreloader() {
         "Ciao",           // Italian
         "Olà",            // Portuguese
         "やあ",           // Japanese
-        "Namaste",        // Hindi
+        "Hallå",          // Swedish
         "Guten Tag",      // German
         "Hallo",          // Dutch
-        'arpityadav<span class="preloader-accent">.dev</span>' // Grand Brand Reveal
+        "Namaste"         // Hindi
     ];
 
     let currentIndex = 0;
-    const wordIntervalTime = 175; // ms per word
+    const wordIntervalTime = 180; // ms per word
 
     // Prevent background scrolling while preloader is active
     document.body.style.overflow = 'hidden';
@@ -416,9 +416,9 @@ function initWordsPreloader() {
                 wordEl.classList.remove('word-switching');
             }, 65);
 
-            // If we reached the final word (arpityadav.dev), pause longer for maximum impact!
+            // If we reached the final word, hold briefly then smoothly peel up the curtain!
             if (currentIndex === words.length - 1) {
-                setTimeout(startExitAnimation, 480);
+                setTimeout(startExitAnimation, 380);
             } else {
                 setTimeout(showNextWord, wordIntervalTime);
             }
