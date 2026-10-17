@@ -1772,3 +1772,38 @@ if (labClearBtn && labSmoothInput) {
         labSmoothInput.focus();
     });
 }
+
+/* ========================================================
+   17. SKIPER40 ANIMATED HYPERLINK ENGINE (Cursor.com)
+   Directional Underline + Floating Arrow Micro-interactions
+======================================================== */
+function initSkiperAnimatedLinks() {
+    const allLinks = document.querySelectorAll('a');
+    allLinks.forEach(link => {
+        // Tag regular text hyperlinks with .skiper-link
+        if (!link.classList.contains('btn') && 
+            !link.classList.contains('card-btn') && 
+            !link.classList.contains('social-link') && 
+            !link.classList.contains('logo') && 
+            !link.classList.contains('menu-toggle') &&
+            !link.classList.contains('sound-toggle-btn') &&
+            !link.classList.contains('theme-mode-btn')) {
+            link.classList.add('skiper-link');
+        }
+
+        // Wrap arrow glyphs (↗, ↑, →) in .skiper-arrow for smooth directional glide
+        Array.from(link.childNodes).forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE && /[↗↑→]/.test(node.textContent)) {
+                const tempWrap = document.createElement('span');
+                tempWrap.innerHTML = node.textContent.replace(/([↗↑→])/g, '<span class="skiper-arrow">$1</span>');
+                node.replaceWith(...tempWrap.childNodes);
+            }
+        });
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSkiperAnimatedLinks);
+} else {
+    initSkiperAnimatedLinks();
+}
