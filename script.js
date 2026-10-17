@@ -248,6 +248,38 @@ function playKeyTick() {
     });
 }
 
+// Sound 5c: Studio-Grade Mechanical Linear Switch Click (For Smooth Input Typing)
+let lastTypingTime = 0;
+function playSmoothTypingSound() {
+    const now = performance.now();
+    if (now - lastTypingTime < 30) return;
+    lastTypingTime = now;
+    ensureAudio(t => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1300 + (Math.random() * 350), t);
+        filter.Q.setValueAtTime(3.2, t);
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(900 + (Math.random() * 200), t);
+        osc.frequency.exponentialRampToValueAtTime(180, t + 0.016);
+
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.065, t + 0.001);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.016);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterCompressor);
+
+        osc.start(t);
+        osc.stop(t + 0.016);
+    });
+}
+
 // Sound 6: Modal State Transition Sound
 function playModalSound(isOpen) {
     ensureAudio(t => {
@@ -1137,6 +1169,7 @@ const tabTitles = {
     bio: '<i class="fas fa-code-branch"></i> arpit.config.ts',
     projects: '<i class="fas fa-rocket"></i> featured-work.json',
     skills: '<i class="fas fa-layer-group"></i> tech-stack.yaml',
+    lab: '<i class="fas fa-i-cursor"></i> smooth-input.tsx',
     contact: '<i class="fas fa-terminal"></i> connect.sh'
 };
 
@@ -1423,3 +1456,295 @@ document.querySelectorAll('.tech-stack-pills span[data-skill]').forEach(tag => {
         }
     });
 });
+
+/* ======================================================================
+   🟢 16. SMOOTH SPRING CARET INPUT ENGINE (Skiper106 Physics)
+   Subpixel DOM glyph measurement + Framer-Motion Spring Dynamics
+   (Stiffness: 500, Damping: 30, Mass: 0.5)
+   ====================================================================== */
+class SmoothInputController {
+    constructor(inputElement, options = {}) {
+        this.input = inputElement;
+        this.container = inputElement.closest('.smooth-input-container') || inputElement.parentElement;
+        this.measureSpan = this.container ? this.container.querySelector('.smooth-measure-span') : null;
+        this.caret = this.container ? this.container.querySelector('.smooth-caret') : null;
+
+        // Framer Motion spring parameters from user specification:
+        this.stiffness = options.stiffness || 500;
+        this.damping = options.damping || 30;
+        this.mass = options.mass || 0.5;
+
+        this.currentX = 0;
+        this.targetX = 0;
+        this.velocity = 0;
+        this.isMoving = false;
+        this.isFocused = false;
+        this.lastTime = 0;
+        this.rafId = null;
+        this.idleTimeout = null;
+
+        this.passwordChar = navigator.userAgent.match(/firefox|fxios/i) ? '\u25CF' : '\u2022';
+
+        this.init();
+    }
+
+    init() {
+        if (!this.container) return;
+
+        if (!this.measureSpan) {
+            this.measureSpan = document.createElement('span');
+            this.measureSpan.className = 'smooth-measure-span';
+            this.measureSpan.setAttribute('aria-hidden', 'true');
+            this.container.appendChild(this.measureSpan);
+        }
+        if (!this.caret) {
+            this.caret = document.createElement('div');
+            this.caret.className = 'smooth-caret';
+            this.caret.setAttribute('aria-hidden', 'true');
+            this.container.appendChild(this.caret);
+        }
+
+        // Hide native browser caret
+        this.input.style.caretColor = 'transparent';
+
+        // Bind events
+        this.input.addEventListener('focus', () => this.handleFocus());
+        this.input.addEventListener('blur', () => this.handleBlur());
+        this.input.addEventListener('input', () => this.handleInput());
+        this.input.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        this.input.addEventListener('keyup', () => this.handleCursorMove());
+        this.input.addEventListener('click', () => this.handleCursorMove());
+        this.input.addEventListener('scroll', () => this.handleCursorMove());
+
+        document.addEventListener('selectionchange', () => {
+            if (document.activeElement === this.input) {
+                this.handleSelectionChange();
+            }
+        });
+
+        if (document.fonts) {
+            document.fonts.ready.then(() => this.syncMeasureStyles());
+        }
+
+        if (window.ResizeObserver) {
+            const ro = new ResizeObserver(() => {
+                if (this.isFocused) this.updateCaretPosition(true);
+            });
+            ro.observe(this.container);
+        }
+    }
+
+    syncMeasureStyles() {
+        if (!this.input || !this.measureSpan) return;
+        const styles = window.getComputedStyle(this.input);
+        const isPassword = this.input.type === 'password';
+        let fontSize = styles.fontSize;
+        if (this.passwordChar === '\u2022' && isPassword && !navigator.userAgent.match(/chrome|chromium|crios/i)) {
+            fontSize = `${parseFloat(fontSize) + 6.25}px`;
+        }
+
+        this.measureSpan.style.font = `${styles.fontStyle} ${styles.fontWeight} ${fontSize} ${styles.fontFamily}`;
+        this.measureSpan.style.letterSpacing = styles.letterSpacing;
+        this.measureSpan.style.fontFeatureSettings = styles.fontFeatureSettings;
+        this.measureSpan.style.fontVariationSettings = styles.fontVariationSettings;
+    }
+
+    measurePrefixWidth(text) {
+        this.syncMeasureStyles();
+        this.measureSpan.textContent = text;
+        const styles = window.getComputedStyle(this.input);
+        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+        return text.length > 0 ? (this.measureSpan.offsetWidth + paddingLeft) : (paddingLeft - 1);
+    }
+
+    scrollCaretIntoView(absoluteWidth) {
+        const styles = window.getComputedStyle(this.input);
+        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+        const paddingRight = parseFloat(styles.paddingRight) || 0;
+        const maxScroll = Math.max(0, this.input.scrollWidth - this.input.clientWidth);
+        const visibleRight = this.input.scrollLeft + this.input.clientWidth - paddingRight;
+        const visibleLeft = this.input.scrollLeft + paddingLeft;
+
+        if (absoluteWidth > visibleRight) {
+            this.input.scrollLeft = Math.min(absoluteWidth - this.input.clientWidth + paddingRight, maxScroll);
+        } else if (absoluteWidth < visibleLeft) {
+            this.input.scrollLeft = Math.max(0, absoluteWidth - paddingLeft);
+        }
+    }
+
+    getCaretIndex() {
+        const start = this.input.selectionStart ?? 0;
+        const end = this.input.selectionEnd ?? 0;
+        if (start === end) return start;
+        return this.input.selectionDirection === 'backward' ? start : end;
+    }
+
+    updateCaretPosition(immediate = false) {
+        if (!this.isFocused || !this.caret) return;
+
+        const selectionStart = this.input.selectionStart ?? 0;
+        const selectionEnd = this.input.selectionEnd ?? 0;
+        const hasSelection = selectionStart !== selectionEnd;
+
+        if (hasSelection) {
+            this.caret.style.opacity = '0';
+            return;
+        }
+
+        const caretIndex = this.getCaretIndex();
+        const isPassword = this.input.type === 'password';
+        const textBeforeCaret = isPassword 
+            ? this.passwordChar.repeat(caretIndex) 
+            : this.input.value.slice(0, caretIndex);
+
+        const absoluteWidth = this.measurePrefixWidth(textBeforeCaret);
+        if (absoluteWidth === null) return;
+
+        this.scrollCaretIntoView(absoluteWidth);
+
+        const styles = window.getComputedStyle(this.input);
+        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+        const paddingRight = parseFloat(styles.paddingRight) || 0;
+        const caretPosition = absoluteWidth - this.input.scrollLeft;
+        const minX = paddingLeft - 1;
+        const maxX = this.input.clientWidth - paddingRight;
+
+        this.targetX = Math.min(Math.max(caretPosition, minX), maxX);
+
+        if (immediate) {
+            this.currentX = this.targetX;
+            this.velocity = 0;
+            this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX}px, 0, 0)`;
+        }
+
+        this.caret.classList.remove('smooth-caret-idle');
+        this.caret.style.opacity = '1';
+
+        clearTimeout(this.idleTimeout);
+        this.idleTimeout = setTimeout(() => {
+            if (this.isFocused && !hasSelection && this.caret) {
+                this.caret.classList.add('smooth-caret-idle');
+            }
+        }, 500);
+
+        this.startSpring();
+    }
+
+    startSpring() {
+        if (!this.isMoving) {
+            this.isMoving = true;
+            this.lastTime = performance.now();
+            this.rafId = requestAnimationFrame((t) => this.tick(t));
+        }
+    }
+
+    tick(time) {
+        if (!this.isFocused && Math.abs(this.currentX - this.targetX) < 0.2) {
+            this.isMoving = false;
+            return;
+        }
+
+        let dt = (time - this.lastTime) / 1000;
+        this.lastTime = time;
+        if (dt > 0.033) dt = 0.033; // clamp dt to 33ms
+
+        // Second-order differential spring mechanics
+        const springForce = -this.stiffness * (this.currentX - this.targetX);
+        const dampingForce = -this.damping * this.velocity;
+        const acceleration = (springForce + dampingForce) / this.mass;
+
+        this.velocity += acceleration * dt;
+        this.currentX += this.velocity * dt;
+
+        if (this.caret) {
+            this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX.toFixed(2)}px, 0, 0)`;
+        }
+
+        if (Math.abs(this.currentX - this.targetX) < 0.15 && Math.abs(this.velocity) < 0.2) {
+            this.currentX = this.targetX;
+            this.velocity = 0;
+            if (this.caret) {
+                this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX}px, 0, 0)`;
+            }
+            this.isMoving = false;
+            return;
+        }
+
+        this.rafId = requestAnimationFrame((t) => this.tick(t));
+    }
+
+    handleFocus() {
+        this.isFocused = true;
+        if (this.caret) this.caret.style.opacity = '1';
+        this.updateCaretPosition(true);
+    }
+
+    handleBlur() {
+        this.isFocused = false;
+        if (this.caret) {
+            this.caret.style.opacity = '0';
+            this.caret.classList.remove('smooth-caret-idle');
+        }
+        clearTimeout(this.idleTimeout);
+    }
+
+    handleInput() {
+        this.updateCaretPosition();
+        if (typeof playSmoothTypingSound === 'function') {
+            playSmoothTypingSound();
+        }
+    }
+
+    handleKeyDown(e) {
+        requestAnimationFrame(() => this.updateCaretPosition());
+    }
+
+    handleCursorMove() {
+        requestAnimationFrame(() => this.updateCaretPosition());
+    }
+
+    handleSelectionChange() {
+        this.updateCaretPosition();
+    }
+}
+
+// Global initialization of all Smooth Inputs
+const smoothInputInstances = [];
+document.querySelectorAll('.smooth-input').forEach(inp => {
+    smoothInputInstances.push(new SmoothInputController(inp, { stiffness: 500, damping: 30, mass: 0.5 }));
+});
+
+// Hero Studio Lab Toolbar functionality:
+const labSmoothInput = document.getElementById('lab-smooth-input');
+const labTogglePasswordBtn = document.getElementById('lab-toggle-password');
+const labClearBtn = document.getElementById('lab-clear-btn');
+
+if (labTogglePasswordBtn && labSmoothInput) {
+    labTogglePasswordBtn.addEventListener('click', () => {
+        playButtonClick();
+        const isPassword = labSmoothInput.type === 'password';
+        labSmoothInput.type = isPassword ? 'text' : 'password';
+        labTogglePasswordBtn.innerHTML = isPassword 
+            ? '<i class="fas fa-eye"></i> <span>Password Mode</span>' 
+            : '<i class="fas fa-eye-slash"></i> <span>Text Mode</span>';
+        
+        const inst = smoothInputInstances.find(i => i.input === labSmoothInput);
+        if (inst) {
+            inst.syncMeasureStyles();
+            inst.updateCaretPosition(true);
+        }
+        labSmoothInput.focus();
+    });
+}
+
+if (labClearBtn && labSmoothInput) {
+    labClearBtn.addEventListener('click', () => {
+        playButtonClick();
+        labSmoothInput.value = '';
+        const inst = smoothInputInstances.find(i => i.input === labSmoothInput);
+        if (inst) {
+            inst.updateCaretPosition(true);
+        }
+        labSmoothInput.focus();
+    });
+}
