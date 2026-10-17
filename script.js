@@ -580,21 +580,21 @@ const projectDetailsData = {
     },
     'smart-kitchen': {
         index: '02 // EMBEDDED & 3D DIGITAL TWIN',
-        badge: '<span class="badge live-badge"><i class="fab fa-youtube"></i> Video Demo &bull; Physical Hardware</span>',
-        title: 'SAFETY-FI 96X: Industrial-Grade Kitchen IoT Safety Platform',
-        subtitle: 'A dual-action closed-loop hazard mitigation platform engineered to prevent catastrophic kitchen accidents from LPG gas leaks and uncontrolled cooking fires.',
+        badge: '<span class="badge live-badge"><i class="fas fa-circle"></i> Physical Hardware + 3D Twin</span>',
+        title: 'FLAMEGUARD (SAFETY-FI 96X): Autonomous Kitchen IoT Safety Platform',
+        subtitle: 'An industrial-grade embedded hazard mitigation platform engineered to prevent catastrophic kitchen accidents from LPG gas leaks and combustion fires via autonomous physical actuation.',
         image: null,
         imageCaption: null,
         videoEmbed: 'https://www.youtube.com/embed/pivb5MaotJo',
         videoCaption: 'Official Hardware Prototype Walkthrough & Hazard Mitigation Demonstration',
         blocks: [
             {
-                title: '<i class="fab fa-youtube" style="color:#ef4444;"></i> Video Demonstration & Timeline Breakdown',
+                title: '<i class="fab fa-youtube" style="color:#ef4444;"></i> Video Demonstration & Shot Breakdown',
                 content: 'A comprehensive video presentation demonstrating FlameGuard\'s physical scaled kitchen model, autonomous fire sprinkler actuation, high-RPM gas extraction ventilation, and live 3D web dashboard synchronization (<a href="https://youtu.be/pivb5MaotJo" target="_blank" style="color:var(--accent-primary); font-weight:600; text-decoration:underline;">Watch on YouTube ↗</a>).',
                 bullets: [
-                    '<strong>[0:00 - 0:06] Hardware Architecture:</strong> Physical scale kitchen model overview with labeled front/back sensors, relays, and I2C LCD.',
-                    '<strong>[0:06 - 0:17] Fire Hazard & Sprinkler:</strong> Optical flame detection immediately triggers submersible pump sprinkler while safety interlock locks exhaust fan OFF.',
-                    '<strong>[0:17 - 0:38] Gas Leak & Ventilation:</strong> MQ-2 sensor detects combustible gas/smoke breach, engaging the exhaust fan and dispatching phone push notifications.',
+                    '<strong>[0:00 - 0:06] Hardware Architecture:</strong> Scaled physical kitchen model overview with labeled front/back sensors, isolated relays, and 16x2 I2C LCD.',
+                    '<strong>[0:06 - 0:17] Fire Emergency & Sprinkler:</strong> Optical flame detection immediately triggers submersible pump sprinkler while safety interlock strictly locks exhaust fan OFF.',
+                    '<strong>[0:17 - 0:38] Gas Leakage & Ventilation:</strong> MQ-2 sensor detects combustible gas/smoke breach, engaging the exhaust fan and dispatching phone push notifications.',
                     '<strong>[0:38 - 1:01] 3D Digital Twin:</strong> Three.js kinetic cooktop CAD simulation, 6 modular subsystem monitors, and microcontroller pinout webbing.'
                 ]
             },
@@ -604,24 +604,28 @@ const projectDetailsData = {
             },
             {
                 title: '<i class="fas fa-user-cog"></i> My Contribution & Role',
-                content: 'As sole builder, engineered the complete working physical model: assembled the Arduino Uno circuit with isolated 5V relays, wrote non-blocking C++ firmware (<code>smart_kitchen.ino</code>), developed the asynchronous Python serial telemetry server (<code>app.py</code>), and created the Three.js 3D digital twin dashboard.'
+                content: 'Served as <strong>Lead Embedded Hardware & Systems Engineer</strong>. Engineered the complete working physical model: assembled the Arduino Uno circuit with isolated 5V relays, wrote deterministic C++ firmware (<code>smart_kitchen.ino</code>), developed the asynchronous Python serial telemetry server (<code>app.py</code>), and created the Three.js 3D digital twin dashboard.'
             },
             {
-                title: '<i class="fas fa-tools"></i> Firmware & Telemetry Architecture',
+                title: '<i class="fas fa-cogs"></i> Firmware & Telemetry Architecture',
                 bullets: [
                     '<strong>5-Second One-Shot Flame Timer:</strong> Optical IR flame detection activates the water pump relay and acoustic alarm for exactly 5,000 ms before deterministic auto shut-off.',
-                    '<strong>Anti-Loop Lockout (<code>flameMustClear</code>):</strong> Prevents infinite alarm cycling during continuous sensor exposure by requiring the flame to clear before re-arming the actuator trigger.',
+                    '<strong>Safety Interlock Engine:</strong> During a fire emergency, exhaust ventilation is strictly forced OFF to avoid pulling fresh oxygen into the fire and feeding combustion.',
                     '<strong>Calibrated Gas Threshold (600 ADC):</strong> Tuned the MQ-2 hydrocarbon trigger to 600 ADC units, eliminating ambient indoor drift while reacting instantly to butane/LPG concentrations.',
                     '<strong>Reentrant Lock Concurrency (<code>threading.RLock</code>):</strong> Eliminated server thread starvation in Python, allowing continuous 9600-Baud USB serial polling and REST API requests concurrently.',
                     '<strong>IoT Cloud Email Sentinel:</strong> Dispatches real-time emergency hazard notifications and system diagnostics directly to user\'s smartphone via Formspree API without fragile GSM hardware dependencies.',
                     '<strong>Three.js 3D Digital Twin:</strong> Client-side 3D cooktop rendering with dynamic particle fluids, electric blue (<code>#38BDF8</code>) gas alert lighting, and live hardware register telemetry.'
                 ]
+            },
+            {
+                title: '<i class="fas fa-shield-alt"></i> Electrical Noise & Power Isolation',
+                content: 'Integrated 1000µF decoupling capacitors across the 5V bus to suppress inductive relay coil back-EMF, preventing I2C bus lockups and ensuring continuous ATmega328P stability under motor loads.'
             }
         ],
         notice: '<strong>Deployment Note:</strong> Physical working prototype built with Arduino Uno & sensors. The web dashboard provides an interactive Three.js 3D digital twin and hybrid simulation engine.',
         actions: [
-            { label: 'Watch Video Demo', icon: 'fab fa-youtube', href: 'https://youtu.be/pivb5MaotJo', external: true, primary: true },
-            { label: 'Live 3D Digital Twin', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/smart-kitchen/', external: true },
+            { label: 'Watch Video Walkthrough', icon: 'fab fa-youtube', href: 'https://youtu.be/pivb5MaotJo', external: true, primary: true },
+            { label: 'Live Interactive Preview', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/smart-kitchen/', external: true },
             { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/smart-kitchen', external: true }
         ]
     },
