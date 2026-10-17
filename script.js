@@ -379,33 +379,114 @@ function bindSounds() {
 bindSounds();
 
 /* ========================================================
-   2. OPENING MINIMALIST BRAND PRELOADER
-   Fast, elegant brand mark reveal with zero delay
+   2. SKIPER8 WORDS PRELOADER (Dennis Snellenberg Inspired)
+   Multilingual Greetings Cycle with Organic Liquid SVG Curtain
 ======================================================== */
-const preloader = document.getElementById('preloader');
-const preloaderProgress = document.getElementById('preloader-progress');
+function initWordsPreloader() {
+    const preloader = document.getElementById('preloader');
+    const wordEl = document.getElementById('preloader-word');
+    const curvePath = document.getElementById('preloader-curve-path');
+    if (!preloader || !wordEl) return;
 
-if (preloader) {
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 12) + 12;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
-            if (preloaderProgress) preloaderProgress.style.width = '100%';
-            
+    const words = [
+        "Hello",          // English
+        "Bonjour",        // French
+        "Ciao",           // Italian
+        "Olà",            // Portuguese
+        "やあ",           // Japanese
+        "Namaste",        // Hindi
+        "Guten Tag",      // German
+        "Hallo",          // Dutch
+        'arpityadav<span class="preloader-accent">.dev</span>' // Grand Brand Reveal
+    ];
+
+    let currentIndex = 0;
+    const wordIntervalTime = 175; // ms per word
+
+    // Prevent background scrolling while preloader is active
+    document.body.style.overflow = 'hidden';
+
+    function showNextWord() {
+        if (currentIndex < words.length - 1) {
+            currentIndex++;
+            wordEl.classList.add('word-switching');
+
             setTimeout(() => {
-                playCozyChime();
-                preloader.classList.add('preloader-hidden');
-                
-                // Cascading reveal for Hero Section
-                const hero = document.getElementById('home');
-                if (hero) hero.classList.add('active');
-            }, 240);
-        } else {
-            if (preloaderProgress) preloaderProgress.style.width = `${progress}%`;
+                wordEl.innerHTML = words[currentIndex];
+                wordEl.classList.remove('word-switching');
+            }, 65);
+
+            // If we reached the final word (arpityadav.dev), pause longer for maximum impact!
+            if (currentIndex === words.length - 1) {
+                setTimeout(startExitAnimation, 480);
+            } else {
+                setTimeout(showNextWord, wordIntervalTime);
+            }
         }
-    }, 35);
+    }
+
+    function startExitAnimation() {
+        if (!curvePath) {
+            preloader.classList.add('preloader-exiting');
+            setTimeout(finishPreloader, 850);
+            return;
+        }
+
+        const startTime = performance.now();
+        const duration = 850; // matches CSS transition duration
+
+        function stepCurve(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Dennis Snellenberg curve morphing:
+            // First 35%: curve pulls down into an organic liquid arch
+            // Next 65%: curve flattens seamlessly to 0 as preloader slides off
+            let curveY;
+            if (progress < 0.35) {
+                curveY = 100 + (progress / 0.35) * 25;
+            } else {
+                const t = (progress - 0.35) / 0.65;
+                curveY = 125 * Math.pow(1 - t, 2.2);
+            }
+
+            curvePath.setAttribute('d', `M0 0 L100 0 Q50 ${curveY.toFixed(1)} 0 0 Z`);
+
+            if (progress < 1) {
+                requestAnimationFrame(stepCurve);
+            } else {
+                finishPreloader();
+            }
+        }
+
+        preloader.classList.add('preloader-exiting');
+        requestAnimationFrame(stepCurve);
+
+        // Play chime audio as curtain begins to lift
+        setTimeout(() => {
+            if (typeof playCozyChime === 'function') {
+                playCozyChime();
+            }
+        }, 220);
+    }
+
+    function finishPreloader() {
+        document.body.style.overflow = '';
+        preloader.style.display = 'none';
+
+        // Trigger Hero Section active cascade
+        const hero = document.getElementById('home');
+        if (hero) hero.classList.add('active');
+    }
+
+    // Start words flipping after initial short pause
+    setTimeout(showNextWord, wordIntervalTime);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWordsPreloader);
+} else {
+    initWordsPreloader();
 }
 
 /* ========================================================

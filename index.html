@@ -90,16 +90,18 @@
     <!-- Linear.app / Vercel Ambient Spotlight Glow Layer -->
     <div class="linear-spotlight" id="spotlight" aria-hidden="true"></div>
 
-    <!-- 0. Opening Minimalist Brand Preloader -->
-    <div id="preloader" class="preloader">
+    <!-- 0. Skiper8 Words Preloader (Dennis Snellenberg Curved Liquid Curtain) -->
+    <div id="preloader" class="preloader" aria-hidden="true">
         <div class="preloader-content">
-            <h1 class="preloader-brand">
-                <span class="preloader-dot"></span>arpityadav<span class="preloader-accent">.dev</span>
-            </h1>
-            <div class="preloader-line-wrap">
-                <div class="preloader-line" id="preloader-progress"></div>
+            <div class="preloader-brand">
+                <span class="preloader-dot"></span>
+                <span id="preloader-word" class="preloader-word">Hello</span>
             </div>
         </div>
+        <!-- Dynamic Curved Liquid Curtain SVG -->
+        <svg class="preloader-curve" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path id="preloader-curve-path" d="M0 0 L100 0 Q50 100 0 0 Z"></path>
+        </svg>
     </div>
 
     <!-- 1. Floating Pill Navbar -->
