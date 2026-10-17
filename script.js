@@ -1096,12 +1096,18 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 /* ========================================================
-   12. AMBIENT THEME PALETTE CUSTOMIZER
+   12. AMBIENT THEME PALETTE CUSTOMIZER & SKIPER26 VIEW TRANSITIONS
+   Circular Ripple / Blur / Wipe Expansion View Transitions API
 ======================================================== */
 const paletteWrap = document.getElementById('theme-palette-wrap');
 const paletteBtn = document.getElementById('palette-btn');
 const paletteCurrentDot = document.getElementById('palette-current-dot');
 const paletteSwatches = document.querySelectorAll('.palette-swatch');
+const themeModeBtn = document.getElementById('theme-mode-btn');
+const themeModeIcon = document.getElementById('theme-mode-icon');
+const pillDarkMode = document.getElementById('pill-dark-mode');
+const pillLightMode = document.getElementById('pill-light-mode');
+const variantPills = document.querySelectorAll('.variant-pill');
 
 const themeColors = {
     'amber': '#f97316',
@@ -1110,9 +1116,93 @@ const themeColors = {
     'violet': '#a855f7'
 };
 
+let activeTransitionVariant = localStorage.getItem('arpit-transition-variant') || 'circle';
+
+// Sync initial variant pill UI
+if (variantPills.length > 0) {
+    variantPills.forEach(pill => {
+        pill.classList.toggle('active', pill.getAttribute('data-variant') === activeTransitionVariant);
+        pill.addEventListener('click', (e) => {
+            e.stopPropagation();
+            activeTransitionVariant = pill.getAttribute('data-variant');
+            localStorage.setItem('arpit-transition-variant', activeTransitionVariant);
+            variantPills.forEach(p => p.classList.toggle('active', p === pill));
+            playButtonClick();
+        });
+    });
+}
+
+function executeViewTransition(changeFn, clickEvent) {
+    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        changeFn();
+        return;
+    }
+
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+
+    if (clickEvent) {
+        if (clickEvent.clientX !== undefined && clickEvent.clientY !== undefined) {
+            x = clickEvent.clientX;
+            y = clickEvent.clientY;
+        } else if (clickEvent.target) {
+            const rect = clickEvent.target.getBoundingClientRect();
+            x = rect.left + rect.width / 2;
+            y = rect.top + rect.height / 2;
+        }
+    }
+
+    const maxRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+        changeFn();
+    });
+
+    transition.ready.then(() => {
+        let keyframes;
+        if (activeTransitionVariant === 'circle-blur') {
+            keyframes = {
+                clipPath: [
+                    `circle(0px at ${x}px ${y}px)`,
+                    `circle(${maxRadius}px at ${x}px ${y}px)`
+                ],
+                filter: ['blur(14px)', 'blur(0px)']
+            };
+        } else if (activeTransitionVariant === 'rectangle') {
+            keyframes = {
+                clipPath: [
+                    'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+                    'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+                ]
+            };
+        } else {
+            // Default: 'circle'
+            keyframes = {
+                clipPath: [
+                    `circle(0px at ${x}px ${y}px)`,
+                    `circle(${maxRadius}px at ${x}px ${y}px)`
+                ]
+            };
+        }
+
+        document.documentElement.animate(
+            keyframes,
+            {
+                duration: 650,
+                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                pseudoElement: '::view-transition-new(root)'
+            }
+        );
+    });
+}
+
 function setAccentTheme(themeName) {
     if (!themeColors[themeName]) themeName = 'amber';
     document.body.setAttribute('data-theme', themeName);
+    document.documentElement.setAttribute('data-theme', themeName);
     localStorage.setItem('arpit-accent-theme', themeName);
 
     if (paletteCurrentDot) {
@@ -1121,17 +1211,58 @@ function setAccentTheme(themeName) {
     }
 
     paletteSwatches.forEach(swatch => {
-        if (swatch.getAttribute('data-theme') === themeName) {
-            swatch.classList.add('active');
-        } else {
-            swatch.classList.remove('active');
-        }
+        swatch.classList.toggle('active', swatch.getAttribute('data-theme') === themeName);
     });
 }
 
-// Restore saved theme on initial load
+function setDisplayMode(mode) {
+    const isLight = mode === 'light';
+    const modeVal = isLight ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-mode', modeVal);
+    document.body.setAttribute('data-mode', modeVal);
+    localStorage.setItem('arpit-theme-mode', modeVal);
+
+    if (themeModeIcon) {
+        themeModeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+    }
+    if (pillDarkMode && pillLightMode) {
+        pillDarkMode.classList.toggle('active', !isLight);
+        pillLightMode.classList.toggle('active', isLight);
+    }
+}
+
+// Restore saved themes on initial load
 const savedTheme = localStorage.getItem('arpit-accent-theme') || 'amber';
 setAccentTheme(savedTheme);
+
+const savedMode = localStorage.getItem('arpit-theme-mode') || 'dark';
+setDisplayMode(savedMode);
+
+// Event Listeners for Theme Mode Toggle
+if (themeModeBtn) {
+    themeModeBtn.addEventListener('click', (e) => {
+        const currentMode = document.body.getAttribute('data-mode') || 'dark';
+        const nextMode = currentMode === 'light' ? 'dark' : 'light';
+        playButtonClick();
+        executeViewTransition(() => setDisplayMode(nextMode), e);
+    });
+}
+
+if (pillDarkMode) {
+    pillDarkMode.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playButtonClick();
+        executeViewTransition(() => setDisplayMode('dark'), e);
+    });
+}
+
+if (pillLightMode) {
+    pillLightMode.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playButtonClick();
+        executeViewTransition(() => setDisplayMode('light'), e);
+    });
+}
 
 if (paletteBtn && paletteWrap) {
     paletteBtn.addEventListener('click', (e) => {
@@ -1144,9 +1275,9 @@ if (paletteBtn && paletteWrap) {
         swatch.addEventListener('click', (e) => {
             e.stopPropagation();
             const theme = swatch.getAttribute('data-theme');
-            setAccentTheme(theme);
-            paletteWrap.classList.remove('open');
             playButtonClick();
+            executeViewTransition(() => setAccentTheme(theme), e);
+            paletteWrap.classList.remove('open');
         });
     });
 

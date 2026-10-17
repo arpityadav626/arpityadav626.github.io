@@ -126,6 +126,11 @@
         </nav>
 
         <div class="header-right">
+            <!-- Light / Dark Mode Toggle Button (with Skiper26 View Transition) -->
+            <button class="theme-mode-btn sound-hover" id="theme-mode-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light / Dark Mode">
+                <i class="fas fa-sun" id="theme-mode-icon"></i>
+            </button>
+
             <!-- Ambient Theme Accent Switcher -->
             <div class="theme-palette-wrap" id="theme-palette-wrap">
                 <button class="palette-toggle-btn sound-hover" id="palette-btn" title="Customize Theme Glow" aria-label="Customize Theme Glow">
@@ -151,6 +156,29 @@
                             <span class="swatch-circle" style="background: #a855f7; box-shadow: 0 0 8px #a855f7;"></span>
                             <span class="swatch-name">Violet</span>
                         </button>
+                    </div>
+
+                    <div class="palette-divider"></div>
+
+                    <div class="palette-section-group">
+                        <span class="palette-label">Display Mode</span>
+                        <div class="palette-mode-pills">
+                            <button class="mode-pill active sound-hover" id="pill-dark-mode" data-mode="dark">
+                                <i class="fas fa-moon"></i> Dark
+                            </button>
+                            <button class="mode-pill sound-hover" id="pill-light-mode" data-mode="light">
+                                <i class="fas fa-sun"></i> Light
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="palette-section-group">
+                        <span class="palette-label">Transition FX (Skiper26)</span>
+                        <div class="palette-variant-pills">
+                            <button class="variant-pill active sound-hover" data-variant="circle" title="Circular Ripple">Circle</button>
+                            <button class="variant-pill sound-hover" data-variant="circle-blur" title="Soft Blur Circle">Blur</button>
+                            <button class="variant-pill sound-hover" data-variant="rectangle" title="Directional Wipe">Wipe</button>
+                        </div>
                     </div>
                 </div>
             </div>
