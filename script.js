@@ -1268,8 +1268,9 @@ if (themeModeBtn) {
 
 /* ========================================================
    13. HERO LIQUID SIMULATION ENGINE (Skiper12 WebGL Fluid Dynamics)
-   Borderless, Organic Liquid Simulation behind Hero Right Section
+   Crystal-Clear Water Refraction & Specular Highlights
    Strictly runs in Black (Dark) Mode; 100% disabled in Light Mode
+   Idle state: Completely calm and still ("still pe still rehta hai")
 ======================================================== */
 function initHeroLiquidSimulation() {
     const container = document.getElementById('hero-liquid-backdrop');
@@ -1327,14 +1328,17 @@ function initHeroLiquidSimulation() {
     let targetB = new THREE.WebGLRenderTarget(W, H, renderTargetParams);
 
     const mouse = new THREE.Vector2(-10, -10);
+    const prevMouse = new THREE.Vector2(-10, -10);
     let frame = 0;
     let animId = null;
     let isRunning = false;
 
+    // Fluid Simulation Shader (Pure physical wave equation with smooth line interpolation)
     const simMaterial = new THREE.ShaderMaterial({
         uniforms: {
             textureA: { value: null },
             mouse: { value: mouse },
+            prevMouse: { value: prevMouse },
             resolution: { value: new THREE.Vector2(W, H) },
             time: { value: 0 },
             frame: { value: 0 }
@@ -1349,6 +1353,7 @@ function initHeroLiquidSimulation() {
         fragmentShader: `
             uniform sampler2D textureA;
             uniform vec2 mouse;
+            uniform vec2 prevMouse;
             uniform vec2 resolution;
             uniform float time;
             uniform int frame;
@@ -1378,69 +1383,95 @@ function initHeroLiquidSimulation() {
                 if (uv.y <= texelSize.y) p_down = p_up;
                 if (uv.y >= 1.0 - texelSize.y) p_up = p_down;
 
+                // 2D Wave propagation
                 pVel += delta * (-2.0 * pressure + p_right + p_left) / 4.0;
                 pVel += delta * (-2.0 * pressure + p_up + p_down) / 4.0;
 
                 pressure += delta * pVel;
-                pVel -= 0.005 * delta * pressure;
-                pVel *= (1.0 - 0.002 * delta);
-                pressure *= 0.999;
 
-                // Interactive cursor ripple
+                // Precise damping: ripples propagate smoothly and settle to absolute stillness when idle
+                pVel -= 0.007 * delta * pressure;
+                pVel *= (1.0 - 0.008 * delta);
+                pressure *= 0.986;
+
+                // Interactive cursor stroke interpolation (unbroken fluid ribbon)
                 if (mouse.x > 0.0) {
                     vec2 mouseUV = mouse / resolution;
-                    float dist = distance(uv, mouseUV);
-                    if (dist <= 0.05) {
-                        pressure += 2.6 * (1.0 - dist / 0.05);
+                    vec2 prevUV = (prevMouse.x > 0.0) ? (prevMouse / resolution) : mouseUV;
+                    
+                    vec2 pa = uv - prevUV;
+                    vec2 ba = mouseUV - prevUV;
+                    float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
+                    float dist = length(pa - ba * h);
+                    
+                    // Fine radius for razor-sharp crystal ripples
+                    if (dist <= 0.022) {
+                        pressure += 2.2 * (1.0 - dist / 0.022);
                     }
                 }
 
-                // Gentle organic ambient droplets across the full hero backdrop
-                float dropCycle = mod(time, 2.8);
-                if (dropCycle < 0.045) {
-                    vec2 dropPos = vec2(0.5 + 0.38 * sin(time * 1.3), 0.5 + 0.35 * cos(time * 1.7));
-                    float d = distance(uv, dropPos);
-                    if (d < 0.035) {
-                        pressure += 1.3 * (1.0 - d / 0.035);
-                    }
-                }
+                // Strictly NO ambient drops - surface stays 100% still when mouse is idle!
 
                 gl_FragColor = vec4(pressure, pVel, (p_right - p_left) / 2.0, (p_up - p_down) / 2.0);
             }
         `
     });
 
-    // Background Canvas Texture (Dark monochrome with subtle blueprint grid across full hero)
+    // Background Canvas Texture (Black base with obsidian liquid glass sculpture)
     const bgCanvas = document.createElement('canvas');
     bgCanvas.width = W;
     bgCanvas.height = H;
-    const bgCtx = bgCanvas.getContext('2d');
+    const bgCtx = bgCanvas.getContext('2d', { alpha: false });
     const bgTexture = new THREE.CanvasTexture(bgCanvas);
     bgTexture.minFilter = THREE.LinearFilter;
     bgTexture.magFilter = THREE.LinearFilter;
 
+    const sculptureImg = new Image();
+    sculptureImg.crossOrigin = 'anonymous';
+    let imgLoaded = false;
+
+    sculptureImg.onload = () => {
+        imgLoaded = true;
+        renderBackgroundPattern();
+    };
+    // Use WebP with PNG fallback
+    sculptureImg.onerror = () => {
+        if (!sculptureImg.src.endsWith('.png')) {
+            sculptureImg.src = 'assets/liquid_sculpture.png';
+        }
+    };
+    sculptureImg.src = 'assets/liquid_sculpture.webp';
+
     function renderBackgroundPattern() {
-        const grad = bgCtx.createLinearGradient(0, 0, W, H);
-        grad.addColorStop(0, '#07080b');
-        grad.addColorStop(0.5, '#0e111a');
-        grad.addColorStop(1, '#090a0f');
-        bgCtx.fillStyle = grad;
+        // Pure black base
+        bgCtx.fillStyle = '#000000';
         bgCtx.fillRect(0, 0, W, H);
 
-        // Subtle dark grid across the entire hero backdrop
-        bgCtx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
-        bgCtx.lineWidth = 1;
-        const step = 32 * dpr;
-        for (let x = 0; x < W; x += step) {
-            bgCtx.beginPath(); bgCtx.moveTo(x, 0); bgCtx.lineTo(x, H); bgCtx.stroke();
-        }
-        for (let y = 0; y < H; y += step) {
-            bgCtx.beginPath(); bgCtx.moveTo(0, y); bgCtx.lineTo(W, y); bgCtx.stroke();
+        if (imgLoaded && sculptureImg.naturalWidth > 0) {
+            const imgRatio = sculptureImg.naturalWidth / sculptureImg.naturalHeight;
+            let targetW, targetH, targetX, targetY;
+
+            if (W > 768 * dpr) {
+                // Desktop: Position on right side of the hero section
+                targetH = Math.min(H * 0.95, (W * 0.58) / imgRatio);
+                targetW = targetH * imgRatio;
+                targetX = W * 0.70 - targetW * 0.5;
+                targetY = (H - targetH) * 0.5;
+            } else {
+                // Mobile/Tablet: Centered hero placement
+                targetW = Math.min(W * 0.88, H * 0.65 * imgRatio);
+                targetH = targetW / imgRatio;
+                targetX = (W - targetW) * 0.5;
+                targetY = (H - targetH) * 0.5;
+            }
+
+            bgCtx.drawImage(sculptureImg, targetX, targetY, targetW, targetH);
         }
         bgTexture.needsUpdate = true;
     }
     renderBackgroundPattern();
 
+    // High-Clarity Water Optics Render Shader (Matching Skiper12 Vercel liquid simulation)
     const renderMaterial = new THREE.ShaderMaterial({
         uniforms: {
             textureA: { value: null },
@@ -1461,24 +1492,26 @@ function initHeroLiquidSimulation() {
             void main() {
                 vec4 data = texture2D(textureA, vUv);
 
-                vec2 distortion = 0.35 * data.zw;
+                // Motion modulation: when surface is still, motion drops to 0.0
+                float motion = smoothstep(0.0006, 0.006, length(data.zw) + abs(data.x) * 0.03);
+
+                // Fluid refraction distortion modulated by active motion
+                vec2 distortion = 0.3 * data.zw * motion;
                 vec4 color = texture2D(textureB, vUv + distortion);
 
-                // Wave surface normal
-                vec3 normal = normalize(vec3(-data.z * 3.8, 1.0, -data.w * 3.8));
-                vec3 lightDir = normalize(vec3(-0.4, 0.8, 0.6));
-                vec3 viewDir = vec3(0.0, 0.0, 1.0);
-                vec3 halfDir = normalize(lightDir + viewDir);
+                // High-precision surface normal
+                vec3 normal = normalize(vec3(-data.z * 2.2, 0.5, -data.w * 2.2));
+                vec3 lightDir = normalize(vec3(-3.0, 10.0, 3.0));
 
-                float specAngle = max(0.0, dot(normal, halfDir));
-                float specular = pow(specAngle, 16.0);
+                // High-exponent specular reflection (Skiper12 exact formula)
+                float specAngle = max(0.0, dot(normal, lightDir));
+                float specular = pow(specAngle, 60.0) * 1.6;
 
-                // Caustic wave edge glow
-                float waveEdge = length(data.zw) * 12.0;
+                // Subtle edge refraction highlight
+                float caustic = smoothstep(0.01, 0.08, length(data.zw)) * 0.35;
 
-                vec3 specColor = vec3(1.0, 1.0, 1.0) * specular * 1.8;
-                vec3 waveTint = vec3(0.3, 0.5, 0.9) * waveEdge * 0.3;
-                gl_FragColor = vec4(color.rgb + specColor + waveTint, 1.0);
+                vec3 finalColor = color.rgb + vec3(specular * motion) + vec3(caustic * motion);
+                gl_FragColor = vec4(finalColor, 1.0);
             }
         `,
         transparent: false
@@ -1491,17 +1524,30 @@ function initHeroLiquidSimulation() {
     simScene.add(simMesh);
     scene.add(renderMesh);
 
-    // Mouse & Touch Interaction mapped directly to canvas bounds
+    // Mouse & Touch Tracking with previous position tracking
+    let mouseTimeout = null;
     function updateMouse(clientX, clientY) {
         if (!isRunning) return;
         const r = canvas.getBoundingClientRect();
         const px = clientX - r.left;
         const py = clientY - r.top;
         if (px >= 0 && px <= r.width && py >= 0 && py <= r.height) {
+            if (mouse.x > 0.0) {
+                prevMouse.copy(mouse);
+            } else {
+                prevMouse.set(px * dpr, (r.height - py) * dpr);
+            }
             mouse.x = px * dpr;
             mouse.y = (r.height - py) * dpr;
+
+            // Clear previous mouse when motion stops
+            clearTimeout(mouseTimeout);
+            mouseTimeout = setTimeout(() => {
+                prevMouse.copy(mouse);
+            }, 60);
         } else {
             mouse.set(-10, -10);
+            prevMouse.set(-10, -10);
         }
     }
 
@@ -1512,6 +1558,7 @@ function initHeroLiquidSimulation() {
         });
         heroSection.addEventListener('mouseleave', () => {
             mouse.set(-10, -10);
+            prevMouse.set(-10, -10);
         });
         heroSection.addEventListener('touchmove', (e) => {
             if (e.touches.length > 0) {
@@ -1520,6 +1567,7 @@ function initHeroLiquidSimulation() {
         }, { passive: true });
         heroSection.addEventListener('touchend', () => {
             mouse.set(-10, -10);
+            prevMouse.set(-10, -10);
         });
     }
 
