@@ -350,7 +350,7 @@ main, .header, .footer {
     padding: 7px 18px;
     border-radius: 20px;
     background: var(--text-primary);
-    color: var(--bg-page);
+    color: var(--bg-page) !important;
     text-decoration: none;
     font-size: 13px;
     font-weight: 600;
@@ -358,9 +358,20 @@ main, .header, .footer {
 }
 
 .btn-pill:hover {
-    background: var(--accent-primary);
-    color: #fff;
+    background: #ffffff;
+    color: var(--bg-page) !important;
     transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.22);
+}
+
+.btn-pill .roll-char,
+.btn-pill .skiper-arrow {
+    color: var(--bg-page) !important;
+}
+
+.btn-pill:hover .roll-char,
+.btn-pill:hover .skiper-arrow {
+    color: #0d111a !important;
 }
 
 .menu-toggle {
@@ -1037,18 +1048,25 @@ main, .header, .footer {
 
 .skill-pill.active,
 .skill-pill.skill-highlighted {
-    background: var(--accent-primary) !important;
-    color: #ffffff !important;
-    border-color: var(--accent-primary) !important;
-    box-shadow: 0 0 16px rgba(var(--accent-primary-rgb), 0.45) !important;
+    background: #ffffff !important;
+    color: #0d111a !important;
+    font-weight: 700 !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.45) !important;
     transform: translateY(-3px) scale(1.06) !important;
 }
 
+.skill-pill.active i,
+.skill-pill.skill-highlighted i {
+    color: #0d111a !important;
+}
+
 .tech-stack-pills span.matched-tech-tag {
-    background: var(--accent-primary) !important;
-    color: #ffffff !important;
-    border-color: var(--accent-primary) !important;
-    box-shadow: 0 0 10px rgba(var(--accent-primary-rgb), 0.5) !important;
+    background: #ffffff !important;
+    color: #0d111a !important;
+    font-weight: 600 !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
 }
 
 /* ========================================================
@@ -1640,6 +1658,7 @@ main, .header, .footer {
     margin: 120px auto 40px;
     padding-top: 30px;
     border-top: 1px solid var(--border-subtle);
+    background: transparent !important;
 }
 
 .footer-content {
@@ -1648,12 +1667,15 @@ main, .header, .footer {
     align-items: center;
     font-size: 13.5px;
     color: var(--text-muted);
+    background: transparent !important;
 }
 
 .back-top {
     color: var(--text-secondary);
     text-decoration: none;
     transition: var(--transition);
+    background: transparent !important;
+    border: none !important;
 }
 
 .back-top:hover {
@@ -2381,13 +2403,19 @@ body.modal-open .header {
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary, #fb923c)) !important;
-        color: #ffffff !important;
+        background: #ffffff !important;
+        color: #0d111a !important;
         font-weight: 700 !important;
         padding: 13px !important;
         border-radius: 14px !important;
         margin-top: 6px;
-        box-shadow: 0 4px 18px rgba(var(--accent-primary-rgb), 0.4);
+        box-shadow: 0 4px 18px rgba(255, 255, 255, 0.25);
+    }
+
+    .mobile-nav-resume i,
+    .mobile-nav-resume .roll-char,
+    .mobile-nav-resume .skiper-arrow {
+        color: #0d111a !important;
     }
 
     /* Hero Section Responsive */
@@ -3220,6 +3248,27 @@ body[data-mode="light"] .skill-pill:hover {
     border-color: #0f172a;
 }
 
+body[data-mode="light"] .skill-pill.active,
+body[data-mode="light"] .skill-pill.skill-highlighted {
+    background: #0f172a !important;
+    color: #ffffff !important;
+    border-color: #0f172a !important;
+    box-shadow: 0 0 16px rgba(15, 23, 42, 0.25) !important;
+    transform: translateY(-3px) scale(1.06) !important;
+}
+
+body[data-mode="light"] .skill-pill.active i,
+body[data-mode="light"] .skill-pill.skill-highlighted i {
+    color: #ffffff !important;
+}
+
+body[data-mode="light"] .tech-stack-pills span.matched-tech-tag {
+    background: #0f172a !important;
+    color: #ffffff !important;
+    border-color: #0f172a !important;
+    box-shadow: 0 0 10px rgba(15, 23, 42, 0.25) !important;
+}
+
 body[data-mode="light"] .education-card {
     background: linear-gradient(145deg, #ffffff, #f8fafc);
     border: 1px solid rgba(15, 23, 42, 0.08);
@@ -3313,13 +3362,36 @@ body[data-mode="light"] .btn-outline:hover {
 
 body[data-mode="light"] .btn-pill {
     background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.14);
-    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.16);
+    color: #0f172a !important;
+}
+
+body[data-mode="light"] .btn-pill .roll-char,
+body[data-mode="light"] .btn-pill .skiper-arrow {
+    color: #0f172a !important;
 }
 
 body[data-mode="light"] .btn-pill:hover {
     background: #0f172a;
-    color: #ffffff;
+    color: #ffffff !important;
+    border-color: #0f172a;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.16);
+}
+
+body[data-mode="light"] .btn-pill:hover .roll-char,
+body[data-mode="light"] .btn-pill:hover .skiper-arrow {
+    color: #ffffff !important;
+}
+
+body[data-mode="light"] .mobile-nav-resume {
+    background: #0f172a !important;
+    color: #ffffff !important;
+}
+
+body[data-mode="light"] .mobile-nav-resume i,
+body[data-mode="light"] .mobile-nav-resume .roll-char,
+body[data-mode="light"] .mobile-nav-resume .skiper-arrow {
+    color: #ffffff !important;
 }
 
 body[data-mode="light"] .social-link {
@@ -3375,9 +3447,33 @@ body[data-mode="light"] .form-group textarea:focus {
     box-shadow: 0 0 12px rgba(15, 23, 42, 0.12);
 }
 
+/* Disable dark spotlight and background blobs in light mode to keep page crisp and clean */
+body[data-mode="light"]::before,
+body[data-mode="light"] .linear-spotlight {
+    display: none !important;
+}
+
 body[data-mode="light"] .footer {
     border-top: 1px solid rgba(15, 23, 42, 0.08);
-    background: #f8fafc;
+    background: transparent !important;
+}
+
+body[data-mode="light"] .footer-content {
+    background: transparent !important;
+}
+
+body[data-mode="light"] .footer-content p {
+    color: #64748b;
+}
+
+body[data-mode="light"] .back-top {
+    color: #475569;
+    background: transparent !important;
+    border: none !important;
+}
+
+body[data-mode="light"] .back-top:hover {
+    color: #0f172a;
 }
 
 body[data-mode="light"] .logo-mark rect {
@@ -3558,6 +3654,7 @@ a.animated-link:hover::before {
 .btn:hover .roll-primary .roll-char,
 .card-btn:hover .roll-primary .roll-char,
 .logo:hover .roll-primary .roll-char,
+.back-top:hover .roll-primary .roll-char,
 .roll-text:hover .roll-primary .roll-char,
 a:hover > .roll-text .roll-primary .roll-char,
 button:hover > .roll-text .roll-primary .roll-char {
@@ -3568,6 +3665,7 @@ button:hover > .roll-text .roll-primary .roll-char {
 .btn:hover .roll-clone .roll-char,
 .card-btn:hover .roll-clone .roll-char,
 .logo:hover .roll-clone .roll-char,
+.back-top:hover .roll-clone .roll-char,
 .roll-text:hover .roll-clone .roll-char,
 a:hover > .roll-text .roll-clone .roll-char,
 button:hover > .roll-text .roll-clone .roll-char {
