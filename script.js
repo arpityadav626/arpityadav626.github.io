@@ -1838,7 +1838,7 @@ function initSkiper58TextRoll() {
         if (link.dataset.textRolled) return;
         if (link.classList.contains('mobile-nav-resume')) {
             link.dataset.textRolled = "true";
-            link.innerHTML = '<i class="fas fa-file-alt"></i> ' + createTextRollMarkup('Resume') + ' <span class="skiper-arrow">↗</span>';
+            link.innerHTML = createTextRollMarkup('Resume') + ' <span class="skiper-arrow">↗</span>';
             return;
         }
         const rawText = link.textContent.trim();

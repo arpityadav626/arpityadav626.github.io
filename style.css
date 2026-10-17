@@ -2401,21 +2401,23 @@ body.modal-open .header {
     .mobile-nav-resume {
         display: flex !important;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background: #ffffff !important;
-        color: #0d111a !important;
-        font-weight: 700 !important;
-        padding: 13px !important;
-        border-radius: 14px !important;
-        margin-top: 6px;
-        box-shadow: 0 4px 18px rgba(255, 255, 255, 0.25);
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 11px 14px !important;
+        border-radius: 12px !important;
+        color: var(--text-secondary) !important;
+        font-weight: 600 !important;
     }
 
-    .mobile-nav-resume i,
+    .mobile-nav-resume:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: var(--accent-primary) !important;
+    }
+
     .mobile-nav-resume .roll-char,
     .mobile-nav-resume .skiper-arrow {
-        color: #0d111a !important;
+        color: inherit !important;
     }
 
     /* Hero Section Responsive */
@@ -3384,14 +3386,20 @@ body[data-mode="light"] .btn-pill:hover .skiper-arrow {
 }
 
 body[data-mode="light"] .mobile-nav-resume {
-    background: #0f172a !important;
-    color: #ffffff !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #334155 !important;
 }
 
-body[data-mode="light"] .mobile-nav-resume i,
+body[data-mode="light"] .mobile-nav-resume:hover {
+    background: rgba(15, 23, 42, 0.05) !important;
+    color: #0f172a !important;
+}
+
 body[data-mode="light"] .mobile-nav-resume .roll-char,
 body[data-mode="light"] .mobile-nav-resume .skiper-arrow {
-    color: #ffffff !important;
+    color: inherit !important;
 }
 
 body[data-mode="light"] .social-link {
