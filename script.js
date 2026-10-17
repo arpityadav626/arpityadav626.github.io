@@ -11,7 +11,7 @@
    HTML se skeleton banta hai, CSS se look & feel, aur JavaScript website
    me interactive jaan daalti hai:
    1. Audio Engine (Web Audio API) -> Button hover & click par soothing sounds
-   2. Theme Switcher              -> Amber, Cyan, Emerald, Violet color switcher
+   2. Theme Switcher              -> Luxury Monochrome Black & White with Skiper26 View Transition
    3. Interactive Skills Filter   -> Skill click karne par related project highlight
    4. Project Details Modal       -> "Details" click karne par popup window khulna
    5. 3D Tilt Card Effects        -> Mouse hover par cards ka 3D angle me move karna
@@ -1096,41 +1096,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 /* ========================================================
-   12. AMBIENT THEME PALETTE CUSTOMIZER & SKIPER26 VIEW TRANSITIONS
-   Circular Ripple / Blur / Wipe Expansion View Transitions API
+   12. LUXURY MONOCHROME (DARK / LIGHT) & SKIPER26 VIEW TRANSITIONS
+   Ultra-clean Black & White aesthetic with circular ripple transition
 ======================================================== */
-const paletteWrap = document.getElementById('theme-palette-wrap');
-const paletteBtn = document.getElementById('palette-btn');
-const paletteCurrentDot = document.getElementById('palette-current-dot');
-const paletteSwatches = document.querySelectorAll('.palette-swatch');
 const themeModeBtn = document.getElementById('theme-mode-btn');
 const themeModeIcon = document.getElementById('theme-mode-icon');
-const pillDarkMode = document.getElementById('pill-dark-mode');
-const pillLightMode = document.getElementById('pill-light-mode');
-const variantPills = document.querySelectorAll('.variant-pill');
-
-const themeColors = {
-    'amber': '#f97316',
-    'cyan': '#38bdf8',
-    'emerald': '#10b981',
-    'violet': '#a855f7'
-};
-
-let activeTransitionVariant = localStorage.getItem('arpit-transition-variant') || 'circle';
-
-// Sync initial variant pill UI
-if (variantPills.length > 0) {
-    variantPills.forEach(pill => {
-        pill.classList.toggle('active', pill.getAttribute('data-variant') === activeTransitionVariant);
-        pill.addEventListener('click', (e) => {
-            e.stopPropagation();
-            activeTransitionVariant = pill.getAttribute('data-variant');
-            localStorage.setItem('arpit-transition-variant', activeTransitionVariant);
-            variantPills.forEach(p => p.classList.toggle('active', p === pill));
-            playButtonClick();
-        });
-    });
-}
 
 function executeViewTransition(changeFn, clickEvent) {
     if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -1162,56 +1132,19 @@ function executeViewTransition(changeFn, clickEvent) {
     });
 
     transition.ready.then(() => {
-        let keyframes;
-        if (activeTransitionVariant === 'circle-blur') {
-            keyframes = {
-                clipPath: [
-                    `circle(0px at ${x}px ${y}px)`,
-                    `circle(${maxRadius}px at ${x}px ${y}px)`
-                ],
-                filter: ['blur(14px)', 'blur(0px)']
-            };
-        } else if (activeTransitionVariant === 'rectangle') {
-            keyframes = {
-                clipPath: [
-                    'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
-                    'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
-                ]
-            };
-        } else {
-            // Default: 'circle'
-            keyframes = {
-                clipPath: [
-                    `circle(0px at ${x}px ${y}px)`,
-                    `circle(${maxRadius}px at ${x}px ${y}px)`
-                ]
-            };
-        }
-
         document.documentElement.animate(
-            keyframes,
+            {
+                clipPath: [
+                    `circle(0px at ${x}px ${y}px)`,
+                    `circle(${maxRadius}px at ${x}px ${y}px)`
+                ]
+            },
             {
                 duration: 650,
                 easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
                 pseudoElement: '::view-transition-new(root)'
             }
         );
-    });
-}
-
-function setAccentTheme(themeName) {
-    if (!themeColors[themeName]) themeName = 'amber';
-    document.body.setAttribute('data-theme', themeName);
-    document.documentElement.setAttribute('data-theme', themeName);
-    localStorage.setItem('arpit-accent-theme', themeName);
-
-    if (paletteCurrentDot) {
-        paletteCurrentDot.style.background = themeColors[themeName];
-        paletteCurrentDot.style.boxShadow = `0 0 8px ${themeColors[themeName]}`;
-    }
-
-    paletteSwatches.forEach(swatch => {
-        swatch.classList.toggle('active', swatch.getAttribute('data-theme') === themeName);
     });
 }
 
@@ -1225,66 +1158,26 @@ function setDisplayMode(mode) {
     if (themeModeIcon) {
         themeModeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
     }
-    if (pillDarkMode && pillLightMode) {
-        pillDarkMode.classList.toggle('active', !isLight);
-        pillLightMode.classList.toggle('active', isLight);
-    }
 }
 
-// Restore saved themes on initial load
-const savedTheme = localStorage.getItem('arpit-accent-theme') || 'amber';
-setAccentTheme(savedTheme);
+// Clean up legacy multi-color accent keys and enforce luxury monochrome
+try {
+    localStorage.removeItem('arpit-accent-theme');
+    document.body.removeAttribute('data-theme');
+    document.documentElement.removeAttribute('data-theme');
+} catch (e) {}
 
+// Restore saved mode on initial load (default: dark)
 const savedMode = localStorage.getItem('arpit-theme-mode') || 'dark';
 setDisplayMode(savedMode);
 
-// Event Listeners for Theme Mode Toggle
+// Event Listener for Theme Mode Toggle
 if (themeModeBtn) {
     themeModeBtn.addEventListener('click', (e) => {
         const currentMode = document.body.getAttribute('data-mode') || 'dark';
         const nextMode = currentMode === 'light' ? 'dark' : 'light';
         playButtonClick();
         executeViewTransition(() => setDisplayMode(nextMode), e);
-    });
-}
-
-if (pillDarkMode) {
-    pillDarkMode.addEventListener('click', (e) => {
-        e.stopPropagation();
-        playButtonClick();
-        executeViewTransition(() => setDisplayMode('dark'), e);
-    });
-}
-
-if (pillLightMode) {
-    pillLightMode.addEventListener('click', (e) => {
-        e.stopPropagation();
-        playButtonClick();
-        executeViewTransition(() => setDisplayMode('light'), e);
-    });
-}
-
-if (paletteBtn && paletteWrap) {
-    paletteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        paletteWrap.classList.toggle('open');
-        playButtonHover();
-    });
-
-    paletteSwatches.forEach(swatch => {
-        swatch.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const theme = swatch.getAttribute('data-theme');
-            playButtonClick();
-            executeViewTransition(() => setAccentTheme(theme), e);
-            paletteWrap.classList.remove('open');
-        });
-    });
-
-    document.addEventListener('click', (e) => {
-        if (paletteWrap && !paletteWrap.contains(e.target)) {
-            paletteWrap.classList.remove('open');
-        }
     });
 }
 

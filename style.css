@@ -2,8 +2,8 @@
    🎨 ARPIT'S CSS STYLE GUIDE (WEBSITE KA DESIGN AUR RANG-ROOP)
    ======================================================================
    HTML se website ka structure banta hai, aur CSS se uski styling hoti hai:
-   - :root               -> Main colors, fonts aur animations ke variables
-   - body[data-theme]    -> Amber, Cyan, Emerald, Violet color switcher rules
+   - :root               -> Main colors, fonts aur animations ke variables (Pure Monochrome B&W)
+   - html[data-mode]     -> Dark & Light Mode luxury monochrome theme rules
    - .header / .navbar   -> Upar ke floating menu bar ki styling
    - .hero               -> Main "Hi, I'm Arpit" banner & interactive studio card
    - .project-card       -> Project cards, 3D tilt effect, glow borders & tags
@@ -11,10 +11,10 @@
    - .modal              -> Project "Details" dabane par khulne wali popup window
    ====================================================================== */
 :root {
-    --bg-page: #0a0b0e;
-    --bg-surface: #12141a;
-    --bg-card: #181b24;
-    --bg-card-hover: #222634;
+    --bg-page: #08090c;
+    --bg-surface: #0f1117;
+    --bg-card: #141721;
+    --bg-card-hover: #1e2230;
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-highlight: rgba(255, 255, 255, 0.22);
     
@@ -22,41 +22,14 @@
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
     
-    --accent-primary: #f97316; /* Default: Amber Orange */
-    --accent-primary-light: #fb923c;
-    --accent-primary-rgb: 249, 115, 22;
-    --accent-cyan: #38bdf8;
-    --accent-emerald: #10b981;
-    --accent-violet: #a855f7;
+    /* Pure Luxury Monochrome (Black & White) */
+    --accent-primary: #ffffff;
+    --accent-primary-light: #f1f5f9;
+    --accent-primary-rgb: 255, 255, 255;
     
     --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
     --font-mono: 'Space Mono', monospace;
     --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Dynamic Ambient Accent Themes */
-body[data-theme="amber"], body:not([data-theme]) {
-    --accent-primary: #f97316;
-    --accent-primary-light: #fb923c;
-    --accent-primary-rgb: 249, 115, 22;
-}
-
-body[data-theme="cyan"] {
-    --accent-primary: #38bdf8;
-    --accent-primary-light: #7dd3fc;
-    --accent-primary-rgb: 56, 189, 248;
-}
-
-body[data-theme="emerald"] {
-    --accent-primary: #10b981;
-    --accent-primary-light: #34d399;
-    --accent-primary-rgb: 16, 185, 129;
-}
-
-body[data-theme="violet"] {
-    --accent-primary: #a855f7;
-    --accent-primary-light: #c084fc;
-    --accent-primary-rgb: 168, 85, 247;
 }
 
 * {
@@ -196,7 +169,7 @@ main, .header, .footer {
     height: 9px;
     background: var(--accent-primary);
     border-radius: 50%;
-    box-shadow: 0 0 14px var(--accent-primary), 0 0 28px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 0 14px var(--accent-primary), 0 0 28px rgba(var(--accent-primary-rgb), 0.35);
     animation: preloaderDotPulse 1.2s infinite ease-in-out;
 }
 
@@ -328,124 +301,6 @@ main, .header, .footer {
     display: flex;
     align-items: center;
     gap: 14px;
-}
-
-/* Theme Palette Switcher Dropdown */
-.theme-palette-wrap {
-    position: relative;
-}
-
-.palette-toggle-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    font-size: 13px;
-    transition: var(--transition);
-}
-
-.palette-toggle-btn:hover,
-.theme-palette-wrap.open .palette-toggle-btn {
-    color: var(--text-primary);
-    border-color: var(--accent-primary);
-    background: rgba(255, 255, 255, 0.09);
-}
-
-.palette-current-dot {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent-primary);
-    box-shadow: 0 0 8px var(--accent-primary);
-    transition: background 0.3s ease;
-}
-
-.palette-dropdown {
-    position: absolute;
-    top: calc(100% + 12px);
-    right: -20px;
-    background: rgba(18, 20, 28, 0.96);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 18px;
-    padding: 12px;
-    min-width: 165px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(var(--accent-primary-rgb), 0.1);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 1001;
-}
-
-.theme-palette-wrap.open .palette-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.palette-label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-    padding-left: 6px;
-    text-transform: uppercase;
-}
-
-.palette-swatches {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.palette-swatch {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 7px 10px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 10px;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-family: var(--font-main);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-}
-
-.palette-swatch:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-primary);
-}
-
-.palette-swatch.active {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-}
-
-.swatch-circle {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    flex-shrink: 0;
 }
 
 .sound-toggle-btn {
@@ -588,10 +443,11 @@ main, .header, .footer {
 }
 
 .btn-primary:hover {
-    background: var(--accent-primary);
-    color: #fff;
+    background: var(--text-primary);
+    color: var(--bg-page);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+    box-shadow: 0 10px 25px rgba(var(--accent-primary-rgb), 0.25);
+    filter: brightness(0.92);
 }
 
 .btn-outline {
@@ -1240,41 +1096,11 @@ main, .header, .footer {
     left: 200%;
 }
 
-/* Specific Card Themed Hover Glows */
-.project-card.card-sih:hover {
-    border-color: rgba(249, 115, 22, 0.5);
-    background: #1c1f2b;
-    box-shadow: 0 20px 45px rgba(249, 115, 22, 0.22);
-}
-
-.project-card.card-chronofact:hover {
-    border-color: rgba(16, 185, 129, 0.5);
-    background: #192226;
-    box-shadow: 0 20px 45px rgba(16, 185, 129, 0.2);
-}
-
-.project-card.card-kitchen:hover {
-    border-color: rgba(56, 189, 248, 0.5);
-    background: #19212c;
-    box-shadow: 0 20px 45px rgba(56, 189, 248, 0.22);
-}
-
-.project-card.card-portfolio:hover {
-    border-color: rgba(244, 63, 94, 0.5);
-    background: #231b26;
-    box-shadow: 0 20px 45px rgba(244, 63, 94, 0.2);
-}
-
-.project-card.card-aihub:hover {
-    border-color: rgba(6, 182, 212, 0.55);
-    background: #0e2026;
-    box-shadow: 0 20px 45px rgba(6, 182, 212, 0.24);
-}
-
-.project-card.card-monolith:hover {
-    border-color: rgba(216, 162, 100, 0.6);
-    background: #1c1813;
-    box-shadow: 0 20px 45px rgba(216, 162, 100, 0.25);
+/* Clean Luxury Monochrome Card Hover Glow */
+.project-card:hover {
+    border-color: rgba(255, 255, 255, 0.32);
+    background: #171a24;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 24px rgba(255, 255, 255, 0.06);
 }
 
 .project-card:hover .project-num {
@@ -1310,9 +1136,9 @@ main, .header, .footer {
 }
 
 .sih-badge {
-    background: rgba(249, 115, 22, 0.15);
+    background: rgba(var(--accent-primary-rgb), 0.12);
     color: var(--accent-primary);
-    border: 1px solid rgba(249, 115, 22, 0.3);
+    border: 1px solid rgba(var(--accent-primary-rgb), 0.25);
 }
 
 .project-card:hover .sih-badge i {
@@ -1413,10 +1239,11 @@ main, .header, .footer {
 }
 
 .card-btn.primary:hover {
-    background: var(--accent-primary);
-    color: #fff;
+    background: var(--text-primary);
+    color: var(--bg-page);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 8px 20px rgba(var(--accent-primary-rgb), 0.25);
+    filter: brightness(0.92);
 }
 
 .card-btn.outline {
@@ -1501,7 +1328,7 @@ main, .header, .footer {
 .skill-pill:hover {
     color: var(--text-primary);
     border-color: var(--accent-primary);
-    background: rgba(249, 115, 22, 0.06);
+    background: rgba(var(--accent-primary-rgb), 0.08);
     transform: translateY(-2px);
 }
 
@@ -1632,7 +1459,7 @@ main, .header, .footer {
 .achieve-icon {
     font-size: 24px;
     color: var(--accent-primary);
-    background: rgba(249, 115, 22, 0.1);
+    background: rgba(var(--accent-primary-rgb), 0.1);
     width: 50px;
     height: 50px;
     border-radius: 12px;
@@ -1754,7 +1581,7 @@ main, .header, .footer {
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: var(--accent-primary);
-    box-shadow: 0 0 15px rgba(249, 115, 22, 0.15);
+    box-shadow: 0 0 15px rgba(var(--accent-primary-rgb), 0.15);
 }
 
 .btn-submit {
@@ -2328,7 +2155,7 @@ body.modal-open .header {
 
     .btn:active,
     .card-btn:active,
-    .palette-toggle-btn:active,
+    .theme-mode-btn:active,
     .sound-toggle-btn:active,
     .menu-toggle:active {
         transform: scale(0.96) !important;
@@ -2429,7 +2256,7 @@ body.modal-open .header {
         display: none !important; /* Moved to mobile dropdown */
     }
 
-    .palette-toggle-btn {
+    .theme-mode-btn {
         width: 34px;
         height: 34px;
         font-size: 13px;
@@ -3067,32 +2894,8 @@ body[data-mode="light"] .project-card {
 }
 
 body[data-mode="light"] .project-card:hover {
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
-}
-
-body[data-mode="light"] .project-card.card-sih:hover {
-    background: #ffffff;
-    box-shadow: 0 20px 45px rgba(249, 115, 22, 0.18);
-}
-
-body[data-mode="light"] .project-card.card-chronofact:hover {
-    background: #ffffff;
-    box-shadow: 0 20px 45px rgba(56, 189, 248, 0.18);
-}
-
-body[data-mode="light"] .project-card.card-kitchen:hover {
-    background: #ffffff;
-    box-shadow: 0 20px 45px rgba(16, 185, 129, 0.18);
-}
-
-body[data-mode="light"] .project-card.card-ai-hub:hover {
-    background: #ffffff;
-    box-shadow: 0 20px 45px rgba(168, 85, 247, 0.18);
-}
-
-body[data-mode="light"] .project-card.card-monolith:hover {
-    background: #ffffff;
-    box-shadow: 0 20px 45px rgba(216, 162, 100, 0.2);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0, 0, 0, 0.03);
+    border-color: rgba(15, 23, 42, 0.28);
 }
 
 body[data-mode="light"] .studio-card {
@@ -3155,12 +2958,6 @@ body[data-mode="light"] .modal-corner-close-btn {
     background: #f1f5f9;
     color: #0f172a;
     border: 1px solid rgba(15, 23, 42, 0.1);
-}
-
-body[data-mode="light"] .palette-dropdown {
-    background: #ffffff;
-    border-color: rgba(15, 23, 42, 0.1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
 }
 
 body[data-mode="light"] .footer {
@@ -3241,7 +3038,7 @@ body[data-mode="light"] .logo-mark circle {
 }
 
 /* ======================================================================
-   🔘 THEME MODE TOGGLE BUTTON & PALETTE CONTROLS
+   🔘 THEME MODE TOGGLE BUTTON (Pure Luxury Black & White)
    ====================================================================== */
 .theme-mode-btn {
     width: 38px;
@@ -3261,9 +3058,9 @@ body[data-mode="light"] .logo-mark circle {
 }
 
 .theme-mode-btn:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-    box-shadow: 0 0 12px rgba(var(--accent-primary-rgb), 0.25);
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    box-shadow: 0 0 14px rgba(var(--accent-primary-rgb), 0.25);
     transform: rotate(15deg) scale(1.05);
 }
 
@@ -3273,64 +3070,4 @@ body[data-mode="light"] .logo-mark circle {
 
 .theme-mode-btn:active i {
     transform: rotate(180deg) scale(0.85);
-}
-
-/* Palette Dropdown Enhanced Controls */
-.palette-divider {
-    height: 1px;
-    background: var(--border-subtle);
-    margin: 10px 0;
-}
-
-.palette-section-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 8px;
-}
-
-.palette-mode-pills,
-.palette-variant-pills {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: rgba(0, 0, 0, 0.25);
-    padding: 3px;
-    border-radius: 8px;
-    border: 1px solid var(--border-subtle);
-}
-
-body[data-mode="light"] .palette-mode-pills,
-body[data-mode="light"] .palette-variant-pills {
-    background: #f1f5f9;
-}
-
-.mode-pill,
-.variant-pill {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 4px 6px;
-    border-radius: 6px;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.mode-pill:hover,
-.variant-pill:hover {
-    color: var(--text-primary);
-}
-
-.mode-pill.active,
-.variant-pill.active {
-    background: var(--accent-primary);
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(var(--accent-primary-rgb), 0.35);
 }

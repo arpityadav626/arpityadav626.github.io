@@ -10,7 +10,7 @@
    ======================================================================
    1. <head>            : Google SEO, Title, Favicon, Fonts (Line 10-75)
    2. Preloader         : Loading screen animation (Line 76-88)
-   3. Header / Navbar   : Top Menu, Logo, Theme Switcher, Resume Button (Line 90-150)
+   3. Header / Navbar   : Top Menu, Logo, Dark/Light Mode Toggle, Resume Button (Line 90-140)
    4. Hero Section      : Main Intro "Hi, I'm Arpit Yadav" & Interactive Studio (Line 153-394)
    5. Projects Section  : Aapke 6 Featured Projects ke cards (Line 396-568)
    6. Skills Section    : Interactive Stack / Capabilities (Line 570-618)
@@ -130,58 +130,6 @@
             <button class="theme-mode-btn sound-hover" id="theme-mode-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light / Dark Mode">
                 <i class="fas fa-sun" id="theme-mode-icon"></i>
             </button>
-
-            <!-- Ambient Theme Accent Switcher -->
-            <div class="theme-palette-wrap" id="theme-palette-wrap">
-                <button class="palette-toggle-btn sound-hover" id="palette-btn" title="Customize Theme Glow" aria-label="Customize Theme Glow">
-                    <span class="palette-current-dot" id="palette-current-dot"></span>
-                    <i class="fas fa-palette"></i>
-                </button>
-                <div class="palette-dropdown" id="palette-dropdown">
-                    <span class="palette-label">Theme Accent</span>
-                    <div class="palette-swatches">
-                        <button class="palette-swatch active sound-hover" data-theme="amber" title="Amber Orange">
-                            <span class="swatch-circle" style="background: #f97316; box-shadow: 0 0 8px #f97316;"></span>
-                            <span class="swatch-name">Amber</span>
-                        </button>
-                        <button class="palette-swatch sound-hover" data-theme="cyan" title="Electric Cyan">
-                            <span class="swatch-circle" style="background: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></span>
-                            <span class="swatch-name">Cyan</span>
-                        </button>
-                        <button class="palette-swatch sound-hover" data-theme="emerald" title="Matrix Emerald">
-                            <span class="swatch-circle" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
-                            <span class="swatch-name">Emerald</span>
-                        </button>
-                        <button class="palette-swatch sound-hover" data-theme="violet" title="Linear Violet">
-                            <span class="swatch-circle" style="background: #a855f7; box-shadow: 0 0 8px #a855f7;"></span>
-                            <span class="swatch-name">Violet</span>
-                        </button>
-                    </div>
-
-                    <div class="palette-divider"></div>
-
-                    <div class="palette-section-group">
-                        <span class="palette-label">Display Mode</span>
-                        <div class="palette-mode-pills">
-                            <button class="mode-pill active sound-hover" id="pill-dark-mode" data-mode="dark">
-                                <i class="fas fa-moon"></i> Dark
-                            </button>
-                            <button class="mode-pill sound-hover" id="pill-light-mode" data-mode="light">
-                                <i class="fas fa-sun"></i> Light
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="palette-section-group">
-                        <span class="palette-label">Transition FX (Skiper26)</span>
-                        <div class="palette-variant-pills">
-                            <button class="variant-pill active sound-hover" data-variant="circle" title="Circular Ripple">Circle</button>
-                            <button class="variant-pill sound-hover" data-variant="circle-blur" title="Soft Blur Circle">Blur</button>
-                            <button class="variant-pill sound-hover" data-variant="rectangle" title="Directional Wipe">Wipe</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Cozy UI Sound Toggle Button -->
             <button id="sound-btn" class="sound-toggle-btn sound-hover" title="Toggle UI Sound">
