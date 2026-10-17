@@ -379,114 +379,18 @@ function bindSounds() {
 bindSounds();
 
 /* ========================================================
-   2. SKIPER8 WORDS PRELOADER (Dennis Snellenberg Inspired)
-   Multilingual Greetings Cycle with Organic Liquid SVG Curtain
+   2. HERO IMMEDIATE REVEAL (Preloader Cleanly Removed)
 ======================================================== */
-function initWordsPreloader() {
-    const preloader = document.getElementById('preloader');
-    const wordEl = document.getElementById('preloader-word');
-    const curvePath = document.getElementById('preloader-curve-path');
-    if (!preloader || !wordEl) return;
-
-    const words = [
-        "Hello",          // English
-        "Bonjour",        // French
-        "Ciao",           // Italian
-        "Olà",            // Portuguese
-        "やあ",           // Japanese
-        "Hallå",          // Swedish
-        "Guten Tag",      // German
-        "Hallo",          // Dutch
-        "Namaste"         // Hindi
-    ];
-
-    let currentIndex = 0;
-    const wordIntervalTime = 180; // ms per word
-
-    // Prevent background scrolling while preloader is active
-    document.body.style.overflow = 'hidden';
-
-    function showNextWord() {
-        if (currentIndex < words.length - 1) {
-            currentIndex++;
-            wordEl.classList.add('word-switching');
-
-            setTimeout(() => {
-                wordEl.innerHTML = words[currentIndex];
-                wordEl.classList.remove('word-switching');
-            }, 65);
-
-            // If we reached the final word, hold briefly then smoothly peel up the curtain!
-            if (currentIndex === words.length - 1) {
-                setTimeout(startExitAnimation, 380);
-            } else {
-                setTimeout(showNextWord, wordIntervalTime);
-            }
-        }
-    }
-
-    function startExitAnimation() {
-        if (!curvePath) {
-            preloader.classList.add('preloader-exiting');
-            setTimeout(finishPreloader, 850);
-            return;
-        }
-
-        const startTime = performance.now();
-        const duration = 850; // matches CSS transition duration
-
-        function stepCurve(now) {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-
-            // Dennis Snellenberg curve morphing:
-            // First 35%: curve pulls down into an organic liquid arch
-            // Next 65%: curve flattens seamlessly to 0 as preloader slides off
-            let curveY;
-            if (progress < 0.35) {
-                curveY = 100 + (progress / 0.35) * 25;
-            } else {
-                const t = (progress - 0.35) / 0.65;
-                curveY = 125 * Math.pow(1 - t, 2.2);
-            }
-
-            curvePath.setAttribute('d', `M0 0 L100 0 Q50 ${curveY.toFixed(1)} 0 0 Z`);
-
-            if (progress < 1) {
-                requestAnimationFrame(stepCurve);
-            } else {
-                finishPreloader();
-            }
-        }
-
-        preloader.classList.add('preloader-exiting');
-        requestAnimationFrame(stepCurve);
-
-        // Play chime audio as curtain begins to lift
-        setTimeout(() => {
-            if (typeof playCozyChime === 'function') {
-                playCozyChime();
-            }
-        }, 220);
-    }
-
-    function finishPreloader() {
-        document.body.style.overflow = '';
-        preloader.style.display = 'none';
-
-        // Trigger Hero Section active cascade
-        const hero = document.getElementById('home');
-        if (hero) hero.classList.add('active');
-    }
-
-    // Start words flipping after initial short pause
-    setTimeout(showNextWord, wordIntervalTime);
+function initHeroReveal() {
+    document.body.style.overflow = '';
+    const hero = document.getElementById('home');
+    if (hero) hero.classList.add('active');
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWordsPreloader);
+    document.addEventListener('DOMContentLoaded', initHeroReveal);
 } else {
-    initWordsPreloader();
+    initHeroReveal();
 }
 
 /* ========================================================
@@ -1239,6 +1143,10 @@ function setDisplayMode(mode) {
     if (themeModeIcon) {
         themeModeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
     }
+
+    if (typeof window.updateStudioLiquidTheme === 'function') {
+        window.updateStudioLiquidTheme();
+    }
 }
 
 // Clean up legacy multi-color accent keys and enforce luxury monochrome
@@ -1370,6 +1278,354 @@ if (studioExploreFooterBtn) {
         smoothScrollToElement(pSec, -30);
         playButtonClick();
     });
+}
+
+/* ========================================================
+   13B. SKIPER12 VERCEL LIQUID SIMULATION ENGINE
+   Real WebGL 2-Pass Shader Fluid Dynamics on Hero Studio Card
+   Supports Dark and Light Monochrome Modes with Specular Reflection
+======================================================== */
+function initHeroStudioLiquidSimulation() {
+    const card = document.getElementById('hero-studio');
+    if (!card || !window.THREE) return;
+
+    // Check if WebGL is available
+    try {
+        const testCanvas = document.createElement('canvas');
+        const testGl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
+        if (!testGl) return;
+    } catch (e) {
+        return;
+    }
+
+    const scene = new THREE.Scene();
+    const simScene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        preserveDrawingBuffer: false,
+        powerPreference: "high-performance"
+    });
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let rect = card.getBoundingClientRect();
+    let width = Math.max(Math.floor(rect.width), 300);
+    let height = Math.max(Math.floor(rect.height), 220);
+
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(width, height);
+    renderer.domElement.className = 'studio-liquid-canvas';
+    renderer.domElement.setAttribute('aria-hidden', 'true');
+    card.insertBefore(renderer.domElement, card.firstChild);
+
+    let W = Math.floor(width * dpr);
+    let H = Math.floor(height * dpr);
+
+    // Support HalfFloatType fallback if FloatType is not supported
+    let targetType = THREE.FloatType;
+    const gl = renderer.getContext();
+    if (!gl.getExtension('OES_texture_float') && !gl.getExtension('EXT_color_buffer_float')) {
+        targetType = THREE.HalfFloatType;
+    }
+
+    const renderTargetParams = {
+        format: THREE.RGBAFormat,
+        type: targetType,
+        minFilter: THREE.NearestFilter,
+        magFilter: THREE.NearestFilter,
+        stencilBuffer: false,
+        depthBuffer: false
+    };
+
+    let targetA = new THREE.WebGLRenderTarget(W, H, renderTargetParams);
+    let targetB = new THREE.WebGLRenderTarget(W, H, renderTargetParams);
+
+    const mouse = new THREE.Vector2(-10, -10);
+    let frame = 0;
+
+    const simMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            textureA: { value: null },
+            mouse: { value: mouse },
+            resolution: { value: new THREE.Vector2(W, H) },
+            time: { value: 0 },
+            frame: { value: 0 }
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform sampler2D textureA;
+            uniform vec2 mouse;
+            uniform vec2 resolution;
+            uniform float time;
+            uniform int frame;
+            varying vec2 vUv;
+
+            const float delta = 1.4;
+
+            void main() {
+                vec2 uv = vUv;
+                if (frame == 0) {
+                    gl_FragColor = vec4(0.0);
+                    return;
+                }
+
+                vec4 data = texture2D(textureA, uv);
+                float pressure = data.x;
+                float pVel = data.y;
+
+                vec2 texelSize = 1.0 / resolution;
+                float p_right = texture2D(textureA, uv + vec2(texelSize.x, 0.0)).x;
+                float p_left  = texture2D(textureA, uv + vec2(-texelSize.x, 0.0)).x;
+                float p_up    = texture2D(textureA, uv + vec2(0.0, texelSize.y)).x;
+                float p_down  = texture2D(textureA, uv + vec2(0.0, -texelSize.y)).x;
+
+                if (uv.x <= texelSize.x) p_left = p_right;
+                if (uv.x >= 1.0 - texelSize.x) p_right = p_left;
+                if (uv.y <= texelSize.y) p_down = p_up;
+                if (uv.y >= 1.0 - texelSize.y) p_up = p_down;
+
+                pVel += delta * (-2.0 * pressure + p_right + p_left) / 4.0;
+                pVel += delta * (-2.0 * pressure + p_up + p_down) / 4.0;
+
+                pressure += delta * pVel;
+                pVel -= 0.005 * delta * pressure;
+                pVel *= (1.0 - 0.002 * delta);
+                pressure *= 0.999;
+
+                // Interactive cursor ripple
+                if (mouse.x > 0.0) {
+                    vec2 mouseUV = mouse / resolution;
+                    float dist = distance(uv, mouseUV);
+                    if (dist <= 0.045) {
+                        pressure += 2.4 * (1.0 - dist / 0.045);
+                    }
+                }
+
+                // Gentle organic ambient droplets when mouse is idle
+                float dropCycle = mod(time, 3.2);
+                if (dropCycle < 0.045) {
+                    vec2 dropPos = vec2(0.5 + 0.3 * sin(time * 1.4), 0.5 + 0.28 * cos(time * 1.9));
+                    float d = distance(uv, dropPos);
+                    if (d < 0.03) {
+                        pressure += 1.1 * (1.0 - d / 0.03);
+                    }
+                }
+
+                gl_FragColor = vec4(pressure, pVel, (p_right - p_left) / 2.0, (p_up - p_down) / 2.0);
+            }
+        `
+    });
+
+    // Background Canvas Texture with Grid
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = W;
+    bgCanvas.height = H;
+    const bgCtx = bgCanvas.getContext('2d');
+    const bgTexture = new THREE.CanvasTexture(bgCanvas);
+    bgTexture.minFilter = THREE.LinearFilter;
+    bgTexture.magFilter = THREE.LinearFilter;
+
+    function renderBackgroundPattern() {
+        const isLight = document.body.getAttribute('data-mode') === 'light';
+        if (isLight) {
+            const grad = bgCtx.createLinearGradient(0, 0, W, H);
+            grad.addColorStop(0, '#f8fafc');
+            grad.addColorStop(0.5, '#f1f5f9');
+            grad.addColorStop(1, '#e2e8f0');
+            bgCtx.fillStyle = grad;
+            bgCtx.fillRect(0, 0, W, H);
+
+            // Subtle luminous grid
+            bgCtx.strokeStyle = 'rgba(15, 23, 42, 0.04)';
+            bgCtx.lineWidth = 1;
+            const step = 28 * dpr;
+            for (let x = 0; x < W; x += step) {
+                bgCtx.beginPath(); bgCtx.moveTo(x, 0); bgCtx.lineTo(x, H); bgCtx.stroke();
+            }
+            for (let y = 0; y < H; y += step) {
+                bgCtx.beginPath(); bgCtx.moveTo(0, y); bgCtx.lineTo(W, y); bgCtx.stroke();
+            }
+        } else {
+            const grad = bgCtx.createLinearGradient(0, 0, W, H);
+            grad.addColorStop(0, '#0c0e15');
+            grad.addColorStop(0.5, '#141724');
+            grad.addColorStop(1, '#090a0f');
+            bgCtx.fillStyle = grad;
+            bgCtx.fillRect(0, 0, W, H);
+
+            // Subtle dark grid
+            bgCtx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            bgCtx.lineWidth = 1;
+            const step = 28 * dpr;
+            for (let x = 0; x < W; x += step) {
+                bgCtx.beginPath(); bgCtx.moveTo(x, 0); bgCtx.lineTo(x, H); bgCtx.stroke();
+            }
+            for (let y = 0; y < H; y += step) {
+                bgCtx.beginPath(); bgCtx.moveTo(0, y); bgCtx.lineTo(W, y); bgCtx.stroke();
+            }
+        }
+        bgTexture.needsUpdate = true;
+    }
+    renderBackgroundPattern();
+
+    const isLightInitial = document.body.getAttribute('data-mode') === 'light' ? 1.0 : 0.0;
+
+    const renderMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            textureA: { value: null },
+            textureB: { value: bgTexture },
+            isLight: { value: isLightInitial }
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform sampler2D textureA;
+            uniform sampler2D textureB;
+            uniform float isLight;
+            varying vec2 vUv;
+
+            void main() {
+                vec4 data = texture2D(textureA, vUv);
+
+                vec2 distortion = 0.35 * data.zw;
+                vec4 color = texture2D(textureB, vUv + distortion);
+
+                // Wave surface normal
+                vec3 normal = normalize(vec3(-data.z * 3.5, 1.0, -data.w * 3.5));
+                vec3 lightDir = normalize(vec3(-0.4, 0.8, 0.6));
+                vec3 viewDir = vec3(0.0, 0.0, 1.0);
+                vec3 halfDir = normalize(lightDir + viewDir);
+
+                float specAngle = max(0.0, dot(normal, halfDir));
+                float specular = pow(specAngle, 16.0);
+
+                // Caustic wave edge glow
+                float waveEdge = length(data.zw) * 12.0;
+
+                if (isLight > 0.5) {
+                    vec3 specColor = vec3(1.0, 1.0, 1.0) * specular * 0.9;
+                    vec3 waveTint = vec3(0.85, 0.9, 0.98) * waveEdge * 0.15;
+                    gl_FragColor = vec4(color.rgb + specColor + waveTint, 1.0);
+                } else {
+                    vec3 specColor = vec3(1.0, 1.0, 1.0) * specular * 1.8;
+                    vec3 waveTint = vec3(0.3, 0.5, 0.9) * waveEdge * 0.3;
+                    gl_FragColor = vec4(color.rgb + specColor + waveTint, 1.0);
+                }
+            }
+        `,
+        transparent: false
+    });
+
+    const plane = new THREE.PlaneGeometry(2, 2);
+    const simMesh = new THREE.Mesh(plane, simMaterial);
+    const renderMesh = new THREE.Mesh(plane, renderMaterial);
+
+    simScene.add(simMesh);
+    scene.add(renderMesh);
+
+    // Mouse Listeners on Hero Card
+    card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        mouse.x = (e.clientX - r.left) * dpr;
+        mouse.y = (r.height - (e.clientY - r.top)) * dpr;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        mouse.set(-10, -10);
+    });
+
+    card.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            const r = card.getBoundingClientRect();
+            mouse.x = (e.touches[0].clientX - r.left) * dpr;
+            mouse.y = (r.height - (e.touches[0].clientY - r.top)) * dpr;
+        }
+    }, { passive: true });
+
+    card.addEventListener('touchend', () => {
+        mouse.set(-10, -10);
+    });
+
+    // Theme update hook
+    window.updateStudioLiquidTheme = function() {
+        const isLight = document.body.getAttribute('data-mode') === 'light';
+        renderMaterial.uniforms.isLight.value = isLight ? 1.0 : 0.0;
+        renderBackgroundPattern();
+    };
+
+    // Resize handler
+    function handleResize() {
+        const newRect = card.getBoundingClientRect();
+        const newW = Math.max(Math.floor(newRect.width), 300);
+        const newH = Math.max(Math.floor(newRect.height), 220);
+        if (newW === width && newH === height) return;
+
+        width = newW;
+        height = newH;
+        W = Math.floor(width * dpr);
+        H = Math.floor(height * dpr);
+
+        renderer.setSize(width, height);
+        targetA.setSize(W, H);
+        targetB.setSize(W, H);
+        simMaterial.uniforms.resolution.value.set(W, H);
+
+        bgCanvas.width = W;
+        bgCanvas.height = H;
+        renderBackgroundPattern();
+    }
+
+    if (window.ResizeObserver) {
+        let resizeTimer;
+        const ro = new ResizeObserver(() => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleResize, 100);
+        });
+        ro.observe(card);
+    } else {
+        window.addEventListener('resize', handleResize);
+    }
+
+    // Animation Loop
+    function animate() {
+        requestAnimationFrame(animate);
+
+        simMaterial.uniforms.frame.value = frame++;
+        simMaterial.uniforms.time.value = performance.now() / 1000;
+        simMaterial.uniforms.textureA.value = targetA.texture;
+
+        renderer.setRenderTarget(targetB);
+        renderer.render(simScene, camera);
+
+        renderMaterial.uniforms.textureA.value = targetB.texture;
+        renderer.setRenderTarget(null);
+        renderer.render(scene, camera);
+
+        let temp = targetA;
+        targetA = targetB;
+        targetB = temp;
+    }
+
+    animate();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroStudioLiquidSimulation);
+} else {
+    initHeroStudioLiquidSimulation();
 }
 
 /* ========================================================

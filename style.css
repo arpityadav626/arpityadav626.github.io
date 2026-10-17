@@ -122,104 +122,6 @@ main, .header, .footer {
     z-index: 1;
 }
 
-/* ========================================================
-   🎭 0. SKIPER8 WORDS PRELOADER (Dennis Snellenberg Liquid Curve)
-======================================================== */
-.preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #0b0d14;
-    z-index: 999999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-    pointer-events: all;
-    will-change: transform;
-}
-
-.preloader.preloader-exiting {
-    transform: translateY(-100%);
-    transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
-}
-
-.preloader-content {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 2;
-}
-
-.preloader-brand {
-    font-size: clamp(34px, 5.5vw, 60px);
-    font-weight: 700;
-    font-family: var(--font-main);
-    color: #ffffff;
-    letter-spacing: -0.02em;
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    user-select: none;
-}
-
-.preloader-dot {
-    width: 12px;
-    height: 12px;
-    background: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 14px rgba(255, 255, 255, 0.8), 0 0 28px rgba(255, 255, 255, 0.35);
-    flex-shrink: 0;
-    animation: preloaderDotGlow 1.2s ease-in-out infinite alternate;
-}
-
-@keyframes preloaderDotGlow {
-    from {
-        transform: scale(0.85);
-        opacity: 0.7;
-    }
-    to {
-        transform: scale(1.18);
-        opacity: 1;
-    }
-}
-
-.preloader-word {
-    display: inline-block;
-    transition: opacity 0.12s ease, transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity;
-}
-
-.preloader-word.word-switching {
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-.preloader-accent {
-    color: rgba(255, 255, 255, 0.45);
-    font-weight: 400;
-}
-
-/* Dennis Snellenberg Curved Liquid Curtain SVG */
-.preloader-curve {
-    position: absolute;
-    top: calc(100% - 1px);
-    left: 0;
-    width: 100%;
-    height: clamp(140px, 22vh, 220px);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.preloader-curve path {
-    fill: #0b0d14;
-}
-
 /* Scroll Entrance Animation */
 .reveal {
     opacity: 0;
@@ -568,10 +470,12 @@ main, .header, .footer {
 
 /* ========================================================
    HERO INTERACTIVE DEVELOPER STUDIO CARD
+   With Skiper12 Vercel Liquid Simulation Shader Backdrop
    Ultra-clean, zero-scroll-trap, 1-click accessibility
 ======================================================== */
 .hero-studio-card {
-    background: rgba(14, 16, 23, 0.94);
+    position: relative;
+    background: rgba(14, 16, 23, 0.76);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-subtle);
@@ -583,13 +487,35 @@ main, .header, .footer {
     flex-direction: column;
 }
 
+.studio-liquid-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
+    opacity: 0.95;
+    transition: opacity 0.4s ease;
+}
+
+.studio-header,
+.studio-tabs,
+.studio-body,
+.studio-footer-bar {
+    position: relative;
+    z-index: 2;
+}
+
 .hero-studio-card:hover {
     border-color: rgba(var(--accent-primary-rgb), 0.35);
     box-shadow: 0 28px 70px rgba(0, 0, 0, 0.65), 0 0 50px rgba(var(--accent-primary-rgb), 0.18);
 }
 
 .studio-header {
-    background: rgba(20, 23, 34, 0.88);
+    background: rgba(20, 23, 34, 0.68);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     padding: 12px 18px;
     border-bottom: 1px solid var(--border-subtle);
     display: flex;
@@ -763,11 +689,13 @@ main, .header, .footer {
 }
 
 .panel-action-btn.primary {
-    background: var(--accent-primary);
-    color: #fff;
+    background: #ffffff;
+    color: #0b0d14;
+    font-weight: 700;
 }
 .panel-action-btn.primary:hover {
-    filter: brightness(1.1);
+    background: #e2e8f0;
+    color: #000000;
     transform: translateY(-1px);
 }
 
@@ -3017,9 +2945,15 @@ body[data-mode="light"] .tag-label {
 
 /* 2. Hero Studio Card (Refined light terminal matching theme without being blinding white) */
 body[data-mode="light"] .hero-studio-card {
-    background: #f1f5f9;
+    background: rgba(241, 245, 249, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(15, 23, 42, 0.12);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06), 0 0 30px rgba(0, 0, 0, 0.02);
+}
+
+body[data-mode="light"] .studio-liquid-canvas {
+    opacity: 0.92;
 }
 
 body[data-mode="light"] .hero-studio-card:hover {
@@ -3028,7 +2962,9 @@ body[data-mode="light"] .hero-studio-card:hover {
 }
 
 body[data-mode="light"] .studio-header {
-    background: #e2e8f0;
+    background: rgba(226, 232, 240, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(15, 23, 42, 0.09);
 }
 
@@ -3037,7 +2973,9 @@ body[data-mode="light"] .studio-title {
 }
 
 body[data-mode="light"] .studio-tabs {
-    background: #f1f5f9;
+    background: rgba(241, 245, 249, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
@@ -3065,7 +3003,9 @@ body[data-mode="light"] .s-tab.active .tab-badge {
 }
 
 body[data-mode="light"] .code-editor-box {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(15, 23, 42, 0.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
