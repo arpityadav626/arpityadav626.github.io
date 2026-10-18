@@ -36,8 +36,8 @@
     <meta name="theme-color" content="#0d111a">
 
     <!-- Google SEO & Metadata -->
-    <meta name="description" content="Official developer portfolio of Arpit Yadav — Full Stack Developer & IoT Enthusiast based in Kanpur, India. Prototyping smart hardware systems and modern web applications.">
-    <meta name="keywords" content="Arpit Yadav, Arpit Yadav Developer, Arpit Yadav Kanpur, Full Stack Developer, IoT Enthusiast, Smart Helmet SIH, ChronoFact, Smart Kitchen">
+    <meta name="description" content="Official engineering portfolio of Arpit Yadav (arpity.me) — Full Stack Developer & AI/IoT Systems Engineer. Specializing in high-performance web systems, SIH 2026 Smart Helmet, ChronoFact 2.0 Forensics, and Three.js 3D Digital Twins.">
+    <meta name="keywords" content="Arpit Yadav, arpity.me, Full Stack Developer, AI Systems, IoT Systems Engineer, Smart Helmet SIH, ChronoFact Forensics, Three.js Digital Twin, React 19, ESP32, Embedded C++, Web Audio API, WebSockets, REST APIs">
     <meta name="author" content="Arpit Yadav">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://arpity.me/">
@@ -46,14 +46,15 @@
     <!-- Open Graph / LinkedIn & Social Preview -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://arpity.me/">
-    <meta property="og:title" content="Arpit Yadav — Full Stack Developer & IoT Enthusiast">
-    <meta property="og:description" content="Explore live projects, IoT hardware innovations (SIH Smart Helmet), and full-stack architecture by Arpit Yadav.">
+    <meta property="og:site_name" content="arpity.me — Arpit Yadav Engineering Portfolio">
+    <meta property="og:title" content="Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer">
+    <meta property="og:description" content="Explore live production systems: SIH 2026 Smart Helmet telemetry, ChronoFact 2.0 Merkle forensics, Three.js 3D Digital Twins, and procedural Web Audio engine.">
     <meta property="og:image" content="https://arpity.me/assets/profile.jpg">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Arpit Yadav — Full Stack Developer & IoT Enthusiast">
-    <meta name="twitter:description" content="Explore live projects, IoT hardware innovations, and full-stack architecture by Arpit Yadav.">
+    <meta name="twitter:title" content="Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer">
+    <meta name="twitter:description" content="Explore live production systems: SIH 2026 Smart Helmet telemetry, ChronoFact 2.0 Merkle forensics, Three.js 3D Digital Twins, and procedural Web Audio engine.">
     <meta name="twitter:image" content="https://arpity.me/assets/profile.jpg">
 
     <!-- Google Structured Data (JSON-LD) for Search Rich Results -->
@@ -103,6 +104,9 @@
 
 
 
+    <!-- 0. Skiper 71: Subpixel Scroll Progress Indicator -->
+    <div class="scroll-progress-line" id="scroll-progress-line" aria-hidden="true"></div>
+
     <!-- 1. Floating Pill Navbar -->
     <header class="header">
 
@@ -116,6 +120,12 @@
         </nav>
 
         <div class="header-right">
+            <!-- Command Palette Trigger Button (Skiper 31: Cmd+K Spotlight) -->
+            <button class="cmd-palette-btn sound-hover" id="cmd-palette-btn" title="Quick Actions (Ctrl + K / ⌘K)" aria-label="Open Command Palette">
+                <i class="fas fa-search"></i>
+                <span class="cmd-kbd-badge">⌘K</span>
+            </button>
+
             <!-- Light / Dark Mode Toggle Button (with Skiper26 View Transition) -->
             <button class="theme-mode-btn sound-hover" id="theme-mode-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light / Dark Mode">
                 <i class="fas fa-sun" id="theme-mode-icon"></i>
@@ -189,15 +199,15 @@
                     <!-- 🟢 STAGE 1: Projects 01 - 03 (Hardware IoT & Forensic Cyber) -->
                     <div class="projects-stage active-stage" id="projects-stage-1" data-stage="1">
                         
-                        <!-- Project 01: Smart Helmet (Connected Hardware IoT) -->
-                        <div class="project-card card-reveal-item card-sih" data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c">
+                        <!-- Project 01: Smart Helmet Telemetry (SIH 2026 Hardware IoT) -->
+                        <div class="project-card card-reveal-item card-sih" data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c linux iot">
                             <div class="card-side-light" aria-hidden="true"></div>
                             
                             <div class="card-visual-slot">
                                 <div class="card-visual-inner">
-                                    <img src="assets/smart-helmet-prototype.jpg" alt="Smart Helmet Prototype" class="card-preview-img" loading="lazy">
+                                    <img src="assets/smart-helmet-prototype.jpg" alt="Smart Helmet Telemetry Prototype" class="card-preview-img" loading="lazy">
                                     <div class="card-visual-overlay"></div>
-                                    <span class="badge sih-badge visual-badge"><i class="fas fa-microchip"></i> Hardware IoT</span>
+                                    <span class="badge sih-badge visual-badge"><i class="fas fa-microchip"></i> SIH 2026 Hardware IoT</span>
                                 </div>
                             </div>
 
@@ -207,21 +217,24 @@
                             </div>
 
                             <div class="card-info-slot">
-                                <h3 class="project-title">Smart Helmet</h3>
+                                <h3 class="project-title">Smart Helmet Telemetry</h3>
                                 <p class="project-summary">
-                                    IoT-enabled safety helmet engineered to detect accidents, alcohol presence, and enforce helmet wear before two-wheeler ignition.
+                                    Engineered an ESP32-powered two-wheeler safety system featuring RF ignition interlocking, MQ-3 alcohol detection, and automated GSM/GPS SOS dispatch with sub-second sensor polling.
                                 </p>
                                 <div class="tech-stack-pills">
-                                    <span data-skill="arduino">Arduino / ESP32</span>
-                                    <span data-skill="sensors">Sensors</span>
-                                    <span data-skill="cpp">Embedded C++</span>
+                                    <span data-skill="esp32">ESP32</span>
+                                    <span data-skill="embedded-c">Embedded C++</span>
+                                    <span data-skill="sensors">MQ-3 &amp; IMU</span>
+                                    <span data-skill="iot">GSM/GPS</span>
                                     <span>IoT Cloud</span>
-                                    <span>GSM/GPS</span>
                                 </div>
                                 <div class="card-links">
                                     <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-helmet">
                                         Details <i class="fas fa-expand-alt"></i>
                                     </button>
+                                    <a href="https://github.com/arpityadav626/smart-helmet" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        GitHub <i class="fab fa-github"></i>
+                                    </a>
                                     <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
                                         LinkedIn <i class="fab fa-linkedin-in"></i>
                                     </a>
@@ -229,13 +242,13 @@
                             </div>
                         </div>
 
-                        <!-- Project 02: Smart Kitchen System -->
-                        <div class="project-card card-reveal-item card-kitchen" data-project="smart-kitchen" data-skills="arduino esp32 sensors cpp python c microcontrollers">
+                        <!-- Project 02: SAFETY-FI 96X Platform -->
+                        <div class="project-card card-reveal-item card-kitchen" data-project="smart-kitchen" data-skills="arduino esp32 sensors cpp python c microcontrollers threejs websockets rest-api">
                             <div class="card-side-light" aria-hidden="true"></div>
                             
                             <div class="card-visual-slot">
                                 <div class="card-visual-inner">
-                                    <img src="assets/smart-kitchen-prototype.jpg" alt="Smart Kitchen Prototype" class="card-preview-img" loading="lazy">
+                                    <img src="assets/smart-kitchen-prototype.jpg" alt="SAFETY-FI 96X Prototype" class="card-preview-img" loading="lazy">
                                     <div class="card-visual-overlay"></div>
                                     <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Physical Hardware + 3D Twin</span>
                                 </div>
@@ -247,20 +260,24 @@
                             </div>
 
                             <div class="card-info-slot">
-                                <h3 class="project-title">Smart Kitchen System</h3>
+                                <h3 class="project-title">SAFETY-FI 96X — Smart Kitchen IoT</h3>
                                 <p class="project-summary">
-                                    Autonomous IoT hazard mitigation platform with dual-sensor fire and gas detection, automated ventilation fan, sprinkler actuation, and Three.js 3D digital twin.
+                                    Real-time kitchen telemetry system pairing microcontroller gas and pantry sensors with an interactive Three.js 3D cooktop digital twin for live spatial hazard monitoring and alerts.
                                 </p>
                                 <div class="tech-stack-pills">
-                                    <span data-skill="arduino">Arduino Uno</span>
-                                    <span data-skill="sensors">MQ-2 &amp; Flame</span>
+                                    <span data-skill="arduino">Arduino / ESP32</span>
+                                    <span data-skill="threejs">Three.js</span>
                                     <span data-skill="python">Python Serial</span>
-                                    <span>Three.js 3D Twin</span>
+                                    <span data-skill="websockets">WebSockets</span>
+                                    <span data-skill="sensors">Sensors</span>
                                 </div>
                                 <div class="card-links">
                                     <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-kitchen">
                                         Details <i class="fas fa-expand-alt"></i>
                                     </button>
+                                    <a href="https://github.com/arpityadav626/smart-kitchen" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        GitHub <i class="fab fa-github"></i>
+                                    </a>
                                     <a href="https://youtu.be/pivb5MaotJo" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch Walkthrough on YouTube">
                                         <i class="fab fa-youtube"></i> Video
                                     </a>
@@ -271,15 +288,15 @@
                             </div>
                         </div>
 
-                        <!-- Project 03: ChronoFact -->
-                        <div class="project-card card-reveal-item card-chronofact" data-project="chronofact" data-skills="python fastapi js html-css tailwind git github">
+                        <!-- Project 03: ChronoFact 2.0 Forensics -->
+                        <div class="project-card card-reveal-item card-chronofact" data-project="chronofact" data-skills="python fastapi js html-css tailwind git github react nodejs express mongodb merkle rest-api docker linux db-security jwt-auth">
                             <div class="card-side-light" aria-hidden="true"></div>
                             
                             <div class="card-visual-slot">
                                 <div class="card-visual-inner">
-                                    <img src="assets/chronofact-preview.jpg" alt="ChronoFact Preview" class="card-preview-img" loading="lazy">
+                                    <img src="assets/chronofact-preview.jpg" alt="ChronoFact 2.0 Preview" class="card-preview-img" loading="lazy">
                                     <div class="card-visual-overlay"></div>
-                                    <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Section 63(4) BSA 2023</span>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Section 63(4) BSA 2023 Compliant</span>
                                 </div>
                             </div>
 
@@ -289,20 +306,25 @@
                             </div>
 
                             <div class="card-info-slot">
-                                <h3 class="project-title">ChronoFact</h3>
+                                <h3 class="project-title">ChronoFact 2.0 Forensics Engine</h3>
                                 <p class="project-summary">
-                                    National Judicial Cyber Forensic Intelligence Workbench with NIST dual-hash Merkle trees, multi-stream timeline fusion, and AI spatial-temporal alibi conflict detection.
+                                    Multi-agent digital forensics and fact-verification platform utilizing Merkle tree cryptographic hashing for tamper-proof timeline indexing and BSA-compliant evidence verification.
                                 </p>
                                 <div class="tech-stack-pills">
-                                    <span data-skill="python">Python FastAPI</span>
-                                    <span data-skill="js">Modern JS</span>
-                                    <span>BSA 2023 §63(4)</span>
-                                    <span>NIST Dual-Hash</span>
+                                    <span data-skill="react">React</span>
+                                    <span data-skill="nodejs">Node.js</span>
+                                    <span data-skill="express">Express</span>
+                                    <span data-skill="mongodb">MongoDB</span>
+                                    <span data-skill="merkle">Merkle Hash</span>
+                                    <span data-skill="rest-api">REST APIs</span>
                                 </div>
                                 <div class="card-links">
                                     <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="chronofact">
                                         Details <i class="fas fa-expand-alt"></i>
                                     </button>
+                                    <a href="https://github.com/arpityadav626/chronofact" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        GitHub <i class="fab fa-github"></i>
+                                    </a>
                                     <a href="https://youtu.be/J8VqyTlGd5w" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch 3-Minute Walkthrough on YouTube">
                                         <i class="fab fa-youtube"></i> Video
                                     </a>
@@ -319,14 +341,14 @@
                     <div class="projects-stage" id="projects-stage-2" data-stage="2">
                         
                         <!-- Project 04: Developer Portfolio (Self) -->
-                        <div class="project-card card-reveal-item card-portfolio" data-project="portfolio" data-skills="html-css js git github web-audio">
+                        <div class="project-card card-reveal-item card-portfolio" data-project="portfolio" data-skills="html-css js git github web-audio typescript">
                             <div class="card-side-light" aria-hidden="true"></div>
                             
                             <div class="card-visual-slot">
                                 <div class="card-visual-inner">
                                     <img src="assets/portfolio-preview.png" alt="Developer Portfolio Preview" class="card-preview-img" loading="lazy">
                                     <div class="card-visual-overlay"></div>
-                                    <span class="badge live-badge visual-badge"><i class="fas fa-star"></i> Personal Architecture</span>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-star"></i> 98+ Lighthouse &amp; Web Audio</span>
                                 </div>
                             </div>
 
@@ -336,14 +358,15 @@
                             </div>
 
                             <div class="card-info-slot">
-                                <h3 class="project-title">Developer Portfolio</h3>
+                                <h3 class="project-title">Interactive Developer Portfolio</h3>
                                 <p class="project-summary">
-                                    High-performance, responsive personal portfolio crafted with custom cozy audio synthesizer engine and fluid micro-interactions.
+                                    High-performance developer portfolio engineered with a zero-dependency Web Audio API sound synthesizer, interactive skill-to-project relational mapping, and dynamic theme architecture.
                                 </p>
                                 <div class="tech-stack-pills">
                                     <span data-skill="html-css">HTML5 &amp; CSS3</span>
-                                    <span data-skill="js">Vanilla JS</span>
+                                    <span data-skill="js">Vanilla JS / TS</span>
                                     <span data-skill="web-audio">Web Audio API</span>
+                                    <span>DOM Optimization</span>
                                     <span data-skill="github">GitHub Pages</span>
                                 </div>
                                 <div class="card-links">
@@ -353,19 +376,22 @@
                                     <a href="https://github.com/arpityadav626/arpityadav626.github.io" target="_blank" class="card-btn outline sound-hover ripple-btn">
                                         GitHub <i class="fab fa-github"></i>
                                     </a>
+                                    <a href="https://arpity.me/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        arpity.me <i class="fas fa-external-link-alt"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Project 05: AI Hub ✲ Media Discovery Suite -->
-                        <div class="project-card card-reveal-item card-aihub" data-project="ai-hub" data-skills="ai react typescript js tailwind threejs web-audio firebase github">
+                        <div class="project-card card-reveal-item card-aihub" data-project="ai-hub" data-skills="ai react typescript js tailwind threejs web-audio firebase github jwt-auth websockets">
                             <div class="card-side-light" aria-hidden="true"></div>
                             
                             <div class="card-visual-slot">
                                 <div class="card-visual-inner">
                                     <img src="assets/ai-hub-preview.jpg" alt="AI Hub Preview" class="card-preview-img" loading="lazy">
                                     <div class="card-visual-overlay"></div>
-                                    <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Live Platform</span>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> 130+ Platforms Indexed</span>
                                 </div>
                             </div>
 
@@ -375,23 +401,25 @@
                             </div>
 
                             <div class="card-info-slot">
-                                <h3 class="project-title">AI Hub ✲ Media Discovery Suite</h3>
+                                <h3 class="project-title">AI Hub — Unified AI &amp; Media Workspace</h3>
                                 <p class="project-summary">
-                                    A fast, motion-rich, dark obsidian AI workspace featuring 3D tool discovery, Global Media Omniverse (54+ film, 38+ music, &amp; 42+ book platforms), in-app 4K theater, and classic reader.
+                                    Unified React 19 and TypeScript workspace aggregating 130+ global film, music, and book sources with interactive Three.js 3D navigation, an in-app 4K media player, and ambient audio streams.
                                 </p>
                                 <div class="tech-stack-pills">
-                                    <span data-skill="ai">AI &amp; LLMs</span>
                                     <span data-skill="react">React 19</span>
                                     <span data-skill="typescript">TypeScript</span>
-                                    <span data-skill="tailwind">Tailwind CSS</span>
                                     <span data-skill="threejs">Three.js</span>
-                                    <span data-skill="web-audio">Web Audio</span>
-                                    <span data-skill="firebase">Firebase &amp; GitHub</span>
+                                    <span data-skill="tailwind">Tailwind CSS</span>
+                                    <span data-skill="firebase">Firebase</span>
+                                    <span data-skill="web-audio">Web Audio API</span>
                                 </div>
                                 <div class="card-links">
                                     <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="ai-hub">
                                         Details <i class="fas fa-expand-alt"></i>
                                     </button>
+                                    <a href="https://github.com/arpityadav626/arpit.fun" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        GitHub <i class="fab fa-github"></i>
+                                    </a>
                                     <a href="https://arpit-fun.web.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
                                         Live Site <i class="fas fa-external-link-alt"></i>
                                     </a>
@@ -417,16 +445,16 @@
                             </div>
 
                             <div class="card-info-slot">
-                                <h3 class="project-title">Monolith Villa ⬡ 3D ArchViz</h3>
+                                <h3 class="project-title">Monolith Villa — 3D Spatial Digital Twin</h3>
                                 <p class="project-summary">
-                                    Sample 3D architectural showcase project built &amp; engineered by Arpit for <strong>Apex Intelligence</strong> (Founded by Antriksh, Co-founded by Arpit) featuring scroll-driven camera interpolation, spatial HUD beacons, and ambient acoustic soundscapes.
+                                    Photorealistic 3D spatial digital twin of a 14,200 sq.ft luxury villa engineered with scroll-interpolated camera splines, spatial HUD matrix projection, and procedural ambient audio.
                                 </p>
                                 <div class="tech-stack-pills">
                                     <span data-skill="threejs">Three.js</span>
                                     <span data-skill="shaders">GLSL Shaders &amp; PBR</span>
-                                    <span data-skill="threejs">3D WebGL</span>
+                                    <span>3D WebGL</span>
                                     <span data-skill="web-audio">Web Audio API</span>
-                                    <span data-skill="vercel">Vercel</span>
+                                    <span data-skill="vercel">Vercel Edge</span>
                                 </div>
                                 <div class="card-links">
                                     <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="monolith-villa">
@@ -482,7 +510,9 @@
                         <span class="skill-pill sound-hover" data-skill="react"><i class="fab fa-react"></i> React</span>
                         <span class="skill-pill sound-hover" data-skill="nodejs"><i class="fab fa-node-js"></i> Node.js</span>
                         <span class="skill-pill sound-hover" data-skill="express"><i class="fas fa-server"></i> Express</span>
-                        <span class="skill-pill sound-hover" data-skill="html-css"><i class="fab fa-html5"></i> HTML5 & CSS3</span>
+                        <span class="skill-pill sound-hover" data-skill="rest-api"><i class="fas fa-network-wired"></i> REST APIs</span>
+                        <span class="skill-pill sound-hover" data-skill="websockets"><i class="fas fa-plug"></i> WebSockets</span>
+                        <span class="skill-pill sound-hover" data-skill="html-css"><i class="fab fa-html5"></i> HTML5 &amp; CSS3</span>
                         <span class="skill-pill sound-hover" data-skill="tailwind"><i class="fas fa-wind"></i> Tailwind CSS</span>
                     </div>
                 </div>
@@ -499,22 +529,25 @@
                 </div>
 
                 <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-microchip"></i> IoT & Hardware</div>
+                    <div class="category-title"><i class="fas fa-microchip"></i> IoT &amp; Hardware</div>
                     <div class="pill-group">
                         <span class="skill-pill sound-hover" data-skill="esp32"><i class="fas fa-memory"></i> ESP32</span>
                         <span class="skill-pill sound-hover" data-skill="arduino"><i class="fas fa-microchip"></i> Arduino</span>
-                        <span class="skill-pill sound-hover" data-skill="sensors"><i class="fas fa-wave-square"></i> Sensors & Actuators</span>
-                        <span class="skill-pill sound-hover" data-skill="embedded-c"><i class="fas fa-laptop-code"></i> Embedded C</span>
+                        <span class="skill-pill sound-hover" data-skill="sensors"><i class="fas fa-wave-square"></i> Sensors &amp; Actuators</span>
+                        <span class="skill-pill sound-hover" data-skill="embedded-c"><i class="fas fa-laptop-code"></i> Embedded C++</span>
                     </div>
                 </div>
 
                 <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-tools"></i> Tools & Databases</div>
+                    <div class="category-title"><i class="fas fa-tools"></i> Tools, Cloud &amp; DevOps</div>
                     <div class="pill-group">
                         <span class="skill-pill sound-hover" data-skill="mongodb"><i class="fas fa-database"></i> MongoDB</span>
+                        <span class="skill-pill sound-hover" data-skill="db-security"><i class="fas fa-shield-alt"></i> Database Security</span>
+                        <span class="skill-pill sound-hover" data-skill="jwt-auth"><i class="fas fa-key"></i> JWT / OAuth</span>
+                        <span class="skill-pill sound-hover" data-skill="linux"><i class="fab fa-linux"></i> Linux</span>
+                        <span class="skill-pill sound-hover" data-skill="docker"><i class="fab fa-docker"></i> Docker</span>
                         <span class="skill-pill sound-hover" data-skill="git"><i class="fab fa-git-alt"></i> Git</span>
                         <span class="skill-pill sound-hover" data-skill="github"><i class="fab fa-github"></i> GitHub</span>
-                        <span class="skill-pill sound-hover" data-skill="vscode"><i class="fas fa-code"></i> VS Code</span>
                         <span class="skill-pill sound-hover" data-skill="vercel"><i class="fas fa-cloud"></i> Vercel</span>
                         <span class="skill-pill sound-hover" data-skill="postman"><i class="fas fa-paper-plane"></i> Postman</span>
                     </div>
@@ -531,12 +564,12 @@
         <section class="section about-section reveal" id="about">
             <div class="section-header">
                 <span class="mono-tag">( 03 // BACKGROUND )</span>
-                <h2 class="section-title">About & Education</h2>
+                <h2 class="section-title">About &amp; Education</h2>
             </div>
 
             <div class="about-grid">
                 <div class="about-narrative">
-                    <h3>Engineering with Passion & Grit</h3>
+                    <h3>Engineering with Passion &amp; Grit</h3>
                     <p>
                         I'm a Computer Science undergraduate passionate about solving real-world challenges through technology. My interests span across full-stack web development and IoT hardware integration.
                     </p>
@@ -544,8 +577,8 @@
                         Whether it's prototyping a Smart Helmet for road safety at Smart India Hackathon or architecting web platforms, I love taking ideas from zero to production. Constantly learning, building, and exploring new tech stacks.
                     </p>
                     <div class="focus-bullets">
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Focus:</strong> Full-Stack Web Development & IoT Integration</div>
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Currently Building:</strong> ChronoFact & Smart Kitchen System</div>
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Focus:</strong> Full-Stack Web Development &amp; IoT Integration</div>
+                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Currently Building:</strong> ChronoFact &amp; Smart Kitchen System</div>
                         <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Hackathons:</strong> Smart India Hackathon (SIH) Participant</div>
                     </div>
                 </div>
@@ -553,7 +586,7 @@
                 <div class="education-card">
                     <span class="edu-badge"><i class="fas fa-graduation-cap"></i> Higher Education</span>
                     <h4 class="degree">Bachelor of Technology (B.Tech)</h4>
-                    <p class="field">Computer Science & Engineering</p>
+                    <p class="field">Computer Science &amp; Engineering</p>
                     <p class="college"><i class="fas fa-university"></i> Axis Institute of Technology and Management</p>
                     <p class="year"><i class="fas fa-calendar-alt"></i> 2025 — 2029</p>
                     <div class="edu-footer">
@@ -579,22 +612,32 @@
                 <div class="achievement-item">
                     <div class="achieve-icon"><i class="fas fa-trophy"></i></div>
                     <div class="achieve-content">
-                        <h4>Smart India Hackathon (SIH) Participant</h4>
-                        <p>Designed and built an end-to-end IoT Smart Helmet system for accident prevention and road safety innovation.</p>
+                        <h4>Smart India Hackathon (SIH) 2026 — Hardware Edition</h4>
+                        <p>Engineered an end-to-end ESP32 Smart Helmet telemetry and ignition-interlock prototype for road safety innovation and real-time crash response.</p>
+                        <div class="achieve-links">
+                            <a href="assets/sih-certificate.jpg" target="_blank" class="achieve-link sound-hover"><i class="fas fa-certificate"></i> View Certificate ↗</a>
+                        </div>
                     </div>
                 </div>
                 <div class="achievement-item">
                     <div class="achieve-icon"><i class="fas fa-code"></i></div>
                     <div class="achieve-content">
-                        <h4>Competitive Coding & Platforms</h4>
-                        <p>Active problem solver practicing core data structures and algorithmic thinking on GeeksforGeeks & LeetCode.</p>
+                        <h4>Competitive Programming &amp; Algorithmic Problem Solving</h4>
+                        <p>Active problem solver in C/C++ and Data Structures across <strong>LeetCode</strong> and <strong>GeeksforGeeks</strong>; earned certification in the <strong>GeeksforGeeks Code Catalyst</strong> coding contest.</p>
+                        <div class="achieve-links">
+                            <a href="https://leetcode.com/u/arpityadav626/" target="_blank" rel="noopener noreferrer" class="achieve-link sound-hover"><i class="fas fa-code"></i> LeetCode ↗</a>
+                            <a href="https://www.geeksforgeeks.org/user/arpityadav626/" target="_blank" rel="noopener noreferrer" class="achieve-link sound-hover"><i class="fas fa-laptop-code"></i> GeeksforGeeks ↗</a>
+                        </div>
                     </div>
                 </div>
                 <div class="achievement-item">
-                    <div class="achieve-icon"><i class="fas fa-certificate"></i></div>
+                    <div class="achieve-icon"><i class="fas fa-shield-alt"></i></div>
                     <div class="achieve-content">
-                        <h4>Technical Certifications & Badges</h4>
-                        <p>Full-Stack Web Development, Git/GitHub Version Control & Modern Database Foundations.</p>
+                        <h4>Verified Credentials &amp; Cybersecurity Training</h4>
+                        <p>Earned verified <strong>MongoDB Credly Digital Badges</strong> (Database Security &amp; Student Basics) and completed the <strong>Cybersuraksha Training Program</strong> hosted by C3i Hub.</p>
+                        <div class="achieve-links">
+                            <a href="https://www.credly.com" target="_blank" rel="noopener noreferrer" class="achieve-link sound-hover"><i class="fas fa-external-link-alt"></i> Verify Credly ↗</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -622,7 +665,13 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <span class="label">Direct Email</span>
-                            <a href="mailto:arpityadav6794@gmail.com" class="val sound-hover">arpityadav6794@gmail.com</a>
+                            <div class="email-copy-wrap">
+                                <a href="mailto:arpityadav6794@gmail.com" class="val sound-hover">arpityadav6794@gmail.com</a>
+                                <button type="button" class="copy-email-btn sound-hover" id="copy-email-btn" title="Copy email address" aria-label="Copy email address">
+                                    <i class="far fa-copy" id="copy-email-icon"></i>
+                                    <span class="copy-toast-bubble" id="copy-toast-bubble">Copied!</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -713,6 +762,115 @@
                 <div id="modal-dynamic-content" class="modal-body-content">
                     <!-- Populated dynamically with staggered cascade animations -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         🟢 SECTION 10: SKIPER 31 COMMAND PALETTE (CMD+K / CTRL+K SPOTLIGHT)
+         Ultra-fast keyboard navigation across projects, sections & quick actions
+         ======================================================== -->
+    <div id="cmd-palette-modal" class="cmd-palette-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Command Palette">
+        <div class="cmd-palette-dialog">
+            <div class="cmd-palette-search-row">
+                <i class="fas fa-search cmd-search-icon"></i>
+                <input type="text" id="cmd-palette-input" class="cmd-search-input" placeholder="Type a command or search projects..." autocomplete="off" spellcheck="false">
+                <kbd class="cmd-esc-badge" id="cmd-close-esc">ESC</kbd>
+            </div>
+            <div class="cmd-palette-results" id="cmd-palette-results">
+                <!-- Group 1: Navigation -->
+                <div class="cmd-group">
+                    <span class="cmd-group-title">Navigation</span>
+                    <button type="button" class="cmd-item" data-action="nav" data-target="#projects">
+                        <i class="fas fa-laptop-code"></i>
+                        <span class="cmd-item-label">Featured Projects</span>
+                        <span class="cmd-item-hint">Go to projects</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="nav" data-target="#skills">
+                        <i class="fas fa-microchip"></i>
+                        <span class="cmd-item-label">Technical Skills</span>
+                        <span class="cmd-item-hint">Go to skills</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="nav" data-target="#about">
+                        <i class="fas fa-user-astronaut"></i>
+                        <span class="cmd-item-label">About &amp; Journey</span>
+                        <span class="cmd-item-hint">Go to about</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="nav" data-target="#achievements">
+                        <i class="fas fa-trophy"></i>
+                        <span class="cmd-item-label">Achievements &amp; Honors</span>
+                        <span class="cmd-item-hint">Go to honors</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="nav" data-target="#contact">
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="cmd-item-label">Contact &amp; Connect</span>
+                        <span class="cmd-item-hint">Go to contact</span>
+                    </button>
+                </div>
+
+                <!-- Group 2: Projects Quick Jump -->
+                <div class="cmd-group">
+                    <span class="cmd-group-title">Projects</span>
+                    <button type="button" class="cmd-item" data-action="project" data-project="smart-helmet">
+                        <span class="cmd-badge">01</span>
+                        <span class="cmd-item-label">Smart Helmet Telemetry (SIH 2026 Hardware IoT)</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="project" data-project="smart-kitchen">
+                        <span class="cmd-badge">02</span>
+                        <span class="cmd-item-label">SAFETY-FI 96X (Smart Kitchen IoT &amp; 3D Twin)</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="project" data-project="chronofact">
+                        <span class="cmd-badge">03</span>
+                        <span class="cmd-item-label">ChronoFact 2.0 (Multi-Agent Forensics Engine)</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="project" data-project="portfolio">
+                        <span class="cmd-badge">04</span>
+                        <span class="cmd-item-label">Interactive Developer Portfolio &amp; Audio Engine</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="project" data-project="ai-hub">
+                        <span class="cmd-badge">05</span>
+                        <span class="cmd-item-label">AI Hub — Unified AI &amp; Media Workspace</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="project" data-project="monolith-villa">
+                        <span class="cmd-badge">06</span>
+                        <span class="cmd-item-label">Monolith Villa — 3D Spatial Digital Twin</span>
+                    </button>
+                </div>
+
+                <!-- Group 3: Quick Utilities -->
+                <div class="cmd-group">
+                    <span class="cmd-group-title">Actions &amp; Links</span>
+                    <button type="button" class="cmd-item" data-action="resume">
+                        <i class="fas fa-file-pdf"></i>
+                        <span class="cmd-item-label">View / Download Resume (PDF)</span>
+                        <span class="cmd-item-hint">↗</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="theme">
+                        <i class="fas fa-adjust"></i>
+                        <span class="cmd-item-label">Toggle Theme (Light / Dark)</span>
+                        <span class="cmd-item-hint">Switch</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="copy-email">
+                        <i class="fas fa-copy"></i>
+                        <span class="cmd-item-label">Copy Email to Clipboard</span>
+                        <span class="cmd-item-hint">arpityadav6794@gmail.com</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="github">
+                        <i class="fab fa-github"></i>
+                        <span class="cmd-item-label">Open GitHub Profile</span>
+                        <span class="cmd-item-hint">↗</span>
+                    </button>
+                    <button type="button" class="cmd-item" data-action="linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                        <span class="cmd-item-label">Open LinkedIn Profile</span>
+                        <span class="cmd-item-hint">↗</span>
+                    </button>
+                </div>
+            </div>
+            <div class="cmd-palette-footer">
+                <span>Navigate <kbd>↑</kbd><kbd>↓</kbd></span>
+                <span>Select <kbd>↵</kbd></span>
+                <span>Close <kbd>ESC</kbd></span>
             </div>
         </div>
     </div>

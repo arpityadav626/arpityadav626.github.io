@@ -1461,6 +1461,47 @@ main, .header, .footer {
     line-height: 1.5;
 }
 
+.achieve-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.achieve-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.achieve-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--border-highlight);
+    color: var(--accent-primary);
+    transform: translateY(-1.5px);
+}
+
+body[data-mode="light"] .achieve-link {
+    background: #f1f5f9;
+    border-color: rgba(15, 23, 42, 0.12);
+    color: #0f172a;
+}
+
+body[data-mode="light"] .achieve-link:hover {
+    background: #e2e8f0;
+    border-color: rgba(15, 23, 42, 0.28);
+    color: #000000;
+}
+
 /* ========================================================
    CONTACT & FORM
 ======================================================== */
@@ -3577,4 +3618,418 @@ body[data-mode="light"] .crowd-canvas {
     .crowd-canvas-wrapper {
         display: none !important;
     }
+}
+
+/* ======================================================================
+   🟢 20. SKIPER 71: SUBPIXEL SCROLL PROGRESS INDICATOR
+   ====================================================================== */
+.scroll-progress-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #ffffff 0%, #cbd5e1 50%, #64748b 100%);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    transform-origin: left center;
+    transform: scaleX(0);
+    z-index: 9999;
+    pointer-events: none;
+    transition: transform 0.08s linear;
+}
+
+body[data-mode="light"] .scroll-progress-line {
+    background: linear-gradient(90deg, #0f172a 0%, #334155 50%, #94a3b8 100%);
+    box-shadow: 0 0 8px rgba(15, 23, 42, 0.4);
+}
+
+/* ======================================================================
+   🟢 21. SKIPER 31: COMMAND PALETTE TRIGGER BUTTON IN NAVBAR
+   ====================================================================== */
+.cmd-palette-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    color: var(--text-secondary);
+    padding: 5px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    transition: var(--transition);
+    height: 32px;
+}
+
+.cmd-palette-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.22);
+    transform: translateY(-1px);
+}
+
+.cmd-kbd-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+}
+
+body[data-mode="light"] .cmd-palette-btn {
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    color: #475569;
+}
+
+body[data-mode="light"] .cmd-palette-btn:hover {
+    background: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+    border-color: #0f172a;
+}
+
+body[data-mode="light"] .cmd-kbd-badge {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    color: #0f172a;
+}
+
+@media (max-width: 640px) {
+    .cmd-kbd-badge {
+        display: none;
+    }
+    .cmd-palette-btn {
+        padding: 5px 8px;
+    }
+}
+
+/* ======================================================================
+   🟢 22. SKIPER 31: COMMAND PALETTE MODAL BACKDROP & DIALOG
+   ====================================================================== */
+.cmd-palette-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 10000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12vh 20px 20px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+}
+
+.cmd-palette-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.cmd-palette-dialog {
+    width: 100%;
+    max-width: 580px;
+    background: rgba(15, 17, 23, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    overflow: hidden;
+    transform: translateY(-14px) scale(0.98);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.cmd-palette-backdrop.active .cmd-palette-dialog {
+    transform: translateY(0) scale(1);
+}
+
+.cmd-palette-search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cmd-search-icon {
+    color: var(--text-muted);
+    font-size: 15px;
+}
+
+.cmd-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-main);
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.cmd-search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.cmd-esc-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.cmd-palette-results {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cmd-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cmd-group-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    padding: 6px 10px 4px;
+}
+
+.cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    text-align: left;
+    font-family: var(--font-main);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    width: 100%;
+}
+
+.cmd-item i {
+    width: 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.cmd-item .cmd-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+.cmd-item-label {
+    flex: 1;
+}
+
+.cmd-item-hint {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.cmd-item:hover,
+.cmd-item.selected {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.cmd-item:hover i,
+.cmd-item.selected i {
+    color: #ffffff;
+}
+
+.cmd-palette-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: 10px 18px;
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-muted);
+}
+
+.cmd-palette-footer kbd {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 9.5px;
+    margin-left: 3px;
+}
+
+/* Light Mode Command Palette */
+body[data-mode="light"] .cmd-palette-dialog {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+}
+
+body[data-mode="light"] .cmd-palette-search-row {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body[data-mode="light"] .cmd-search-input {
+    color: #0f172a;
+}
+
+body[data-mode="light"] .cmd-item {
+    color: #334155;
+}
+
+body[data-mode="light"] .cmd-item:hover,
+body[data-mode="light"] .cmd-item.selected {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+body[data-mode="light"] .cmd-item .cmd-badge {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body[data-mode="light"] .cmd-palette-footer {
+    background: #f8fafc;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+/* ======================================================================
+   🟢 23. SKIPER 83: COPY EMAIL BUTTON & MICRO TOAST
+   ====================================================================== */
+.email-copy-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.copy-email-btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.copy-email-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.copy-toast-bubble {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px) scale(0.9);
+    background: #ffffff;
+    color: #0d111a;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    z-index: 10;
+}
+
+.copy-toast-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 4px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+.copy-toast-bubble.active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+body[data-mode="light"] .copy-email-btn {
+    background: #f1f5f9;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    color: #334155;
+}
+
+body[data-mode="light"] .copy-email-btn:hover {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+}
+
+body[data-mode="light"] .copy-toast-bubble {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body[data-mode="light"] .copy-toast-bubble::after {
+    border-color: #0f172a transparent transparent transparent;
+}
+
+/* ======================================================================
+   🟢 24. SKIPER 48: MAGNETIC SKILL PILLS (Micro-tilt on hover)
+   ====================================================================== */
+.skill-pill {
+    transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1), 
+                box-shadow 0.22s ease, 
+                border-color 0.22s ease, 
+                background 0.22s ease;
+    will-change: transform;
+}
+
+.skill-pill:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 6px 18px -4px rgba(255, 255, 255, 0.15);
 }
