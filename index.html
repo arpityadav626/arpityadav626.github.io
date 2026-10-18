@@ -177,194 +177,271 @@
              - 05: AI Hub (arpit.fun Media Discovery)
              - 06: Monolith Villa (Apex Intelligence 3D ArchViz)
              ======================================================== -->
-        <section class="section projects-section reveal" id="projects">
-            <div class="section-header">
-                <span class="mono-tag">( 01 // SELECTED WORK )</span>
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-desc">Six technical solutions engineered with purpose and performance.</p>
-            </div>
-
-            <div class="projects-grid">
-                
-                <!-- Project 01: Smart Helmet (Connected Hardware IoT) -->
-                <div class="project-card tilt-card card-sih" data-tilt data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c">
-                    <div class="card-gradient-glow" aria-hidden="true"></div>
-                    <div class="card-inner-backdrop" aria-hidden="true"></div>
-                    <div class="card-top">
-                        <span class="project-num">01</span>
-                        <span class="badge sih-badge"><i class="fas fa-microchip"></i> Hardware IoT</span>
-                    </div>
-                    <h3 class="project-title">Smart Helmet</h3>
-                    <p class="project-summary">
-                        IoT-enabled safety helmet engineered to detect accidents, alcohol presence, and enforce helmet wear before two-wheeler ignition.
-                    </p>
-                    <div class="tech-stack-pills">
-                        <span data-skill="arduino">Arduino / ESP32</span>
-                        <span data-skill="sensors">Sensors</span>
-                        <span data-skill="cpp">Embedded C++</span>
-                        <span>IoT Cloud</span>
-                        <span>GSM/GPS</span>
-                    </div>
-                    <div class="card-links">
-                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-helmet">
-                            Details <i class="fas fa-expand-alt"></i>
-                        </button>
-                        <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                            LinkedIn <i class="fab fa-linkedin-in"></i>
-                        </a>
-                    </div>
+        <section class="projects-scroll-section" id="projects" aria-label="Featured Projects">
+            <div class="projects-sticky-viewport">
+                <div class="section-header projects-pinned-header">
+                    <span class="mono-tag">( 01 // SELECTED WORK )</span>
+                    <h2 class="section-title">Featured Projects</h2>
                 </div>
 
-                <!-- Project 02: Smart Kitchen System -->
-                <div class="project-card tilt-card card-kitchen" data-tilt data-project="smart-kitchen" data-skills="arduino esp32 sensors cpp python c microcontrollers">
-                    <div class="card-gradient-glow" aria-hidden="true"></div>
-                    <div class="card-inner-backdrop" aria-hidden="true"></div>
-                    <div class="card-top">
-                        <span class="project-num">02</span>
-                        <span class="badge live-badge"><i class="fas fa-circle"></i> Physical Hardware + 3D Twin</span>
-                    </div>
-                    <h3 class="project-title">Smart Kitchen System</h3>
-                    <p class="project-summary">
-                        Autonomous IoT hazard mitigation platform with dual-sensor fire and gas detection, automated ventilation fan, sprinkler actuation, and Three.js 3D digital twin.
-                    </p>
-                    <div class="tech-stack-pills">
-                        <span data-skill="arduino">Arduino Uno</span>
-                        <span data-skill="sensors">MQ-2 &amp; Flame</span>
-                        <span data-skill="python">Python Serial</span>
-                        <span>Three.js 3D Twin</span>
-                    </div>
-                    <div class="card-links">
-                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-kitchen">
-                            Details <i class="fas fa-expand-alt"></i>
-                        </button>
-                        <a href="https://youtu.be/pivb5MaotJo" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch Walkthrough on YouTube">
-                            <i class="fab fa-youtube"></i> Video
-                        </a>
-                        <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                            Live Site <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
+                <div class="projects-stages-wrapper">
+                    
+                    <!-- 🟢 STAGE 1: Projects 01 - 03 (Hardware IoT & Forensic Cyber) -->
+                    <div class="projects-stage active-stage" id="projects-stage-1" data-stage="1">
+                        
+                        <!-- Project 01: Smart Helmet (Connected Hardware IoT) -->
+                        <div class="project-card card-reveal-item card-sih" data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c">
+                            <div class="card-side-light" aria-hidden="true"></div>
+                            
+                            <div class="card-visual-slot">
+                                <div class="card-visual-inner">
+                                    <img src="assets/smart-helmet-prototype.jpg" alt="Smart Helmet Prototype" class="card-preview-img" loading="lazy">
+                                    <div class="card-visual-overlay"></div>
+                                    <span class="badge sih-badge visual-badge"><i class="fas fa-microchip"></i> Hardware IoT</span>
+                                </div>
+                            </div>
 
-                <!-- Project 03: ChronoFact -->
-                <div class="project-card tilt-card card-chronofact" data-tilt data-project="chronofact" data-skills="python fastapi js html-css tailwind git github">
-                    <div class="card-gradient-glow" aria-hidden="true"></div>
-                    <div class="card-inner-backdrop" aria-hidden="true"></div>
-                    <div class="card-top">
-                        <span class="project-num">03</span>
-                        <span class="badge live-badge"><i class="fas fa-circle"></i> Section 63(4) BSA 2023</span>
-                    </div>
-                    <h3 class="project-title">ChronoFact</h3>
-                    <p class="project-summary">
-                        National Judicial Cyber Forensic Intelligence Workbench with NIST dual-hash Merkle trees, multi-stream timeline fusion, and AI spatial-temporal alibi conflict detection.
-                    </p>
-                    <div class="tech-stack-pills">
-                        <span data-skill="python">Python FastAPI</span>
-                        <span data-skill="js">Modern JS</span>
-                        <span>BSA 2023 §63(4)</span>
-                        <span>NIST Dual-Hash</span>
-                    </div>
-                    <div class="card-links">
-                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="chronofact">
-                            Details <i class="fas fa-expand-alt"></i>
-                        </button>
-                        <a href="https://youtu.be/J8VqyTlGd5w" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch 3-Minute Walkthrough on YouTube">
-                            <i class="fab fa-youtube"></i> Video
-                        </a>
-                        <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                            Live Site <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
+                            <div class="card-step-row">
+                                <div class="card-step-badge">01</div>
+                                <div class="card-step-line" aria-hidden="true"></div>
+                            </div>
 
-                <!-- Project 04: Developer Portfolio (Self) -->
-                <div class="project-card tilt-card card-portfolio" data-tilt data-project="portfolio" data-skills="html-css js git github web-audio">
-                    <div class="card-gradient-glow" aria-hidden="true"></div>
-                    <div class="card-inner-backdrop" aria-hidden="true"></div>
-                    <div class="card-top">
-                        <span class="project-num">04</span>
-                        <span class="badge live-badge"><i class="fas fa-star"></i> Personal Architecture</span>
-                    </div>
-                    <h3 class="project-title">Developer Portfolio</h3>
-                    <p class="project-summary">
-                        High-performance, responsive personal portfolio crafted with custom cozy audio synthesizer engine and fluid micro-interactions.
-                    </p>
-                    <div class="tech-stack-pills">
-                        <span data-skill="html-css">HTML5 &amp; CSS3</span>
-                        <span data-skill="js">Vanilla JS</span>
-                        <span data-skill="web-audio">Web Audio API</span>
-                        <span data-skill="github">GitHub Pages</span>
-                    </div>
-                    <div class="card-links">
-                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="portfolio">
-                            Details <i class="fas fa-expand-alt"></i>
-                        </button>
-                        <a href="https://github.com/arpityadav626/arpityadav626.github.io" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                            GitHub <i class="fab fa-github"></i>
-                        </a>
-                    </div>
-                </div>
+                            <div class="card-info-slot">
+                                <h3 class="project-title">Smart Helmet</h3>
+                                <p class="project-summary">
+                                    IoT-enabled safety helmet engineered to detect accidents, alcohol presence, and enforce helmet wear before two-wheeler ignition.
+                                </p>
+                                <div class="tech-stack-pills">
+                                    <span data-skill="arduino">Arduino / ESP32</span>
+                                    <span data-skill="sensors">Sensors</span>
+                                    <span data-skill="cpp">Embedded C++</span>
+                                    <span>IoT Cloud</span>
+                                    <span>GSM/GPS</span>
+                                </div>
+                                <div class="card-links">
+                                    <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-helmet">
+                                        Details <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        LinkedIn <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 
-                <!-- Project 05: AI Hub ✲ Media Discovery Suite -->
-                <div class="project-card tilt-card card-aihub" data-tilt data-project="ai-hub" data-skills="ai react typescript js tailwind threejs web-audio firebase github">
-                    <div class="card-gradient-glow" aria-hidden="true"></div>
-                    <div class="card-inner-backdrop" aria-hidden="true"></div>
-                    <div class="card-top">
-                        <span class="project-num">05</span>
-                        <span class="badge live-badge"><i class="fas fa-circle"></i> Live Platform</span>
-                    </div>
-                    <h3 class="project-title">AI Hub ✲ Media Discovery Suite</h3>
-                    <p class="project-summary">
-                        A fast, motion-rich, dark obsidian AI workspace featuring 3D tool discovery, Global Media Omniverse (54+ film, 38+ music, &amp; 42+ book platforms), in-app 4K theater, and classic reader.
-                    </p>
-                    <div class="tech-stack-pills">
-                        <span data-skill="ai">AI &amp; LLMs</span>
-                        <span data-skill="react">React 19</span>
-                        <span data-skill="typescript">TypeScript</span>
-                        <span data-skill="tailwind">Tailwind CSS</span>
-                        <span data-skill="threejs">Three.js</span>
-                        <span data-skill="web-audio">Web Audio</span>
-                        <span data-skill="firebase">Firebase &amp; GitHub</span>
-                    </div>
-                    <div class="card-links">
-                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="ai-hub">
-                            Details <i class="fas fa-expand-alt"></i>
-                        </button>
-                        <a href="https://arpit-fun.web.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                            Live Site <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
+                        <!-- Project 02: Smart Kitchen System -->
+                        <div class="project-card card-reveal-item card-kitchen" data-project="smart-kitchen" data-skills="arduino esp32 sensors cpp python c microcontrollers">
+                            <div class="card-side-light" aria-hidden="true"></div>
+                            
+                            <div class="card-visual-slot">
+                                <div class="card-visual-inner">
+                                    <img src="assets/smart-kitchen-prototype.jpg" alt="Smart Kitchen Prototype" class="card-preview-img" loading="lazy">
+                                    <div class="card-visual-overlay"></div>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Physical Hardware + 3D Twin</span>
+                                </div>
+                            </div>
 
-                <!-- Project 06: Monolith Villa ⬡ 3D Architectural Walkthrough -->
-                <div class="project-card tilt-card card-monolith" data-tilt data-project="monolith-villa" data-skills="threejs web-audio shaders js vercel html-css">
-                    <div class="card-gradient-glow" aria-hidden="true"></div>
-                    <div class="card-inner-backdrop" aria-hidden="true"></div>
-                    <div class="card-top">
-                        <span class="project-num">06</span>
-                        <span class="badge live-badge"><i class="fas fa-cube"></i> Live WebGL 3D</span>
-                    </div>
-                    <h3 class="project-title">Monolith Villa ⬡ 3D ArchViz</h3>
-                    <p class="project-summary">
-                        Sample 3D architectural showcase project built &amp; engineered by Arpit for <strong>Apex Intelligence</strong> (Founded by Antriksh, Co-founded by Arpit) featuring scroll-driven camera interpolation, spatial HUD beacons, and ambient acoustic soundscapes.
-                    </p>
-                    <div class="tech-stack-pills">
-                        <span data-skill="threejs">Three.js</span>
-                        <span data-skill="shaders">GLSL Shaders &amp; PBR</span>
-                        <span data-skill="threejs">3D WebGL</span>
-                        <span data-skill="web-audio">Web Audio API</span>
-                        <span data-skill="vercel">Vercel</span>
-                    </div>
-                    <div class="card-links">
-                        <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="monolith-villa">
-                            Details <i class="fas fa-expand-alt"></i>
-                        </button>
-                        <a href="https://monolith-villa.vercel.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                            Live Site <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
+                            <div class="card-step-row">
+                                <div class="card-step-badge">02</div>
+                                <div class="card-step-line" aria-hidden="true"></div>
+                            </div>
 
+                            <div class="card-info-slot">
+                                <h3 class="project-title">Smart Kitchen System</h3>
+                                <p class="project-summary">
+                                    Autonomous IoT hazard mitigation platform with dual-sensor fire and gas detection, automated ventilation fan, sprinkler actuation, and Three.js 3D digital twin.
+                                </p>
+                                <div class="tech-stack-pills">
+                                    <span data-skill="arduino">Arduino Uno</span>
+                                    <span data-skill="sensors">MQ-2 &amp; Flame</span>
+                                    <span data-skill="python">Python Serial</span>
+                                    <span>Three.js 3D Twin</span>
+                                </div>
+                                <div class="card-links">
+                                    <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-kitchen">
+                                        Details <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <a href="https://youtu.be/pivb5MaotJo" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch Walkthrough on YouTube">
+                                        <i class="fab fa-youtube"></i> Video
+                                    </a>
+                                    <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        Live Site <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 03: ChronoFact -->
+                        <div class="project-card card-reveal-item card-chronofact" data-project="chronofact" data-skills="python fastapi js html-css tailwind git github">
+                            <div class="card-side-light" aria-hidden="true"></div>
+                            
+                            <div class="card-visual-slot">
+                                <div class="card-visual-inner">
+                                    <img src="assets/chronofact-preview.jpg" alt="ChronoFact Preview" class="card-preview-img" loading="lazy">
+                                    <div class="card-visual-overlay"></div>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Section 63(4) BSA 2023</span>
+                                </div>
+                            </div>
+
+                            <div class="card-step-row">
+                                <div class="card-step-badge">03</div>
+                                <div class="card-step-line" aria-hidden="true"></div>
+                            </div>
+
+                            <div class="card-info-slot">
+                                <h3 class="project-title">ChronoFact</h3>
+                                <p class="project-summary">
+                                    National Judicial Cyber Forensic Intelligence Workbench with NIST dual-hash Merkle trees, multi-stream timeline fusion, and AI spatial-temporal alibi conflict detection.
+                                </p>
+                                <div class="tech-stack-pills">
+                                    <span data-skill="python">Python FastAPI</span>
+                                    <span data-skill="js">Modern JS</span>
+                                    <span>BSA 2023 §63(4)</span>
+                                    <span>NIST Dual-Hash</span>
+                                </div>
+                                <div class="card-links">
+                                    <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="chronofact">
+                                        Details <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <a href="https://youtu.be/J8VqyTlGd5w" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch 3-Minute Walkthrough on YouTube">
+                                        <i class="fab fa-youtube"></i> Video
+                                    </a>
+                                    <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        Live Site <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 🟢 STAGE 2: Projects 04 - 06 (Platforms, Web Audio & 3D WebGL) -->
+                    <div class="projects-stage" id="projects-stage-2" data-stage="2">
+                        
+                        <!-- Project 04: Developer Portfolio (Self) -->
+                        <div class="project-card card-reveal-item card-portfolio" data-project="portfolio" data-skills="html-css js git github web-audio">
+                            <div class="card-side-light" aria-hidden="true"></div>
+                            
+                            <div class="card-visual-slot">
+                                <div class="card-visual-inner">
+                                    <img src="assets/portfolio-preview.png" alt="Developer Portfolio Preview" class="card-preview-img" loading="lazy">
+                                    <div class="card-visual-overlay"></div>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-star"></i> Personal Architecture</span>
+                                </div>
+                            </div>
+
+                            <div class="card-step-row">
+                                <div class="card-step-badge">04</div>
+                                <div class="card-step-line" aria-hidden="true"></div>
+                            </div>
+
+                            <div class="card-info-slot">
+                                <h3 class="project-title">Developer Portfolio</h3>
+                                <p class="project-summary">
+                                    High-performance, responsive personal portfolio crafted with custom cozy audio synthesizer engine and fluid micro-interactions.
+                                </p>
+                                <div class="tech-stack-pills">
+                                    <span data-skill="html-css">HTML5 &amp; CSS3</span>
+                                    <span data-skill="js">Vanilla JS</span>
+                                    <span data-skill="web-audio">Web Audio API</span>
+                                    <span data-skill="github">GitHub Pages</span>
+                                </div>
+                                <div class="card-links">
+                                    <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="portfolio">
+                                        Details <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <a href="https://github.com/arpityadav626/arpityadav626.github.io" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        GitHub <i class="fab fa-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 05: AI Hub ✲ Media Discovery Suite -->
+                        <div class="project-card card-reveal-item card-aihub" data-project="ai-hub" data-skills="ai react typescript js tailwind threejs web-audio firebase github">
+                            <div class="card-side-light" aria-hidden="true"></div>
+                            
+                            <div class="card-visual-slot">
+                                <div class="card-visual-inner">
+                                    <img src="assets/ai-hub-preview.jpg" alt="AI Hub Preview" class="card-preview-img" loading="lazy">
+                                    <div class="card-visual-overlay"></div>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Live Platform</span>
+                                </div>
+                            </div>
+
+                            <div class="card-step-row">
+                                <div class="card-step-badge">05</div>
+                                <div class="card-step-line" aria-hidden="true"></div>
+                            </div>
+
+                            <div class="card-info-slot">
+                                <h3 class="project-title">AI Hub ✲ Media Discovery Suite</h3>
+                                <p class="project-summary">
+                                    A fast, motion-rich, dark obsidian AI workspace featuring 3D tool discovery, Global Media Omniverse (54+ film, 38+ music, &amp; 42+ book platforms), in-app 4K theater, and classic reader.
+                                </p>
+                                <div class="tech-stack-pills">
+                                    <span data-skill="ai">AI &amp; LLMs</span>
+                                    <span data-skill="react">React 19</span>
+                                    <span data-skill="typescript">TypeScript</span>
+                                    <span data-skill="tailwind">Tailwind CSS</span>
+                                    <span data-skill="threejs">Three.js</span>
+                                    <span data-skill="web-audio">Web Audio</span>
+                                    <span data-skill="firebase">Firebase &amp; GitHub</span>
+                                </div>
+                                <div class="card-links">
+                                    <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="ai-hub">
+                                        Details <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <a href="https://arpit-fun.web.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        Live Site <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 06: Monolith Villa ⬡ 3D Architectural Walkthrough -->
+                        <div class="project-card card-reveal-item card-monolith" data-project="monolith-villa" data-skills="threejs web-audio shaders js vercel html-css">
+                            <div class="card-side-light" aria-hidden="true"></div>
+                            
+                            <div class="card-visual-slot">
+                                <div class="card-visual-inner">
+                                    <img src="assets/monolith-villa-preview.jpg" alt="Monolith Villa Preview" class="card-preview-img" loading="lazy">
+                                    <div class="card-visual-overlay"></div>
+                                    <span class="badge live-badge visual-badge"><i class="fas fa-cube"></i> Live WebGL 3D</span>
+                                </div>
+                            </div>
+
+                            <div class="card-step-row">
+                                <div class="card-step-badge">06</div>
+                                <div class="card-step-line" aria-hidden="true"></div>
+                            </div>
+
+                            <div class="card-info-slot">
+                                <h3 class="project-title">Monolith Villa ⬡ 3D ArchViz</h3>
+                                <p class="project-summary">
+                                    Sample 3D architectural showcase project built &amp; engineered by Arpit for <strong>Apex Intelligence</strong> (Founded by Antriksh, Co-founded by Arpit) featuring scroll-driven camera interpolation, spatial HUD beacons, and ambient acoustic soundscapes.
+                                </p>
+                                <div class="tech-stack-pills">
+                                    <span data-skill="threejs">Three.js</span>
+                                    <span data-skill="shaders">GLSL Shaders &amp; PBR</span>
+                                    <span data-skill="threejs">3D WebGL</span>
+                                    <span data-skill="web-audio">Web Audio API</span>
+                                    <span data-skill="vercel">Vercel</span>
+                                </div>
+                                <div class="card-links">
+                                    <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="monolith-villa">
+                                        Details <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <a href="https://monolith-villa.vercel.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+                                        Live Site <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
         </section>
 

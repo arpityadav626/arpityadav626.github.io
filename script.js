@@ -533,55 +533,99 @@ revealElements.forEach(el => revealObserver.observe(el));
 
 
 /* ========================================================
-   5. 3D TILT EFFECT & SKIPER 90 GRADIENT HOVER ON CARDS
+   5. SKIPER 104: BIDIRECTIONAL PINNED SCROLL REVEAL ENGINE
+   - Sticky pinned viewport on desktop (page pauses during project exploration)
+   - Sequentially unlocks projects 01 -> 06 as user scrolls down
+   - Seamlessly reverses as user scrolls up (bidirectional loop)
+   - Page unpins and scrolls down once all 6 projects have appeared
+   - Ensures page normally starts from the top on load
 ======================================================== */
-document.querySelectorAll('.project-card').forEach(card => {
-    // Bulletproof: ensure gradient and inner backdrop elements exist
-    if (!card.querySelector('.card-gradient-glow')) {
-        const glow = document.createElement('div');
-        glow.className = 'card-gradient-glow';
-        glow.setAttribute('aria-hidden', 'true');
-        card.prepend(glow);
+(function initSkiper104PinnedScroll() {
+    // 1. Ensure page starts from the very top on load
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
     }
-    if (!card.querySelector('.card-inner-backdrop')) {
-        const backdrop = document.createElement('div');
-        backdrop.className = 'card-inner-backdrop';
-        backdrop.setAttribute('aria-hidden', 'true');
-        card.insertBefore(backdrop, card.children[1] || null);
+    if (!window.location.hash || window.location.hash === '#home' || window.location.hash === '#projects') {
+        window.scrollTo(0, 0);
     }
 
-    const updateGlowAndTilt = (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        // Update mouse-following gradient coordinates
-        card.style.setProperty('--gx', `${x.toFixed(1)}px`);
-        card.style.setProperty('--gy', `${y.toFixed(1)}px`);
+    const scrollSection = document.querySelector('.projects-scroll-section');
+    if (!scrollSection) return;
 
-        if (card.classList.contains('tilt-card')) {
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -5;
-            const rotateY = ((x - centerX) / centerX) * 5;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-5px)`;
+    const cards = Array.from(scrollSection.querySelectorAll('.project-card.card-reveal-item'));
+    const stage1 = document.getElementById('projects-stage-1');
+    const stage2 = document.getElementById('projects-stage-2');
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        cards.forEach(c => c.classList.add('is-revealed'));
+        if (stage2) stage2.classList.add('active-stage');
+        return;
+    }
+
+    let ticking = false;
+
+    function onScroll() {
+        if (!ticking) {
+            requestAnimationFrame(updateScrollState);
+            ticking = true;
         }
-    };
+    }
 
-    card.addEventListener('mouseenter', (e) => {
-        updateGlowAndTilt(e);
-    });
+    function updateScrollState() {
+        ticking = false;
+        const isDesktop = window.innerWidth > 900;
 
-    card.addEventListener('mousemove', (e) => {
-        updateGlowAndTilt(e);
-    });
-
-    card.addEventListener('mouseleave', () => {
-        if (card.classList.contains('tilt-card')) {
-            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+        if (!isDesktop) {
+            // Mobile: natural viewport-based scroll reveal
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.85 && rect.bottom > 0) {
+                    card.classList.add('is-revealed');
+                } else if (rect.top > window.innerHeight * 0.95 || rect.bottom < 0) {
+                    card.classList.remove('is-revealed');
+                }
+            });
+            return;
         }
-    });
-});
+
+        const rect = scrollSection.getBoundingClientRect();
+        const totalDist = scrollSection.offsetHeight - window.innerHeight;
+        if (totalDist <= 0) return;
+
+        // Progress strictly from 0 to 1 inside the pinned section
+        const progress = Math.min(Math.max(-rect.top / totalDist, 0), 1);
+
+        // Switch stages smoothly around progress 0.48
+        const isSet2 = progress >= 0.48;
+        if (isSet2) {
+            if (stage1) stage1.classList.remove('active-stage');
+            if (stage2) stage2.classList.add('active-stage');
+        } else {
+            if (stage2) stage2.classList.remove('active-stage');
+            if (stage1) stage1.classList.add('active-stage');
+        }
+
+        // Two-way unlock thresholds
+        // Stage 1 (Cards 01, 02, 03): 0.04, 0.18, 0.32
+        // Stage 2 (Cards 04, 05, 06): 0.54, 0.68, 0.82
+        const thresholds = [0.04, 0.18, 0.32, 0.54, 0.68, 0.82];
+
+        cards.forEach((card, i) => {
+            const thresh = thresholds[i] || 0;
+            if (progress >= thresh) {
+                card.classList.add('is-revealed');
+            } else {
+                card.classList.remove('is-revealed');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    
+    // Check state immediately
+    updateScrollState();
+})();
 
 /* ========================================================
    6. MOBILE NAVIGATION

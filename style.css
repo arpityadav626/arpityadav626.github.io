@@ -747,101 +747,348 @@ main, .header, .footer {
 /* ========================================================
    PROJECTS (01 - 04)
 ======================================================== */
-.projects-grid {
+/* ========================================================
+   SKIPER 104: BIDIRECTIONAL PINNED SCROLL SYSTEM
+   - Desktop: Sticky viewport pinned for 340vh scroll track
+   - Bidirectional sequential unlocks: 01 -> 06 on scroll down,
+     reverses seamlessly on scroll up
+   - Mobile: Natural responsive flow
+   ======================================================== */
+.projects-scroll-section {
+    position: relative;
+    width: 100%;
+}
+
+@media (min-width: 901px) {
+    .projects-scroll-section {
+        height: 320vh; /* Pinned exploration distance */
+        margin-top: 40px;
+    }
+
+    .projects-sticky-viewport {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        width: 90%;
+        max-width: 1260px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+        z-index: 10;
+        padding: 56px 0 16px 0;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 900px) {
+    .projects-scroll-section {
+        height: auto;
+        width: 90%;
+        max-width: 1200px;
+        margin: 80px auto 0;
+    }
+    .projects-sticky-viewport {
+        position: relative;
+        height: auto;
+    }
+}
+
+.projects-pinned-header {
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 5;
+    text-align: left;
+}
+
+.projects-pinned-header .mono-tag {
+    display: inline-block;
+    margin-bottom: 6px;
+}
+
+/* STAGES CONTAINER */
+.projects-stages-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 520px;
+}
+
+.projects-stage {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 28px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px) scale(0.98);
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.projects-stage.active-stage {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    position: relative;
+}
+
+@media (max-width: 900px) {
+    .projects-stages-wrapper {
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .projects-stage {
+        position: relative !important;
+        grid-template-columns: 1fr;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: none !important;
+    }
 }
 
 /* ========================================================
-   SKIPER 90: LUXURY GRADIENT HOVER CARDS
-   - Mouse-following smooth radial gradient spotlight
-   - Dual-layer: 1.5px glowing gradient border + glass backdrop
-   - Preserves original typography & fonts
+   SKIPER 104: SCROLL REVEAL GRID CARDS WITH PREMIUM SIDE LIGHTS
+   - Pure CSS premium side lights & top reflection rim (zero lag)
+   - 3-Piece scroll reveal: visual drops from top, badge scales,
+     info slides from bottom, timeline line fills
    ======================================================== */
 .project-card {
     position: relative;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 22px;
-    padding: 32px;
+    background: rgba(14, 18, 27, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 16px 18px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.4s ease, 
-                border-color 0.4s ease;
-    transform-style: preserve-3d;
+    gap: 10px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.35s ease, 
+                border-color 0.35s ease;
     isolation: isolate;
 }
 
-/* Mouse-following gradient glow (Skiper 90 signature) */
-.project-card .card-gradient-glow {
+/* 🟢 PREMIUM SIDE LIGHTS (Signature Luminous Edge) */
+.card-side-light {
     position: absolute;
-    width: 440px;
-    height: 440px;
-    left: var(--gx, 50%);
-    top: var(--gy, 50%);
-    transform: translate(-50%, -50%) scale(1);
-    border-radius: 9999px;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, 
+        transparent 0%, 
+        #ffffff 20%, 
+        #818cf8 60%, 
+        transparent 100%
+    );
+    opacity: 0.85;
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.5), -2px 0 12px rgba(129, 140, 248, 0.4);
     pointer-events: none;
-    z-index: 1;
-    opacity: 0;
-    /* Skiper 90 signature 4-stop vibrant gradient */
-    background: linear-gradient(135deg, #3BC4F2 0%, #7A69F9 35%, #F26378 70%, #F5833F 100%);
-    -webkit-mask-image: radial-gradient(220px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 38%, transparent 72%);
-    mask-image: radial-gradient(220px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 38%, transparent 72%);
-    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, left, top, opacity;
+    z-index: 5;
+    transition: opacity 0.35s ease, width 0.35s ease, box-shadow 0.35s ease;
 }
 
-.project-card:hover .card-gradient-glow {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(2.8);
-}
-
-/* Inner card backdrop: reveals 1.5px glowing gradient perimeter & luxury dark glass interior */
-.project-card .card-inner-backdrop {
+/* Top Subtle Glass Reflection Rim */
+.project-card::before {
+    content: '';
     position: absolute;
-    inset: 1.5px;
-    border-radius: 20.5px;
-    background: rgba(14, 17, 24, 0.88);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(255, 255, 255, 0.25) 30%, 
+        rgba(255, 255, 255, 0.05) 70%, 
+        transparent 100%
+    );
     pointer-events: none;
-    transition: background 0.35s ease;
+    z-index: 5;
 }
 
-.project-card:hover .card-inner-backdrop {
-    background: rgba(14, 17, 24, 0.80);
-}
-
-/* Ensure all content elements sit comfortably above the backdrop */
-.project-card > *:not(.card-gradient-glow):not(.card-inner-backdrop) {
-    position: relative;
-    z-index: 3;
-}
-
-/* Card hover glow & subtle ambient aura */
+/* Premium Side Lights: Pure CSS Hover Lift & Brightening */
 .project-card:hover {
-    border-color: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.70), 
-                0 0 35px -5px rgba(122, 105, 249, 0.22),
-                0 0 55px -10px rgba(59, 196, 242, 0.16);
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.20);
+    box-shadow: -4px 0 25px -4px rgba(255, 255, 255, 0.45),
+                0 24px 50px -12px rgba(0, 0, 0, 0.75),
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
 }
 
-.project-card:hover .project-num {
-    color: var(--accent-primary);
-    transform: scale(1.15);
+.project-card:hover .card-side-light {
+    opacity: 1;
+    width: 4px;
+    box-shadow: 0 0 22px rgba(255, 255, 255, 0.8), 0 0 35px rgba(129, 140, 248, 0.5);
 }
 
-.card-top {
+/* 🟢 1. TOP VISUAL SLOT (Drops down on scroll) */
+.card-visual-slot {
+    position: relative;
+    width: 100%;
+    height: clamp(125px, 15vh, 150px);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-35px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.65s ease;
+    will-change: opacity, transform;
+}
+
+.card-visual-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.card-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    display: block;
+}
+
+.project-card:hover .card-preview-img {
+    transform: scale(1.05);
+}
+
+.card-visual-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(14, 18, 27, 0.65) 100%);
+    pointer-events: none;
+}
+
+.visual-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    margin: 0 !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* 🟢 2. STEP INDICATOR & TIMELINE ROW (Pops with progress line on scroll) */
+.card-step-row {
+    position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 22px;
+    gap: 12px;
+    margin: 2px 0;
+}
+
+.card-step-badge {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #0b0d14;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.2);
+    transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                opacity 0.65s ease,
+                visibility 0.65s ease,
+                box-shadow 0.4s ease;
+    will-change: transform, opacity;
+    z-index: 2;
+}
+
+.card-step-line {
+    flex: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.card-step-line::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.4));
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 🟢 3. BOTTOM INFO SLOT (Slides up on scroll) */
+.card-info-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    justify-content: space-between;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(35px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.65s ease;
+    will-change: opacity, transform;
+}
+
+/* 🟢 REVEALED STATE (Activated sequentially on scroll) */
+.project-card.is-revealed .card-visual-slot {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.project-card.is-revealed .card-step-badge {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+    box-shadow: 0 0 18px rgba(var(--accent-primary-rgb), 0.65);
+}
+
+.project-card.is-revealed .card-step-line {
+    opacity: 1;
+}
+
+.project-card.is-revealed .card-step-line::after {
+    transform: scaleX(1);
+}
+
+.project-card.is-revealed .card-info-slot {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
 }
 
 .project-num {
@@ -910,30 +1157,34 @@ main, .header, .footer {
 }
 
 .project-title {
-    font-size: 24px;
+    font-size: clamp(18px, 2vw, 21px);
     font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 12px;
+    letter-spacing: -0.4px;
+    margin-bottom: 4px;
 }
 
 .project-summary {
     color: var(--text-secondary);
-    font-size: 14.5px;
-    line-height: 1.6;
-    margin-bottom: 24px;
+    font-size: 13px;
+    line-height: 1.45;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .tech-stack-pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 28px;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 
 .tech-stack-pills span {
     font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 4px 10px;
+    font-size: 10.5px;
+    padding: 3px 8px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-subtle);
     border-radius: 6px;
@@ -942,7 +1193,8 @@ main, .header, .footer {
 
 .card-links {
     display: flex;
-    gap: 12px;
+    gap: 10px;
+    margin-top: auto;
 }
 
 .card-btn {
@@ -950,16 +1202,16 @@ main, .header, .footer {
     position: relative;
     overflow: hidden;
     text-align: center;
-    padding: 11px 16px;
+    padding: 8px 12px;
     border-radius: 8px;
-    font-size: 13.5px;
+    font-size: 12.5px;
     font-weight: 600;
     text-decoration: none;
     transition: var(--transition);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .card-btn.primary {
@@ -2668,24 +2920,43 @@ body[data-mode="light"] .hero {
 
 /* 3. Project Cards & Links */
 body[data-mode="light"] .project-card {
-    background: rgba(0, 0, 0, 0.04);
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.09);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+body[data-mode="light"] .card-side-light {
+    background: linear-gradient(180deg, transparent 0%, #0f172a 25%, #334155 70%, transparent 100%);
+    box-shadow: 0 0 10px rgba(15, 23, 42, 0.25);
+}
+
+body[data-mode="light"] .card-visual-slot {
+    background: #f1f5f9;
     border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
-body[data-mode="light"] .project-card .card-inner-backdrop {
-    background: rgba(255, 255, 255, 0.92);
+body[data-mode="light"] .card-visual-overlay {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(15, 23, 42, 0.15) 100%);
 }
 
-body[data-mode="light"] .project-card:hover .card-inner-backdrop {
-    background: rgba(255, 255, 255, 0.85);
+body[data-mode="light"] .card-step-badge {
+    background: #0f172a !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(15, 23, 42, 0.15);
+}
+
+body[data-mode="light"] .card-step-line {
+    background: rgba(15, 23, 42, 0.10);
+}
+
+body[data-mode="light"] .card-step-line::after {
+    background: linear-gradient(90deg, #0f172a, #334155);
 }
 
 body[data-mode="light"] .project-card:hover {
-    border-color: rgba(15, 23, 42, 0.16);
-    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.10),
-                0 0 35px -5px rgba(122, 105, 249, 0.16), 
-                0 0 55px -10px rgba(59, 196, 242, 0.12);
+    border-color: rgba(15, 23, 42, 0.22);
+    box-shadow: -3px 0 20px rgba(15, 23, 42, 0.14), 0 20px 45px rgba(0, 0, 0, 0.08);
 }
 
 body[data-mode="light"] .project-title {
