@@ -533,25 +533,53 @@ revealElements.forEach(el => revealObserver.observe(el));
 
 
 /* ========================================================
-   5. 3D TILT EFFECT ON CARDS
+   5. 3D TILT EFFECT & SKIPER 90 GRADIENT HOVER ON CARDS
 ======================================================== */
-document.querySelectorAll('.tilt-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
+document.querySelectorAll('.project-card').forEach(card => {
+    // Bulletproof: ensure gradient and inner backdrop elements exist
+    if (!card.querySelector('.card-gradient-glow')) {
+        const glow = document.createElement('div');
+        glow.className = 'card-gradient-glow';
+        glow.setAttribute('aria-hidden', 'true');
+        card.prepend(glow);
+    }
+    if (!card.querySelector('.card-inner-backdrop')) {
+        const backdrop = document.createElement('div');
+        backdrop.className = 'card-inner-backdrop';
+        backdrop.setAttribute('aria-hidden', 'true');
+        card.insertBefore(backdrop, card.children[1] || null);
+    }
+
+    const updateGlowAndTilt = (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = ((y - centerY) / centerY) * -6;
-        const rotateY = ((x - centerX) / centerX) * 6;
+        // Update mouse-following gradient coordinates
+        card.style.setProperty('--gx', `${x.toFixed(1)}px`);
+        card.style.setProperty('--gy', `${y.toFixed(1)}px`);
 
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        if (card.classList.contains('tilt-card')) {
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -5;
+            const rotateY = ((x - centerX) / centerX) * 5;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-5px)`;
+        }
+    };
+
+    card.addEventListener('mouseenter', (e) => {
+        updateGlowAndTilt(e);
+    });
+
+    card.addEventListener('mousemove', (e) => {
+        updateGlowAndTilt(e);
     });
 
     card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+        if (card.classList.contains('tilt-card')) {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+        }
     });
 });
 

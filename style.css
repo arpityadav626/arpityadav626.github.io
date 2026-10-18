@@ -753,47 +753,83 @@ main, .header, .footer {
     gap: 28px;
 }
 
+/* ========================================================
+   SKIPER 90: LUXURY GRADIENT HOVER CARDS
+   - Mouse-following smooth radial gradient spotlight
+   - Dual-layer: 1.5px glowing gradient border + glass backdrop
+   - Preserves original typography & fonts
+   ======================================================== */
 .project-card {
     position: relative;
     overflow: hidden;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
     padding: 32px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
                 box-shadow 0.4s ease, 
-                border-color 0.4s ease, 
-                background 0.4s ease;
+                border-color 0.4s ease;
     transform-style: preserve-3d;
+    isolation: isolate;
 }
 
-/* Glass shine light beam effect on card hover */
-.project-card::before {
-    content: '';
+/* Mouse-following gradient glow (Skiper 90 signature) */
+.project-card .card-gradient-glow {
     position: absolute;
-    top: 0;
-    left: -140%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.75s ease;
+    width: 440px;
+    height: 440px;
+    left: var(--gx, 50%);
+    top: var(--gy, 50%);
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 9999px;
     pointer-events: none;
     z-index: 1;
+    opacity: 0;
+    /* Skiper 90 signature 4-stop vibrant gradient */
+    background: linear-gradient(135deg, #3BC4F2 0%, #7A69F9 35%, #F26378 70%, #F5833F 100%);
+    -webkit-mask-image: radial-gradient(220px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 38%, transparent 72%);
+    mask-image: radial-gradient(220px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 38%, transparent 72%);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, left, top, opacity;
 }
 
-.project-card:hover::before {
-    left: 200%;
+.project-card:hover .card-gradient-glow {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(2.8);
 }
 
-/* Clean Luxury Monochrome Card Hover Glow */
+/* Inner card backdrop: reveals 1.5px glowing gradient perimeter & luxury dark glass interior */
+.project-card .card-inner-backdrop {
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 20.5px;
+    background: rgba(14, 17, 24, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 2;
+    pointer-events: none;
+    transition: background 0.35s ease;
+}
+
+.project-card:hover .card-inner-backdrop {
+    background: rgba(14, 17, 24, 0.80);
+}
+
+/* Ensure all content elements sit comfortably above the backdrop */
+.project-card > *:not(.card-gradient-glow):not(.card-inner-backdrop) {
+    position: relative;
+    z-index: 3;
+}
+
+/* Card hover glow & subtle ambient aura */
 .project-card:hover {
-    border-color: rgba(255, 255, 255, 0.32);
-    background: #171a24;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 24px rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.70), 
+                0 0 35px -5px rgba(122, 105, 249, 0.22),
+                0 0 55px -10px rgba(59, 196, 242, 0.16);
 }
 
 .project-card:hover .project-num {
@@ -2632,14 +2668,24 @@ body[data-mode="light"] .hero {
 
 /* 3. Project Cards & Links */
 body[data-mode="light"] .project-card {
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.09);
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
+body[data-mode="light"] .project-card .card-inner-backdrop {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+body[data-mode="light"] .project-card:hover .card-inner-backdrop {
+    background: rgba(255, 255, 255, 0.85);
+}
+
 body[data-mode="light"] .project-card:hover {
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0, 0, 0, 0.03);
-    border-color: rgba(15, 23, 42, 0.28);
+    border-color: rgba(15, 23, 42, 0.16);
+    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.10),
+                0 0 35px -5px rgba(122, 105, 249, 0.16), 
+                0 0 55px -10px rgba(59, 196, 242, 0.12);
 }
 
 body[data-mode="light"] .project-title {
