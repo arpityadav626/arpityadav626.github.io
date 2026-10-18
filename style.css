@@ -3202,6 +3202,98 @@ button:hover > .roll-text .roll-clone .roll-char {
     transform: translateY(-100%);
 }
 
+/* ========================================================
+   19. CROWD CANVAS ANIMATION (SKIPER 39)
+   Pure Canvas Walking Crowd Simulation at End of Site
+======================================================== */
+.crowd-canvas-section {
+    width: 100%;
+    position: relative;
+    margin-top: 100px;
+    padding-top: 40px;
+    overflow: hidden;
+    background: transparent;
+}
+
+.crowd-canvas-inner {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.crowd-header {
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+}
+
+.crowd-header .mono-tag {
+    margin-bottom: 8px;
+}
+
+.crowd-title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.crowd-subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.crowd-canvas-wrapper {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+.crowd-canvas {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* In dark mode: invert black line art to crisp white */
+    filter: invert(1) brightness(1.2);
+    transition: filter 0.4s ease;
+}
+
+/* Light mode support: keep hand-drawn black ink original */
+body[data-mode="light"] .crowd-canvas-wrapper {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+body[data-mode="light"] .crowd-canvas {
+    filter: none;
+}
+
+@media (max-width: 768px) {
+    .crowd-canvas-wrapper {
+        height: 280px;
+        border-radius: 18px;
+    }
+    .crowd-title {
+        font-size: 24px;
+    }
+}
+
 /* Accessibility: respect user prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
     .roll-clone {
@@ -3210,5 +3302,8 @@ button:hover > .roll-text .roll-clone .roll-char {
     .roll-char {
         transition: none !important;
         transform: none !important;
+    }
+    .crowd-canvas-wrapper {
+        display: none !important;
     }
 }

@@ -2278,3 +2278,260 @@ if (document.readyState === 'loading') {
 } else {
     initSkiper58TextRoll();
 }
+
+/* ========================================================
+   19. CROWD CANVAS ANIMATION ENGINE (SKIPER 39)
+   High-Performance Pure HTML5 Canvas Crowd Walking Engine
+======================================================== */
+(function initCrowdCanvas() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const canvas = document.getElementById('crowd-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const config = {
+        src: 'assets/all-peeps.png',
+        rows: 15,
+        cols: 7,
+    };
+
+    const randomRange = (min, max) => min + Math.random() * (max - min);
+    const randomIndex = (array) => (randomRange(0, array.length) | 0);
+    const removeFromArray = (array, i) => array.splice(i, 1)[0];
+    const removeItemFromArray = (array, item) => removeFromArray(array, array.indexOf(item));
+    const removeRandomFromArray = (array) => removeFromArray(array, randomIndex(array));
+
+    const stage = { width: 0, height: 0 };
+    const allPeeps = [];
+    const availablePeeps = [];
+    const crowd = [];
+
+    const img = new Image();
+
+    const createPeep = (rect) => {
+        const p = {
+            rect: rect,
+            width: rect[2],
+            height: rect[3],
+            x: 0,
+            y: 0,
+            anchorY: 0,
+            scaleX: 1,
+            // Custom walk parameters (native RAF, zero GSAP dependency)
+            startX: 0,
+            endX: 0,
+            startY: 0,
+            duration: 10,
+            speed: 1,
+            progress: 0,
+            bobSpeed: 0.4,
+            
+            initWalk: function(stg) {
+                const direction = Math.random() > 0.5 ? 1 : -1;
+                // Power2.in distribution for natural perspective layering
+                const r = Math.random();
+                const easeIn = r * r;
+                const offsetY = 70 - 210 * easeIn;
+                const sY = Math.max(30, stg.height - p.height + offsetY);
+                
+                if (direction === 1) {
+                    p.startX = -p.width;
+                    p.endX = stg.width + p.width;
+                    p.scaleX = 1;
+                } else {
+                    p.startX = stg.width + p.width;
+                    p.endX = -p.width;
+                    p.scaleX = -1;
+                }
+                
+                p.startY = sY;
+                p.anchorY = sY;
+                p.x = p.startX;
+                p.y = sY;
+                p.speed = randomRange(0.65, 1.15);
+                // Calmer, slower walking speed across the section
+                const baseDuration = stg.width > 900 ? 22 : 16;
+                p.duration = baseDuration / p.speed;
+                p.progress = 0;
+            },
+
+            update: function(dt) {
+                p.progress += dt / p.duration;
+                if (p.progress >= 1) return false; // completed
+
+                // Linear horizontal motion
+                p.x = p.startX + (p.endX - p.startX) * p.progress;
+                // Natural gentle bounce step cycle
+                const bounce = Math.abs(Math.sin((p.progress * p.duration) / p.bobSpeed * Math.PI));
+                p.y = p.startY - bounce * 6;
+                return true;
+            },
+
+            render: function(context) {
+                context.save();
+                context.translate(p.x, p.y);
+                context.scale(p.scaleX, 1);
+                context.drawImage(
+                    img,
+                    p.rect[0],
+                    p.rect[1],
+                    p.rect[2],
+                    p.rect[3],
+                    0,
+                    0,
+                    p.width,
+                    p.height
+                );
+                context.restore();
+            }
+        };
+        return p;
+    };
+
+    const createPeeps = () => {
+        const { rows, cols } = config;
+        const width = img.naturalWidth || 1050;
+        const height = img.naturalHeight || 560;
+        const total = rows * cols;
+        const rectWidth = width / rows;
+        const rectHeight = height / cols;
+
+        allPeeps.length = 0;
+        for (let i = 0; i < total; i++) {
+            allPeeps.push(
+                createPeep([
+                    (i % rows) * rectWidth,
+                    ((i / rows) | 0) * rectHeight,
+                    rectWidth,
+                    rectHeight,
+                ])
+            );
+        }
+    };
+
+    const addPeepToCrowd = (randomizeProgress = false) => {
+        if (!availablePeeps.length) return null;
+        const peep = removeRandomFromArray(availablePeeps);
+        peep.initWalk(stage);
+        if (randomizeProgress) {
+            peep.progress = Math.random();
+            peep.x = peep.startX + (peep.endX - peep.startX) * peep.progress;
+        }
+        crowd.push(peep);
+        // Sort by anchorY for true perspective depth (closer people render in front)
+        crowd.sort((a, b) => a.anchorY - b.anchorY);
+        return peep;
+    };
+
+    const removePeepFromCrowd = (peep) => {
+        removeItemFromArray(crowd, peep);
+        availablePeeps.push(peep);
+    };
+
+    const initCrowd = () => {
+        // Rich crowd density with smooth 60fps performance
+        const targetCount = stage.width > 900 ? 38 : 20;
+        while (availablePeeps.length && crowd.length < targetCount) {
+            addPeepToCrowd(true);
+        }
+    };
+
+    const resize = () => {
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        stage.width = rect.width || canvas.clientWidth || 800;
+        stage.height = rect.height || canvas.clientHeight || 350;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(stage.width * dpr);
+        canvas.height = Math.floor(stage.height * dpr);
+
+        crowd.length = 0;
+        availablePeeps.length = 0;
+        availablePeeps.push(...allPeeps);
+
+        initCrowd();
+    };
+
+    let isVisible = false;
+    let animId = null;
+    let lastTime = 0;
+
+    const render = (time) => {
+        if (!isVisible) return;
+        animId = requestAnimationFrame(render);
+
+        if (!lastTime) lastTime = time;
+        let dt = (time - lastTime) / 1000;
+        lastTime = time;
+        if (dt > 0.05) dt = 0.05; // clamp
+
+        // Update crowd
+        for (let i = crowd.length - 1; i >= 0; i--) {
+            const peep = crowd[i];
+            const alive = peep.update(dt);
+            if (!alive) {
+                removePeepFromCrowd(peep);
+                addPeepToCrowd(false);
+            }
+        }
+
+        // Render frame
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.scale(dpr, dpr);
+
+        for (let i = 0; i < crowd.length; i++) {
+            crowd[i].render(ctx);
+        }
+
+        ctx.restore();
+    };
+
+    const start = () => {
+        if (isVisible) return;
+        isVisible = true;
+        lastTime = 0;
+        animId = requestAnimationFrame(render);
+    };
+
+    const stop = () => {
+        isVisible = false;
+        if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+        }
+    };
+
+    // Smart IntersectionObserver: only consumes CPU/GPU when user scrolls to bottom!
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    start();
+                } else {
+                    stop();
+                }
+            });
+        }, { threshold: 0.05 });
+        observer.observe(canvas);
+    } else {
+        start();
+    }
+
+    img.onload = () => {
+        createPeeps();
+        resize();
+    };
+    img.src = config.src;
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resize, 150);
+    }, { passive: true });
+})();
