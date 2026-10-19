@@ -4162,3 +4162,186 @@ body[data-mode="light"] .copy-toast-bubble::after {
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 6px 18px -4px rgba(255, 255, 255, 0.15);
 }
+
+/* ======================================================================
+   🟢 25. SKIPER 31: SCROLL ANIMATION 002 (Black Theme Luxury)
+   - 3D explosive CharacterV1 typography
+   - Curved arc to dock row CharacterV2 icons
+   - 3D rotated & arched CharacterV3 icons
+   ====================================================================== */
+.skiper31-scroll-section {
+    position: relative;
+    width: 100%;
+    background: #080b12;
+    color: #ffffff;
+    overflow: hidden;
+    margin-top: 80px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 2;
+}
+
+.skiper31-stage {
+    position: relative;
+    width: 100%;
+    height: 160vh;
+    box-sizing: border-box;
+}
+
+.skiper31-stage-2,
+.skiper31-stage-3 {
+    margin-top: 0;
+}
+
+.skiper31-guide-indicator {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.skiper31-guide-text {
+    font-size: 11.5px;
+    font-family: var(--font-mono, monospace);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    white-space: nowrap;
+}
+
+.skiper31-guide-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, transparent 100%);
+}
+
+.skiper31-sticky-container {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 24px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.skiper31-char-wrapper {
+    width: 100%;
+    max-width: 1100px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    will-change: transform;
+}
+
+.skiper31-char {
+    display: inline-block;
+    font-size: clamp(28px, 5.2vw, 76px);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    color: #f97316; /* text-orange-500 matching Skiper 31 */
+    text-shadow: 0 0 28px rgba(249, 115, 22, 0.5);
+    will-change: transform;
+    transform-origin: center;
+}
+
+.skiper31-char.is-space {
+    width: clamp(12px, 2vw, 28px);
+}
+
+.skiper31-tech-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-size: clamp(16px, 2.2vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin: 0;
+    text-transform: lowercase;
+}
+
+.skiper31-bracket {
+    height: clamp(30px, 4vw, 44px);
+    width: auto;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.skiper31-bracket-flip {
+    transform: scaleX(-1);
+}
+
+.skiper31-icons-row {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2.2vw, 32px);
+    will-change: transform;
+}
+
+.skiper31-icon-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(48px, 6vw, 80px);
+    height: clamp(48px, 6vw, 80px);
+    border-radius: 20px;
+    will-change: transform;
+    transform-origin: center;
+    transition: filter 0.25s ease, transform 0.25s ease;
+    cursor: pointer;
+}
+
+.skiper31-icon-item:hover {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6)) scale(1.1);
+}
+
+.skiper31-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 20px;
+    display: block;
+}
+
+/* Light Mode support: subtle cream luxury background */
+body[data-mode="light"] .skiper31-scroll-section {
+    background: #f5f4f3;
+    color: #000000;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body[data-mode="light"] .skiper31-guide-text {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+body[data-mode="light"] .skiper31-guide-line {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+}
+
+body[data-mode="light"] .skiper31-tech-title {
+    color: #000000;
+}
+
+body[data-mode="light"] .skiper31-bracket {
+    color: #000000;
+}

@@ -2985,4 +2985,150 @@ if (document.readyState === 'loading') {
     items.forEach(item => {
         item.addEventListener('click', () => executeItem(item));
     });
-})();
+})();
+
+/* ========================================================
+   🟢 SKIPER 31: SCROLL CONVERGE ANIMATION (Black Theme)
+   - Stage 1: CharacterV1 3D letters ("see more from gxuri")
+   - Stage 2: CharacterV2 Mac tech stack dock convergence
+   - Stage 3: CharacterV3 3D rotated & arched icon snap
+   ======================================================== */
+function initSkiper31() {
+    const stage1 = document.getElementById('skiper31-stage-1');
+    const stage2 = document.getElementById('skiper31-stage-2');
+    const stage3 = document.getElementById('skiper31-stage-3');
+    const charRow = document.getElementById('skiper31-char-row');
+    const iconsRow1 = document.getElementById('skiper31-icons-row-1');
+    const iconsRow2 = document.getElementById('skiper31-icons-row-2');
+
+    if (!stage1 || !charRow || !iconsRow1 || !iconsRow2) return;
+
+    const text = "see more from gxuri";
+    const characters = text.split("");
+    const centerIndex = Math.floor(characters.length / 2);
+
+    const macIcons = [
+        { name: 'Discord', src: 'assets/mac/Discord.svg' },
+        { name: 'Figma', src: 'assets/mac/figma.svg' },
+        { name: 'Framer', src: 'assets/mac/Framer.svg' },
+        { name: 'GitHub', src: 'assets/mac/Github.svg' },
+        { name: 'MongoDB', src: 'assets/mac/Monog.svg' },
+        { name: 'Notion', src: 'assets/mac/notion.svg' },
+        { name: 'Pieces', src: 'assets/mac/Pieces.svg' },
+        { name: 'Postman', src: 'assets/mac/Postman.svg' },
+        { name: 'VS Code', src: 'assets/mac/vsCode.svg' }
+    ];
+    const iconCenterIndex = Math.floor(macIcons.length / 2);
+
+    // 1. Populate Characters
+    charRow.innerHTML = '';
+    const charElements = [];
+    characters.forEach((char, index) => {
+        const span = document.createElement('span');
+        span.className = `skiper31-char ${char === ' ' ? 'is-space' : ''}`;
+        span.textContent = char;
+        charRow.appendChild(span);
+        charElements.push({
+            el: span,
+            distance: index - centerIndex
+        });
+    });
+
+    // 2. Populate Icons for Stage 2 (CharacterV2)
+    iconsRow1.innerHTML = '';
+    const iconV2Elements = [];
+    macIcons.forEach((item, index) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'skiper31-icon-item sound-hover';
+        wrap.title = item.name;
+        wrap.innerHTML = `<img src="${item.src}" alt="${item.name}" class="skiper31-icon-img" loading="lazy">`;
+        iconsRow1.appendChild(wrap);
+        iconV2Elements.push({
+            el: wrap,
+            distance: index - iconCenterIndex
+        });
+    });
+
+    // 3. Populate Icons for Stage 3 (CharacterV3)
+    iconsRow2.innerHTML = '';
+    const iconV3Elements = [];
+    macIcons.forEach((item, index) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'skiper31-icon-item sound-hover';
+        wrap.title = item.name;
+        wrap.innerHTML = `<img src="${item.src}" alt="${item.name}" class="skiper31-icon-img" loading="lazy">`;
+        iconsRow2.appendChild(wrap);
+        iconV3Elements.push({
+            el: wrap,
+            distance: index - iconCenterIndex
+        });
+    });
+
+    function getStageProgress(el) {
+        const rect = el.getBoundingClientRect();
+        const total = el.offsetHeight - window.innerHeight;
+        if (total <= 0) return 0;
+        const current = -rect.top;
+        return Math.min(Math.max(current / total, 0), 1);
+    }
+
+    let ticking = false;
+
+    function updateSkiper31() {
+        ticking = false;
+
+        // Stage 1: CharacterV1
+        // [0, 0.5] -> [distanceFromCenter * 50, 0]
+        const p1 = getStageProgress(stage1);
+        const factor1 = 1 - Math.min(p1 / 0.5, 1);
+        charElements.forEach(({ el, distance }) => {
+            const x = distance * 50 * factor1;
+            const rotX = distance * 50 * factor1;
+            el.style.transform = `translateX(${x}px) rotateX(${rotX}deg)`;
+        });
+
+        // Stage 2: CharacterV2
+        // x: [distanceFromCenter * 50, 0]
+        // scale: [0.75, 1]
+        // y: [|distanceFromCenter| * 50, 0]
+        if (stage2) {
+            const p2 = getStageProgress(stage2);
+            const factor2 = 1 - Math.min(p2 / 0.5, 1);
+            const scale2 = 0.75 + (0.25 * (1 - factor2));
+            iconV2Elements.forEach(({ el, distance }) => {
+                const x = distance * 50 * factor2;
+                const y = Math.abs(distance) * 50 * factor2;
+                el.style.transform = `translateX(${x}px) translateY(${y}px) scale(${scale2})`;
+            });
+        }
+
+        // Stage 3: CharacterV3
+        // x: [distanceFromCenter * 90, 0]
+        // rotate: [distanceFromCenter * 50, 0]
+        // y: [-|distanceFromCenter| * 20, 0]
+        // scale: [0.75, 1]
+        if (stage3) {
+            const p3 = getStageProgress(stage3);
+            const factor3 = 1 - Math.min(p3 / 0.5, 1);
+            const scale3 = 0.75 + (0.25 * (1 - factor3));
+            iconV3Elements.forEach(({ el, distance }) => {
+                const x = distance * 90 * factor3;
+                const rotate = distance * 50 * factor3;
+                const y = -Math.abs(distance) * 20 * factor3;
+                el.style.transform = `translateX(${x}px) translateY(${y}px) rotate(${rotate}deg) scale(${scale3})`;
+            });
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(updateSkiper31);
+            ticking = true;
+        }
+    }, { passive: true });
+
+    window.addEventListener('resize', updateSkiper31, { passive: true });
+    updateSkiper31();
+}
+
+initSkiper31();
