@@ -3037,21 +3037,20 @@ body[data-mode="light"] .hero-sylva-backdrop {
 body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
     display: block !important;
     position: absolute;
-    top: var(--stroke-start-y, 720px);
-    right: -20px;
-    width: clamp(520px, 60vw, 1100px);
-    height: calc(100% - var(--stroke-start-y, 720px));
+    top: var(--stroke-start-y, 723px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: calc(100% - var(--stroke-start-y, 723px));
     pointer-events: none;
     z-index: 0;
     overflow: visible;
-    opacity: 0.92;
+    opacity: 0.95;
 }
 
 @media (max-width: 768px) {
     body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
-        width: clamp(340px, 85vw, 650px);
-        right: -10px;
-        opacity: 0.75;
+        opacity: 0.85;
     }
 }
 
@@ -3073,7 +3072,7 @@ body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
     stroke-width: 14px;
     stroke-linecap: round;
     stroke-linejoin: round;
-    filter: drop-shadow(0 0 14px rgba(122, 105, 249, 0.32));
+    filter: drop-shadow(0 0 16px rgba(122, 105, 249, 0.40));
     transition: stroke-dashoffset 0.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -3083,13 +3082,17 @@ body[data-mode="light"] .hero {
 
 /* 3. Project Cards & Links */
 body[data-mode="light"] .project-card {
-    background: rgba(15, 23, 42, 0.06);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border: 1px solid rgba(15, 23, 42, 0.12);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 body[data-mode="light"] .card-inset-bg {
-    background: rgba(255, 255, 255, 0.86);
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 body[data-mode="light"] .card-side-light {

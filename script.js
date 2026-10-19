@@ -724,15 +724,15 @@ function initSkiper19ScrollStroke() {
         if (activeRange <= 0) return;
 
         if (scrollY < startY) {
-            // Above projects: Hero section is clean, stroke loop is primed at 50% below hero
-            path.style.strokeDashoffset = `${pathLength * 0.5}`;
+            // Above projects: Hero section is clean, stroke is 0% drawn
+            path.style.strokeDashoffset = `${pathLength}`;
             return;
         }
 
         // Below hero: as user scrolls from #projects to footer, progress goes 0 -> 1
-        // Mapping exactly to Skiper 19's [0.5, 1.0] range so the stroke weaves all the way down
+        // Smoothly draws across the entire site from projects through to footer
         const progress = Math.min(Math.max((scrollY - startY) / activeRange, 0), 1);
-        const currentProgress = 0.5 + (progress * 0.5);
+        const currentProgress = 0.08 + (progress * 0.92);
         const drawLength = pathLength * currentProgress;
         path.style.strokeDashoffset = `${pathLength - drawLength}`;
     }
