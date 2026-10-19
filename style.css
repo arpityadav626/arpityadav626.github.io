@@ -853,28 +853,72 @@ main, .header, .footer {
 }
 
 /* ========================================================
-   SKIPER 104: SCROLL REVEAL GRID CARDS WITH PREMIUM SIDE LIGHTS
-   - Pure CSS premium side lights & top reflection rim (zero lag)
+   SKIPER 90 + SKIPER 104: GRADIENT HOVER CARDS WITH PREMIUM ACCENTS
+   - Mouse-following chromatic gradient orb (Skiper 90)
+   - Luminous 1.5px perimeter gap + frosted glass inset backdrop
    - 3-Piece scroll reveal: visual drops from top, badge scales,
      info slides from bottom, timeline line fills
    ======================================================== */
 .project-card {
     position: relative;
     overflow: hidden;
-    background: rgba(14, 18, 27, 0.78);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 20px;
     padding: 16px 18px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
                 box-shadow 0.35s ease, 
                 border-color 0.35s ease;
     isolation: isolate;
+}
+
+/* 🟢 SKIPER 90: SIGNATURE MOUSE-FOLLOWING GRADIENT ORB */
+.card-gradient-orb {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3BC4F2 0%, #7A69F9 35%, #F26378 70%, #F5833F 100%);
+    -webkit-mask-image: radial-gradient(210px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.6) 45%, transparent 75%);
+    mask-image: radial-gradient(210px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.6) 45%, transparent 75%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: left, top, opacity, transform;
+}
+
+.project-card:hover .card-gradient-orb {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(2.6);
+}
+
+/* 🟢 INSET BACKDROP (Exposes glowing 1.5px border while providing deep translucent glass body) */
+.card-inset-bg {
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 18.5px;
+    background: rgba(14, 18, 27, 0.80);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    pointer-events: none;
+    z-index: 2;
+    transition: background 0.35s ease, opacity 0.35s ease;
+}
+
+/* Card Content Elevation */
+.card-visual-slot,
+.card-step-row,
+.card-info-slot {
+    position: relative;
+    z-index: 4;
 }
 
 /* 🟢 PREMIUM SIDE LIGHTS (Signature Luminous Edge) */
@@ -915,13 +959,12 @@ main, .header, .footer {
     z-index: 5;
 }
 
-/* Premium Side Lights: Pure CSS Hover Lift & Brightening */
+/* Premium Hover Lift & Dynamic Lighting */
 .project-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.20);
-    box-shadow: -4px 0 25px -4px rgba(255, 255, 255, 0.45),
-                0 24px 50px -12px rgba(0, 0, 0, 0.75),
-                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    border-color: rgba(255, 255, 255, 0.32);
+    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.75),
+                0 0 35px -5px rgba(122, 105, 249, 0.35);
 }
 
 .project-card:hover .card-side-light {
@@ -2961,9 +3004,13 @@ body[data-mode="light"] .hero {
 
 /* 3. Project Cards & Links */
 body[data-mode="light"] .project-card {
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.09);
+    background: rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(15, 23, 42, 0.12);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+body[data-mode="light"] .card-inset-bg {
+    background: rgba(255, 255, 255, 0.86);
 }
 
 body[data-mode="light"] .card-side-light {
@@ -2996,8 +3043,8 @@ body[data-mode="light"] .card-step-line::after {
 }
 
 body[data-mode="light"] .project-card:hover {
-    border-color: rgba(15, 23, 42, 0.22);
-    box-shadow: -3px 0 20px rgba(15, 23, 42, 0.14), 0 20px 45px rgba(0, 0, 0, 0.08);
+    border-color: rgba(122, 105, 249, 0.35);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08), 0 0 30px -5px rgba(122, 105, 249, 0.25);
 }
 
 body[data-mode="light"] .project-title {

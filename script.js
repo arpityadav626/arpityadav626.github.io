@@ -628,6 +628,59 @@ revealElements.forEach(el => revealObserver.observe(el));
 })();
 
 /* ========================================================
+   SKIPER 90: GRADIENT HOVER CARDS (Mouse-Following Orb)
+   Smooth 60/120fps mouse tracking per card via RAF
+   ======================================================== */
+function initGradientHoverCards() {
+    const cards = document.querySelectorAll('.project-card');
+    if (!cards.length) return;
+
+    cards.forEach(card => {
+        const orb = card.querySelector('.card-gradient-orb');
+        if (!orb) return;
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let isHovered = false;
+        let rafId = null;
+
+        const updateOrb = () => {
+            if (isHovered) {
+                orb.style.left = `${mouseX}px`;
+                orb.style.top = `${mouseY}px`;
+                orb.style.opacity = '1';
+                rafId = requestAnimationFrame(updateOrb);
+            }
+        };
+
+        card.addEventListener('mouseenter', (e) => {
+            isHovered = true;
+            const rect = card.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+            orb.style.left = `${mouseX}px`;
+            orb.style.top = `${mouseY}px`;
+            orb.style.opacity = '1';
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(updateOrb);
+        });
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            isHovered = false;
+            cancelAnimationFrame(rafId);
+            orb.style.opacity = '0';
+        });
+    });
+}
+initGradientHoverCards();
+
+/* ========================================================
    6. MOBILE NAVIGATION
 ======================================================== */
 const menuToggle = document.getElementById('menu-toggle');
