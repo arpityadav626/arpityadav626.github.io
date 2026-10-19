@@ -681,8 +681,60 @@ function initGradientHoverCards() {
 initGradientHoverCards();
 
 /* ========================================================
-   6. MOBILE NAVIGATION
-======================================================== */
+   SKIPER 19: SVG FOLLOW SCROLL PATH (Smooth Scroll Stroke)
+   Animates stroke-dashoffset on the organic winding path as user scrolls in Light Mode
+   ======================================================== */
+function initSkiper19ScrollStroke() {
+    const path = document.getElementById('skiper19-active-path');
+    if (!path) return;
+
+    let pathLength = 0;
+    try {
+        pathLength = path.getTotalLength();
+    } catch (e) {
+        return;
+    }
+
+    path.style.strokeDasharray = `${pathLength} ${pathLength}`;
+    // Initialize with 45% drawn at the top, matching Skiper 19's [0.5, 1] range!
+    path.style.strokeDashoffset = `${pathLength * 0.55}`;
+
+    let ticking = false;
+
+    function onScrollUpdate() {
+        ticking = false;
+        if (document.body.getAttribute('data-mode') !== 'light') return;
+
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (maxScroll <= 0) return;
+
+        const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+        // Map from 0.45 at top to 1.0 at bottom
+        const currentProgress = 0.45 + (progress * 0.55);
+        const drawLength = pathLength * currentProgress;
+        path.style.strokeDashoffset = `${pathLength - drawLength}`;
+    }
+
+    window.updateSkiper19ScrollStroke = onScrollUpdate;
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(onScrollUpdate);
+            ticking = true;
+        }
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+        try {
+            pathLength = path.getTotalLength();
+            path.style.strokeDasharray = `${pathLength} ${pathLength}`;
+        } catch (e) {}
+        onScrollUpdate();
+    }, { passive: true });
+
+    onScrollUpdate();
+}
+initSkiper19ScrollStroke();
 const menuToggle = document.getElementById('menu-toggle');
 const navbar = document.getElementById('navbar');
 
@@ -1373,6 +1425,10 @@ function setDisplayMode(mode) {
 
     if (typeof window.updateHeroLiquidTheme === 'function') {
         window.updateHeroLiquidTheme();
+    }
+
+    if (typeof window.updateSkiper19ScrollStroke === 'function') {
+        window.updateSkiper19ScrollStroke();
     }
 }
 

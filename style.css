@@ -626,6 +626,10 @@ main, .header, .footer {
     display: none;
 }
 
+.skiper19-scroll-canvas-wrapper {
+    display: none;
+}
+
 .hero-left {
     position: relative;
     z-index: 2;
@@ -3027,6 +3031,42 @@ body[data-mode="light"] .hero-sylva-backdrop {
     border: 0;
     display: block;
     pointer-events: auto;
+}
+
+/* 🎨 SKIPER 19: SVG FOLLOW SCROLL PATH (Strictly Active in Light Mode) */
+body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    right: -60px;
+    width: clamp(520px, 58vw, 1080px);
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: visible;
+    opacity: 0.92;
+}
+
+.skiper19-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+}
+
+.skiper19-guide-path {
+    stroke: rgba(15, 23, 42, 0.05);
+    stroke-width: 16px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.skiper19-active-path {
+    stroke-width: 14px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 14px rgba(122, 105, 249, 0.32));
+    transition: stroke-dashoffset 0.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body[data-mode="light"] .hero {
