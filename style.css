@@ -3037,19 +3037,27 @@ body[data-mode="light"] .hero-sylva-backdrop {
 body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
     display: block !important;
     position: absolute;
-    top: 0;
-    right: -60px;
-    width: clamp(520px, 58vw, 1080px);
-    height: 100%;
+    top: var(--stroke-start-y, 720px);
+    right: -20px;
+    width: clamp(520px, 60vw, 1100px);
+    height: calc(100% - var(--stroke-start-y, 720px));
     pointer-events: none;
     z-index: 0;
     overflow: visible;
     opacity: 0.92;
 }
 
+@media (max-width: 768px) {
+    body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
+        width: clamp(340px, 85vw, 650px);
+        right: -10px;
+        opacity: 0.75;
+    }
+}
+
 .skiper19-svg {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     overflow: visible;
 }

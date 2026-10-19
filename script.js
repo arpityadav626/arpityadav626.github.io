@@ -685,8 +685,21 @@ initGradientHoverCards();
    Animates stroke-dashoffset on the organic winding path as user scrolls in Light Mode
    ======================================================== */
 function initSkiper19ScrollStroke() {
+    const wrapper = document.getElementById('skiper19-wrapper');
     const path = document.getElementById('skiper19-active-path');
-    if (!path) return;
+    const projectsSection = document.getElementById('projects');
+    if (!path || !wrapper) return;
+
+    function getProjectsTop() {
+        if (projectsSection) {
+            const top = projectsSection.offsetTop;
+            document.documentElement.style.setProperty('--stroke-start-y', `${top}px`);
+            return top;
+        }
+        return 720;
+    }
+
+    let startY = getProjectsTop();
 
     let pathLength = 0;
     try {
@@ -696,8 +709,7 @@ function initSkiper19ScrollStroke() {
     }
 
     path.style.strokeDasharray = `${pathLength} ${pathLength}`;
-    // Initialize with 45% drawn at the top, matching Skiper 19's [0.5, 1] range!
-    path.style.strokeDashoffset = `${pathLength * 0.55}`;
+    path.style.strokeDashoffset = `${pathLength}`;
 
     let ticking = false;
 
@@ -705,17 +717,30 @@ function initSkiper19ScrollStroke() {
         ticking = false;
         if (document.body.getAttribute('data-mode') !== 'light') return;
 
+        const scrollY = window.scrollY || window.pageYOffset;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        if (maxScroll <= 0) return;
+        const activeRange = maxScroll - startY;
 
-        const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
-        // Map from 0.45 at top to 1.0 at bottom
-        const currentProgress = 0.45 + (progress * 0.55);
+        if (activeRange <= 0) return;
+
+        if (scrollY < startY) {
+            // Above projects: Hero section is clean, stroke loop is primed at 50% below hero
+            path.style.strokeDashoffset = `${pathLength * 0.5}`;
+            return;
+        }
+
+        // Below hero: as user scrolls from #projects to footer, progress goes 0 -> 1
+        // Mapping exactly to Skiper 19's [0.5, 1.0] range so the stroke weaves all the way down
+        const progress = Math.min(Math.max((scrollY - startY) / activeRange, 0), 1);
+        const currentProgress = 0.5 + (progress * 0.5);
         const drawLength = pathLength * currentProgress;
         path.style.strokeDashoffset = `${pathLength - drawLength}`;
     }
 
-    window.updateSkiper19ScrollStroke = onScrollUpdate;
+    window.updateSkiper19ScrollStroke = () => {
+        startY = getProjectsTop();
+        onScrollUpdate();
+    };
 
     window.addEventListener('scroll', () => {
         if (!ticking) {
@@ -725,12 +750,18 @@ function initSkiper19ScrollStroke() {
     }, { passive: true });
 
     window.addEventListener('resize', () => {
+        startY = getProjectsTop();
         try {
             pathLength = path.getTotalLength();
             path.style.strokeDasharray = `${pathLength} ${pathLength}`;
         } catch (e) {}
         onScrollUpdate();
     }, { passive: true });
+
+    window.addEventListener('load', () => {
+        startY = getProjectsTop();
+        onScrollUpdate();
+    });
 
     onScrollUpdate();
 }
