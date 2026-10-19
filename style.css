@@ -622,6 +622,10 @@ main, .header, .footer {
     pointer-events: none;
 }
 
+.hero-sylva-backdrop {
+    display: none;
+}
+
 .hero-left {
     position: relative;
     z-index: 2;
@@ -2996,6 +3000,33 @@ body[data-mode="light"] .hero-tagline {
 body[data-mode="light"] .hero-liquid-backdrop,
 body[data-mode="light"] #hero-liquid-canvas {
     display: none !important;
+}
+
+/* ThreeUI Sylva Living World Scene (Strictly Active in Light Mode Only) */
+body[data-mode="light"] .hero-sylva-backdrop {
+    display: block !important;
+    position: absolute;
+    top: -60px;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: calc(100% + 120px);
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    -webkit-mask-image: radial-gradient(ellipse 92% 84% at 50% 50%, rgba(0, 0, 0, 1) 45%, rgba(0, 0, 0, 0) 95%);
+    mask-image: radial-gradient(ellipse 92% 84% at 50% 50%, rgba(0, 0, 0, 1) 45%, rgba(0, 0, 0, 0) 95%);
+}
+
+.hero-sylva-iframe {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border: 0;
+    display: block;
+    pointer-events: auto;
 }
 
 body[data-mode="light"] .hero {
