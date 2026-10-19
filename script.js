@@ -713,9 +713,13 @@ function initSkiper19ScrollStroke() {
 
     let ticking = false;
 
+    function updateStrokeTheme() {
+        const isLight = document.body.getAttribute('data-mode') === 'light';
+        path.setAttribute('stroke', isLight ? 'url(#skiper19-gradient-light)' : 'url(#skiper19-gradient-dark)');
+    }
+
     function onScrollUpdate() {
         ticking = false;
-        if (document.body.getAttribute('data-mode') !== 'light') return;
 
         const scrollY = window.scrollY || window.pageYOffset;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -739,6 +743,7 @@ function initSkiper19ScrollStroke() {
 
     window.updateSkiper19ScrollStroke = () => {
         startY = getProjectsTop();
+        updateStrokeTheme();
         onScrollUpdate();
     };
 
@@ -760,9 +765,11 @@ function initSkiper19ScrollStroke() {
 
     window.addEventListener('load', () => {
         startY = getProjectsTop();
+        updateStrokeTheme();
         onScrollUpdate();
     });
 
+    updateStrokeTheme();
     onScrollUpdate();
 }
 initSkiper19ScrollStroke();
@@ -1289,31 +1296,35 @@ let lastScrollY = window.scrollY;
 let scrollTickAccumulator = 0;
 const header = document.querySelector('.header');
 
+let headerTicking = false;
 window.addEventListener('scroll', () => {
-    const currentScrollY = window.scrollY;
-    const delta = Math.abs(currentScrollY - lastScrollY);
-    scrollTickAccumulator += delta;
+    if (!headerTicking) {
+        requestAnimationFrame(() => {
+            headerTicking = false;
+            const currentScrollY = window.scrollY;
+            const delta = Math.abs(currentScrollY - lastScrollY);
+            scrollTickAccumulator += delta;
 
-    if (scrollTickAccumulator > 240) {
-        playScrollTick();
-        scrollTickAccumulator = 0;
-    }
-
-    if (header) {
-        if (currentScrollY > 120) {
-            if (currentScrollY > lastScrollY + 8) {
-                // Scrolling down -> hide navbar
-                header.classList.add('header-hidden');
-            } else if (currentScrollY < lastScrollY - 8) {
-                // Scrolling up -> reveal navbar
-                header.classList.remove('header-hidden');
+            if (scrollTickAccumulator > 240) {
+                playScrollTick();
+                scrollTickAccumulator = 0;
             }
-        } else {
-            // Near top -> always visible
-            header.classList.remove('header-hidden');
-        }
+
+            if (header) {
+                if (currentScrollY > 120) {
+                    if (currentScrollY > lastScrollY + 8) {
+                        header.classList.add('header-hidden');
+                    } else if (currentScrollY < lastScrollY - 8) {
+                        header.classList.remove('header-hidden');
+                    }
+                } else {
+                    header.classList.remove('header-hidden');
+                }
+            }
+            lastScrollY = currentScrollY;
+        });
+        headerTicking = true;
     }
-    lastScrollY = currentScrollY;
 }, { passive: true });
 
 /* ========================================================
@@ -1884,6 +1895,28 @@ function initHeroLiquidSimulation() {
             startSimulation();
         }
     };
+
+    // Performance optimization: Pause heavy WebGL rendering when hero is scrolled out of view!
+    if ('IntersectionObserver' in window) {
+        const heroSection = document.getElementById('home');
+        if (heroSection) {
+            const heroObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const isLight = document.body.getAttribute('data-mode') === 'light';
+                    if (entry.isIntersecting) {
+                        if (!isLight && !isRunning) {
+                            startSimulation();
+                        }
+                    } else {
+                        if (isRunning) {
+                            stopSimulation();
+                        }
+                    }
+                });
+            }, { threshold: 0.02 });
+            heroObserver.observe(heroSection);
+        }
+    }
 
     // Initial Start if in Dark Mode
     const isCurrentLight = document.body.getAttribute('data-mode') === 'light';

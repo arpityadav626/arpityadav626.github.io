@@ -626,9 +626,6 @@ main, .header, .footer {
     display: none;
 }
 
-.skiper19-scroll-canvas-wrapper {
-    display: none;
-}
 
 .hero-left {
     position: relative;
@@ -3033,8 +3030,8 @@ body[data-mode="light"] .hero-sylva-backdrop {
     pointer-events: auto;
 }
 
-/* 🎨 SKIPER 19: SVG FOLLOW SCROLL PATH (Strictly Active in Light Mode) */
-body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
+/* 🎨 SKIPER 19: SVG FOLLOW SCROLL PATH (Active in Both Dark & Light Themes) */
+.skiper19-scroll-canvas-wrapper {
     display: block !important;
     position: absolute;
     top: var(--stroke-start-y, 723px);
@@ -3046,10 +3043,12 @@ body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
     z-index: 0;
     overflow: visible;
     opacity: 0.95;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 @media (max-width: 768px) {
-    body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
+    .skiper19-scroll-canvas-wrapper {
         opacity: 0.85;
     }
 }
@@ -3061,19 +3060,33 @@ body[data-mode="light"] .skiper19-scroll-canvas-wrapper {
     overflow: visible;
 }
 
+/* Dark Theme Guide Stroke (Faint trace) */
 .skiper19-guide-path {
-    stroke: rgba(15, 23, 42, 0.05);
+    stroke: rgba(255, 255, 255, 0.05);
     stroke-width: 16px;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
+/* Dark Theme Active Animated Stroke: Pure Luminous Cyber-White with Multi-Stage Glow */
 .skiper19-active-path {
+    stroke: url(#skiper19-gradient-dark);
     stroke-width: 14px;
     stroke-linecap: round;
     stroke-linejoin: round;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.90)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.45));
+    transition: stroke-dashoffset 0.06s linear;
+    will-change: stroke-dashoffset;
+}
+
+/* Light Theme Overrides */
+body[data-mode="light"] .skiper19-guide-path {
+    stroke: rgba(15, 23, 42, 0.05);
+}
+
+body[data-mode="light"] .skiper19-active-path {
+    stroke: url(#skiper19-gradient-light);
     filter: drop-shadow(0 0 16px rgba(122, 105, 249, 0.40));
-    transition: stroke-dashoffset 0.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body[data-mode="light"] .hero {
