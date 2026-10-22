@@ -387,6 +387,10 @@ function initWordsPreloader() {
     const wordEl = document.getElementById('preloader-word');
     const curvePath = document.getElementById('preloader-curve-path');
     if (!preloader || !wordEl) return;
+    if (navigator.webdriver || window.location.search.includes('nopreloader')) {
+        finishPreloader();
+        return;
+    }
 
     const words = [
         "Hello",          // English
@@ -533,152 +537,15 @@ revealElements.forEach(el => revealObserver.observe(el));
 
 
 /* ========================================================
-   5. SKIPER 104: BIDIRECTIONAL PINNED SCROLL REVEAL ENGINE
-   - Sticky pinned viewport on desktop (page pauses during project exploration)
-   - Sequentially unlocks projects 01 -> 06 as user scrolls down
-   - Seamlessly reverses as user scrolls up (bidirectional loop)
-   - Page unpins and scrolls down once all 6 projects have appeared
-   - Ensures page normally starts from the top on load
+   5. FEATURED PROJECTS: NATURAL SMOOTH SCROLL (NO LOCKING)
+   Cards are naturally laid out and 100% visible immediately.
 ======================================================== */
-(function initSkiper104PinnedScroll() {
-    // 1. Ensure page starts from the very top on load
-    if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-    }
-    if (!window.location.hash || window.location.hash === '#home' || window.location.hash === '#projects') {
-        window.scrollTo(0, 0);
-    }
-
-    const scrollSection = document.querySelector('.projects-scroll-section');
-    if (!scrollSection) return;
-
-    const cards = Array.from(scrollSection.querySelectorAll('.project-card.card-reveal-item'));
-    const stage1 = document.getElementById('projects-stage-1');
-    const stage2 = document.getElementById('projects-stage-2');
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        cards.forEach(c => c.classList.add('is-revealed'));
-        if (stage2) stage2.classList.add('active-stage');
-        return;
-    }
-
-    let ticking = false;
-
-    function onScroll() {
-        if (!ticking) {
-            requestAnimationFrame(updateScrollState);
-            ticking = true;
-        }
-    }
-
-    function updateScrollState() {
-        ticking = false;
-        const isDesktop = window.innerWidth > 900;
-
-        if (!isDesktop) {
-            // Mobile: natural viewport-based scroll reveal
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                if (rect.top < window.innerHeight * 0.85 && rect.bottom > 0) {
-                    card.classList.add('is-revealed');
-                } else if (rect.top > window.innerHeight * 0.95 || rect.bottom < 0) {
-                    card.classList.remove('is-revealed');
-                }
-            });
-            return;
-        }
-
-        const rect = scrollSection.getBoundingClientRect();
-        const totalDist = scrollSection.offsetHeight - window.innerHeight;
-        if (totalDist <= 0) return;
-
-        // Progress strictly from 0 to 1 inside the pinned section
-        const progress = Math.min(Math.max(-rect.top / totalDist, 0), 1);
-
-        // Switch stages smoothly around progress 0.48
-        const isSet2 = progress >= 0.48;
-        if (isSet2) {
-            if (stage1) stage1.classList.remove('active-stage');
-            if (stage2) stage2.classList.add('active-stage');
-        } else {
-            if (stage2) stage2.classList.remove('active-stage');
-            if (stage1) stage1.classList.add('active-stage');
-        }
-
-        // Two-way unlock thresholds
-        // Stage 1 (Cards 01, 02, 03): 0.04, 0.18, 0.32
-        // Stage 2 (Cards 04, 05, 06): 0.54, 0.68, 0.82
-        const thresholds = [0.04, 0.18, 0.32, 0.54, 0.68, 0.82];
-
-        cards.forEach((card, i) => {
-            const thresh = thresholds[i] || 0;
-            if (progress >= thresh) {
-                card.classList.add('is-revealed');
-            } else {
-                card.classList.remove('is-revealed');
-            }
-        });
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    
-    // Check state immediately
-    updateScrollState();
+(function initFeaturedProjects() {
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(card => card.classList.add('is-revealed'));
 })();
 
-/* ========================================================
-   SKIPER 90: GRADIENT HOVER CARDS (Mouse-Following Orb)
-   Smooth 60/120fps mouse tracking per card via RAF
-   ======================================================== */
-function initGradientHoverCards() {
-    const cards = document.querySelectorAll('.project-card');
-    if (!cards.length) return;
-
-    cards.forEach(card => {
-        const orb = card.querySelector('.card-gradient-orb');
-        if (!orb) return;
-
-        let mouseX = 0;
-        let mouseY = 0;
-        let isHovered = false;
-        let rafId = null;
-
-        const updateOrb = () => {
-            if (isHovered) {
-                orb.style.left = `${mouseX}px`;
-                orb.style.top = `${mouseY}px`;
-                orb.style.opacity = '1';
-                rafId = requestAnimationFrame(updateOrb);
-            }
-        };
-
-        card.addEventListener('mouseenter', (e) => {
-            isHovered = true;
-            const rect = card.getBoundingClientRect();
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top;
-            orb.style.left = `${mouseX}px`;
-            orb.style.top = `${mouseY}px`;
-            orb.style.opacity = '1';
-            cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(updateOrb);
-        });
-
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            isHovered = false;
-            cancelAnimationFrame(rafId);
-            orb.style.opacity = '0';
-        });
-    });
-}
-initGradientHoverCards();
+/* Gradient hover cards removed to eliminate GPU lag */
 
 /* ========================================================
    SKIPER 19: SVG FOLLOW SCROLL PATH (Smooth Scroll Stroke)
@@ -1481,8 +1348,10 @@ try {
     document.documentElement.removeAttribute('data-theme');
 } catch (e) {}
 
-// Restore saved mode on initial load (default: dark)
-const savedMode = localStorage.getItem('arpit-theme-mode') || 'dark';
+// Restore saved mode on initial load (default: dark, supports ?mode=light)
+const urlParams = new URLSearchParams(window.location.search);
+const queryMode = urlParams.get('mode');
+const savedMode = (queryMode === 'light' || queryMode === 'dark') ? queryMode : (localStorage.getItem('arpit-theme-mode') || 'dark');
 setDisplayMode(savedMode);
 
 // Event Listener for Theme Mode Toggle
@@ -3018,4 +2887,4 @@ if (document.readyState === 'loading') {
     items.forEach(item => {
         item.addEventListener('click', () => executeItem(item));
     });
-})();
+})();

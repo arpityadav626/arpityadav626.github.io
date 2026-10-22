@@ -429,6 +429,7 @@ main, .header, .footer {
 .hero {
     position: relative;
     min-height: 85vh;
+    max-height: 880px;
     width: 90%;
     max-width: 1200px;
     margin: 40px auto 0;
@@ -604,7 +605,8 @@ main, .header, .footer {
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-    height: calc(100% + 120px);
+    height: 100%;
+    max-height: 100vh;
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
@@ -753,107 +755,40 @@ main, .header, .footer {
    PROJECTS (01 - 04)
 ======================================================== */
 /* ========================================================
-   SKIPER 104: BIDIRECTIONAL PINNED SCROLL SYSTEM
-   - Desktop: Sticky viewport pinned for 340vh scroll track
-   - Bidirectional sequential unlocks: 01 -> 06 on scroll down,
-     reverses seamlessly on scroll up
-   - Mobile: Natural responsive flow
+   FEATURED PROJECTS SECTION (Clean, Natural Responsive Grid)
+   Zero scroll-locking, instant smooth rendering in Dark & Light modes
    ======================================================== */
-.projects-scroll-section {
+.projects-section {
     position: relative;
-    width: 100%;
+    width: 90%;
+    max-width: 1260px;
+    margin: 80px auto 0;
+    padding: 0;
 }
 
-@media (min-width: 901px) {
-    .projects-scroll-section {
-        height: 320vh; /* Pinned exploration distance */
-        margin-top: 40px;
-    }
-
-    .projects-sticky-viewport {
-        position: sticky;
-        top: 0;
-        height: 100vh;
-        width: 90%;
-        max-width: 1260px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        overflow: hidden;
-        z-index: 10;
-        padding: 56px 0 16px 0;
-        box-sizing: border-box;
-    }
-}
-
-@media (max-width: 900px) {
-    .projects-scroll-section {
-        height: auto;
-        width: 90%;
-        max-width: 1200px;
-        margin: 80px auto 0;
-    }
-    .projects-sticky-viewport {
-        position: relative;
-        height: auto;
-    }
-}
-
-.projects-pinned-header {
-    margin-bottom: 18px;
-    position: relative;
-    z-index: 5;
-    text-align: left;
-}
-
-.projects-pinned-header .mono-tag {
-    display: inline-block;
-    margin-bottom: 6px;
-}
-
-/* STAGES CONTAINER */
-.projects-stages-wrapper {
-    position: relative;
-    width: 100%;
-    min-height: 520px;
-}
-
-.projects-stage {
+.projects-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
+    gap: 24px;
     width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(20px) scale(0.98);
-    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
-                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-top: 36px;
 }
 
-.projects-stage.active-stage {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0) scale(1);
-    position: relative;
-}
-
-@media (max-width: 900px) {
-    .projects-stages-wrapper {
-        min-height: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
+@media (max-width: 1080px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
     }
-    .projects-stage {
-        position: relative !important;
+}
+
+@media (max-width: 768px) {
+    .projects-section {
+        width: 92%;
+        margin-top: 60px;
+    }
+    .projects-grid {
         grid-template-columns: 1fr;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        transform: none !important;
+        gap: 20px;
     }
 }
 
@@ -866,135 +801,41 @@ main, .header, .footer {
    ======================================================== */
 .project-card {
     position: relative;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 20px;
+    background: #121624;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
     padding: 16px 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.35s ease, 
-                border-color 0.35s ease;
-    isolation: isolate;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-/* 🟢 SKIPER 90: SIGNATURE MOUSE-FOLLOWING GRADIENT ORB */
-.card-gradient-orb {
-    position: absolute;
-    width: 420px;
-    height: 420px;
-    top: 0;
-    left: 0;
-    transform: translate(-50%, -50%) scale(0.85);
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3BC4F2 0%, #7A69F9 35%, #F26378 70%, #F5833F 100%);
-    -webkit-mask-image: radial-gradient(210px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.6) 45%, transparent 75%);
-    mask-image: radial-gradient(210px circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.6) 45%, transparent 75%);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: left, top, opacity, transform;
-}
-
-.project-card:hover .card-gradient-orb {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(2.6);
-}
-
-/* 🟢 INSET BACKDROP (Exposes glowing 1.5px border while providing deep translucent glass body) */
-.card-inset-bg {
-    position: absolute;
-    inset: 1.5px;
-    border-radius: 18.5px;
-    background: rgba(14, 18, 27, 0.80);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    pointer-events: none;
-    z-index: 2;
-    transition: background 0.35s ease, opacity 0.35s ease;
-}
-
-/* Card Content Elevation */
-.card-visual-slot,
-.card-step-row,
-.card-info-slot {
-    position: relative;
-    z-index: 4;
-}
-
-/* 🟢 PREMIUM SIDE LIGHTS (Signature Luminous Edge) */
-.card-side-light {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(180deg, 
-        transparent 0%, 
-        #ffffff 20%, 
-        #818cf8 60%, 
-        transparent 100%
-    );
-    opacity: 0.85;
-    box-shadow: 0 0 14px rgba(255, 255, 255, 0.5), -2px 0 12px rgba(129, 140, 248, 0.4);
-    pointer-events: none;
-    z-index: 5;
-    transition: opacity 0.35s ease, width 0.35s ease, box-shadow 0.35s ease;
-}
-
-/* Top Subtle Glass Reflection Rim */
-.project-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-        rgba(255, 255, 255, 0.8) 0%, 
-        rgba(255, 255, 255, 0.25) 30%, 
-        rgba(255, 255, 255, 0.05) 70%, 
-        transparent 100%
-    );
-    pointer-events: none;
-    z-index: 5;
-}
-
-/* Premium Hover Lift & Dynamic Lighting */
 .project-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.32);
-    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.75),
-                0 0 35px -5px rgba(122, 105, 249, 0.35);
+    border-color: rgba(255, 255, 255, 0.28);
+    transform: translateY(-2px);
 }
 
-.project-card:hover .card-side-light {
-    opacity: 1;
-    width: 4px;
-    box-shadow: 0 0 22px rgba(255, 255, 255, 0.8), 0 0 35px rgba(129, 140, 248, 0.5);
+/* Disabled Heavy Animation Layers (Zero Lag) */
+.card-gradient-orb,
+.card-inset-bg,
+.card-side-light {
+    display: none !important;
 }
 
-/* 🟢 1. TOP VISUAL SLOT (Drops down on scroll) */
 .card-visual-slot {
     position: relative;
     width: 100%;
-    height: clamp(125px, 15vh, 150px);
+    height: clamp(140px, 16vh, 175px);
     border-radius: 12px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.45);
     border: 1px solid rgba(255, 255, 255, 0.06);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(-35px);
-    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
-                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0.65s ease;
-    will-change: opacity, transform;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
 }
 
 .card-visual-inner {
@@ -1008,12 +849,13 @@ main, .header, .footer {
     height: 100%;
     object-fit: cover;
     object-position: center;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: none;
     display: block;
 }
 
+/* Image scale hover removed for maximum smoothness */
 .project-card:hover .card-preview-img {
-    transform: scale(1.05);
+    transform: none;
 }
 
 .card-visual-overlay {
@@ -1057,14 +899,9 @@ main, .header, .footer {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 16px rgba(255, 255, 255, 0.45);
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.2);
-    transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                opacity 0.65s ease,
-                visibility 0.65s ease,
-                box-shadow 0.4s ease;
-    will-change: transform, opacity;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
     z-index: 2;
 }
 
@@ -1075,8 +912,7 @@ main, .header, .footer {
     position: relative;
     overflow: hidden;
     border-radius: 2px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+    opacity: 1;
 }
 
 .card-step-line::after {
@@ -1088,8 +924,7 @@ main, .header, .footer {
     width: 100%;
     background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.4));
     transform-origin: left center;
-    transform: scaleX(0);
-    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scaleX(1);
 }
 
 /* 🟢 3. BOTTOM INFO SLOT (Slides up on scroll) */
@@ -1099,14 +934,10 @@ main, .header, .footer {
     gap: 12px;
     flex: 1;
     justify-content: space-between;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(35px);
-    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
-                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0.65s ease;
-    will-change: opacity, transform;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
 }
 
 /* 🟢 REVEALED STATE (Activated sequentially on scroll) */
@@ -3012,7 +2843,8 @@ body[data-mode="light"] .hero-sylva-backdrop {
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-    height: calc(100% + 120px);
+    height: 100%;
+    max-height: 100vh;
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
@@ -3093,24 +2925,18 @@ body[data-mode="light"] .hero {
     max-width: 1200px;
 }
 
-/* 3. Project Cards & Links */
+/* 3. Project Cards & Links (Clean & Zero Lag) */
 body[data-mode="light"] .project-card {
-    background: rgba(255, 255, 255, 0.78);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(15, 23, 42, 0.12);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-body[data-mode="light"] .card-inset-bg {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-body[data-mode="light"] .card-side-light {
-    background: linear-gradient(180deg, transparent 0%, #0f172a 25%, #334155 70%, transparent 100%);
-    box-shadow: 0 0 10px rgba(15, 23, 42, 0.25);
+body[data-mode="light"] .project-card:hover {
+    border-color: rgba(15, 23, 42, 0.28);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
 }
 
 body[data-mode="light"] .card-visual-slot {
@@ -3127,14 +2953,27 @@ body[data-mode="light"] .card-step-badge {
     color: #ffffff !important;
     box-shadow: 0 2px 10px rgba(15, 23, 42, 0.25);
     border: 1px solid rgba(15, 23, 42, 0.15);
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
 }
 
 body[data-mode="light"] .card-step-line {
     background: rgba(15, 23, 42, 0.10);
+    opacity: 1 !important;
 }
 
 body[data-mode="light"] .card-step-line::after {
     background: linear-gradient(90deg, #0f172a, #334155);
+    transform: scaleX(1) !important;
+}
+
+body[data-mode="light"] .card-visual-slot,
+body[data-mode="light"] .card-info-slot {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    pointer-events: auto !important;
 }
 
 body[data-mode="light"] .project-card:hover {
