@@ -19,479 +19,26 @@
    ====================================================================== */
 
 /* ========================================================
-   1. STUDIO-GRADE ZERO-GLITCH AUDIO ENGINE (Web Audio API)
-   Ultra-Crisp Tactile Feedback, Zero Latency & Dynamic Limiting
+   1. AUDIO ENGINE: REMOVED (Lightweight Safe Stubs)
 ======================================================== */
-let audioCtx = null;
-let masterCompressor = null;
-let masterGain = null;
-let soundEnabled = true;
-let lastHoverTime = 0;
-let lastScrollTickTime = 0;
-
-function initAudio() {
-    if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-        audioCtx = new AudioContextClass();
-
-        // 1. Dynamics Compressor (Limiter) - 100% eliminates distortion & crackling
-        masterCompressor = audioCtx.createDynamicsCompressor();
-        masterCompressor.threshold.setValueAtTime(-14, audioCtx.currentTime);
-        masterCompressor.knee.setValueAtTime(24, audioCtx.currentTime);
-        masterCompressor.ratio.setValueAtTime(8, audioCtx.currentTime);
-        masterCompressor.attack.setValueAtTime(0.002, audioCtx.currentTime);
-        masterCompressor.release.setValueAtTime(0.1, audioCtx.currentTime);
-
-        // 2. Master Gain
-        masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
-
-        masterCompressor.connect(masterGain);
-        masterGain.connect(audioCtx.destination);
-    }
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-}
-
-// Proactively unlock AudioContext on ANY user gesture
-function unlockAudio() {
-    initAudio();
-}
-['pointerdown', 'pointermove', 'mousedown', 'wheel', 'touchstart', 'keydown', 'click', 'scroll'].forEach(evt => {
-    window.addEventListener(evt, unlockAudio, { once: true, passive: true });
-});
-
-// Resilient sound execution helper
-function ensureAudio(callback) {
-    if (!soundEnabled) return;
-    initAudio();
-    if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume().then(() => {
-            if (callback) callback(audioCtx.currentTime);
-        }).catch(() => {});
-    } else {
-        if (callback) callback(audioCtx.currentTime);
-    }
-}
-
-// Sound 1: Soft Button Hover (Ultra-crisp tactile micro-tick)
-function playButtonHover() {
-    const now = performance.now();
-    if (now - lastHoverTime < 45) return;
-    lastHoverTime = now;
-
-    ensureAudio(t => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        const filter = audioCtx.createBiquadFilter();
-
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(1600, t);
-        filter.Q.setValueAtTime(2.5, t);
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1400, t);
-        osc.frequency.exponentialRampToValueAtTime(450, t + 0.02);
-
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.09, t + 0.002);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.02);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(masterCompressor);
-
-        osc.start(t);
-        osc.stop(t + 0.02);
-    });
-}
-
-// Sound 2: Deep Warm Card Hover (Acoustic marimba / soft wooden thud)
-function playCardHover() {
-    const now = performance.now();
-    if (now - lastHoverTime < 60) return;
-    lastHoverTime = now;
-
-    ensureAudio(t => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        const filter = audioCtx.createBiquadFilter();
-
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(700, t);
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(320, t);
-        osc.frequency.exponentialRampToValueAtTime(140, t + 0.045);
-
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.11, t + 0.003);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(masterCompressor);
-
-        osc.start(t);
-        osc.stop(t + 0.045);
-    });
-}
-
-// Sound 3: Mechanical Haptic Button Click (Satisfying tactile dual-stage switch)
-function playButtonClick() {
-    ensureAudio(t => {
-        // High click transient
-        const oscClick = audioCtx.createOscillator();
-        const gainClick = audioCtx.createGain();
-        oscClick.type = 'triangle';
-        oscClick.frequency.setValueAtTime(1050, t);
-        oscClick.frequency.exponentialRampToValueAtTime(280, t + 0.035);
-
-        gainClick.gain.setValueAtTime(0.0001, t);
-        gainClick.gain.linearRampToValueAtTime(0.15, t + 0.002);
-        gainClick.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
-
-        oscClick.connect(gainClick);
-        gainClick.connect(masterCompressor);
-        oscClick.start(t);
-        oscClick.stop(t + 0.035);
-
-        // Warm resonant body
-        const oscBody = audioCtx.createOscillator();
-        const gainBody = audioCtx.createGain();
-        oscBody.type = 'sine';
-        oscBody.frequency.setValueAtTime(210, t);
-        oscBody.frequency.exponentialRampToValueAtTime(80, t + 0.05);
-
-        gainBody.gain.setValueAtTime(0.0001, t);
-        gainBody.gain.linearRampToValueAtTime(0.12, t + 0.003);
-        gainBody.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
-
-        oscBody.connect(gainBody);
-        gainBody.connect(masterCompressor);
-        oscBody.start(t);
-        oscBody.stop(t + 0.05);
-    });
-}
-
-// Sound 4: Liquid Bubble Tone (For Navigation links)
-function playNavClick() {
-    ensureAudio(t => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(520, t);
-        osc.frequency.exponentialRampToValueAtTime(820, t + 0.045);
-
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.12, t + 0.003);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
-
-        osc.connect(gain);
-        gain.connect(masterCompressor);
-
-        osc.start(t);
-        osc.stop(t + 0.045);
-    });
-}
-
-// Sound 5: Minimal Precision Scroll Ratchet Tick
-function playScrollTick() {
-    const now = performance.now();
-    if (now - lastScrollTickTime < 130) return;
-    lastScrollTickTime = now;
-
-    ensureAudio(t => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        const filter = audioCtx.createBiquadFilter();
-
-        filter.type = 'highpass';
-        filter.frequency.setValueAtTime(1200, t);
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1500, t);
-        osc.frequency.exponentialRampToValueAtTime(550, t + 0.014);
-
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.05, t + 0.001);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.014);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(masterCompressor);
-
-        osc.start(t);
-        osc.stop(t + 0.014);
-    });
-}
-
-// Sound 5b: Subtle Mechanical Keyclick Tick
-function playKeyTick() {
-    ensureAudio(t => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1600, t);
-        osc.frequency.exponentialRampToValueAtTime(750, t + 0.012);
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.04, t + 0.001);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
-        osc.connect(gain);
-        gain.connect(masterCompressor);
-        osc.start(t);
-        osc.stop(t + 0.012);
-    });
-}
-
-// Sound 5c: Studio-Grade Mechanical Linear Switch Click (For Smooth Input Typing)
-let lastTypingTime = 0;
-function playSmoothTypingSound() {
-    const now = performance.now();
-    if (now - lastTypingTime < 30) return;
-    lastTypingTime = now;
-    ensureAudio(t => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        const filter = audioCtx.createBiquadFilter();
-
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(1300 + (Math.random() * 350), t);
-        filter.Q.setValueAtTime(3.2, t);
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(900 + (Math.random() * 200), t);
-        osc.frequency.exponentialRampToValueAtTime(180, t + 0.016);
-
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.065, t + 0.001);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.016);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(masterCompressor);
-
-        osc.start(t);
-        osc.stop(t + 0.016);
-    });
-}
-
-// Sound 6: Modal State Transition Sound
-function playModalSound(isOpen) {
-    ensureAudio(t => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = 'sine';
-        if (isOpen) {
-            osc.frequency.setValueAtTime(320, t);
-            osc.frequency.exponentialRampToValueAtTime(680, t + 0.08);
-        } else {
-            osc.frequency.setValueAtTime(600, t);
-            osc.frequency.exponentialRampToValueAtTime(260, t + 0.07);
-        }
-
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.11, t + 0.003);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + (isOpen ? 0.08 : 0.07));
-
-        osc.connect(gain);
-        gain.connect(masterCompressor);
-
-        osc.start(t);
-        osc.stop(t + (isOpen ? 0.08 : 0.07));
-    });
-}
-
-// Sound 7: Crystalline Melodic Welcome Chime
-function playCozyChime() {
-    ensureAudio(t => {
-        const chords = [523.25, 659.25, 783.99]; // C5, E5, G5 Major Chord
-        chords.forEach((freq, idx) => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, t + idx * 0.07);
-
-            gain.gain.setValueAtTime(0.0001, t + idx * 0.07);
-            gain.gain.linearRampToValueAtTime(0.08, t + idx * 0.07 + 0.008);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t + idx * 0.07 + 0.45);
-
-            osc.connect(gain);
-            gain.connect(masterCompressor);
-
-            osc.start(t + idx * 0.07);
-            osc.stop(t + idx * 0.07 + 0.45);
-        });
-    });
-}
-
-// Sound Toggle Handler
-const soundBtn = document.getElementById('sound-btn');
-const soundIcon = document.getElementById('sound-icon');
-const soundText = document.getElementById('sound-text');
-
-if (soundBtn) {
-    soundBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        soundEnabled = !soundEnabled;
-        if (soundEnabled) {
-            soundIcon.className = 'fas fa-volume-up';
-            soundText.textContent = 'COZY SFX';
-            playButtonClick();
-        } else {
-            soundIcon.className = 'fas fa-volume-mute';
-            soundText.textContent = 'SFX MUTED';
-        }
-    });
-}
-
-// Smart Glitch-Free Event Bindings
-function bindSounds() {
-    // 1. Project Cards
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('mouseenter', playCardHover);
-    });
-
-    // 2. Buttons & Actions
-    document.querySelectorAll('.btn, .card-btn, .btn-pill').forEach(btn => {
-        btn.addEventListener('mouseenter', playButtonHover);
-        btn.addEventListener('click', playButtonClick);
-    });
-
-    // 3. Navigation Links
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('mouseenter', playButtonHover);
-        link.addEventListener('click', playNavClick);
-    });
-
-    // 4. Skills & Socials
-    document.querySelectorAll('.skill-pill, .social-link, .sound-hover:not(.nav-link):not(.btn):not(.card-btn)').forEach(item => {
-        item.addEventListener('mouseenter', playButtonHover);
-        item.addEventListener('click', playButtonClick);
-    });
-}
-bindSounds();
+function playButtonClick() {}
+function playButtonHover() {}
+function playCardHover() {}
+function playNavClick() {}
+function playScrollTick() {}
+function playKeyTick() {}
+function playSmoothTypingSound() {}
+function playThemeTogglePop() {}
+function playCozyChime() {}
 
 /* ========================================================
-   2. SKIPER8 WORDS PRELOADER (Dennis Snellenberg Inspired)
-   Multilingual Greetings Cycle with Organic Liquid SVG Curtain
+   2. PRELOADER (REMOVED - HERO IMMEDIATE ACTIVATION)
 ======================================================== */
-function initWordsPreloader() {
-    const preloader = document.getElementById('preloader');
-    const wordEl = document.getElementById('preloader-word');
-    const curvePath = document.getElementById('preloader-curve-path');
-    if (!preloader || !wordEl) return;
-    if (navigator.webdriver || window.location.search.includes('nopreloader')) {
-        finishPreloader();
-        return;
-    }
-
-    const words = [
-        "Hello",          // English
-        "Bonjour",        // French
-        "Ciao",           // Italian
-        "Olà",            // Portuguese
-        "やあ",           // Japanese
-        "Hallå",          // Swedish
-        "Guten Tag",      // German
-        "Hallo",          // Dutch
-        "Namaste"         // Hindi
-    ];
-
-    let currentIndex = 0;
-    const wordIntervalTime = 180; // ms per word
-
-    // Prevent background scrolling while preloader is active
-    document.body.style.overflow = 'hidden';
-
-    function showNextWord() {
-        if (currentIndex < words.length - 1) {
-            currentIndex++;
-            wordEl.classList.add('word-switching');
-
-            setTimeout(() => {
-                wordEl.innerHTML = words[currentIndex];
-                wordEl.classList.remove('word-switching');
-            }, 65);
-
-            // If we reached the final word, hold briefly then smoothly peel up the curtain!
-            if (currentIndex === words.length - 1) {
-                setTimeout(startExitAnimation, 380);
-            } else {
-                setTimeout(showNextWord, wordIntervalTime);
-            }
-        }
-    }
-
-    function startExitAnimation() {
-        if (!curvePath) {
-            preloader.classList.add('preloader-exiting');
-            setTimeout(finishPreloader, 850);
-            return;
-        }
-
-        const startTime = performance.now();
-        const duration = 850; // matches CSS transition duration
-
-        function stepCurve(now) {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-
-            // Dennis Snellenberg curve morphing:
-            // First 35%: curve pulls down into an organic liquid arch
-            // Next 65%: curve flattens seamlessly to 0 as preloader slides off
-            let curveY;
-            if (progress < 0.35) {
-                curveY = 100 + (progress / 0.35) * 25;
-            } else {
-                const t = (progress - 0.35) / 0.65;
-                curveY = 125 * Math.pow(1 - t, 2.2);
-            }
-
-            curvePath.setAttribute('d', `M0 0 L100 0 Q50 ${curveY.toFixed(1)} 0 0 Z`);
-
-            if (progress < 1) {
-                requestAnimationFrame(stepCurve);
-            } else {
-                finishPreloader();
-            }
-        }
-
-        preloader.classList.add('preloader-exiting');
-        requestAnimationFrame(stepCurve);
-
-        // Play chime audio as curtain begins to lift
-        setTimeout(() => {
-            if (typeof playCozyChime === 'function') {
-                playCozyChime();
-            }
-        }, 220);
-    }
-
-    function finishPreloader() {
-        document.body.style.overflow = '';
-        preloader.style.display = 'none';
-
-        // Trigger Hero Section active cascade
-        const hero = document.getElementById('home');
-        if (hero) hero.classList.add('active');
-    }
-
-    // Start words flipping after initial short pause
-    setTimeout(showNextWord, wordIntervalTime);
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWordsPreloader);
-} else {
-    initWordsPreloader();
-}
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.overflow = '';
+    const hero = document.getElementById('home');
+    if (hero) hero.classList.add('active');
+});
 
 /* ========================================================
    3. BUTTON CLICK FLUID RIPPLE WAVE EFFECT
@@ -518,128 +65,456 @@ document.querySelectorAll('.ripple-btn').forEach(button => {
 });
 
 /* ========================================================
-   3. SCROLL REVEAL ANIMATIONS (Intersection Observer)
+   RIGHT HEMISPHERE LUXURY MOTION & SCROLL ENGINE
+   1. Lenis Butter-Smooth Scrolling (Inertia Curve: 1.5s)
+   2. GSAP ScrollTrigger Precision Synchronization
+   3. Right Hemisphere Masked Text Reveal (Word/Line splits)
+   4. Staggered Bento & Capabilities Viewport Emergence
 ======================================================== */
-const revealElements = document.querySelectorAll('.reveal');
 
-const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            observer.unobserve(entry.target);
+// 1. Initialize Lenis Smooth Scroll
+let lenis = null;
+if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({
+        duration: 1.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothTouch: false,
+        touchMultiplier: 1.5
+    });
+    window.lenis = lenis;
+
+    if (typeof ScrollTrigger !== 'undefined' && typeof gsap !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+    } else {
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
+}
+
+// 2. Lenis-Driven Butter-Smooth Anchor Link Navigation
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId && targetId !== '#') {
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+                e.preventDefault();
+                if (window.lenis) {
+                    window.lenis.scrollTo(targetEl, { offset: -50, duration: 1.3 });
+                } else {
+                    targetEl.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
         }
     });
-}, {
-    threshold: 0.15
 });
 
-revealElements.forEach(el => revealObserver.observe(el));
+// 3. Right Hemisphere & Cinematic Motion Engine
 
+// ========================================================
+// 0. SEAMLESS FLIP PRELOADER TO HERO ENGINE ("The Invisible Hand-off")
+// 1. Preloader on blank screen.
+// 2. "Arpit" (top-left) & "Yadav" (top-right) converge to center (2.0s).
+// 3. The unified title glides directly to the exact resting position of the website's hero heading (0.95s).
+// 4. Preloader background dissolves, header slides down, hero bio cascades in.
+// 5. At destination, hero headline takes over, preloader disappears cleanly.
+// ========================================================
+function initSeamlessFlipPreloader() {
+    const preloader = document.getElementById('intro-preloader');
+    const heroTitle = document.querySelector('.hero-title.hero-headline-converge');
+    const header = document.querySelector('.header');
+    const heroItems = document.querySelectorAll('.hero-anim-item');
 
-/* ========================================================
-   5. FEATURED PROJECTS: NATURAL SMOOTH SCROLL (NO LOCKING)
-   Cards are naturally laid out and 100% visible immediately.
-======================================================== */
-(function initFeaturedProjects() {
-    const cards = document.querySelectorAll('.project-card');
-    cards.forEach(card => card.classList.add('is-revealed'));
-})();
-
-/* Gradient hover cards removed to eliminate GPU lag */
-
-/* ========================================================
-   SKIPER 19: SVG FOLLOW SCROLL PATH (Smooth Scroll Stroke)
-   Animates stroke-dashoffset on the organic winding path as user scrolls in Light Mode
-   ======================================================== */
-function initSkiper19ScrollStroke() {
-    const wrapper = document.getElementById('skiper19-wrapper');
-    const path = document.getElementById('skiper19-active-path');
-    const projectsSection = document.getElementById('projects');
-    if (!path || !wrapper) return;
-
-    function getProjectsTop() {
-        if (projectsSection) {
-            const top = projectsSection.offsetTop;
-            document.documentElement.style.setProperty('--stroke-start-y', `${top}px`);
-            return top;
-        }
-        return 720;
-    }
-
-    let startY = getProjectsTop();
-
-    let pathLength = 0;
-    try {
-        pathLength = path.getTotalLength();
-    } catch (e) {
+    if (!preloader || !heroTitle) {
+        if (heroTitle) heroTitle.style.opacity = '1';
+        if (header) header.style.opacity = '1';
+        heroItems.forEach(el => el.classList.add('is-active'));
+        document.body.style.overflow = '';
         return;
     }
 
-    path.style.strokeDasharray = `${pathLength} ${pathLength}`;
-    path.style.strokeDashoffset = `${pathLength}`;
-
-    let ticking = false;
-
-    function updateStrokeTheme() {
-        const isLight = document.body.getAttribute('data-mode') === 'light';
-        path.setAttribute('stroke', isLight ? 'url(#skiper19-gradient-light)' : 'url(#skiper19-gradient-dark)');
+    // Instant bypass for testing or direct link
+    if (window.location.search.includes('skip_preloader=1')) {
+        preloader.style.display = 'none';
+        heroTitle.style.opacity = '1';
+        if (header) {
+            header.style.opacity = '1';
+            header.style.transform = 'none';
+        }
+        heroItems.forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
+        document.body.style.overflow = '';
+        if (window.location.search.includes('menu_open=1')) {
+            const nb = document.getElementById('navbar');
+            const mt = document.getElementById('menu-toggle');
+            if (nb) nb.classList.add('active');
+            if (mt) {
+                mt.classList.add('active');
+                mt.innerHTML = '<i class="fas fa-times"></i>';
+            }
+        }
+        return;
     }
 
-    function onScrollUpdate() {
-        ticking = false;
+    const leftPart = preloader.querySelector('.preloader-left');
+    const rightPart = preloader.querySelector('.preloader-right');
+    const preloaderHeadline = preloader.querySelector('.preloader-headline');
+    const preloaderBackdrop = preloader.querySelector('.preloader-backdrop');
 
-        const scrollY = window.scrollY || window.pageYOffset;
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const activeRange = maxScroll - startY;
+    // Prevent scrolling while preloader is active
+    document.body.style.overflow = 'hidden';
 
-        if (activeRange <= 0) return;
-
-        if (scrollY < startY) {
-            // Above projects: Hero section is clean, stroke is 0% drawn
-            path.style.strokeDashoffset = `${pathLength}`;
-            return;
-        }
-
-        // Below hero: as user scrolls from #projects to footer, progress goes 0 -> 1
-        // Smoothly draws across the entire site from projects through to footer
-        const progress = Math.min(Math.max((scrollY - startY) / activeRange, 0), 1);
-        const currentProgress = 0.08 + (progress * 0.92);
-        const drawLength = pathLength * currentProgress;
-        path.style.strokeDashoffset = `${pathLength - drawLength}`;
+    if (typeof gsap === 'undefined' || !leftPart || !rightPart || !preloaderHeadline) {
+        preloader.style.display = 'none';
+        heroTitle.style.opacity = '1';
+        if (header) header.style.opacity = '1';
+        heroItems.forEach(el => el.classList.add('is-active'));
+        document.body.style.overflow = '';
+        return;
     }
 
-    window.updateSkiper19ScrollStroke = () => {
-        startY = getProjectsTop();
-        updateStrokeTheme();
-        onScrollUpdate();
-    };
+    // Ensure hero title is hidden while preloader title is in motion
+    heroTitle.style.opacity = '0';
+    if (header) {
+        gsap.set(header, { y: -20, opacity: 0 });
+    }
+    gsap.set(heroItems, { y: 22, opacity: 0, filter: "blur(8px)" });
 
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            requestAnimationFrame(onScrollUpdate);
-            ticking = true;
-        }
-    }, { passive: true });
+    const screenW = window.innerWidth;
+    const isMobile = screenW <= 768;
+    const margin = isMobile ? 24 : 56;
 
-    window.addEventListener('resize', () => {
-        startY = getProjectsTop();
-        try {
-            pathLength = path.getTotalLength();
-            path.style.strokeDasharray = `${pathLength} ${pathLength}`;
-        } catch (e) {}
-        onScrollUpdate();
-    }, { passive: true });
+    // Reset preloader parts to measure natural centered width
+    gsap.set([leftPart, rightPart], { clearProps: "all" });
+    const leftRect = leftPart.getBoundingClientRect();
+    const rightRect = rightPart.getBoundingClientRect();
 
-    window.addEventListener('load', () => {
-        startY = getProjectsTop();
-        updateStrokeTheme();
-        onScrollUpdate();
+    const targetLeftEdgeX = margin;
+    const targetRightEdgeX = screenW - rightRect.width - margin;
+
+    const leftStartX = targetLeftEdgeX - leftRect.left;
+    const rightStartX = targetRightEdgeX - rightRect.left;
+    const startY = isMobile ? -24 : -42;
+
+    // 1. Initial State: Positioned at opposite corners, blurred & zero opacity
+    gsap.set(leftPart, {
+        x: leftStartX,
+        y: startY,
+        opacity: 0,
+        filter: "blur(14px)",
+        scale: 0.92
     });
 
-    updateStrokeTheme();
-    onScrollUpdate();
+    gsap.set(rightPart, {
+        x: rightStartX,
+        y: startY,
+        opacity: 0,
+        filter: "blur(14px)",
+        scale: 0.92
+    });
+
+    if (preloaderBackdrop) {
+        gsap.set(preloaderBackdrop, {
+            opacity: 0,
+            scale: 0.8
+        });
+    }
+
+    // 2. Master FLIP Timeline
+    const tl = gsap.timeline({ delay: 0.1 });
+
+    // Ambient radial halo blooms
+    if (preloaderBackdrop) {
+        tl.to(preloaderBackdrop, {
+            opacity: 1,
+            scale: 1.15,
+            duration: 2.2,
+            ease: "power2.out"
+        }, 0);
+    }
+
+    // "Arpit" glides in from top-left corner
+    tl.to(leftPart, {
+        x: 0,
+        y: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+        scale: 1,
+        duration: 2.0,
+        ease: "power2.inOut"
+    }, 0);
+
+    // "Yadav" glides in from top-right corner
+    tl.to(rightPart, {
+        x: 0,
+        y: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+        scale: 1,
+        duration: 2.0,
+        ease: "power2.inOut"
+    }, 0);
+
+    // 3. FLIP Flight from Preloader Center directly to Hero Destination:
+    // Once united in center, calculate exact delta to the website's hero heading
+    tl.call(() => {
+        // Measure exact live destination
+        const heroRect = heroTitle.getBoundingClientRect();
+        const preloaderRect = preloaderHeadline.getBoundingClientRect();
+
+        const deltaX = heroRect.left - preloaderRect.left;
+        const deltaY = heroRect.top - preloaderRect.top;
+
+        // ZERO-GAP SEAMLESS FLIGHT:
+        // Preloader headline stays 100% solid black (no fade/no ghosting)
+        // Hero title is unhidden at 85% progress so it's already solid underneath BEFORE handoff
+        const isDark = document.body.getAttribute('data-theme') === 'black-vault';
+        const transparentBg = isDark ? "rgba(10, 10, 11, 0)" : "rgba(246, 245, 242, 0)";
+
+        gsap.to(preloaderHeadline, {
+            x: deltaX,
+            y: deltaY,
+            duration: 0.85,
+            ease: "power3.inOut",
+            onUpdate: function() {
+                // Ensure zero millisecond gap: hero title is active underneath before landing
+                if (this.progress() >= 0.85 && heroTitle.style.opacity !== '1') {
+                    heroTitle.style.opacity = '1';
+                }
+            },
+            onComplete: () => {
+                heroTitle.style.opacity = '1';
+                preloader.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Fade ONLY the preloader background canvas (NOT the text!)
+        gsap.to(preloader, {
+            backgroundColor: transparentBg,
+            duration: 0.75,
+            delay: 0.1,
+            ease: "power2.inOut"
+        });
+
+        if (preloaderBackdrop) {
+            gsap.to(preloaderBackdrop, {
+                opacity: 0,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        }
+
+        // Top Header glides in as headline reaches hero destination
+        if (header) {
+            gsap.to(header, {
+                y: 0,
+                opacity: 1,
+                duration: 0.7,
+                delay: 0.5,
+                ease: "power2.out"
+            });
+        }
+
+        // Subtitle, Bio lead, CTA buttons, and direct line cascade in right below the landing spot
+        if (heroItems.length) {
+            gsap.to(heroItems, {
+                y: 0,
+                opacity: 1,
+                filter: "blur(0px)",
+                stagger: 0.1,
+                duration: 0.7,
+                delay: 0.65,
+                ease: "power2.out",
+                onStart: () => {
+                    heroItems.forEach(el => el.classList.add('is-active'));
+                }
+            });
+        }
+    }, null, 2.1);
 }
-initSkiper19ScrollStroke();
+
+function initRightHemisphereMotion() {
+    // 1. Immediate activation for project card inner slots
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(card => card.classList.add('is-revealed'));
+
+    // 2. A. CORNER-TO-CENTER HEADLINE CONVERGENCE & HERO CASCADE (GSAP POWERED)
+    initSeamlessFlipPreloader();
+
+    // 3. B. SCROLL-TRIGGERED SECTION APPEARANCE (GSAP + ScrollTrigger + Lenis)
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        // Section Titles (Clean upward float, no word-splitting cutoffs)
+        document.querySelectorAll('.section-title, .contact-card h3').forEach(title => {
+            gsap.fromTo(title,
+                { y: 22, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: title,
+                        start: "top 92%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        });
+
+        // Mono Tags & Descriptions
+        document.querySelectorAll('.mono-tag, .section-desc, .skills-interactive-hint').forEach(el => {
+            el.classList.add('rh-reveal-up');
+            ScrollTrigger.create({
+                trigger: el,
+                start: "top 95%",
+                onEnter: () => el.classList.add('is-revealed')
+            });
+        });
+
+        // Featured Projects (2x2 Bento Grid Stagger)
+        const projectGrid = document.querySelector('.projects-grid');
+        const projectCardList = document.querySelectorAll('.project-card');
+        if (projectGrid && projectCardList.length) {
+            gsap.fromTo(projectCardList,
+                { y: 35, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: projectGrid,
+                        start: "top 90%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        }
+
+        // Technical Skills (4-column Capabilities Grid)
+        const skillsGrid = document.querySelector('.skills-categories-grid');
+        const skillCards = document.querySelectorAll('.skill-category-card');
+        if (skillsGrid && skillCards.length) {
+            gsap.fromTo(skillCards,
+                { y: 30, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.75,
+                    ease: "power3.out",
+                    stagger: 0.08,
+                    scrollTrigger: {
+                        trigger: skillsGrid,
+                        start: "top 90%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        }
+
+        // Achievements items
+        const achieveContainer = document.querySelector('.achievements-container');
+        const achieveItems = document.querySelectorAll('.achievement-item');
+        if (achieveContainer && achieveItems.length) {
+            gsap.fromTo(achieveItems,
+                { y: 25, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.75,
+                    ease: "power3.out",
+                    stagger: 0.08,
+                    scrollTrigger: {
+                        trigger: achieveContainer,
+                        start: "top 90%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        }
+
+        // Signal Flow Telemetry
+        const signalContainer = document.querySelector('.signal-flow-container');
+        if (signalContainer) {
+            signalContainer.classList.add('rh-reveal-up');
+            ScrollTrigger.create({
+                trigger: signalContainer,
+                start: "top 90%",
+                onEnter: () => signalContainer.classList.add('is-revealed')
+            });
+        }
+
+        // Contact Section (Direct card & form card)
+        const contactGrid = document.querySelector('.contact-grid');
+        const contactCards = document.querySelectorAll('.contact-card, .contact-form-card');
+        if (contactGrid && contactCards.length) {
+            gsap.fromTo(contactCards,
+                { y: 30, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: contactGrid,
+                        start: "top 90%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        }
+
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+        }, 200);
+    }
+
+    // 4. GUARANTEED FAIL-SAFE INTERSECTION OBSERVER
+    const safetyObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                el.classList.add('is-revealed');
+                obs.unobserve(el);
+            }
+        });
+    }, { threshold: 0.05, rootMargin: "0px 0px 50px 0px" });
+
+    document.querySelectorAll('.section-title, .mono-tag, .section-desc, .project-card, .skill-category-card, .achievement-item, .contact-card, .contact-form-card, .signal-flow-container').forEach(el => {
+        safetyObserver.observe(el);
+    });
+
+    // 5. SAFETY TIMEOUT: Ensure all content is 100% revealed
+    setTimeout(() => {
+        document.querySelectorAll('.hero-anim-item:not(.is-active)').forEach(el => el.classList.add('is-active'));
+        document.querySelectorAll('.rh-reveal-up:not(.is-revealed)').forEach(el => el.classList.add('is-revealed'));
+    }, 3500);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRightHemisphereMotion);
+} else {
+    initRightHemisphereMotion();
+}
+
+/* Gradient hover cards removed to eliminate GPU lag */
+
+/* Skiper 19 Scroll Stroke: Removed */
+window.updateSkiper19ScrollStroke = () => {};
+
 const menuToggle = document.getElementById('menu-toggle');
 const navbar = document.getElementById('navbar');
 
@@ -865,7 +740,7 @@ const projectDetailsData = {
             {
                 title: '<i class="fas fa-sliders-h"></i> ATS Quantifiable Engineering Bullets',
                 bullets: [
-                    '<strong>Developed</strong> a full-stack fact-checking and digital forensics platform using <strong>React, Node.js, and MongoDB</strong>, orchestrating multi-agent verification pipelines to cross-reference claims against trusted sources.',
+                    '<strong>Developed</strong> a full-stack fact-checking and digital forensics platform using <strong>React, Node.js, and Express</strong>, orchestrating multi-agent verification pipelines to cross-reference claims against trusted sources.',
                     '<strong>Implemented</strong> <strong>Merkle Tree cryptographic hashing</strong> to generate immutable, tamper-evident audit trails for verified timeline events, aligning digital evidence integrity with <strong>BSA (Bharatiya Sakshya Adhiniyam)</strong> legal standards.',
                     '<strong>Optimized</strong> backend <strong>REST API</strong> query indexing and caching strategies, decreasing complex timeline search and verification response times by <strong>40%</strong>.'
                 ]
@@ -882,45 +757,8 @@ const projectDetailsData = {
             { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/chronofact', external: true }
         ]
     },
-    'portfolio': {
-        index: '04 // PERSONAL ARCHITECTURE',
-        badge: '<span class="badge live-badge"><i class="fas fa-star"></i> 98+ Lighthouse &amp; Web Audio</span>',
-        title: 'Interactive Developer Portfolio & Custom Web Audio Synthesizer',
-        subtitle: 'High-performance zero-dependency developer portfolio achieving 98+ Google Lighthouse scores, custom procedural Web Audio synthesis (0 KB audio payload), and relational skill-to-project state mapping.',
-        image: null,
-        imageCaption: null,
-        blocks: [
-            {
-                title: '<i class="fas fa-bullseye"></i> Engineering Objectives',
-                content: 'Built from scratch without heavy frameworks to deliver instantaneous sub-second load times, accessible semantic structure, and immersive haptic audio micro-interactions.'
-            },
-            {
-                title: '<i class="fas fa-project-diagram"></i> Architecture & Zero-Payload Synthesis Flow',
-                diagram: `[SEMANTIC DOM ARCHITECTURE]
-├── Hardware-Accelerated CSS (Zero Layout Shifts • Fluid Typography)
-├── Skiper UI Micro-Enhancements (Subpixel Progress, Cmd+K Spotlight)
-└── Procedural Web Audio API (0 KB External Audio Payload)
-        │
-        ▼ (Dual-Cloud CI/CD CDN Deployment)
-[HOSTING: Firebase Edge + GitHub Pages Pipeline]`
-            },
-            {
-                title: '<i class="fas fa-sliders-h"></i> ATS Quantifiable Engineering Bullets',
-                bullets: [
-                    '<strong>Engineered</strong> a responsive, zero-framework developer portfolio achieving <strong>98+</strong> Google Lighthouse performance and accessibility scores through semantic HTML5, modern CSS, and modular JavaScript.',
-                    '<strong>Programmed</strong> a custom procedural <strong>Web Audio API synthesizer engine</strong> from scratch to generate real-time polyphonic UI micro-interaction sound effects with zero external audio asset overhead (<code>0 KB</code> audio payload).',
-                    '<strong>Designed</strong> an interactive relational state filter that dynamically links <strong>20+ technical skills</strong> to corresponding project architectures, alongside a persistent multi-accent CSS variable theming engine.'
-                ]
-            }
-        ],
-        notice: '<strong>Stack:</strong> Semantic HTML5, CSS3 Custom Properties, Vanilla JavaScript (ES6+), Web Audio API, Firebase Hosting & GitHub Pages.',
-        actions: [
-            { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/arpityadav626.github.io', external: true, primary: true },
-            { label: 'Live Portfolio (arpity.me)', icon: 'fas fa-external-link-alt', href: 'https://arpity.me/', external: true }
-        ]
-    },
     'ai-hub': {
-        index: '05 // FRONTIER AI & MEDIA ECOSYSTEM',
+        index: '04 // FRONTIER AI & MEDIA ECOSYSTEM',
         badge: '<span class="badge live-badge"><i class="fas fa-bolt"></i> 130+ Platforms Indexed</span>',
         title: 'AI Hub — Unified AI Workspace & 3D Media Discovery Suite',
         subtitle: 'Unified React 19 and TypeScript workspace aggregating 130+ global film, music, and book sources with interactive Three.js 3D navigation, an in-app 4K media player, and ambient audio streams.',
@@ -960,7 +798,7 @@ const projectDetailsData = {
         ]
     },
     'monolith-villa': {
-        index: '06 // SPATIAL COMPUTING & 3D ARCHVIZ',
+        index: '05 // SPATIAL COMPUTING & 3D ARCHVIZ',
         badge: '<span class="badge live-badge"><i class="fas fa-cube"></i> Live WebGL 3D ArchViz</span>',
         title: 'Monolith Villa — 3D Spatial Digital Twin & Architectural Walkthrough',
         subtitle: 'Photorealistic 3D spatial digital twin of a 14,200 sq.ft luxury villa engineered with scroll-interpolated camera splines, spatial HUD matrix projection, and procedural ambient audio.',
@@ -1079,6 +917,7 @@ const projectModalCard = document.querySelector('.project-modal-card');
 
 function openProjectModal(projectId) {
     if (!projectModal) return;
+    if (window.lenis) window.lenis.stop();
     renderProjectDetails(projectId);
     projectModal.classList.add('active');
     projectModal.setAttribute('aria-hidden', 'false');
@@ -1092,6 +931,7 @@ function openProjectModal(projectId) {
 
 function closeProjectModal() {
     if (!projectModal) return;
+    if (window.lenis) window.lenis.start();
     projectModal.classList.remove('active');
     projectModal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
@@ -1269,536 +1109,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 /* ========================================================
-   12. LUXURY MONOCHROME (DARK / LIGHT) & SKIPER26 VIEW TRANSITIONS
-   Ultra-clean Black & White aesthetic with circular ripple transition
+   12. THEME MODE: PERMANENT LIGHT MODE (Black Mode Removed)
 ======================================================== */
-const themeModeBtn = document.getElementById('theme-mode-btn');
-const themeModeIcon = document.getElementById('theme-mode-icon');
-
-function executeViewTransition(changeFn, clickEvent) {
-    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        changeFn();
-        return;
-    }
-
-    let x = window.innerWidth / 2;
-    let y = window.innerHeight / 2;
-
-    if (clickEvent) {
-        if (clickEvent.clientX !== undefined && clickEvent.clientY !== undefined) {
-            x = clickEvent.clientX;
-            y = clickEvent.clientY;
-        } else if (clickEvent.target) {
-            const rect = clickEvent.target.getBoundingClientRect();
-            x = rect.left + rect.width / 2;
-            y = rect.top + rect.height / 2;
-        }
-    }
-
-    const maxRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y)
-    );
-
-    const transition = document.startViewTransition(() => {
-        changeFn();
-    });
-
-    transition.ready.then(() => {
-        document.documentElement.animate(
-            {
-                clipPath: [
-                    `circle(0px at ${x}px ${y}px)`,
-                    `circle(${maxRadius}px at ${x}px ${y}px)`
-                ]
-            },
-            {
-                duration: 650,
-                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                pseudoElement: '::view-transition-new(root)'
-            }
-        );
-    });
-}
-
-function setDisplayMode(mode) {
-    const isLight = mode === 'light';
-    const modeVal = isLight ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-mode', modeVal);
-    document.body.setAttribute('data-mode', modeVal);
-    localStorage.setItem('arpit-theme-mode', modeVal);
-
-    if (themeModeIcon) {
-        themeModeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
-    }
-
-    if (typeof window.updateHeroLiquidTheme === 'function') {
-        window.updateHeroLiquidTheme();
-    }
-
-    if (typeof window.updateSkiper19ScrollStroke === 'function') {
-        window.updateSkiper19ScrollStroke();
-    }
-}
-
-// Clean up legacy multi-color accent keys and enforce luxury monochrome
+document.documentElement.setAttribute('data-mode', 'light');
+document.body.setAttribute('data-mode', 'light');
 try {
+    localStorage.removeItem('arpit-theme-mode');
     localStorage.removeItem('arpit-accent-theme');
-    document.body.removeAttribute('data-theme');
-    document.documentElement.removeAttribute('data-theme');
 } catch (e) {}
-
-// Restore saved mode on initial load (default: dark, supports ?mode=light)
-const urlParams = new URLSearchParams(window.location.search);
-const queryMode = urlParams.get('mode');
-const savedMode = (queryMode === 'light' || queryMode === 'dark') ? queryMode : (localStorage.getItem('arpit-theme-mode') || 'dark');
-setDisplayMode(savedMode);
-
-// Event Listener for Theme Mode Toggle
-if (themeModeBtn) {
-    themeModeBtn.addEventListener('click', (e) => {
-        const currentMode = document.body.getAttribute('data-mode') || 'dark';
-        const nextMode = currentMode === 'light' ? 'dark' : 'light';
-        playButtonClick();
-        executeViewTransition(() => setDisplayMode(nextMode), e);
-    });
-}
-
-/* ========================================================
-   13. HERO LIQUID SIMULATION ENGINE (Skiper12 WebGL Fluid Dynamics)
-   Crystal-Clear Water Refraction & Specular Highlights
-   Strictly runs in Black (Dark) Mode; 100% disabled in Light Mode
-   Idle state: Completely calm and still ("still pe still rehta hai")
-======================================================== */
-function initHeroLiquidSimulation() {
-    const container = document.getElementById('hero-liquid-backdrop');
-    const canvas = document.getElementById('hero-liquid-canvas');
-    if (!container || !canvas || !window.THREE) return;
-
-    // Check WebGL availability
-    try {
-        const testCanvas = document.createElement('canvas');
-        const testGl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
-        if (!testGl) return;
-    } catch (e) {
-        return;
-    }
-
-    const scene = new THREE.Scene();
-    const simScene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-    const renderer = new THREE.WebGLRenderer({
-        canvas: canvas,
-        antialias: true,
-        alpha: true,
-        preserveDrawingBuffer: false,
-        powerPreference: "high-performance"
-    });
-
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let rect = container.getBoundingClientRect();
-    let width = Math.max(Math.floor(rect.width), 300);
-    let height = Math.max(Math.floor(rect.height), 280);
-
-    renderer.setPixelRatio(dpr);
-    renderer.setSize(width, height);
-
-    let W = Math.floor(width * dpr);
-    let H = Math.floor(height * dpr);
-
-    let targetType = THREE.FloatType;
-    const gl = renderer.getContext();
-    if (!gl.getExtension('OES_texture_float') && !gl.getExtension('EXT_color_buffer_float')) {
-        targetType = THREE.HalfFloatType;
-    }
-
-    const renderTargetParams = {
-        format: THREE.RGBAFormat,
-        type: targetType,
-        minFilter: THREE.NearestFilter,
-        magFilter: THREE.NearestFilter,
-        stencilBuffer: false,
-        depthBuffer: false
-    };
-
-    let targetA = new THREE.WebGLRenderTarget(W, H, renderTargetParams);
-    let targetB = new THREE.WebGLRenderTarget(W, H, renderTargetParams);
-
-    const mouse = new THREE.Vector2(-10, -10);
-    const prevMouse = new THREE.Vector2(-10, -10);
-    let frame = 0;
-    let animId = null;
-    let isRunning = false;
-
-    // Fluid Simulation Shader (Pure physical wave equation with smooth line interpolation)
-    const simMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-            textureA: { value: null },
-            mouse: { value: mouse },
-            prevMouse: { value: prevMouse },
-            resolution: { value: new THREE.Vector2(W, H) },
-            time: { value: 0 },
-            frame: { value: 0 }
-        },
-        vertexShader: `
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-        `,
-        fragmentShader: `
-            uniform sampler2D textureA;
-            uniform vec2 mouse;
-            uniform vec2 prevMouse;
-            uniform vec2 resolution;
-            uniform float time;
-            uniform int frame;
-            varying vec2 vUv;
-
-            const float delta = 1.4;
-
-            void main() {
-                vec2 uv = vUv;
-                if (frame == 0) {
-                    gl_FragColor = vec4(0.0);
-                    return;
-                }
-
-                vec4 data = texture2D(textureA, uv);
-                float pressure = data.x;
-                float pVel = data.y;
-
-                vec2 texelSize = 1.0 / resolution;
-                float p_right = texture2D(textureA, uv + vec2(texelSize.x, 0.0)).x;
-                float p_left  = texture2D(textureA, uv + vec2(-texelSize.x, 0.0)).x;
-                float p_up    = texture2D(textureA, uv + vec2(0.0, texelSize.y)).x;
-                float p_down  = texture2D(textureA, uv + vec2(0.0, -texelSize.y)).x;
-
-                if (uv.x <= texelSize.x) p_left = p_right;
-                if (uv.x >= 1.0 - texelSize.x) p_right = p_left;
-                if (uv.y <= texelSize.y) p_down = p_up;
-                if (uv.y >= 1.0 - texelSize.y) p_up = p_down;
-
-                // 2D Wave propagation
-                pVel += delta * (-2.0 * pressure + p_right + p_left) / 4.0;
-                pVel += delta * (-2.0 * pressure + p_up + p_down) / 4.0;
-
-                pressure += delta * pVel;
-
-                // Precise damping: ripples propagate smoothly and settle to absolute stillness when idle
-                pVel -= 0.007 * delta * pressure;
-                pVel *= (1.0 - 0.008 * delta);
-                pressure *= 0.986;
-
-                // Interactive cursor stroke interpolation (unbroken fluid ribbon)
-                if (mouse.x > 0.0) {
-                    vec2 mouseUV = mouse / resolution;
-                    vec2 prevUV = (prevMouse.x > 0.0) ? (prevMouse / resolution) : mouseUV;
-                    
-                    vec2 pa = uv - prevUV;
-                    vec2 ba = mouseUV - prevUV;
-                    float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
-                    float dist = length(pa - ba * h);
-                    
-                    // Fine radius for razor-sharp crystal ripples
-                    if (dist <= 0.022) {
-                        pressure += 2.2 * (1.0 - dist / 0.022);
-                    }
-                }
-
-                // Strictly NO ambient drops - surface stays 100% still when mouse is idle!
-
-                gl_FragColor = vec4(pressure, pVel, (p_right - p_left) / 2.0, (p_up - p_down) / 2.0);
-            }
-        `
-    });
-
-    // Background Canvas Texture (Black base with obsidian liquid glass sculpture)
-    const bgCanvas = document.createElement('canvas');
-    bgCanvas.width = W;
-    bgCanvas.height = H;
-    const bgCtx = bgCanvas.getContext('2d', { alpha: false });
-    const bgTexture = new THREE.CanvasTexture(bgCanvas);
-    bgTexture.minFilter = THREE.LinearFilter;
-    bgTexture.magFilter = THREE.LinearFilter;
-
-    const sculptureImg = new Image();
-    sculptureImg.crossOrigin = 'anonymous';
-    let imgLoaded = false;
-
-    sculptureImg.onload = () => {
-        imgLoaded = true;
-        renderBackgroundPattern();
-    };
-    // Use WebP with PNG fallback
-    sculptureImg.onerror = () => {
-        if (!sculptureImg.src.endsWith('.png')) {
-            sculptureImg.src = 'assets/liquid_sculpture.png';
-        }
-    };
-    sculptureImg.src = 'assets/liquid_sculpture.webp';
-
-    function renderBackgroundPattern() {
-        // Pure black base
-        bgCtx.fillStyle = '#000000';
-        bgCtx.fillRect(0, 0, W, H);
-
-        if (imgLoaded && sculptureImg.naturalWidth > 0) {
-            const imgRatio = sculptureImg.naturalWidth / sculptureImg.naturalHeight;
-            let targetW, targetH, targetX, targetY;
-
-            if (W > 768 * dpr) {
-                // Desktop: Position on right side of the hero section
-                targetH = Math.min(H * 0.95, (W * 0.58) / imgRatio);
-                targetW = targetH * imgRatio;
-                targetX = W * 0.70 - targetW * 0.5;
-                targetY = (H - targetH) * 0.5;
-            } else {
-                // Mobile/Tablet: Centered hero placement
-                targetW = Math.min(W * 0.88, H * 0.65 * imgRatio);
-                targetH = targetW / imgRatio;
-                targetX = (W - targetW) * 0.5;
-                targetY = (H - targetH) * 0.5;
-            }
-
-            bgCtx.drawImage(sculptureImg, targetX, targetY, targetW, targetH);
-        }
-        bgTexture.needsUpdate = true;
-    }
-    renderBackgroundPattern();
-
-    // High-Clarity Water Optics Render Shader (Matching Skiper12 Vercel liquid simulation)
-    const renderMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-            textureA: { value: null },
-            textureB: { value: bgTexture }
-        },
-        vertexShader: `
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-        `,
-        fragmentShader: `
-            uniform sampler2D textureA;
-            uniform sampler2D textureB;
-            varying vec2 vUv;
-
-            void main() {
-                vec4 data = texture2D(textureA, vUv);
-
-                // Motion modulation: when surface is still, motion drops to 0.0
-                float motion = smoothstep(0.0006, 0.006, length(data.zw) + abs(data.x) * 0.03);
-
-                // Fluid refraction distortion modulated by active motion
-                vec2 distortion = 0.3 * data.zw * motion;
-                vec4 color = texture2D(textureB, vUv + distortion);
-
-                // High-precision surface normal
-                vec3 normal = normalize(vec3(-data.z * 2.2, 0.5, -data.w * 2.2));
-                vec3 lightDir = normalize(vec3(-3.0, 10.0, 3.0));
-
-                // High-exponent specular reflection (Skiper12 exact formula)
-                float specAngle = max(0.0, dot(normal, lightDir));
-                float specular = pow(specAngle, 60.0) * 1.6;
-
-                // Subtle edge refraction highlight
-                float caustic = smoothstep(0.01, 0.08, length(data.zw)) * 0.35;
-
-                vec3 finalColor = color.rgb + vec3(specular * motion) + vec3(caustic * motion);
-                gl_FragColor = vec4(finalColor, 1.0);
-            }
-        `,
-        transparent: false
-    });
-
-    const plane = new THREE.PlaneGeometry(2, 2);
-    const simMesh = new THREE.Mesh(plane, simMaterial);
-    const renderMesh = new THREE.Mesh(plane, renderMaterial);
-
-    simScene.add(simMesh);
-    scene.add(renderMesh);
-
-    // Mouse & Touch Tracking with previous position tracking
-    let mouseTimeout = null;
-    function updateMouse(clientX, clientY) {
-        if (!isRunning) return;
-        const r = canvas.getBoundingClientRect();
-        const px = clientX - r.left;
-        const py = clientY - r.top;
-        if (px >= 0 && px <= r.width && py >= 0 && py <= r.height) {
-            if (mouse.x > 0.0) {
-                prevMouse.copy(mouse);
-            } else {
-                prevMouse.set(px * dpr, (r.height - py) * dpr);
-            }
-            mouse.x = px * dpr;
-            mouse.y = (r.height - py) * dpr;
-
-            // Clear previous mouse when motion stops
-            clearTimeout(mouseTimeout);
-            mouseTimeout = setTimeout(() => {
-                prevMouse.copy(mouse);
-            }, 60);
-        } else {
-            mouse.set(-10, -10);
-            prevMouse.set(-10, -10);
-        }
-    }
-
-    const heroSection = document.getElementById('home');
-    if (heroSection) {
-        heroSection.addEventListener('mousemove', (e) => {
-            updateMouse(e.clientX, e.clientY);
-        });
-        heroSection.addEventListener('mouseleave', () => {
-            mouse.set(-10, -10);
-            prevMouse.set(-10, -10);
-        });
-        heroSection.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                updateMouse(e.touches[0].clientX, e.touches[0].clientY);
-            }
-        }, { passive: true });
-        heroSection.addEventListener('touchend', () => {
-            mouse.set(-10, -10);
-            prevMouse.set(-10, -10);
-        });
-    }
-
-    window.addEventListener('mousemove', (e) => {
-        if (!isRunning || !heroSection) return;
-        const hr = heroSection.getBoundingClientRect();
-        if (e.clientY >= hr.top - 50 && e.clientY <= hr.bottom + 50) {
-            updateMouse(e.clientX, e.clientY);
-        }
-    });
-
-    // Resize handler
-    function handleResize() {
-        const newRect = container.getBoundingClientRect();
-        if (newRect.width === 0 || newRect.height === 0) return;
-        const newW = Math.max(Math.floor(newRect.width), window.innerWidth || 300);
-        const newH = Math.max(Math.floor(newRect.height), 350);
-        if (newW === width && newH === height) return;
-
-        width = newW;
-        height = newH;
-        W = Math.floor(width * dpr);
-        H = Math.floor(height * dpr);
-
-        renderer.setSize(width, height);
-        targetA.setSize(W, H);
-        targetB.setSize(W, H);
-        simMaterial.uniforms.resolution.value.set(W, H);
-
-        bgCanvas.width = W;
-        bgCanvas.height = H;
-        renderBackgroundPattern();
-    }
-
-    if (window.ResizeObserver) {
-        let resizeTimer;
-        const ro = new ResizeObserver(() => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(handleResize, 100);
-        });
-        ro.observe(container);
-    } else {
-        window.addEventListener('resize', handleResize);
-    }
-
-    // Animation Loop
-    function animate() {
-        if (!isRunning) return;
-        animId = requestAnimationFrame(animate);
-
-        simMaterial.uniforms.frame.value = frame++;
-        simMaterial.uniforms.time.value = performance.now() / 1000;
-        simMaterial.uniforms.textureA.value = targetA.texture;
-
-        renderer.setRenderTarget(targetB);
-        renderer.render(simScene, camera);
-
-        renderMaterial.uniforms.textureA.value = targetB.texture;
-        renderer.setRenderTarget(null);
-        renderer.render(scene, camera);
-
-        let temp = targetA;
-        targetA = targetB;
-        targetB = temp;
-    }
-
-    function startSimulation() {
-        const isLight = document.body.getAttribute('data-mode') === 'light';
-        if (isLight) {
-            stopSimulation();
-            return;
-        }
-        if (isRunning) return;
-        isRunning = true;
-        handleResize();
-        animate();
-    }
-
-    function stopSimulation() {
-        isRunning = false;
-        if (animId) {
-            cancelAnimationFrame(animId);
-            animId = null;
-        }
-        if (renderer) {
-            renderer.clear();
-        }
-    }
-
-    // Hook to Dark/Light Theme Switching (Strict Dark-Only policy)
-    window.updateHeroLiquidTheme = function() {
-        const isLight = document.body.getAttribute('data-mode') === 'light';
-        if (isLight) {
-            stopSimulation();
-        } else {
-            startSimulation();
-        }
-    };
-
-    // Performance optimization: Pause heavy WebGL rendering when hero is scrolled out of view!
-    if ('IntersectionObserver' in window) {
-        const heroSection = document.getElementById('home');
-        if (heroSection) {
-            const heroObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const isLight = document.body.getAttribute('data-mode') === 'light';
-                    if (entry.isIntersecting) {
-                        if (!isLight && !isRunning) {
-                            startSimulation();
-                        }
-                    } else {
-                        if (isRunning) {
-                            stopSimulation();
-                        }
-                    }
-                });
-            }, { threshold: 0.02 });
-            heroObserver.observe(heroSection);
-        }
-    }
-
-    // Initial Start if in Dark Mode
-    const isCurrentLight = document.body.getAttribute('data-mode') === 'light';
-    if (!isCurrentLight) {
-        startSimulation();
-    }
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHeroLiquidSimulation);
-} else {
-    initHeroLiquidSimulation();
-}
 
 /* ========================================================
    14. TECH STACK ↔ PROJECT INTERACTIVE HIGHLIGHTING ENGINE
@@ -1824,7 +1142,6 @@ function formatSkillName(key) {
         'react': 'React 19',
         'nodejs': 'Node.js',
         'express': 'Express',
-        'mongodb': 'MongoDB',
         'esp32': 'ESP32',
         'arduino': 'Arduino',
         'sensors': 'Sensors & Actuators',
@@ -2317,26 +1634,7 @@ function createTextRollMarkup(text) {
 }
 
 function initSkiper58TextRoll() {
-    // 1. Navbar Links
-    document.querySelectorAll('.navbar .nav-link').forEach(link => {
-        if (link.dataset.textRolled) return;
-        if (link.classList.contains('mobile-nav-resume')) {
-            link.dataset.textRolled = "true";
-            link.innerHTML = createTextRollMarkup('Resume') + ' <span class="skiper-arrow">↗</span>';
-            return;
-        }
-        const rawText = link.textContent.trim();
-        if (!rawText) return;
-        link.dataset.textRolled = "true";
-        link.innerHTML = createTextRollMarkup(rawText);
-    });
-
-    // 2. Resume button in header
-    const resumeBtn = document.querySelector('.header-right .btn-pill');
-    if (resumeBtn && !resumeBtn.dataset.textRolled) {
-        resumeBtn.dataset.textRolled = "true";
-        resumeBtn.innerHTML = createTextRollMarkup('Resume') + ' <span class="skiper-arrow">↗</span>';
-    }
+    // 1. Minimal flat navbar links remain pure clean text (Awwwards standard)
 
     // 3. Hero CTA buttons
     const heroPrimaryBtn = document.querySelector('.hero-actions .btn-primary');
@@ -2348,7 +1646,9 @@ function initSkiper58TextRoll() {
     const heroOutlineBtn = document.querySelector('.hero-actions .btn-outline');
     if (heroOutlineBtn && !heroOutlineBtn.dataset.textRolled) {
         heroOutlineBtn.dataset.textRolled = "true";
-        heroOutlineBtn.innerHTML = createTextRollMarkup('Get In Touch');
+        heroOutlineBtn.setAttribute('href', '#contact');
+        heroOutlineBtn.removeAttribute('target');
+        heroOutlineBtn.innerHTML = createTextRollMarkup('Get In Touch') + ' <i class="fas fa-arrow-down"></i>';
     }
 
     // 4. Project Card Primary CTA buttons ("Details")
@@ -2378,263 +1678,6 @@ if (document.readyState === 'loading') {
 } else {
     initSkiper58TextRoll();
 }
-
-/* ========================================================
-   19. CROWD CANVAS ANIMATION ENGINE (SKIPER 39)
-   High-Performance Pure HTML5 Canvas Crowd Walking Engine
-======================================================== */
-(function initCrowdCanvas() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const canvas = document.getElementById('crowd-canvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const config = {
-        src: 'assets/all-peeps.png',
-        rows: 15,
-        cols: 7,
-    };
-
-    const randomRange = (min, max) => min + Math.random() * (max - min);
-    const randomIndex = (array) => (randomRange(0, array.length) | 0);
-    const removeFromArray = (array, i) => array.splice(i, 1)[0];
-    const removeItemFromArray = (array, item) => removeFromArray(array, array.indexOf(item));
-    const removeRandomFromArray = (array) => removeFromArray(array, randomIndex(array));
-
-    const stage = { width: 0, height: 0 };
-    const allPeeps = [];
-    const availablePeeps = [];
-    const crowd = [];
-
-    const img = new Image();
-
-    const createPeep = (rect) => {
-        const p = {
-            rect: rect,
-            width: rect[2],
-            height: rect[3],
-            x: 0,
-            y: 0,
-            anchorY: 0,
-            scaleX: 1,
-            // Custom walk parameters (native RAF, zero GSAP dependency)
-            startX: 0,
-            endX: 0,
-            startY: 0,
-            duration: 10,
-            speed: 1,
-            progress: 0,
-            bobSpeed: 0.4,
-            
-            initWalk: function(stg) {
-                const direction = Math.random() > 0.5 ? 1 : -1;
-                // Power2.in distribution for natural perspective layering
-                const r = Math.random();
-                const easeIn = r * r;
-                const offsetY = 70 - 210 * easeIn;
-                const sY = Math.max(30, stg.height - p.height + offsetY);
-                
-                if (direction === 1) {
-                    p.startX = -p.width;
-                    p.endX = stg.width + p.width;
-                    p.scaleX = 1;
-                } else {
-                    p.startX = stg.width + p.width;
-                    p.endX = -p.width;
-                    p.scaleX = -1;
-                }
-                
-                p.startY = sY;
-                p.anchorY = sY;
-                p.x = p.startX;
-                p.y = sY;
-                p.speed = randomRange(0.65, 1.15);
-                // Calmer, slower walking speed across the section
-                const baseDuration = stg.width > 900 ? 22 : 16;
-                p.duration = baseDuration / p.speed;
-                p.progress = 0;
-            },
-
-            update: function(dt) {
-                p.progress += dt / p.duration;
-                if (p.progress >= 1) return false; // completed
-
-                // Linear horizontal motion
-                p.x = p.startX + (p.endX - p.startX) * p.progress;
-                // Natural gentle bounce step cycle
-                const bounce = Math.abs(Math.sin((p.progress * p.duration) / p.bobSpeed * Math.PI));
-                p.y = p.startY - bounce * 6;
-                return true;
-            },
-
-            render: function(context) {
-                context.save();
-                context.translate(p.x, p.y);
-                context.scale(p.scaleX, 1);
-                context.drawImage(
-                    img,
-                    p.rect[0],
-                    p.rect[1],
-                    p.rect[2],
-                    p.rect[3],
-                    0,
-                    0,
-                    p.width,
-                    p.height
-                );
-                context.restore();
-            }
-        };
-        return p;
-    };
-
-    const createPeeps = () => {
-        const { rows, cols } = config;
-        const width = img.naturalWidth || 1050;
-        const height = img.naturalHeight || 560;
-        const total = rows * cols;
-        const rectWidth = width / rows;
-        const rectHeight = height / cols;
-
-        allPeeps.length = 0;
-        for (let i = 0; i < total; i++) {
-            allPeeps.push(
-                createPeep([
-                    (i % rows) * rectWidth,
-                    ((i / rows) | 0) * rectHeight,
-                    rectWidth,
-                    rectHeight,
-                ])
-            );
-        }
-    };
-
-    const addPeepToCrowd = (randomizeProgress = false) => {
-        if (!availablePeeps.length) return null;
-        const peep = removeRandomFromArray(availablePeeps);
-        peep.initWalk(stage);
-        if (randomizeProgress) {
-            peep.progress = Math.random();
-            peep.x = peep.startX + (peep.endX - peep.startX) * peep.progress;
-        }
-        crowd.push(peep);
-        // Sort by anchorY for true perspective depth (closer people render in front)
-        crowd.sort((a, b) => a.anchorY - b.anchorY);
-        return peep;
-    };
-
-    const removePeepFromCrowd = (peep) => {
-        removeItemFromArray(crowd, peep);
-        availablePeeps.push(peep);
-    };
-
-    const initCrowd = () => {
-        // Rich crowd density with smooth 60fps performance
-        const targetCount = stage.width > 900 ? 38 : 20;
-        while (availablePeeps.length && crowd.length < targetCount) {
-            addPeepToCrowd(true);
-        }
-    };
-
-    const resize = () => {
-        if (!canvas) return;
-        const rect = canvas.getBoundingClientRect();
-        stage.width = rect.width || canvas.clientWidth || 800;
-        stage.height = rect.height || canvas.clientHeight || 350;
-
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.floor(stage.width * dpr);
-        canvas.height = Math.floor(stage.height * dpr);
-
-        crowd.length = 0;
-        availablePeeps.length = 0;
-        availablePeeps.push(...allPeeps);
-
-        initCrowd();
-    };
-
-    let isVisible = false;
-    let animId = null;
-    let lastTime = 0;
-
-    const render = (time) => {
-        if (!isVisible) return;
-        animId = requestAnimationFrame(render);
-
-        if (!lastTime) lastTime = time;
-        let dt = (time - lastTime) / 1000;
-        lastTime = time;
-        if (dt > 0.05) dt = 0.05; // clamp
-
-        // Update crowd
-        for (let i = crowd.length - 1; i >= 0; i--) {
-            const peep = crowd[i];
-            const alive = peep.update(dt);
-            if (!alive) {
-                removePeepFromCrowd(peep);
-                addPeepToCrowd(false);
-            }
-        }
-
-        // Render frame
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-        ctx.scale(dpr, dpr);
-
-        for (let i = 0; i < crowd.length; i++) {
-            crowd[i].render(ctx);
-        }
-
-        ctx.restore();
-    };
-
-    const start = () => {
-        if (isVisible) return;
-        isVisible = true;
-        lastTime = 0;
-        animId = requestAnimationFrame(render);
-    };
-
-    const stop = () => {
-        isVisible = false;
-        if (animId) {
-            cancelAnimationFrame(animId);
-            animId = null;
-        }
-    };
-
-    // Smart IntersectionObserver: only consumes CPU/GPU when user scrolls to bottom!
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    start();
-                } else {
-                    stop();
-                }
-            });
-        }, { threshold: 0.05 });
-        observer.observe(canvas);
-    } else {
-        start();
-    }
-
-    img.onload = () => {
-        createPeeps();
-        resize();
-    };
-    img.src = config.src;
-
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(resize, 150);
-    }, { passive: true });
-})();
 
 /* ======================================================================
    🟢 20. SKIPER 71: SUBPIXEL SCROLL PROGRESS LINE
@@ -2672,44 +1715,48 @@ if (document.readyState === 'loading') {
    Native Clipboard API + Mechanical click sound + Sleek bubble
    ====================================================================== */
 (function initCopyEmail() {
-    const btn = document.getElementById('copy-email-btn');
-    const bubble = document.getElementById('copy-toast-bubble');
-    const icon = document.getElementById('copy-email-icon');
-    if (!btn || !bubble) return;
+    function setupCopyBtn(btnId, bubbleId, iconId) {
+        const btn = document.getElementById(btnId);
+        const bubble = document.getElementById(bubbleId);
+        const icon = document.getElementById(iconId);
+        if (!btn) return;
 
-    const email = 'arpityadav6794@gmail.com';
-    let timeoutId = null;
+        const email = 'arpityadav6794@gmail.com';
+        let timeoutId = null;
 
-    btn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        try {
-            await navigator.clipboard.writeText(email);
-            if (typeof playButtonClick === 'function') playButtonClick();
-            bubble.classList.add('active');
-            if (icon) {
-                icon.className = 'fas fa-check';
-                icon.style.color = '#10b981';
-            }
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-                bubble.classList.remove('active');
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await navigator.clipboard.writeText(email);
+                if (typeof playButtonClick === 'function') playButtonClick();
+                if (bubble) bubble.classList.add('active');
                 if (icon) {
-                    icon.className = 'far fa-copy';
-                    icon.style.color = '';
+                    icon.className = 'fas fa-check';
+                    icon.style.color = '#10b981';
                 }
-            }, 2000);
-        } catch (err) {
-            // Fallback for older browsers
-            const input = document.createElement('input');
-            input.value = email;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            document.body.removeChild(input);
-            bubble.classList.add('active');
-            setTimeout(() => bubble.classList.remove('active'), 2000);
-        }
-    });
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    if (bubble) bubble.classList.remove('active');
+                    if (icon) {
+                        icon.className = 'far fa-copy';
+                        icon.style.color = '';
+                    }
+                }, 2000);
+            } catch (err) {
+                const input = document.createElement('input');
+                input.value = email;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                if (bubble) bubble.classList.add('active');
+                setTimeout(() => { if (bubble) bubble.classList.remove('active'); }, 2000);
+            }
+        });
+    }
+
+    setupCopyBtn('copy-email-btn', 'copy-toast-bubble', 'copy-email-icon');
+    setupCopyBtn('hero-copy-email-btn', 'hero-copy-toast-bubble', 'hero-copy-email-icon');
 })();
 
 /* ======================================================================
@@ -2735,156 +1782,6 @@ if (document.readyState === 'loading') {
     });
 })();
 
-/* ======================================================================
-   🟢 23. SKIPER 31: COMMAND PALETTE (CMD+K / CTRL+K SPOTLIGHT)
-   Quick navigation, project jump, theme switch & resume download
-   ====================================================================== */
-(function initCommandPalette() {
-    const modal = document.getElementById('cmd-palette-modal');
-    const input = document.getElementById('cmd-palette-input');
-    const triggerBtn = document.getElementById('cmd-palette-btn');
-    const closeEsc = document.getElementById('cmd-close-esc');
-    const items = Array.from(document.querySelectorAll('.cmd-item'));
-    if (!modal || !input) return;
+/* Command Palette (Ctrl+K): Removed */
 
-    let selectedIndex = 0;
 
-    function openPalette() {
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-        input.value = '';
-        filterItems('');
-        selectedIndex = 0;
-        highlightItem(0);
-        setTimeout(() => input.focus(), 50);
-        if (typeof playNavClick === 'function') playNavClick();
-    }
-
-    function closePalette() {
-        modal.classList.remove('active');
-        modal.setAttribute('aria-hidden', 'true');
-        input.blur();
-    }
-
-    function filterItems(query) {
-        const q = query.toLowerCase().trim();
-        let firstMatch = -1;
-        items.forEach((item, idx) => {
-            const text = item.innerText.toLowerCase();
-            const match = !q || text.includes(q);
-            item.style.display = match ? 'flex' : 'none';
-            if (match && firstMatch === -1) firstMatch = idx;
-        });
-
-        // Hide empty groups
-        document.querySelectorAll('.cmd-group').forEach(grp => {
-            const visibleItems = grp.querySelectorAll('.cmd-item:not([style*="display: none"])');
-            grp.style.display = visibleItems.length ? 'flex' : 'none';
-        });
-
-        selectedIndex = Math.max(0, firstMatch);
-        highlightItem(selectedIndex);
-    }
-
-    function highlightItem(index) {
-        const visibleItems = items.filter(it => it.style.display !== 'none');
-        if (!visibleItems.length) return;
-        visibleItems.forEach((it, i) => {
-            if (i === index) {
-                it.classList.add('selected');
-                it.scrollIntoView({ block: 'nearest' });
-            } else {
-                it.classList.remove('selected');
-            }
-        });
-    }
-
-    function executeItem(item) {
-        if (!item) return;
-        closePalette();
-        if (typeof playButtonClick === 'function') playButtonClick();
-
-        const action = item.getAttribute('data-action');
-        if (action === 'nav') {
-            const target = item.getAttribute('data-target');
-            const el = document.querySelector(target);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-        } else if (action === 'project') {
-            const projKey = item.getAttribute('data-project');
-            if (typeof openProjectModal === 'function') {
-                openProjectModal(projKey);
-            } else {
-                const trigger = document.querySelector(`[data-project="${projKey}"] .open-modal-btn`);
-                if (trigger) trigger.click();
-            }
-        } else if (action === 'resume') {
-            window.open('assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.1', '_blank');
-        } else if (action === 'theme') {
-            const themeBtn = document.getElementById('theme-mode-btn');
-            if (themeBtn) themeBtn.click();
-        } else if (action === 'copy-email') {
-            const copyBtn = document.getElementById('copy-email-btn');
-            if (copyBtn) copyBtn.click();
-        } else if (action === 'github') {
-            window.open('https://github.com/arpityadav626', '_blank');
-        } else if (action === 'linkedin') {
-            window.open('https://www.linkedin.com/in/arpit-yadav-944983309/', '_blank');
-        }
-    }
-
-    // Trigger button in header
-    if (triggerBtn) {
-        triggerBtn.addEventListener('click', openPalette);
-    }
-
-    // Close button / backdrop clicks
-    if (closeEsc) closeEsc.addEventListener('click', closePalette);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closePalette();
-    });
-
-    // Keyboard shortcut: Cmd + K / Ctrl + K
-    window.addEventListener('keydown', (e) => {
-        if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
-            e.preventDefault();
-            if (modal.classList.contains('active')) {
-                closePalette();
-            } else {
-                openPalette();
-            }
-        } else if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closePalette();
-        }
-    });
-
-    // Live search
-    input.addEventListener('input', (e) => {
-        filterItems(e.target.value);
-    });
-
-    // Arrow navigation
-    input.addEventListener('keydown', (e) => {
-        const visibleItems = items.filter(it => it.style.display !== 'none');
-        if (!visibleItems.length) return;
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            selectedIndex = (selectedIndex + 1) % visibleItems.length;
-            highlightItem(selectedIndex);
-            if (typeof playScrollTick === 'function') playScrollTick();
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            selectedIndex = (selectedIndex - 1 + visibleItems.length) % visibleItems.length;
-            highlightItem(selectedIndex);
-            if (typeof playScrollTick === 'function') playScrollTick();
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            executeItem(visibleItems[selectedIndex]);
-        }
-    });
-
-    // Click item directly
-    items.forEach(item => {
-        item.addEventListener('click', () => executeItem(item));
-    });
-})();

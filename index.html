@@ -21,7 +21,7 @@
    11. Modals & Scripts : Project Detail Popups & JS Links (Line 768-795)
    ======================================================================
 -->
-<html lang="en">
+<html lang="en" data-mode="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -84,157 +84,79 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=7.1">
 </head>
-<body class="dark-theme">
-
-    <!-- 0. Skiper8 Words Preloader (Dennis Snellenberg Curved Liquid Curtain) -->
-    <div id="preloader" class="preloader" aria-hidden="true">
-        <div class="preloader-content">
-            <div class="preloader-brand">
-                <span class="preloader-dot"></span>
-                <span id="preloader-word" class="preloader-word">Hello</span>
-            </div>
+<body class="light-theme" data-mode="light">
+    <!-- 0. High-End Editorial Intro Preloader -->
+    <div id="intro-preloader" class="intro-preloader" aria-hidden="true">
+        <div class="preloader-backdrop"></div>
+        <div class="preloader-title-wrap">
+            <h1 class="preloader-headline" aria-label="Arpit Yadav">
+                <span class="preloader-part preloader-left">Arpit</span>
+                <span class="preloader-part preloader-right">Yadav</span>
+            </h1>
         </div>
-        <!-- Dynamic Curved Liquid Curtain SVG -->
-        <svg class="preloader-curve" viewBox="0 0 1440 6220" preserveAspectRatio="none">
-            <path id="preloader-curve-path" d="M0 0 L100 0 Q50 100 0 0 Z"></path>
-        </svg>
     </div>
-
 
 
     <!-- 0. Skiper 71: Subpixel Scroll Progress Indicator -->
     <div class="scroll-progress-line" id="scroll-progress-line" aria-hidden="true"></div>
 
-    <!-- 1. Floating Pill Navbar -->
+    <!-- 1. Flat Minimal Awwwards Header -->
     <header class="header">
+        <div class="header-inner">
+            <a href="#home" class="brand-link">arpity.me</a>
 
-        <nav class="navbar" id="navbar">
-            <a href="#projects" class="nav-link sound-hover">Projects</a>
-            <a href="#skills" class="nav-link sound-hover">Skills</a>
-            <a href="#about" class="nav-link sound-hover">About</a>
-            <a href="#achievements" class="nav-link sound-hover">Achievements</a>
-            <a href="#contact" class="nav-link sound-hover">Contact</a>
-            <a href="assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.1" target="_blank" class="nav-link sound-hover mobile-nav-resume">Resume ↗</a>
-        </nav>
+            <nav class="navbar" id="navbar">
+                <a href="#projects" class="nav-link">Work</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#achievements" class="nav-link">Honors</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.1" target="_blank" rel="noopener noreferrer" class="nav-link nav-resume-link">Resume ↗</a>
+            </nav>
 
-        <div class="header-right">
-            <!-- Command Palette Trigger Button (Skiper 31: Cmd+K Spotlight) -->
-            <button class="cmd-palette-btn sound-hover" id="cmd-palette-btn" title="Quick Actions (Ctrl + K / ⌘K)" aria-label="Open Command Palette">
-                <i class="fas fa-search"></i>
-                <span class="cmd-kbd-badge">⌘K</span>
-            </button>
-
-            <!-- Light / Dark Mode Toggle Button (with Skiper26 View Transition) -->
-            <button class="theme-mode-btn sound-hover" id="theme-mode-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light / Dark Mode">
-                <i class="fas fa-sun" id="theme-mode-icon"></i>
-            </button>
-
-            <!-- Cozy UI Sound Toggle Button -->
-            <button id="sound-btn" class="sound-toggle-btn sound-hover" title="Toggle UI Sound">
-                <i class="fas fa-volume-up" id="sound-icon"></i>
-                <span id="sound-text">COZY SFX</span>
-            </button>
-            <a href="assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.1" target="_blank" class="btn btn-pill sound-hover ripple-btn">Resume ↗</a>
-            <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+            <div class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation"><i class="fas fa-bars"></i></div>
         </div>
     </header>
 
     <main>
-        <!-- Skiper 19: SVG Follow Scroll Path (Active in Light Mode Only) -->
-        <div class="skiper19-scroll-canvas-wrapper" id="skiper19-wrapper" aria-hidden="true">
-            <svg
-              width="1440" height="6220"
-              viewBox="0 0 1440 6220"
-              fill="none"
-              overflow="visible"
-              xmlns="http://www.w3.org/2000/svg"
-              class="skiper19-svg"
-              id="skiper19-svg"
-              preserveAspectRatio="none"
-            >
-              <defs>
-                <!-- Light Theme Vibrant Flow Gradient -->
-                <linearGradient id="skiper19-gradient-light" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#7A69F9" />
-                  <stop offset="25%" stop-color="#3BC4F2" />
-                  <stop offset="55%" stop-color="#10B981" />
-                  <stop offset="78%" stop-color="#C2F84F" />
-                  <stop offset="100%" stop-color="#F5833F" />
-                </linearGradient>
+        <!-- 2. Minimalist Editorial Hero (Tight Centered Container) -->
+        <section class="hero hero-editorial" id="home">
+            <span id="about" class="section-anchor" aria-hidden="true"></span>
+            <div class="hero-ambient-backdrop" aria-hidden="true"></div>
 
-                <!-- Black / Dark Theme Luminous Cyber-White Gradient -->
-                <linearGradient id="skiper19-gradient-dark" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#FFFFFF" />
-                  <stop offset="20%" stop-color="#F8FAFC" />
-                  <stop offset="45%" stop-color="#E2E8F0" />
-                  <stop offset="75%" stop-color="#F1F5F9" />
-                  <stop offset="100%" stop-color="#FFFFFF" />
-                </linearGradient>
-
-                <!-- Default Fallback -->
-                <linearGradient id="skiper19-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#FFFFFF" />
-                  <stop offset="20%" stop-color="#F8FAFC" />
-                  <stop offset="45%" stop-color="#E2E8F0" />
-                  <stop offset="75%" stop-color="#F1F5F9" />
-                  <stop offset="100%" stop-color="#FFFFFF" />
-                </linearGradient>
-              </defs>
-              <!-- Base faint guide stroke -->
-              <path
-                class="skiper19-guide-path"
-                vector-effect="non-scaling-stroke"
-                d="M 880 80 C 908.3 90.0, 1010.0 106.7, 1050.0 140.0 C 1090.0 173.3, 1131.7 240.0, 1120.0 280.0 C 1108.3 320.0, 1036.7 373.3, 980.0 380.0 C 923.3 386.7, 820.0 350.0, 780.0 320.0 C 740.0 290.0, 726.7 226.7, 740.0 200.0 C 753.3 173.3, 823.3 156.7, 860.0 160.0 C 896.7 163.3, 950.0 193.3, 960.0 220.0 C 970.0 246.7, 955.0 283.3, 920.0 320.0 C 885.0 356.7, 800.0 406.7, 750.0 440.0 C 700.0 473.3, 615.0 486.7, 620.0 520.0 C 625.0 553.3, 713.3 606.7, 780.0 640.0 C 846.7 673.3, 966.7 673.3, 1020.0 720.0 C 1073.3 766.7, 1111.7 848.3, 1100.0 920.0 C 1088.3 991.7, 1020.0 1095.0, 950.0 1150.0 C 880.0 1205.0, 751.7 1208.3, 680.0 1250.0 C 608.3 1291.7, 513.3 1350.0, 520.0 1400.0 C 526.7 1450.0, 631.7 1508.3, 720.0 1550.0 C 808.3 1591.7, 983.3 1605.0, 1050.0 1650.0 C 1116.7 1695.0, 1141.7 1765.0, 1120.0 1820.0 C 1098.3 1875.0, 998.3 1933.3, 920.0 1980.0 C 841.7 2026.7, 723.3 2055.0, 650.0 2100.0 C 576.7 2145.0, 485.0 2196.7, 480.0 2250.0 C 475.0 2303.3, 550.0 2370.0, 620.0 2420.0 C 690.0 2470.0, 823.3 2500.0, 900.0 2550.0 C 976.7 2600.0, 1060.0 2661.7, 1080.0 2720.0 C 1100.0 2778.3, 1073.3 2845.0, 1020.0 2900.0 C 966.7 2955.0, 846.7 3003.3, 760.0 3050.0 C 673.3 3096.7, 556.7 3135.0, 500.0 3180.0 C 443.3 3225.0, 400.0 3275.0, 420.0 3320.0 C 440.0 3365.0, 536.7 3403.3, 620.0 3450.0 C 703.3 3496.7, 843.3 3550.0, 920.0 3600.0 C 996.7 3650.0, 1070.0 3696.7, 1080.0 3750.0 C 1090.0 3803.3, 1043.3 3870.0, 980.0 3920.0 C 916.7 3970.0, 783.3 4006.7, 700.0 4050.0 C 616.7 4093.3, 526.7 4135.0, 480.0 4180.0 C 433.3 4225.0, 391.7 4273.3, 420.0 4320.0 C 448.3 4366.7, 561.7 4416.7, 650.0 4460.0 C 738.3 4503.3, 881.7 4536.7, 950.0 4580.0 C 1018.3 4623.3, 1071.7 4673.3, 1060.0 4720.0 C 1048.3 4766.7, 956.7 4816.7, 880.0 4860.0 C 803.3 4903.3, 673.3 4936.7, 600.0 4980.0 C 526.7 5023.3, 443.3 5073.3, 440.0 5120.0 C 436.7 5166.7, 510.0 5216.7, 580.0 5260.0 C 650.0 5303.3, 783.3 5336.7, 860.0 5380.0 C 936.7 5423.3, 1023.3 5470.0, 1040.0 5520.0 C 1056.7 5570.0, 1020.0 5630.0, 960.0 5680.0 C 900.0 5730.0, 760.0 5775.0, 680.0 5820.0 C 600.0 5865.0, 500.0 5906.7, 480.0 5950.0 C 460.0 5993.3, 510.0 6045.0, 560.0 6080.0 C 610.0 6115.0, 773.3 6136.7, 780.0 6160.0 C 786.7 6183.3, 630.0 6210.0, 600.0 6220.0"
-              />
-              <!-- Active animated scroll path -->
-              <path
-                id="skiper19-active-path"
-                class="skiper19-active-path"
-                vector-effect="non-scaling-stroke"
-                d="M 880 80 C 908.3 90.0, 1010.0 106.7, 1050.0 140.0 C 1090.0 173.3, 1131.7 240.0, 1120.0 280.0 C 1108.3 320.0, 1036.7 373.3, 980.0 380.0 C 923.3 386.7, 820.0 350.0, 780.0 320.0 C 740.0 290.0, 726.7 226.7, 740.0 200.0 C 753.3 173.3, 823.3 156.7, 860.0 160.0 C 896.7 163.3, 950.0 193.3, 960.0 220.0 C 970.0 246.7, 955.0 283.3, 920.0 320.0 C 885.0 356.7, 800.0 406.7, 750.0 440.0 C 700.0 473.3, 615.0 486.7, 620.0 520.0 C 625.0 553.3, 713.3 606.7, 780.0 640.0 C 846.7 673.3, 966.7 673.3, 1020.0 720.0 C 1073.3 766.7, 1111.7 848.3, 1100.0 920.0 C 1088.3 991.7, 1020.0 1095.0, 950.0 1150.0 C 880.0 1205.0, 751.7 1208.3, 680.0 1250.0 C 608.3 1291.7, 513.3 1350.0, 520.0 1400.0 C 526.7 1450.0, 631.7 1508.3, 720.0 1550.0 C 808.3 1591.7, 983.3 1605.0, 1050.0 1650.0 C 1116.7 1695.0, 1141.7 1765.0, 1120.0 1820.0 C 1098.3 1875.0, 998.3 1933.3, 920.0 1980.0 C 841.7 2026.7, 723.3 2055.0, 650.0 2100.0 C 576.7 2145.0, 485.0 2196.7, 480.0 2250.0 C 475.0 2303.3, 550.0 2370.0, 620.0 2420.0 C 690.0 2470.0, 823.3 2500.0, 900.0 2550.0 C 976.7 2600.0, 1060.0 2661.7, 1080.0 2720.0 C 1100.0 2778.3, 1073.3 2845.0, 1020.0 2900.0 C 966.7 2955.0, 846.7 3003.3, 760.0 3050.0 C 673.3 3096.7, 556.7 3135.0, 500.0 3180.0 C 443.3 3225.0, 400.0 3275.0, 420.0 3320.0 C 440.0 3365.0, 536.7 3403.3, 620.0 3450.0 C 703.3 3496.7, 843.3 3550.0, 920.0 3600.0 C 996.7 3650.0, 1070.0 3696.7, 1080.0 3750.0 C 1090.0 3803.3, 1043.3 3870.0, 980.0 3920.0 C 916.7 3970.0, 783.3 4006.7, 700.0 4050.0 C 616.7 4093.3, 526.7 4135.0, 480.0 4180.0 C 433.3 4225.0, 391.7 4273.3, 420.0 4320.0 C 448.3 4366.7, 561.7 4416.7, 650.0 4460.0 C 738.3 4503.3, 881.7 4536.7, 950.0 4580.0 C 1018.3 4623.3, 1071.7 4673.3, 1060.0 4720.0 C 1048.3 4766.7, 956.7 4816.7, 880.0 4860.0 C 803.3 4903.3, 673.3 4936.7, 600.0 4980.0 C 526.7 5023.3, 443.3 5073.3, 440.0 5120.0 C 436.7 5166.7, 510.0 5216.7, 580.0 5260.0 C 650.0 5303.3, 783.3 5336.7, 860.0 5380.0 C 936.7 5423.3, 1023.3 5470.0, 1040.0 5520.0 C 1056.7 5570.0, 1020.0 5630.0, 960.0 5680.0 C 900.0 5730.0, 760.0 5775.0, 680.0 5820.0 C 600.0 5865.0, 500.0 5906.7, 480.0 5950.0 C 460.0 5993.3, 510.0 6045.0, 560.0 6080.0 C 610.0 6115.0, 773.3 6136.7, 780.0 6160.0 C 786.7 6183.3, 630.0 6210.0, 600.0 6220.0"
-                stroke="url(#skiper19-gradient)"
-              />
-            </svg>
-        </div>
-
-        <!-- 2. Hero Section (Above the fold) -->
-        <section class="hero reveal" id="home">
-            <!-- Full Hero Liquid Simulation Backdrop (Black Mode Only) -->
-            <div class="hero-liquid-backdrop" id="hero-liquid-backdrop" aria-hidden="true">
-                <canvas id="hero-liquid-canvas" class="hero-liquid-canvas"></canvas>
-            </div>
-
-            <!-- ThreeUI Sylva Living World Scene (Living Green - Light Mode Only) -->
-            <div class="hero-sylva-backdrop" id="hero-sylva-backdrop" aria-hidden="true">
-                <iframe id="sylva-scene-frame" class="hero-sylva-iframe" src="assets/sylva-living-world.html" title="Interactive procedural moss root world" loading="lazy"></iframe>
-            </div>
-
-            <div class="hero-left">
-                <div class="tag-label">
-                    <span class="pulse-dot"></span> Available for Opportunities
-                </div>
-                <h1 class="hero-title">
-                    Hi, I'm <span class="text-gradient">Arpit Yadav</span>
+            <div class="hero-editorial-wrap">
+                <h1 class="hero-title hero-headline-converge" aria-label="Arpit Yadav">
+                    <span class="headline-part headline-left">Arpit</span><span class="headline-part headline-right">Yadav</span>
                 </h1>
-                <h2 class="hero-subtitle">
-                    Full Stack Developer | AI &amp; IoT Systems Engineer
+                <h2 class="hero-subtitle hero-anim-item" style="--anim-order: 2">
+                    Full-Stack Developer · AI &amp; IoT Systems Engineer
                 </h2>
-                <p class="hero-tagline">
-                    Building tech-driven solutions from hardware-integrated systems to scalable, modern web applications.
-                </p>
 
-                <div class="hero-actions">
-                    <a href="#projects" class="btn btn-primary sound-hover ripple-btn">View Projects <i class="fas fa-arrow-down"></i></a>
-                    <a href="#contact" class="btn btn-outline sound-hover ripple-btn">Get In Touch</a>
+                <div class="hero-bio-container hero-anim-item" style="--anim-order: 3">
+                    <p class="hero-bio-lead">
+                        Computer Science (AI &amp; ML) undergraduate at <strong>Axis Institute of Technology and Management, Kanpur (2025–2029)</strong>. I build across hardware and software—from an ESP32 ignition-interlock helmet for Smart India Hackathon, to a cryptographic digital forensics tool for BSA Section 63(4) evidence, and a 3D smart-kitchen hazard monitor.
+                    </p>
                 </div>
 
-                <div class="social-bar">
-                    <span class="social-label">Connect:</span>
-                    <a href="https://github.com/arpityadav626" target="_blank" class="social-link sound-hover" title="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" class="social-link sound-hover" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="mailto:arpityadav6794@gmail.com" class="social-link sound-hover" title="Email"><i class="fas fa-envelope"></i></a>
+                <div class="hero-actions hero-anim-item" style="--anim-order: 4">
+                    <a href="#projects" class="btn btn-primary sound-hover ripple-btn">View Projects <i class="fas fa-arrow-down"></i></a>
+                    <a href="#contact" class="btn btn-outline sound-hover ripple-btn">Get In Touch <i class="fas fa-arrow-down"></i></a>
+                </div>
+
+                <div class="social-bar hero-anim-item" style="--anim-order: 5">
+                    <span class="social-label">Direct Line:</span>
+                    <div class="email-copy-wrap">
+                        <a href="mailto:arpityadav6794@gmail.com" class="social-pill-link sound-hover" title="Email Arpit">
+                            <i class="fas fa-envelope"></i> arpityadav6794@gmail.com
+                        </a>
+                        <button type="button" class="copy-email-btn sound-hover" id="hero-copy-email-btn" title="Copy email address" aria-label="Copy email address">
+                            <i class="far fa-copy" id="hero-copy-email-icon"></i>
+                            <span class="copy-toast-bubble" id="hero-copy-toast-bubble">Copied!</span>
+                        </button>
+                    </div>
+                    <a href="https://github.com/arpityadav626" target="_blank" rel="noopener noreferrer" class="social-link sound-hover" title="GitHub Profile"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" rel="noopener noreferrer" class="social-link sound-hover" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </section>
@@ -273,9 +195,9 @@
                 </div>
                 
                 <div class="card-info-slot">
-                <h3 class="project-title">Smart Helmet Telemetry</h3>
+                <h3 class="project-title">Smart Rider — IoT Helmet Telemetry</h3>
                 <p class="project-summary">
-                Engineered an ESP32-powered two-wheeler safety system featuring RF ignition interlocking, MQ-3 alcohol detection, and automated GSM/GPS SOS dispatch with sub-second sensor polling.
+                Closed-loop two-wheeler safety interlock on ESP32. Integrates real-time MQ-3 breath alcohol detection with ignition cutoff, capacitive helmet-wear verification, and an MPU-6050 6-axis IMU triggering instant GSM/GPS SMS crash coordinates.
                 </p>
                 <div class="tech-stack-pills">
                 <span data-skill="esp32">ESP32</span>
@@ -314,9 +236,9 @@
                 </div>
                 
                 <div class="card-info-slot">
-                <h3 class="project-title">SAFETY-FI 96X — Smart Kitchen IoT</h3>
+                <h3 class="project-title">SAFETY-FI 96X — Autonomous Kitchen Safety</h3>
                 <p class="project-summary">
-                Real-time kitchen telemetry system pairing microcontroller gas and pantry sensors with an interactive Three.js 3D cooktop digital twin for live spatial hazard monitoring and alerts.
+                Autonomous life-safety platform pairing microcontroller sensor arrays (MQ-2 hydrocarbon, optical flame, DHT11) with an interactive Three.js 3D cooktop digital twin. Automates sub-second relay solenoid shutoffs and SIM800L cellular alerts.
                 </p>
                 <div class="tech-stack-pills">
                 <span data-skill="arduino">Arduino / ESP32</span>
@@ -342,7 +264,7 @@
                 </div>
                 </div>
 
-                <div class="project-card card-chronofact" data-project="chronofact" data-skills="python fastapi js html-css tailwind git github react nodejs express mongodb merkle rest-api docker linux db-security jwt-auth">
+                <div class="project-card card-chronofact" data-project="chronofact" data-skills="python fastapi js html-css tailwind git github react nodejs express merkle rest-api docker linux db-security jwt-auth">
                                                                 
                 <div class="card-visual-slot">
                 <div class="card-visual-inner">
@@ -360,13 +282,13 @@
                 <div class="card-info-slot">
                 <h3 class="project-title">ChronoFact 2.0 Forensics Engine</h3>
                 <p class="project-summary">
-                Multi-agent digital forensics and fact-verification platform utilizing Merkle tree cryptographic hashing for tamper-proof timeline indexing and BSA-compliant evidence verification.
+                Air-gapped digital evidence verification workbench utilizing Merkle tree cryptographic hashing (SHA-256) for immutable evidentiary audit trails, cross-source quote verification, and automated court-admissible BSA Section 63(4) statutory certificates.
                 </p>
                 <div class="tech-stack-pills">
                 <span data-skill="react">React</span>
                 <span data-skill="nodejs">Node.js</span>
                 <span data-skill="express">Express</span>
-                <span data-skill="mongodb">MongoDB</span>
+                <span data-skill="db-security">Database Security</span>
                 <span data-skill="merkle">Merkle Hash</span>
                 <span data-skill="rest-api">REST APIs</span>
                 </div>
@@ -387,47 +309,6 @@
                 </div>
                 </div>
 
-                <div class="project-card card-portfolio" data-project="portfolio" data-skills="html-css js git github web-audio typescript">
-                                                                
-                <div class="card-visual-slot">
-                <div class="card-visual-inner">
-                <img src="assets/portfolio-preview.png" alt="Developer Portfolio Preview" class="card-preview-img" loading="lazy">
-                <div class="card-visual-overlay"></div>
-                <span class="badge live-badge visual-badge"><i class="fas fa-star"></i> 98+ Lighthouse &amp; Web Audio</span>
-                </div>
-                </div>
-                
-                <div class="card-step-row">
-                <div class="card-step-badge">04</div>
-                <div class="card-step-line" aria-hidden="true"></div>
-                </div>
-                
-                <div class="card-info-slot">
-                <h3 class="project-title">Interactive Developer Portfolio</h3>
-                <p class="project-summary">
-                High-performance developer portfolio engineered with a zero-dependency Web Audio API sound synthesizer, interactive skill-to-project relational mapping, and dynamic theme architecture.
-                </p>
-                <div class="tech-stack-pills">
-                <span data-skill="html-css">HTML5 &amp; CSS3</span>
-                <span data-skill="js">Vanilla JS / TS</span>
-                <span data-skill="web-audio">Web Audio API</span>
-                <span>DOM Optimization</span>
-                <span data-skill="github">GitHub Pages</span>
-                </div>
-                <div class="card-links">
-                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="portfolio">
-                Details <i class="fas fa-expand-alt"></i>
-                </button>
-                <a href="https://github.com/arpityadav626/arpityadav626.github.io" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                GitHub <i class="fab fa-github"></i>
-                </a>
-                <a href="https://arpity.me/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                arpity.me <i class="fas fa-external-link-alt"></i>
-                </a>
-                </div>
-                </div>
-                </div>
-
                 <div class="project-card card-aihub" data-project="ai-hub" data-skills="ai react typescript js tailwind threejs web-audio firebase github jwt-auth websockets">
                                                                 
                 <div class="card-visual-slot">
@@ -439,14 +320,14 @@
                 </div>
                 
                 <div class="card-step-row">
-                <div class="card-step-badge">05</div>
+                <div class="card-step-badge">04</div>
                 <div class="card-step-line" aria-hidden="true"></div>
                 </div>
                 
                 <div class="card-info-slot">
-                <h3 class="project-title">AI Hub — Unified AI &amp; Media Workspace</h3>
+                <h3 class="project-title">AI Hub — Unified AI &amp; Media Discovery</h3>
                 <p class="project-summary">
-                Unified React 19 and TypeScript workspace aggregating 130+ global film, music, and book sources with interactive Three.js 3D navigation, an in-app 4K media player, and ambient audio streams.
+                High-speed developer workspace aggregating 130+ global AI, streaming, and literature platforms. Features interactive Three.js 3D spatial node navigation, zero-latency search indexing, in-app 4K viewport, and ambient Web Audio synthesizer.
                 </p>
                 <div class="tech-stack-pills">
                 <span data-skill="react">React 19</span>
@@ -481,7 +362,7 @@
                 </div>
                 
                 <div class="card-step-row">
-                <div class="card-step-badge">06</div>
+                <div class="card-step-badge">05</div>
                 <div class="card-step-line" aria-hidden="true"></div>
                 </div>
                 
@@ -517,9 +398,9 @@
              - Frontend & Backend (React, Node, Express, Tailwind)
              - 3D & Graphics (Three.js, GLSL Shaders, Web Audio)
              - IoT & Hardware (ESP32, Arduino, Sensors)
-             - Tools & Databases (MongoDB, Git, GitHub, Vercel)
+             - Tools & Databases (Git, GitHub, Vercel, Linux)
              ======================================================== -->
-        <section class="section skills-section reveal" id="skills">
+        <section class="section skills-section" id="skills">
             <div class="section-header">
                 <span class="mono-tag">( 02 // CAPABILITIES )</span>
                 <h2 class="section-title">Technical Skills</h2>
@@ -579,8 +460,7 @@
                 <div class="skill-category-card">
                     <div class="category-title"><i class="fas fa-tools"></i> Tools, Cloud &amp; DevOps</div>
                     <div class="pill-group">
-                        <span class="skill-pill sound-hover" data-skill="mongodb"><i class="fas fa-database"></i> MongoDB</span>
-                        <span class="skill-pill sound-hover" data-skill="db-security"><i class="fas fa-shield-alt"></i> Database Security</span>
+                                                <span class="skill-pill sound-hover" data-skill="db-security"><i class="fas fa-shield-alt"></i> Database Security</span>
                         <span class="skill-pill sound-hover" data-skill="jwt-auth"><i class="fas fa-key"></i> JWT / OAuth</span>
                         <span class="skill-pill sound-hover" data-skill="linux"><i class="fab fa-linux"></i> Linux</span>
                         <span class="skill-pill sound-hover" data-skill="docker"><i class="fab fa-docker"></i> Docker</span>
@@ -595,54 +475,15 @@
         </section>
 
         <!-- ========================================================
-             🟢 SECTION 5: ABOUT ME & EDUCATION (Aapki Bio, Degree aur Focus)
-             - Bio narrative & core engineering philosophy
-             - Education card: B.Tech CSE at Axis Institute of Technology
-             ======================================================== -->
-        <section class="section about-section reveal" id="about">
-            <div class="section-header">
-                <span class="mono-tag">( 03 // BACKGROUND )</span>
-                <h2 class="section-title">About &amp; Education</h2>
-            </div>
-
-            <div class="about-grid">
-                <div class="about-narrative">
-                    <h3>Engineering with Passion &amp; Grit</h3>
-                    <p>
-                        I'm a Computer Science undergraduate passionate about solving real-world challenges through technology. My interests span across full-stack web development and IoT hardware integration.
-                    </p>
-                    <p>
-                        Whether it's prototyping a Smart Helmet for road safety at Smart India Hackathon or architecting web platforms, I love taking ideas from zero to production. Constantly learning, building, and exploring new tech stacks.
-                    </p>
-                    <div class="focus-bullets">
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Focus:</strong> Full-Stack Web Development &amp; IoT Integration</div>
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Currently Building:</strong> ChronoFact &amp; Smart Kitchen System</div>
-                        <div class="bullet-tag"><i class="fas fa-check-circle"></i> <strong>Hackathons:</strong> Smart India Hackathon (SIH) Participant</div>
-                    </div>
-                </div>
-
-                <div class="education-card">
-                    <span class="edu-badge"><i class="fas fa-graduation-cap"></i> Higher Education</span>
-                    <h4 class="degree">Bachelor of Technology (B.Tech)</h4>
-                    <p class="field">Computer Science &amp; Engineering</p>
-                    <p class="college"><i class="fas fa-university"></i> Axis Institute of Technology and Management</p>
-                    <p class="year"><i class="fas fa-calendar-alt"></i> 2025 — 2029</p>
-                    <div class="edu-footer">
-                        <span>Coursework: Data Structures, Web Architecture, IoT, Database Systems</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================================
-             🟢 SECTION 6: ACHIEVEMENTS & MILESTONES (Hackathon & Certificates)
+             🟢 SECTION 3: ACHIEVEMENTS & MILESTONES (Hackathon & Certificates)
              - Smart India Hackathon (SIH) Participant
-             - Problem Solving (LeetCode & GFG)
+             - Competitive Programming & Problem Solving (C/C++)
              - Technical Certifications & Badges
+             - B.Tech CSE (AI & ML) at Axis Institute
              ======================================================== -->
-        <section class="section achievements-section reveal" id="achievements">
+        <section class="section achievements-section" id="achievements">
             <div class="section-header">
-                <span class="mono-tag">( 04 // HONORS )</span>
+                <span class="mono-tag">( 03 // HONORS )</span>
                 <h2 class="section-title">Achievements</h2>
             </div>
 
@@ -658,23 +499,32 @@
                     </div>
                 </div>
                 <div class="achievement-item">
+                    <div class="achieve-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="achieve-content">
+                        <h4>B.Tech in Computer Science &amp; Engineering (AI &amp; ML)</h4>
+                        <p>Undergraduate degree at <strong>Axis Institute of Technology and Management, Kanpur</strong> (Cohort: 2025 — 2029). Focus: Embedded Telemetry, Distributed Web Systems &amp; Database Security.</p>
+                        <div class="achieve-links">
+                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-university"></i> Axis Institute, Kanpur</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="achievement-item">
                     <div class="achieve-icon"><i class="fas fa-code"></i></div>
                     <div class="achieve-content">
                         <h4>Competitive Programming &amp; Algorithmic Problem Solving</h4>
-                        <p>Active problem solver in C/C++ and Data Structures across <strong>LeetCode</strong> and <strong>GeeksforGeeks</strong>; earned certification in the <strong>GeeksforGeeks Code Catalyst</strong> coding contest.</p>
+                        <p>Active problem solver in C/C++ and Data Structures; deterministic hardware-software interlocks and algorithmic logic optimization.</p>
                         <div class="achieve-links">
-                            <a href="https://leetcode.com/u/arpityadav626/" target="_blank" rel="noopener noreferrer" class="achieve-link sound-hover"><i class="fas fa-code"></i> LeetCode ↗</a>
-                            <a href="https://www.geeksforgeeks.org/user/arpityadav626/" target="_blank" rel="noopener noreferrer" class="achieve-link sound-hover"><i class="fas fa-laptop-code"></i> GeeksforGeeks ↗</a>
+                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-terminal"></i> C / C++ &amp; Data Structures</span>
                         </div>
                     </div>
                 </div>
                 <div class="achievement-item">
                     <div class="achieve-icon"><i class="fas fa-shield-alt"></i></div>
                     <div class="achieve-content">
-                        <h4>Verified Credentials &amp; Cybersecurity Training</h4>
-                        <p>Earned verified <strong>MongoDB Credly Digital Badges</strong> (Database Security &amp; Student Basics) and completed the <strong>Cybersuraksha Training Program</strong> hosted by C3i Hub.</p>
+                        <h4>Cybersuraksha Training &amp; Systems Defense — C3i Hub</h4>
+                        <p>Completed the intensive <strong>Cybersuraksha Training Program</strong> hosted by <strong>C3i Hub</strong>, covering foundational network defense, system audits, and vulnerability mitigation.</p>
                         <div class="achieve-links">
-                            <a href="https://www.credly.com" target="_blank" rel="noopener noreferrer" class="achieve-link sound-hover"><i class="fas fa-external-link-alt"></i> Verify Credly ↗</a>
+                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-shield-alt"></i> C3i Hub Certified</span>
                         </div>
                     </div>
                 </div>
@@ -682,14 +532,14 @@
         </section>
 
         <!-- ========================================================
-             🟢 SECTION 7: CONTACT ME (Email, Social Handles & Form)
+             🟢 SECTION 4: CONTACT ME (Email, Social Handles & Form)
              - Direct Email & Location (Kanpur, UP)
              - Social Links (LinkedIn, GitHub)
-             - Formspree Contact Form (Form submit karne par email aati hai)
+             - Formspree Contact Form
              ======================================================== -->
-        <section class="section contact-section reveal" id="contact">
+        <section class="section contact-section" id="contact">
             <div class="section-header">
-                <span class="mono-tag">( 05 // LET'S TALK )</span>
+                <span class="mono-tag">( 04 // LET'S TALK )</span>
                 <h2 class="section-title">Get In Touch</h2>
                 <p class="section-desc">Have a project idea, opportunity, or simply want to connect?</p>
             </div>
@@ -754,22 +604,6 @@
                 </form>
             </div>
         </section>
-        <!-- ========================================================
-             🟢 SECTION 7.5: CROWD CANVAS ANIMATION (Skiper 39)
-             Walking hand-drawn crowd simulation with interactive depth
-             ======================================================== -->
-        <section class="crowd-canvas-section" id="crowd-section" aria-label="Crowd Canvas Animation">
-            <div class="crowd-canvas-inner">
-                <div class="crowd-header">
-                    <span class="mono-tag">( 05 // COMMUNITY & COLLABORATION )</span>
-                    <h3 class="crowd-title">Never Walk Alone</h3>
-                    <p class="crowd-subtitle">Every project is built for real people, engineered to scale.</p>
-                </div>
-                <div class="crowd-canvas-wrapper">
-                    <canvas id="crowd-canvas" class="crowd-canvas"></canvas>
-                </div>
-            </div>
-        </section>
     </main>
 
     <!-- ========================================================
@@ -777,7 +611,7 @@
          ======================================================== -->
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2026 <strong>Arpit Yadav</strong>. Built with precision, semantic code & Web Audio.</p>
+            <p>&copy; 2026 <strong>Arpit Yadav</strong>. Built with precision and semantic code.</p>
             <a href="#home" class="back-top sound-hover">Back to top ↑</a>
         </div>
     </footer>
@@ -794,7 +628,7 @@
             <button class="modal-corner-close-btn sound-hover" id="modal-close-btn" aria-label="Close details modal" title="Close (ESC)">
                 <i class="fas fa-times"></i>
             </button>
-            <div class="project-modal-card" id="project-modal-card">
+            <div class="project-modal-card" id="project-modal-card" data-lenis-prevent>
                 <!-- Integrated Subtle Gradient Reading Progress Bar -->
                 <div class="modal-scroll-progress-bar" id="modal-scroll-bar"></div>
                 <div id="modal-dynamic-content" class="modal-body-content">
@@ -804,116 +638,12 @@
         </div>
     </div>
 
-    <!-- ========================================================
-         🟢 SECTION 10: SKIPER 31 COMMAND PALETTE (CMD+K / CTRL+K SPOTLIGHT)
-         Ultra-fast keyboard navigation across projects, sections & quick actions
-         ======================================================== -->
-    <div id="cmd-palette-modal" class="cmd-palette-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Command Palette">
-        <div class="cmd-palette-dialog">
-            <div class="cmd-palette-search-row">
-                <i class="fas fa-search cmd-search-icon"></i>
-                <input type="text" id="cmd-palette-input" class="cmd-search-input" placeholder="Type a command or search projects..." autocomplete="off" spellcheck="false">
-                <kbd class="cmd-esc-badge" id="cmd-close-esc">ESC</kbd>
-            </div>
-            <div class="cmd-palette-results" id="cmd-palette-results">
-                <!-- Group 1: Navigation -->
-                <div class="cmd-group">
-                    <span class="cmd-group-title">Navigation</span>
-                    <button type="button" class="cmd-item" data-action="nav" data-target="#projects">
-                        <i class="fas fa-laptop-code"></i>
-                        <span class="cmd-item-label">Featured Projects</span>
-                        <span class="cmd-item-hint">Go to projects</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="nav" data-target="#skills">
-                        <i class="fas fa-microchip"></i>
-                        <span class="cmd-item-label">Technical Skills</span>
-                        <span class="cmd-item-hint">Go to skills</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="nav" data-target="#about">
-                        <i class="fas fa-user-astronaut"></i>
-                        <span class="cmd-item-label">About &amp; Journey</span>
-                        <span class="cmd-item-hint">Go to about</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="nav" data-target="#achievements">
-                        <i class="fas fa-trophy"></i>
-                        <span class="cmd-item-label">Achievements &amp; Honors</span>
-                        <span class="cmd-item-hint">Go to honors</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="nav" data-target="#contact">
-                        <i class="fas fa-paper-plane"></i>
-                        <span class="cmd-item-label">Contact &amp; Connect</span>
-                        <span class="cmd-item-hint">Go to contact</span>
-                    </button>
-                </div>
-
-                <!-- Group 2: Projects Quick Jump -->
-                <div class="cmd-group">
-                    <span class="cmd-group-title">Projects</span>
-                    <button type="button" class="cmd-item" data-action="project" data-project="smart-helmet">
-                        <span class="cmd-badge">01</span>
-                        <span class="cmd-item-label">Smart Helmet Telemetry (SIH 2026 Hardware IoT)</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="project" data-project="smart-kitchen">
-                        <span class="cmd-badge">02</span>
-                        <span class="cmd-item-label">SAFETY-FI 96X (Smart Kitchen IoT &amp; 3D Twin)</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="project" data-project="chronofact">
-                        <span class="cmd-badge">03</span>
-                        <span class="cmd-item-label">ChronoFact 2.0 (Multi-Agent Forensics Engine)</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="project" data-project="portfolio">
-                        <span class="cmd-badge">04</span>
-                        <span class="cmd-item-label">Interactive Developer Portfolio &amp; Audio Engine</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="project" data-project="ai-hub">
-                        <span class="cmd-badge">05</span>
-                        <span class="cmd-item-label">AI Hub — Unified AI &amp; Media Workspace</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="project" data-project="monolith-villa">
-                        <span class="cmd-badge">06</span>
-                        <span class="cmd-item-label">Monolith Villa — 3D Spatial Digital Twin</span>
-                    </button>
-                </div>
-
-                <!-- Group 3: Quick Utilities -->
-                <div class="cmd-group">
-                    <span class="cmd-group-title">Actions &amp; Links</span>
-                    <button type="button" class="cmd-item" data-action="resume">
-                        <i class="fas fa-file-pdf"></i>
-                        <span class="cmd-item-label">View / Download Resume (PDF)</span>
-                        <span class="cmd-item-hint">↗</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="theme">
-                        <i class="fas fa-adjust"></i>
-                        <span class="cmd-item-label">Toggle Theme (Light / Dark)</span>
-                        <span class="cmd-item-hint">Switch</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="copy-email">
-                        <i class="fas fa-copy"></i>
-                        <span class="cmd-item-label">Copy Email to Clipboard</span>
-                        <span class="cmd-item-hint">arpityadav6794@gmail.com</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="github">
-                        <i class="fab fa-github"></i>
-                        <span class="cmd-item-label">Open GitHub Profile</span>
-                        <span class="cmd-item-hint">↗</span>
-                    </button>
-                    <button type="button" class="cmd-item" data-action="linkedin">
-                        <i class="fab fa-linkedin-in"></i>
-                        <span class="cmd-item-label">Open LinkedIn Profile</span>
-                        <span class="cmd-item-hint">↗</span>
-                    </button>
-                </div>
-            </div>
-            <div class="cmd-palette-footer">
-                <span>Navigate <kbd>↑</kbd><kbd>↓</kbd></span>
-                <span>Select <kbd>↵</kbd></span>
-                <span>Close <kbd>ESC</kbd></span>
-            </div>
-        </div>
-    </div>
+    
 
     <script src="assets/three.min.js"></script>
-    <script src="script.js"></script>
+    <script src="assets/lenis.min.js"></script>
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/ScrollTrigger.min.js"></script>
+    <script src="script.js?v=7.1"></script>
 </body>
 </html>
