@@ -107,6 +107,16 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             const targetEl = document.querySelector(targetId);
             if (targetEl) {
                 e.preventDefault();
+                // Close mobile drawer if active
+                const nb = document.getElementById('navbar');
+                const mt = document.getElementById('menu-toggle');
+                if (nb && nb.classList.contains('active')) {
+                    nb.classList.remove('active');
+                    if (mt) {
+                        mt.classList.remove('active');
+                        mt.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
                 if (window.lenis) {
                     window.lenis.scrollTo(targetEl, { offset: -50, duration: 1.3 });
                 } else {
@@ -996,68 +1006,10 @@ if (projectModal) {
 }
 
 /* ========================================================
-   9. SMART AUTO-HIDE HEADER & SCROLL HAPTIC TICK
-   Hides on scroll down to clear view, reveals on scroll up
+   9. PERMANENT STICKY HEADER
+   Header stays 100% visible, active, and clickable at ANY scroll position.
+   Auto-hide disabled to ensure instant click responsiveness.
 ======================================================== */
-let lastScrollY = window.scrollY;
-let scrollTickAccumulator = 0;
-const header = document.querySelector('.header');
-
-let headerTicking = false;
-window.addEventListener('scroll', () => {
-    if (!headerTicking) {
-        requestAnimationFrame(() => {
-            headerTicking = false;
-            const currentScrollY = window.scrollY;
-            const delta = Math.abs(currentScrollY - lastScrollY);
-            scrollTickAccumulator += delta;
-
-            if (scrollTickAccumulator > 240) {
-                playScrollTick();
-                scrollTickAccumulator = 0;
-            }
-
-            if (header) {
-                if (currentScrollY > 120) {
-                    if (currentScrollY > lastScrollY + 8) {
-                        header.classList.add('header-hidden');
-                    } else if (currentScrollY < lastScrollY - 8) {
-                        header.classList.remove('header-hidden');
-                    }
-                } else {
-                    header.classList.remove('header-hidden');
-                }
-            }
-            lastScrollY = currentScrollY;
-        });
-        headerTicking = true;
-    }
-}, { passive: true });
-
-/* ========================================================
-   10. RELIABLE NATIVE SMOOTH SCROLL & ANCHOR GLIDE
-   Uses native browser scrolling with zero lockups on any device
-======================================================== */
-function smoothScrollToElement(targetEl, offset = -30) {
-    if (!targetEl) return;
-    const scrollY = window.pageYOffset !== undefined ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-    const top = targetEl.getBoundingClientRect().top + scrollY + offset;
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-}
-
-// Smooth anchor link gliding
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const targetId = this.getAttribute('href');
-        if (targetId && targetId !== '#') {
-            const targetEl = document.querySelector(targetId);
-            if (targetEl) {
-                e.preventDefault();
-                smoothScrollToElement(targetEl, -30);
-            }
-        }
-    });
-});
 
 /* ========================================================
    11. LINEAR.APP / VERCEL HIGH-PERFORMANCE SPOTLIGHT TRACKER
