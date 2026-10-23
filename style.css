@@ -4558,7 +4558,12 @@ body[data-mode="light"] .skill-pill.skill-highlighted i {
     color: #F6F5F2 !important;
 }
 
-.preloader-part,
+.preloader-part {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+    opacity: 0; /* Prevents millisecond center flash before GSAP sets corner coords */
+}
+
 .headline-part {
     display: inline-block;
     will-change: transform, opacity, filter;
