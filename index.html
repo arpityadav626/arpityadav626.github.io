@@ -84,7 +84,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css?v=7.3">
+    <link rel="stylesheet" href="style.css?v=7.4">
 </head>
 <body class="light-theme" data-mode="light">
     <!-- 0. High-End Editorial Intro Preloader -->
@@ -590,12 +590,14 @@
                         <div class="smooth-caret" aria-hidden="true"></div>
                     </div>
                     <div class="form-group smooth-input-container">
-                        <input type="email" id="email" name="email" class="smooth-input" placeholder="Your Email Address" required spellcheck="false">
+                        <input type="text" id="email" name="email" class="smooth-input" placeholder="Your Email Address" required spellcheck="false" inputmode="email" autocomplete="email">
                         <span class="smooth-measure-span" aria-hidden="true"></span>
                         <div class="smooth-caret" aria-hidden="true"></div>
                     </div>
-                    <div class="form-group">
-                        <textarea id="message" name="message" rows="5" placeholder="Your Message..." required></textarea>
+                    <div class="form-group smooth-input-container smooth-textarea-container">
+                        <textarea id="message" name="message" class="smooth-input" rows="5" placeholder="Your Message..." required spellcheck="false"></textarea>
+                        <span class="smooth-measure-span" aria-hidden="true"></span>
+                        <div class="smooth-caret" aria-hidden="true"></div>
                     </div>
                     <button type="submit" id="submit-btn" class="btn btn-primary btn-submit sound-hover ripple-btn">
                         <span>Send Message</span> <i class="fas fa-paper-plane"></i>
@@ -644,6 +646,6 @@
     <script src="assets/lenis.min.js"></script>
     <script src="assets/gsap.min.js"></script>
     <script src="assets/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=7.3"></script>
+    <script src="script.js?v=7.4"></script>
 </body>
 </html>

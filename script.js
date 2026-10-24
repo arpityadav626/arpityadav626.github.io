@@ -1275,9 +1275,17 @@ document.querySelectorAll('.tech-stack-pills span[data-skill]').forEach(tag => {
 class SmoothInputController {
     constructor(inputElement, options = {}) {
         this.input = inputElement;
+        this.isTextarea = inputElement.tagName.toLowerCase() === 'textarea';
         this.container = inputElement.closest('.smooth-input-container') || inputElement.parentElement;
         this.measureSpan = this.container ? this.container.querySelector('.smooth-measure-span') : null;
         this.caret = this.container ? this.container.querySelector('.smooth-caret') : null;
+
+        // If it's an email input, ensure selectionStart works in WebKit/Blink
+        if (this.input.type === 'email') {
+            this.input.type = 'text';
+            this.input.inputMode = 'email';
+            this.input.autocomplete = 'email';
+        }
 
         // Framer Motion spring parameters from user specification:
         this.stiffness = options.stiffness || 500;
@@ -1286,12 +1294,17 @@ class SmoothInputController {
 
         this.currentX = 0;
         this.targetX = 0;
-        this.velocity = 0;
+        this.currentY = 0;
+        this.targetY = 0;
+        this.velocityX = 0;
+        this.velocityY = 0;
+
         this.isMoving = false;
         this.isFocused = false;
         this.lastTime = 0;
         this.rafId = null;
         this.idleTimeout = null;
+        this.mirrorDiv = null;
 
         this.passwordChar = navigator.userAgent.match(/firefox|fxios/i) ? '\u25CF' : '\u2022';
 
@@ -1367,6 +1380,40 @@ class SmoothInputController {
         return text.length > 0 ? (this.measureSpan.offsetWidth + paddingLeft) : (paddingLeft - 1);
     }
 
+    getTextareaCaretCoords() {
+        if (!this.mirrorDiv) {
+            this.mirrorDiv = document.createElement('div');
+            this.mirrorDiv.className = 'smooth-textarea-mirror';
+            this.mirrorDiv.style.cssText = 'position:absolute;top:0;left:0;visibility:hidden;pointer-events:none;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;z-index:-10;opacity:0;';
+            document.body.appendChild(this.mirrorDiv);
+        }
+        const styles = window.getComputedStyle(this.input);
+        const mirrorProps = [
+            'direction', 'boxSizing', 'width', 'height', 'overflowX', 'overflowY',
+            'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+            'borderStyle', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+            'fontStyle', 'fontVariant', 'fontWeight', 'fontStretch', 'fontSize',
+            'lineHeight', 'fontFamily', 'textAlign', 'textTransform', 'textIndent',
+            'letterSpacing', 'wordSpacing', 'tabSize'
+        ];
+        mirrorProps.forEach(p => {
+            this.mirrorDiv.style[p] = styles[p];
+        });
+
+        const caretIndex = this.getCaretIndex();
+        const textBeforeCaret = this.input.value.substring(0, caretIndex);
+        this.mirrorDiv.textContent = textBeforeCaret;
+        
+        const marker = document.createElement('span');
+        marker.textContent = '|';
+        this.mirrorDiv.appendChild(marker);
+
+        const caretX = marker.offsetLeft - this.input.scrollLeft;
+        const caretY = marker.offsetTop - this.input.scrollTop;
+
+        return { x: caretX, y: caretY };
+    }
+
     scrollCaretIntoView(absoluteWidth) {
         const styles = window.getComputedStyle(this.input);
         const paddingLeft = parseFloat(styles.paddingLeft) || 0;
@@ -1383,48 +1430,73 @@ class SmoothInputController {
     }
 
     getCaretIndex() {
-        const start = this.input.selectionStart ?? 0;
-        const end = this.input.selectionEnd ?? 0;
-        if (start === end) return start;
-        return this.input.selectionDirection === 'backward' ? start : end;
+        let start = 0;
+        try {
+            start = this.input.selectionStart ?? 0;
+            const end = this.input.selectionEnd ?? 0;
+            if (start !== end && this.input.selectionDirection === 'backward') {
+                return start;
+            }
+            return end;
+        } catch (e) {
+            return this.input.value ? this.input.value.length : 0;
+        }
     }
 
     updateCaretPosition(immediate = false) {
         if (!this.isFocused || !this.caret) return;
 
-        const selectionStart = this.input.selectionStart ?? 0;
-        const selectionEnd = this.input.selectionEnd ?? 0;
-        const hasSelection = selectionStart !== selectionEnd;
+        let hasSelection = false;
+        try {
+            const start = this.input.selectionStart;
+            const end = this.input.selectionEnd;
+            hasSelection = start !== null && end !== null && start !== end;
+        } catch (e) {
+            hasSelection = false;
+        }
 
         if (hasSelection) {
             this.caret.style.opacity = '0';
             return;
         }
 
-        const caretIndex = this.getCaretIndex();
-        const isPassword = this.input.type === 'password';
-        const textBeforeCaret = isPassword 
-            ? this.passwordChar.repeat(caretIndex) 
-            : this.input.value.slice(0, caretIndex);
+        if (this.isTextarea) {
+            const coords = this.getTextareaCaretCoords();
+            this.targetX = coords.x;
+            this.targetY = coords.y;
+        } else {
+            const caretIndex = this.getCaretIndex();
+            const isPassword = this.input.type === 'password';
+            const textBeforeCaret = isPassword 
+                ? this.passwordChar.repeat(caretIndex) 
+                : this.input.value.slice(0, caretIndex);
 
-        const absoluteWidth = this.measurePrefixWidth(textBeforeCaret);
-        if (absoluteWidth === null) return;
+            const absoluteWidth = this.measurePrefixWidth(textBeforeCaret);
+            if (absoluteWidth === null) return;
 
-        this.scrollCaretIntoView(absoluteWidth);
+            this.scrollCaretIntoView(absoluteWidth);
 
-        const styles = window.getComputedStyle(this.input);
-        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
-        const paddingRight = parseFloat(styles.paddingRight) || 0;
-        const caretPosition = absoluteWidth - this.input.scrollLeft;
-        const minX = paddingLeft - 1;
-        const maxX = this.input.clientWidth - paddingRight;
+            const styles = window.getComputedStyle(this.input);
+            const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+            const paddingRight = parseFloat(styles.paddingRight) || 0;
+            const caretPosition = absoluteWidth - this.input.scrollLeft;
+            const minX = paddingLeft - 1;
+            const maxX = this.input.clientWidth - paddingRight;
 
-        this.targetX = Math.min(Math.max(caretPosition, minX), maxX);
+            this.targetX = Math.min(Math.max(caretPosition, minX), maxX);
+            this.targetY = 0;
+        }
 
         if (immediate) {
             this.currentX = this.targetX;
-            this.velocity = 0;
-            this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX}px, 0, 0)`;
+            this.currentY = this.targetY;
+            this.velocityX = 0;
+            this.velocityY = 0;
+            if (this.isTextarea) {
+                this.caret.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+            } else {
+                this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX}px, 0, 0)`;
+            }
         }
 
         this.caret.classList.remove('smooth-caret-idle');
@@ -1449,7 +1521,7 @@ class SmoothInputController {
     }
 
     tick(time) {
-        if (!this.isFocused && Math.abs(this.currentX - this.targetX) < 0.2) {
+        if (!this.isFocused && Math.abs(this.currentX - this.targetX) < 0.2 && Math.abs(this.currentY - this.targetY) < 0.2) {
             this.isMoving = false;
             return;
         }
@@ -1458,23 +1530,46 @@ class SmoothInputController {
         this.lastTime = time;
         if (dt > 0.033) dt = 0.033; // clamp dt to 33ms
 
-        // Second-order differential spring mechanics
-        const springForce = -this.stiffness * (this.currentX - this.targetX);
-        const dampingForce = -this.damping * this.velocity;
-        const acceleration = (springForce + dampingForce) / this.mass;
+        // Second-order differential spring mechanics (X axis)
+        const springForceX = -this.stiffness * (this.currentX - this.targetX);
+        const dampingForceX = -this.damping * this.velocityX;
+        const accelerationX = (springForceX + dampingForceX) / this.mass;
 
-        this.velocity += acceleration * dt;
-        this.currentX += this.velocity * dt;
+        this.velocityX += accelerationX * dt;
+        this.currentX += this.velocityX * dt;
 
-        if (this.caret) {
-            this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX.toFixed(2)}px, 0, 0)`;
+        // Second-order differential spring mechanics (Y axis for textarea)
+        if (this.isTextarea) {
+            const springForceY = -this.stiffness * (this.currentY - this.targetY);
+            const dampingForceY = -this.damping * this.velocityY;
+            const accelerationY = (springForceY + dampingForceY) / this.mass;
+
+            this.velocityY += accelerationY * dt;
+            this.currentY += this.velocityY * dt;
         }
 
-        if (Math.abs(this.currentX - this.targetX) < 0.15 && Math.abs(this.velocity) < 0.2) {
+        if (this.caret) {
+            if (this.isTextarea) {
+                this.caret.style.transform = `translate3d(${this.currentX.toFixed(2)}px, ${this.currentY.toFixed(2)}px, 0)`;
+            } else {
+                this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX.toFixed(2)}px, 0, 0)`;
+            }
+        }
+
+        const settledX = Math.abs(this.currentX - this.targetX) < 0.15 && Math.abs(this.velocityX) < 0.2;
+        const settledY = !this.isTextarea || (Math.abs(this.currentY - this.targetY) < 0.15 && Math.abs(this.velocityY) < 0.2);
+
+        if (settledX && settledY) {
             this.currentX = this.targetX;
-            this.velocity = 0;
+            this.currentY = this.targetY;
+            this.velocityX = 0;
+            this.velocityY = 0;
             if (this.caret) {
-                this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX}px, 0, 0)`;
+                if (this.isTextarea) {
+                    this.caret.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+                } else {
+                    this.caret.style.transform = `translateY(-50%) translate3d(${this.currentX}px, 0, 0)`;
+                }
             }
             this.isMoving = false;
             return;
@@ -1523,8 +1618,6 @@ const smoothInputInstances = [];
 document.querySelectorAll('.smooth-input').forEach(inp => {
     smoothInputInstances.push(new SmoothInputController(inp, { stiffness: 500, damping: 30, mass: 0.5 }));
 });
-
-
 
 /* ========================================================
    17. SKIPER40 ANIMATED HYPERLINK ENGINE (Cursor.com)
