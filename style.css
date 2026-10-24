@@ -2423,6 +2423,21 @@ body.modal-open .header {
     align-items: center;
 }
 
+.smooth-textarea-container {
+    align-items: flex-start !important;
+}
+
+.smooth-textarea-container textarea {
+    width: 100% !important;
+    caret-color: transparent !important;
+    resize: vertical;
+}
+
+.smooth-textarea-container .smooth-caret {
+    top: 0 !important;
+    transform-origin: top left !important;
+}
+
 .smooth-input {
     caret-color: transparent !important;
 }
