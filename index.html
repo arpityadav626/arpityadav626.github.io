@@ -1,693 +1,1379 @@
-<!DOCTYPE html>
-<!--
-   Copyright 2026 Arpit Yadav (https://arpity.me)
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-<!--
-   ======================================================================
-   👋 ARPIT'S PORTFOLIO CODE MAP (YAHAN SE AAP KUCH BHI EDIT KAR SAKTE HO):
-   ======================================================================
-   1. <head>            : Google SEO, Title, Favicon, Fonts (Line 10-75)
-   2. Preloader         : Loading screen animation (Line 76-88)
-   3. Header / Navbar   : Top Menu, Logo, Dark/Light Mode Toggle, Resume Button (Line 90-140)
-   4. Hero Section      : Main Intro "Hi, I'm Arpit Yadav" & Interactive Studio (Line 153-394)
-   5. Projects Section  : Aapke 6 Featured Projects ke cards (Line 396-568)
-   6. Skills Section    : Interactive Stack / Capabilities (Line 570-618)
-   7. About Section     : Bio, Photo, Education & Core Principles (Line 620-664)
-   8. Achievements      : SIH Hackathon & Certifications (Line 666-694)
-   9. Contact Section   : Email, Phone, Socials & Contact Form (Line 696-745)
-   10. Footer           : Bottom Copyright & Back-to-Top (Line 747-766)
-   11. Modals & Scripts : Project Detail Popups & JS Links (Line 768-795)
-   ======================================================================
--->
-<html lang="en" data-mode="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer</title>
-    
-    <!-- Favicon & Brand Icons -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2026.2">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026.2">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026.2">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026.2">
-    <link rel="shortcut icon" href="favicon.ico?v=2026.2">
-    <meta name="theme-color" content="#0d111a">
-
-    <!-- Google SEO & Metadata -->
-    <meta name="description" content="Official engineering portfolio of Arpit Yadav (arpity.me) — Full Stack Developer & AI/IoT Systems Engineer. Specializing in high-performance web systems, SIH 2026 Smart Helmet, ChronoFact 2.0 Forensics, and Three.js 3D Digital Twins.">
-    <meta name="keywords" content="Arpit Yadav, arpity.me, Full Stack Developer, AI Systems, IoT Systems Engineer, Smart Helmet SIH, ChronoFact Forensics, Three.js Digital Twin, React 19, ESP32, Embedded C++, Web Audio API, WebSockets, REST APIs">
-    <meta name="author" content="Arpit Yadav">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://arpity.me/">
-    <meta name="google-site-verification" content="google29457da30806de7f">
-
-    <!-- Open Graph / LinkedIn & Social Preview -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://arpity.me/">
-    <meta property="og:site_name" content="arpity.me — Arpit Yadav Engineering Portfolio">
-    <meta property="og:title" content="Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer">
-    <meta property="og:description" content="Explore live production systems: SIH 2026 Smart Helmet telemetry, ChronoFact 2.0 Merkle forensics, Three.js 3D Digital Twins, and procedural Web Audio engine.">
-    <meta property="og:image" content="https://arpity.me/assets/profile.jpg">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer">
-    <meta name="twitter:description" content="Explore live production systems: SIH 2026 Smart Helmet telemetry, ChronoFact 2.0 Merkle forensics, Three.js 3D Digital Twins, and procedural Web Audio engine.">
-    <meta name="twitter:image" content="https://arpity.me/assets/profile.jpg">
-
-    <!-- Google Structured Data (JSON-LD) for Search Rich Results -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Arpit Yadav",
-      "url": "https://arpity.me/",
-      "image": "https://arpity.me/assets/profile.jpg",
-      "jobTitle": "Full Stack Developer & IoT Enthusiast",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Axis Institute of Technology and Management"
-      },
-      "sameAs": [
-        "https://www.linkedin.com/in/arpit-yadav-944983309/",
-        "https://github.com/arpityadav626"
-      ],
-      "knowsAbout": ["Full Stack Web Development", "IoT", "Arduino", "ESP32", "Python", "React", "JavaScript", "C++"]
-    }
-    </script>
-    
-    <!-- Google Fonts & Font Awesome Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="style.css?v=7.5">
-</head>
-<body class="light-theme" data-mode="light">
-    <!-- 0. High-End Editorial Intro Preloader -->
-    <div id="intro-preloader" class="intro-preloader" aria-hidden="true">
-        <div class="preloader-backdrop"></div>
-        <div class="preloader-title-wrap">
-            <h1 class="preloader-headline" aria-label="Arpit Yadav">
-                <span class="preloader-part preloader-left">Arpit</span>
-                <span class="preloader-part preloader-right">Yadav</span>
-            </h1>
-        </div>
-    </div>
-
-
-    <!-- 0. Skiper 71: Subpixel Scroll Progress Indicator -->
-    <div class="scroll-progress-line" id="scroll-progress-line" aria-hidden="true"></div>
-
-    <!-- 1. Flat Minimal Awwwards Header -->
-    <header class="header">
-        <div class="header-inner">
-            <a href="#home" class="brand-link">arpity.me</a>
-
-            <nav class="navbar" id="navbar">
-                <a href="#projects" class="nav-link">Work</a>
-                <a href="#skills" class="nav-link">Skills</a>
-                <a href="#achievements" class="nav-link">Honors</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.1" target="_blank" rel="noopener noreferrer" class="nav-link nav-resume-link">Resume ↗</a>
-            </nav>
-
-            <div class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation"><i class="fas fa-bars"></i></div>
-        </div>
-    </header>
-
-    <main>
-        <!-- 2. Minimalist Editorial Hero (Tight Centered Container) -->
-        <section class="hero hero-editorial" id="home">
-            <span id="about" class="section-anchor" aria-hidden="true"></span>
-            <div class="hero-ambient-backdrop" aria-hidden="true"></div>
-
-            <div class="hero-editorial-wrap">
-                <h1 class="hero-title hero-headline-converge" aria-label="Arpit Yadav">
-                    <span class="headline-part headline-left">Arpit</span><span class="headline-part headline-right">Yadav</span>
-                </h1>
-                <h2 class="hero-subtitle hero-anim-item" style="--anim-order: 2">
-                    Full-Stack Developer · AI &amp; IoT Systems Engineer
-                </h2>
-
-                <div class="hero-bio-container hero-anim-item" style="--anim-order: 3">
-                    <p class="hero-bio-lead">
-                        Computer Science (AI &amp; ML) undergraduate at <strong>Axis Institute of Technology and Management, Kanpur (2025–2029)</strong>. I build across hardware and software—from an ESP32 ignition-interlock helmet for Smart India Hackathon, to a cryptographic digital forensics tool for BSA Section 63(4) evidence, and a 3D smart-kitchen hazard monitor.
-                    </p>
-                </div>
-
-                <div class="hero-actions hero-anim-item" style="--anim-order: 4">
-                    <a href="#projects" class="btn btn-primary sound-hover ripple-btn">View Projects <i class="fas fa-arrow-down"></i></a>
-                    <a href="#contact" class="btn btn-outline sound-hover ripple-btn">Get In Touch <i class="fas fa-arrow-down"></i></a>
-                </div>
-
-                <div class="social-bar hero-anim-item" style="--anim-order: 5">
-                    <span class="social-label">Direct Line:</span>
-                    <div class="email-copy-wrap">
-                        <a href="mailto:arpityadav6794@gmail.com" class="social-pill-link sound-hover" title="Email Arpit">
-                            <i class="fas fa-envelope"></i> arpityadav6794@gmail.com
-                        </a>
-                        <button type="button" class="copy-email-btn sound-hover" id="hero-copy-email-btn" title="Copy email address" aria-label="Copy email address">
-                            <i class="far fa-copy" id="hero-copy-email-icon"></i>
-                            <span class="copy-toast-bubble" id="hero-copy-toast-bubble">Copied!</span>
-                        </button>
-                    </div>
-                    <a href="https://github.com/arpityadav626" target="_blank" rel="noopener noreferrer" class="social-link sound-hover" title="GitHub Profile"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" rel="noopener noreferrer" class="social-link sound-hover" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================================
-             🟢 SECTION 3: FEATURED PROJECTS (Aapke 6 Main Projects)
-             Har project ka card yahan hai:
-             - 01: Smart Helmet (SIH Hardware)
-             - 02: Smart Kitchen (Arduino + 3D Twin)
-             - 03: ChronoFact (Cyber Forensic)
-             - 04: AI Hub (arpit.fun Media Discovery)
-             - 05: Monolith Villa (Apex Intelligence 3D ArchViz)
-             - 06: Monu Egg Center (Cloud Kitchen & QR Suite)
-             ======================================================== -->
-        <section class="section projects-section" id="projects" aria-label="Featured Projects">
-            <div class="section-header">
-                <span class="mono-tag">( 01 // SELECTED WORK )</span>
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-desc">Hardware-integrated prototypes, AI forensics, and immersive web platforms.</p>
-            </div>
-
-            <div class="projects-grid">
-                <div class="project-card card-sih" data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c linux iot">
-                                                                
-                <div class="card-visual-slot">
-                <div class="card-visual-inner">
-                <img src="assets/smart-helmet-prototype.jpg" alt="Smart Helmet Telemetry Prototype" class="card-preview-img" loading="lazy">
-                <div class="card-visual-overlay"></div>
-                <span class="badge sih-badge visual-badge"><i class="fas fa-microchip"></i> SIH 2026 Hardware IoT</span>
-                </div>
-                </div>
-                
-                <div class="card-step-row">
-                <div class="card-step-badge">01</div>
-                <div class="card-step-line" aria-hidden="true"></div>
-                </div>
-                
-                <div class="card-info-slot">
-                <h3 class="project-title">Smart Rider — IoT Helmet Telemetry</h3>
-                <p class="project-summary">
-                Closed-loop two-wheeler safety interlock on ESP32. Integrates real-time MQ-3 breath alcohol detection with ignition cutoff, capacitive helmet-wear verification, and an MPU-6050 6-axis IMU triggering instant GSM/GPS SMS crash coordinates.
-                </p>
-                <div class="tech-stack-pills">
-                <span data-skill="esp32">ESP32</span>
-                <span data-skill="embedded-c">Embedded C++</span>
-                <span data-skill="sensors">MQ-3 &amp; IMU</span>
-                <span data-skill="iot">GSM/GPS</span>
-                <span>IoT Cloud</span>
-                </div>
-                <div class="card-links">
-                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-helmet">
-                Details <i class="fas fa-expand-alt"></i>
-                </button>
-                <a href="https://github.com/arpityadav626/smart-helmet" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                GitHub <i class="fab fa-github"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                LinkedIn <i class="fab fa-linkedin-in"></i>
-                </a>
-                </div>
-                </div>
-                </div>
-
-                <div class="project-card card-kitchen" data-project="smart-kitchen" data-skills="arduino esp32 sensors cpp python c microcontrollers threejs websockets rest-api">
-                                                                
-                <div class="card-visual-slot">
-                <div class="card-visual-inner">
-                <img src="assets/smart-kitchen-prototype.jpg" alt="SAFETY-FI 96X Prototype" class="card-preview-img" loading="lazy">
-                <div class="card-visual-overlay"></div>
-                <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Physical Hardware + 3D Twin</span>
-                </div>
-                </div>
-                
-                <div class="card-step-row">
-                <div class="card-step-badge">02</div>
-                <div class="card-step-line" aria-hidden="true"></div>
-                </div>
-                
-                <div class="card-info-slot">
-                <h3 class="project-title">SAFETY-FI 96X — Autonomous Kitchen Safety</h3>
-                <p class="project-summary">
-                Autonomous life-safety platform pairing microcontroller sensor arrays (MQ-2 hydrocarbon, optical flame, DHT11) with an interactive Three.js 3D cooktop digital twin. Automates sub-second relay solenoid shutoffs and SIM800L cellular alerts.
-                </p>
-                <div class="tech-stack-pills">
-                <span data-skill="arduino">Arduino / ESP32</span>
-                <span data-skill="threejs">Three.js</span>
-                <span data-skill="python">Python Serial</span>
-                <span data-skill="websockets">WebSockets</span>
-                <span data-skill="sensors">Sensors</span>
-                </div>
-                <div class="card-links">
-                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-kitchen">
-                Details <i class="fas fa-expand-alt"></i>
-                </button>
-                <a href="https://github.com/arpityadav626/smart-kitchen" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                GitHub <i class="fab fa-github"></i>
-                </a>
-                <a href="https://youtu.be/pivb5MaotJo" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch Walkthrough on YouTube">
-                <i class="fab fa-youtube"></i> Video
-                </a>
-                <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                Live Site <i class="fas fa-external-link-alt"></i>
-                </a>
-                </div>
-                </div>
-                </div>
-
-                <div class="project-card card-chronofact" data-project="chronofact" data-skills="python fastapi js html-css tailwind git github react nodejs express merkle rest-api docker linux db-security jwt-auth">
-                                                                
-                <div class="card-visual-slot">
-                <div class="card-visual-inner">
-                <img src="assets/chronofact-preview.jpg" alt="ChronoFact 2.0 Preview" class="card-preview-img" loading="lazy">
-                <div class="card-visual-overlay"></div>
-                <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Section 63(4) BSA 2023 Compliant</span>
-                </div>
-                </div>
-                
-                <div class="card-step-row">
-                <div class="card-step-badge">03</div>
-                <div class="card-step-line" aria-hidden="true"></div>
-                </div>
-                
-                <div class="card-info-slot">
-                <h3 class="project-title">ChronoFact 2.0 Forensics Engine</h3>
-                <p class="project-summary">
-                Air-gapped digital evidence verification workbench utilizing Merkle tree cryptographic hashing (SHA-256) for immutable evidentiary audit trails, cross-source quote verification, and automated court-admissible BSA Section 63(4) statutory certificates.
-                </p>
-                <div class="tech-stack-pills">
-                <span data-skill="react">React</span>
-                <span data-skill="nodejs">Node.js</span>
-                <span data-skill="express">Express</span>
-                <span data-skill="db-security">Database Security</span>
-                <span data-skill="merkle">Merkle Hash</span>
-                <span data-skill="rest-api">REST APIs</span>
-                </div>
-                <div class="card-links">
-                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="chronofact">
-                Details <i class="fas fa-expand-alt"></i>
-                </button>
-                <a href="https://github.com/arpityadav626/chronofact" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                GitHub <i class="fab fa-github"></i>
-                </a>
-                <a href="https://youtu.be/J8VqyTlGd5w" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch 3-Minute Walkthrough on YouTube">
-                <i class="fab fa-youtube"></i> Video
-                </a>
-                <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                Live Site <i class="fas fa-external-link-alt"></i>
-                </a>
-                </div>
-                </div>
-                </div>
-
-                <div class="project-card card-aihub" data-project="ai-hub" data-skills="ai react typescript js tailwind threejs web-audio firebase github jwt-auth websockets">
-                                                                
-                <div class="card-visual-slot">
-                <div class="card-visual-inner">
-                <img src="assets/ai-hub-preview.jpg" alt="AI Hub Preview" class="card-preview-img" loading="lazy">
-                <div class="card-visual-overlay"></div>
-                <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> 130+ Platforms Indexed</span>
-                </div>
-                </div>
-                
-                <div class="card-step-row">
-                <div class="card-step-badge">04</div>
-                <div class="card-step-line" aria-hidden="true"></div>
-                </div>
-                
-                <div class="card-info-slot">
-                <h3 class="project-title">AI Hub — Unified AI &amp; Media Discovery</h3>
-                <p class="project-summary">
-                High-speed developer workspace aggregating 130+ global AI, streaming, and literature platforms. Features interactive Three.js 3D spatial node navigation, zero-latency search indexing, in-app 4K viewport, and ambient Web Audio synthesizer.
-                </p>
-                <div class="tech-stack-pills">
-                <span data-skill="react">React 19</span>
-                <span data-skill="typescript">TypeScript</span>
-                <span data-skill="threejs">Three.js</span>
-                <span data-skill="tailwind">Tailwind CSS</span>
-                <span data-skill="firebase">Firebase</span>
-                <span data-skill="web-audio">Web Audio API</span>
-                </div>
-                <div class="card-links">
-                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="ai-hub">
-                Details <i class="fas fa-expand-alt"></i>
-                </button>
-                <a href="https://github.com/arpityadav626/arpit.fun" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                GitHub <i class="fab fa-github"></i>
-                </a>
-                <a href="https://arpit-fun.web.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                Live Site <i class="fas fa-external-link-alt"></i>
-                </a>
-                </div>
-                </div>
-                </div>
-
-                <div class="project-card card-monolith" data-project="monolith-villa" data-skills="threejs web-audio shaders js vercel html-css">
-                                                                
-                <div class="card-visual-slot">
-                <div class="card-visual-inner">
-                <img src="assets/monolith-villa-preview.jpg" alt="Monolith Villa Preview" class="card-preview-img" loading="lazy">
-                <div class="card-visual-overlay"></div>
-                <span class="badge live-badge visual-badge"><i class="fas fa-cube"></i> Live WebGL 3D</span>
-                </div>
-                </div>
-                
-                <div class="card-step-row">
-                <div class="card-step-badge">05</div>
-                <div class="card-step-line" aria-hidden="true"></div>
-                </div>
-                
-                <div class="card-info-slot">
-                <h3 class="project-title">Monolith Villa — 3D Spatial Digital Twin</h3>
-                <p class="project-summary">
-                Photorealistic 3D spatial digital twin of a 14,200 sq.ft luxury villa engineered with scroll-interpolated camera splines, spatial HUD matrix projection, and procedural ambient audio.
-                </p>
-                <div class="tech-stack-pills">
-                <span data-skill="threejs">Three.js</span>
-                <span data-skill="shaders">GLSL Shaders &amp; PBR</span>
-                <span>3D WebGL</span>
-                <span data-skill="web-audio">Web Audio API</span>
-                <span data-skill="vercel">Vercel Edge</span>
-                </div>
-                <div class="card-links">
-                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="monolith-villa">
-                Details <i class="fas fa-expand-alt"></i>
-                </button>
-                <a href="https://monolith-villa.vercel.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                Live Site <i class="fas fa-external-link-alt"></i>
-                </a>
-                </div>
-                </div>
-                </div>
-
-                <div class="project-card card-monu" data-project="monu-egg-center" data-skills="firebase js tailwind vercel html-css">
-                                                                
-                <div class="card-visual-slot">
-                <div class="card-visual-inner">
-                <img src="assets/monu-egg-center-preview.jpg" alt="Monu Egg Center Cloud Kitchen & Smart QR Suite Preview" class="card-preview-img" loading="lazy">
-                <div class="card-visual-overlay"></div>
-                <span class="badge live-badge visual-badge"><i class="fas fa-store"></i> Live Commercial System</span>
-                </div>
-                </div>
-                
-                <div class="card-step-row">
-                <div class="card-step-badge">06</div>
-                <div class="card-step-line" aria-hidden="true"></div>
-                </div>
-                
-                <div class="card-info-slot">
-                <h3 class="project-title">Monu Egg Center — Cloud Kitchen &amp; Smart QR Suite</h3>
-                <p class="project-summary">
-                Commercial cloud kitchen digital ecosystem featuring real-time menu &amp; gym diet packs manager with Firebase Firestore sync, Google review rating funnel with automated clipboard injection, and print-ready digital table QR standees.
-                </p>
-                <div class="tech-stack-pills">
-                <span data-skill="firebase">Firebase Firestore</span>
-                <span data-skill="js">Cloud Realtime Sync</span>
-                <span data-skill="tailwind">Tailwind CSS</span>
-                <span data-skill="vercel">Vercel Edge</span>
-                <span>Smart QR Architecture</span>
-                <span>Google Maps API</span>
-                </div>
-                <div class="card-links">
-                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="monu-egg-center">
-                Details <i class="fas fa-expand-alt"></i>
-                </button>
-                <a href="https://monu-egg-center.vercel.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
-                Live Site <i class="fas fa-external-link-alt"></i>
-                </a>
-                <a href="https://github.com/arpityadav626/monu-egg-center" target="_blank" class="card-btn outline sound-hover ripple-btn" title="View Source Code">
-                <i class="fab fa-github"></i>
-                </a>
-                </div>
-                </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ========================================================
-             🟢 SECTION 4: TECHNICAL SKILLS (Aapke Saare Technical Skills)
-             - Languages (C, C++, JS, TS, Python)
-             - Frontend & Backend (React, Node, Express, Tailwind)
-             - 3D & Graphics (Three.js, GLSL Shaders, Web Audio)
-             - IoT & Hardware (ESP32, Arduino, Sensors)
-             - Tools & Databases (Git, GitHub, Vercel, Linux)
-             ======================================================== -->
-        <section class="section skills-section" id="skills">
-            <div class="section-header">
-                <span class="mono-tag">( 02 // CAPABILITIES )</span>
-                <h2 class="section-title">Technical Skills</h2>
-                <p class="section-desc">Categorized stack used for software engineering & hardware integration.</p>
-                <div class="skills-interactive-hint" id="skills-interactive-hint">
-                    <span class="hint-pulse"></span> <span id="hint-text">Hover or click any skill to highlight linked projects</span>
-                </div>
-            </div>
-
-            <div class="skills-categories-grid">
-                
-                <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-terminal"></i> Languages</div>
-                    <div class="pill-group">
-                        <span class="skill-pill sound-hover" data-skill="c"><i class="fas fa-code"></i> C</span>
-                        <span class="skill-pill sound-hover" data-skill="cpp"><i class="fas fa-code"></i> C++</span>
-                        <span class="skill-pill sound-hover" data-skill="js"><i class="fab fa-js"></i> JavaScript</span>
-                        <span class="skill-pill sound-hover" data-skill="typescript"><i class="fab fa-js"></i> TypeScript</span>
-                        <span class="skill-pill sound-hover" data-skill="python"><i class="fab fa-python"></i> Python</span>
-                    </div>
-                </div>
-
-                <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-layer-group"></i> Frontend & Backend</div>
-                    <div class="pill-group">
-                        <span class="skill-pill sound-hover" data-skill="react"><i class="fab fa-react"></i> React</span>
-                        <span class="skill-pill sound-hover" data-skill="nodejs"><i class="fab fa-node-js"></i> Node.js</span>
-                        <span class="skill-pill sound-hover" data-skill="express"><i class="fas fa-server"></i> Express</span>
-                        <span class="skill-pill sound-hover" data-skill="rest-api"><i class="fas fa-network-wired"></i> REST APIs</span>
-                        <span class="skill-pill sound-hover" data-skill="websockets"><i class="fas fa-plug"></i> WebSockets</span>
-                        <span class="skill-pill sound-hover" data-skill="html-css"><i class="fab fa-html5"></i> HTML5 &amp; CSS3</span>
-                        <span class="skill-pill sound-hover" data-skill="tailwind"><i class="fas fa-wind"></i> Tailwind CSS</span>
-                    </div>
-                </div>
-
-                <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-brain"></i> AI &amp; Frontier Tech</div>
-                    <div class="pill-group">
-                        <span class="skill-pill sound-hover" data-skill="ai"><i class="fas fa-brain"></i> Generative AI &amp; LLMs</span>
-                        <span class="skill-pill sound-hover" data-skill="threejs"><i class="fas fa-cube"></i> Three.js / WebGL</span>
-                        <span class="skill-pill sound-hover" data-skill="shaders"><i class="fas fa-magic"></i> GLSL Shaders &amp; PBR</span>
-                        <span class="skill-pill sound-hover" data-skill="web-audio"><i class="fas fa-volume-up"></i> Web Audio API</span>
-                        <span class="skill-pill sound-hover" data-skill="firebase"><i class="fas fa-fire"></i> Google Firebase</span>
-                    </div>
-                </div>
-
-                <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-microchip"></i> IoT &amp; Hardware</div>
-                    <div class="pill-group">
-                        <span class="skill-pill sound-hover" data-skill="esp32"><i class="fas fa-memory"></i> ESP32</span>
-                        <span class="skill-pill sound-hover" data-skill="arduino"><i class="fas fa-microchip"></i> Arduino</span>
-                        <span class="skill-pill sound-hover" data-skill="sensors"><i class="fas fa-wave-square"></i> Sensors &amp; Actuators</span>
-                        <span class="skill-pill sound-hover" data-skill="embedded-c"><i class="fas fa-laptop-code"></i> Embedded C++</span>
-                    </div>
-                </div>
-
-                <div class="skill-category-card">
-                    <div class="category-title"><i class="fas fa-tools"></i> Tools, Cloud &amp; DevOps</div>
-                    <div class="pill-group">
-                                                <span class="skill-pill sound-hover" data-skill="db-security"><i class="fas fa-shield-alt"></i> Database Security</span>
-                        <span class="skill-pill sound-hover" data-skill="jwt-auth"><i class="fas fa-key"></i> JWT / OAuth</span>
-                        <span class="skill-pill sound-hover" data-skill="linux"><i class="fab fa-linux"></i> Linux</span>
-                        <span class="skill-pill sound-hover" data-skill="docker"><i class="fab fa-docker"></i> Docker</span>
-                        <span class="skill-pill sound-hover" data-skill="git"><i class="fab fa-git-alt"></i> Git</span>
-                        <span class="skill-pill sound-hover" data-skill="github"><i class="fab fa-github"></i> GitHub</span>
-                        <span class="skill-pill sound-hover" data-skill="vercel"><i class="fas fa-cloud"></i> Vercel</span>
-                        <span class="skill-pill sound-hover" data-skill="postman"><i class="fas fa-paper-plane"></i> Postman</span>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ========================================================
-             🟢 SECTION 3: ACHIEVEMENTS & MILESTONES (Hackathon & Certificates)
-             - Smart India Hackathon (SIH) Participant
-             - Competitive Programming & Problem Solving (C/C++)
-             - Technical Certifications & Badges
-             - B.Tech CSE (AI & ML) at Axis Institute
-             ======================================================== -->
-        <section class="section achievements-section" id="achievements">
-            <div class="section-header">
-                <span class="mono-tag">( 03 // HONORS )</span>
-                <h2 class="section-title">Achievements</h2>
-            </div>
-
-            <div class="achievements-container">
-                <div class="achievement-item">
-                    <div class="achieve-icon"><i class="fas fa-trophy"></i></div>
-                    <div class="achieve-content">
-                        <h4>Smart India Hackathon (SIH) 2026 — Hardware Edition</h4>
-                        <p>Engineered an end-to-end ESP32 Smart Helmet telemetry and ignition-interlock prototype for road safety innovation and real-time crash response.</p>
-                        <div class="achieve-links">
-                            <a href="assets/sih-certificate.jpg" target="_blank" class="achieve-link sound-hover"><i class="fas fa-certificate"></i> View Certificate ↗</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="achievement-item">
-                    <div class="achieve-icon"><i class="fas fa-graduation-cap"></i></div>
-                    <div class="achieve-content">
-                        <h4>B.Tech in Computer Science &amp; Engineering (AI &amp; ML)</h4>
-                        <p>Undergraduate degree at <strong>Axis Institute of Technology and Management, Kanpur</strong> (Cohort: 2025 — 2029). Focus: Embedded Telemetry, Distributed Web Systems &amp; Database Security.</p>
-                        <div class="achieve-links">
-                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-university"></i> Axis Institute, Kanpur</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="achievement-item">
-                    <div class="achieve-icon"><i class="fas fa-code"></i></div>
-                    <div class="achieve-content">
-                        <h4>Competitive Programming &amp; Algorithmic Problem Solving</h4>
-                        <p>Active problem solver in C/C++ and Data Structures; deterministic hardware-software interlocks and algorithmic logic optimization.</p>
-                        <div class="achieve-links">
-                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-terminal"></i> C / C++ &amp; Data Structures</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="achievement-item">
-                    <div class="achieve-icon"><i class="fas fa-shield-alt"></i></div>
-                    <div class="achieve-content">
-                        <h4>Cybersuraksha Training &amp; Systems Defense — C3i Hub</h4>
-                        <p>Completed the intensive <strong>Cybersuraksha Training Program</strong> hosted by <strong>C3i Hub</strong>, covering foundational network defense, system audits, and vulnerability mitigation.</p>
-                        <div class="achieve-links">
-                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-shield-alt"></i> C3i Hub Certified</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================================
-             🟢 SECTION 4: CONTACT ME (Email, Social Handles & Form)
-             - Direct Email & Location (Kanpur, UP)
-             - Social Links (LinkedIn, GitHub)
-             - Formspree Contact Form
-             ======================================================== -->
-        <section class="section contact-section" id="contact">
-            <div class="section-header">
-                <span class="mono-tag">( 04 // LET'S TALK )</span>
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="section-desc">Have a project idea, opportunity, or simply want to connect?</p>
-            </div>
-
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <h3>Contact Details</h3>
-                    <p>Feel free to reach out directly through email or socials:</p>
-
-                    <div class="contact-detail-row">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <span class="label">Direct Email</span>
-                            <div class="email-copy-wrap">
-                                <a href="mailto:arpityadav6794@gmail.com" class="val sound-hover">arpityadav6794@gmail.com</a>
-                                <button type="button" class="copy-email-btn sound-hover" id="copy-email-btn" title="Copy email address" aria-label="Copy email address">
-                                    <i class="far fa-copy" id="copy-email-icon"></i>
-                                    <span class="copy-toast-bubble" id="copy-toast-bubble">Copied!</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="contact-detail-row">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <span class="label">Location</span>
-                            <span class="val">Kanpur, Uttar Pradesh, India</span>
-                        </div>
-                    </div>
-
-                    <div class="contact-detail-row">
-                        <i class="fas fa-link"></i>
-                        <div>
-                            <span class="label">Social Handles</span>
-                            <div class="social-links-inline">
-                                <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" class="sound-hover">LinkedIn ↗</a>
-                                <a href="https://github.com/arpityadav626" target="_blank" class="sound-hover">GitHub ↗</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <form class="contact-form" id="contact-form" action="https://formspree.io/f/moevgzjw" method="POST">
-                    <div class="form-group smooth-input-container">
-                        <input type="text" id="name" name="name" class="smooth-input" placeholder="Your Name" required spellcheck="false">
-                        <span class="smooth-measure-span" aria-hidden="true"></span>
-                        <div class="smooth-caret" aria-hidden="true"></div>
-                    </div>
-                    <div class="form-group smooth-input-container">
-                        <input type="text" id="email" name="email" class="smooth-input" placeholder="Your Email Address" required spellcheck="false" inputmode="email" autocomplete="email">
-                        <span class="smooth-measure-span" aria-hidden="true"></span>
-                        <div class="smooth-caret" aria-hidden="true"></div>
-                    </div>
-                    <div class="form-group smooth-input-container smooth-textarea-container">
-                        <textarea id="message" name="message" class="smooth-input" rows="5" placeholder="Your Message..." required spellcheck="false"></textarea>
-                        <span class="smooth-measure-span" aria-hidden="true"></span>
-                        <div class="smooth-caret" aria-hidden="true"></div>
-                    </div>
-                    <button type="submit" id="submit-btn" class="btn btn-primary btn-submit sound-hover ripple-btn">
-                        <span>Send Message</span> <i class="fas fa-paper-plane"></i>
-                    </button>
-                    <p id="form-msg" class="form-msg"></p>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <!-- ========================================================
-         🟢 SECTION 8: FOOTER (Copyright notice aur Back to Top button)
-         ======================================================== -->
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2026 <strong>Arpit Yadav</strong>. Built with precision and semantic code.</p>
-            <a href="#home" class="back-top sound-hover">Back to top ↑</a>
-        </div>
-    </footer>
-
-    <!-- ========================================================
-         🟢 SECTION 9: PROJECT DETAILS POPUP MODAL
-         (Jab user kisi project par "Details" button dabata hai, 
-          to ye popup window khulti hai. Iska pura content
-          script.js ke projectDetailsData se dynamically load hota hai)
-         ======================================================== -->
-    <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details">
-        <div class="modal-dialog-container">
-            <!-- Sleek Corner Integrated Close Button - Nestled symmetrically into the 24px corner curve -->
-            <button class="modal-corner-close-btn sound-hover" id="modal-close-btn" aria-label="Close details modal" title="Close (ESC)">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="project-modal-card" id="project-modal-card" data-lenis-prevent>
-                <!-- Integrated Subtle Gradient Reading Progress Bar -->
-                <div class="modal-scroll-progress-bar" id="modal-scroll-bar"></div>
-                <div id="modal-dynamic-content" class="modal-body-content">
-                    <!-- Populated dynamically with staggered cascade animations -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    
-
-    <script src="assets/three.min.js"></script>
-    <script src="assets/lenis.min.js"></script>
-    <script src="assets/gsap.min.js"></script>
-    <script src="assets/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=7.5"></script>
-</body>
+<!DOCTYPE html>
+
+<!--
+
+   Copyright 2026 Arpit Yadav (https://arpity.me)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+
+   you may not use this file except in compliance with the License.
+
+   You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+<!--
+
+   ======================================================================
+
+   👋 ARPIT'S PORTFOLIO CODE MAP (YAHAN SE AAP KUCH BHI EDIT KAR SAKTE HO):
+
+   ======================================================================
+
+   1. <head>            : Google SEO, Title, Favicon, Fonts (Line 10-75)
+
+   2. Preloader         : Loading screen animation (Line 76-88)
+
+   3. Header / Navbar   : Top Menu, Logo, Dark/Light Mode Toggle, Resume Button (Line 90-140)
+
+   4. Hero Section      : Main Intro "Hi, I'm Arpit Yadav" & Interactive Studio (Line 153-394)
+
+   5. Projects Section  : Aapke 6 Featured Projects ke cards (Line 396-568)
+
+   6. Skills Section    : Interactive Stack / Capabilities (Line 570-618)
+
+   7. About Section     : Bio, Photo, Education & Core Principles (Line 620-664)
+
+   8. Achievements      : SIH Hackathon & Certifications (Line 666-694)
+
+   9. Contact Section   : Email, Phone, Socials & Contact Form (Line 696-745)
+
+   10. Footer           : Bottom Copyright & Back-to-Top (Line 747-766)
+
+   11. Modals & Scripts : Project Detail Popups & JS Links (Line 768-795)
+
+   ======================================================================
+
+-->
+
+<html lang="en" data-mode="light">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer</title>
+
+    
+
+    <!-- Favicon & Brand Icons -->
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2026.2">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026.2">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026.2">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026.2">
+
+    <link rel="shortcut icon" href="favicon.ico?v=2026.2">
+
+    <meta name="theme-color" content="#0d111a">
+
+
+
+    <!-- Google SEO & Metadata -->
+
+    <meta name="description" content="Official engineering portfolio of Arpit Yadav (arpity.me) — Full Stack Developer & AI/IoT Systems Engineer. Specializing in high-performance web systems, SIH 2026 Smart Helmet, ChronoFact 2.0 Forensics, and Three.js 3D Digital Twins.">
+
+    <meta name="keywords" content="Arpit Yadav, arpity.me, Full Stack Developer, AI Systems, IoT Systems Engineer, Smart Helmet SIH, ChronoFact Forensics, Three.js Digital Twin, React 19, ESP32, Embedded C++, Web Audio API, WebSockets, REST APIs">
+
+    <meta name="author" content="Arpit Yadav">
+
+    <meta name="robots" content="index, follow">
+
+    <link rel="canonical" href="https://arpity.me/">
+
+    <meta name="google-site-verification" content="google29457da30806de7f">
+
+
+
+    <!-- Open Graph / LinkedIn & Social Preview -->
+
+    <meta property="og:type" content="website">
+
+    <meta property="og:url" content="https://arpity.me/">
+
+    <meta property="og:site_name" content="arpity.me — Arpit Yadav Engineering Portfolio">
+
+    <meta property="og:title" content="Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer">
+
+    <meta property="og:description" content="Explore live production systems: SIH 2026 Smart Helmet telemetry, ChronoFact 2.0 Merkle forensics, Three.js 3D Digital Twins, and procedural Web Audio engine.">
+
+    <meta property="og:image" content="https://arpity.me/assets/profile.jpg">
+
+
+
+    <!-- Twitter Card -->
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="twitter:title" content="Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer">
+
+    <meta name="twitter:description" content="Explore live production systems: SIH 2026 Smart Helmet telemetry, ChronoFact 2.0 Merkle forensics, Three.js 3D Digital Twins, and procedural Web Audio engine.">
+
+    <meta name="twitter:image" content="https://arpity.me/assets/profile.jpg">
+
+
+
+    <!-- Google Structured Data (JSON-LD) for Search Rich Results -->
+
+    <script type="application/ld+json">
+
+    {
+
+      "@context": "https://schema.org",
+
+      "@type": "Person",
+
+      "name": "Arpit Yadav",
+
+      "url": "https://arpity.me/",
+
+      "image": "https://arpity.me/assets/profile.jpg",
+
+      "jobTitle": "Full Stack Developer & IoT Enthusiast",
+
+      "worksFor": {
+
+        "@type": "Organization",
+
+        "name": "Axis Institute of Technology and Management"
+
+      },
+
+      "sameAs": [
+
+        "https://www.linkedin.com/in/arpit-yadav-944983309/",
+
+        "https://github.com/arpityadav626"
+
+      ],
+
+      "knowsAbout": ["Full Stack Web Development", "IoT", "Arduino", "ESP32", "Python", "React", "JavaScript", "C++"]
+
+    }
+
+    </script>
+
+    
+
+    <!-- Google Fonts & Font Awesome Icons -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+
+    <link rel="stylesheet" href="style.css?v=7.5">
+
+</head>
+
+<body class="light-theme" data-mode="light">
+
+    <!-- 0. High-End Editorial Intro Preloader -->
+
+    <div id="intro-preloader" class="intro-preloader" aria-hidden="true">
+
+        <div class="preloader-backdrop"></div>
+
+        <div class="preloader-title-wrap">
+
+            <h1 class="preloader-headline" aria-label="Arpit Yadav">
+
+                <span class="preloader-part preloader-left">Arpit</span>
+
+                <span class="preloader-part preloader-right">Yadav</span>
+
+            </h1>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- 0. Skiper 71: Subpixel Scroll Progress Indicator -->
+
+    <div class="scroll-progress-line" id="scroll-progress-line" aria-hidden="true"></div>
+
+
+
+    <!-- 1. Flat Minimal Awwwards Header -->
+
+    <header class="header">
+
+        <div class="header-inner">
+
+            <a href="#home" class="brand-link">arpity.me</a>
+
+
+
+            <nav class="navbar" id="navbar">
+
+                <a href="#projects" class="nav-link">Work</a>
+
+                <a href="#skills" class="nav-link">Skills</a>
+
+                <a href="#achievements" class="nav-link">Honors</a>
+
+                <a href="#contact" class="nav-link">Contact</a>
+
+                <a href="assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.1" target="_blank" rel="noopener noreferrer" class="nav-link nav-resume-link">Resume ↗</a>
+
+            </nav>
+
+
+
+            <div class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation"><i class="fas fa-bars"></i></div>
+
+        </div>
+
+    </header>
+
+
+
+    <main>
+
+        <!-- 2. Minimalist Editorial Hero (Tight Centered Container) -->
+
+        <section class="hero hero-editorial" id="home">
+
+            <span id="about" class="section-anchor" aria-hidden="true"></span>
+
+            <div class="hero-ambient-backdrop" aria-hidden="true"></div>
+
+
+
+            <div class="hero-editorial-wrap">
+
+                <h1 class="hero-title hero-headline-converge" aria-label="Arpit Yadav">
+
+                    <span class="headline-part headline-left">Arpit</span><span class="headline-part headline-right">Yadav</span>
+
+                </h1>
+
+                <h2 class="hero-subtitle hero-anim-item" style="--anim-order: 2">
+
+                    Full-Stack Developer · AI &amp; IoT Systems Engineer
+
+                </h2>
+
+
+
+                <div class="hero-bio-container hero-anim-item" style="--anim-order: 3">
+
+                    <p class="hero-bio-lead">
+
+                        Computer Science (AI &amp; ML) undergraduate at <strong>Axis Institute of Technology and Management, Kanpur (2025–2029)</strong>. I build across hardware and software—from an ESP32 ignition-interlock helmet for Smart India Hackathon, to a cryptographic digital forensics tool for BSA Section 63(4) evidence, and a 3D smart-kitchen hazard monitor.
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="hero-actions hero-anim-item" style="--anim-order: 4">
+
+                    <a href="#projects" class="btn btn-primary sound-hover ripple-btn">View Projects <i class="fas fa-arrow-down"></i></a>
+
+                    <a href="#contact" class="btn btn-outline sound-hover ripple-btn">Get In Touch <i class="fas fa-arrow-down"></i></a>
+
+                </div>
+
+
+
+                <div class="social-bar hero-anim-item" style="--anim-order: 5">
+
+                    <span class="social-label">Direct Line:</span>
+
+                    <div class="email-copy-wrap">
+
+                        <a href="mailto:arpityadav6794@gmail.com" class="social-pill-link sound-hover" title="Email Arpit">
+
+                            <i class="fas fa-envelope"></i> arpityadav6794@gmail.com
+
+                        </a>
+
+                        <button type="button" class="copy-email-btn sound-hover" id="hero-copy-email-btn" title="Copy email address" aria-label="Copy email address">
+
+                            <i class="far fa-copy" id="hero-copy-email-icon"></i>
+
+                            <span class="copy-toast-bubble" id="hero-copy-toast-bubble">Copied!</span>
+
+                        </button>
+
+                    </div>
+
+                    <a href="https://github.com/arpityadav626" target="_blank" rel="noopener noreferrer" class="social-link sound-hover" title="GitHub Profile"><i class="fab fa-github"></i></a>
+
+                    <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" rel="noopener noreferrer" class="social-link sound-hover" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================================
+
+             🟢 SECTION 3: FEATURED PROJECTS (Aapke 6 Main Projects)
+
+             Har project ka card yahan hai:
+
+             - 01: Smart Helmet (SIH Hardware)
+
+             - 02: Smart Kitchen (Arduino + 3D Twin)
+
+             - 03: ChronoFact (Cyber Forensic)
+
+             - 04: AI Hub (arpit.fun Media Discovery)
+
+             - 05: Monolith Villa (Apex Intelligence 3D ArchViz)
+
+             - 06: Monu Egg Center (Cloud Kitchen & QR Suite)
+
+             ======================================================== -->
+
+        <section class="section projects-section" id="projects" aria-label="Featured Projects">
+
+            <div class="section-header">
+
+                <span class="mono-tag">( 01 // SELECTED WORK )</span>
+
+                <h2 class="section-title">Featured Projects</h2>
+
+                <p class="section-desc">Hardware-integrated prototypes, AI forensics, and immersive web platforms.</p>
+
+            </div>
+
+
+
+            <div class="projects-grid">
+
+                <div class="project-card card-sih" data-project="smart-helmet" data-skills="arduino esp32 sensors cpp embedded-c c linux iot">
+
+                                                                
+
+                <div class="card-visual-slot">
+
+                <div class="card-visual-inner">
+
+                <img src="assets/smart-helmet-prototype.jpg" alt="Smart Helmet Telemetry Prototype" class="card-preview-img" loading="lazy">
+
+                <div class="card-visual-overlay"></div>
+
+                <span class="badge sih-badge visual-badge"><i class="fas fa-microchip"></i> SIH 2026 Hardware IoT</span>
+
+                </div>
+
+                </div>
+
+                
+
+                <div class="card-step-row">
+
+                <div class="card-step-badge">01</div>
+
+                <div class="card-step-line" aria-hidden="true"></div>
+
+                </div>
+
+                
+
+                <div class="card-info-slot">
+
+                <h3 class="project-title">Smart Rider — IoT Helmet Telemetry</h3>
+
+                <p class="project-summary">
+
+                Closed-loop two-wheeler safety interlock on ESP32. Integrates real-time MQ-3 breath alcohol detection with ignition cutoff, capacitive helmet-wear verification, and an MPU-6050 6-axis IMU triggering instant GSM/GPS SMS crash coordinates.
+
+                </p>
+
+                <div class="tech-stack-pills">
+
+                <span data-skill="esp32">ESP32</span>
+
+                <span data-skill="embedded-c">Embedded C++</span>
+
+                <span data-skill="sensors">MQ-3 &amp; IMU</span>
+
+                <span data-skill="iot">GSM/GPS</span>
+
+                <span>IoT Cloud</span>
+
+                </div>
+
+                <div class="card-links">
+
+                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-helmet">
+
+                Details <i class="fas fa-expand-alt"></i>
+
+                </button>
+
+                <a href="https://github.com/arpityadav626/smart-helmet" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                GitHub <i class="fab fa-github"></i>
+
+                </a>
+
+                <a href="https://www.linkedin.com/in/arpit-yadav-944983309/details/projects/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                LinkedIn <i class="fab fa-linkedin-in"></i>
+
+                </a>
+
+                </div>
+
+                </div>
+
+                </div>
+
+
+
+                <div class="project-card card-kitchen" data-project="smart-kitchen" data-skills="arduino esp32 sensors cpp python c microcontrollers threejs websockets rest-api">
+
+                                                                
+
+                <div class="card-visual-slot">
+
+                <div class="card-visual-inner">
+
+                <img src="assets/smart-kitchen-prototype.jpg" alt="SAFETY-FI 96X Prototype" class="card-preview-img" loading="lazy">
+
+                <div class="card-visual-overlay"></div>
+
+                <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Physical Hardware + 3D Twin</span>
+
+                </div>
+
+                </div>
+
+                
+
+                <div class="card-step-row">
+
+                <div class="card-step-badge">02</div>
+
+                <div class="card-step-line" aria-hidden="true"></div>
+
+                </div>
+
+                
+
+                <div class="card-info-slot">
+
+                <h3 class="project-title">SAFETY-FI 96X — Autonomous Kitchen Safety</h3>
+
+                <p class="project-summary">
+
+                Autonomous life-safety platform pairing microcontroller sensor arrays (MQ-2 hydrocarbon, optical flame, DHT11) with an interactive Three.js 3D cooktop digital twin. Automates sub-second relay solenoid shutoffs and SIM800L cellular alerts.
+
+                </p>
+
+                <div class="tech-stack-pills">
+
+                <span data-skill="arduino">Arduino / ESP32</span>
+
+                <span data-skill="threejs">Three.js</span>
+
+                <span data-skill="python">Python Serial</span>
+
+                <span data-skill="websockets">WebSockets</span>
+
+                <span data-skill="sensors">Sensors</span>
+
+                </div>
+
+                <div class="card-links">
+
+                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="smart-kitchen">
+
+                Details <i class="fas fa-expand-alt"></i>
+
+                </button>
+
+                <a href="https://github.com/arpityadav626/smart-kitchen" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                GitHub <i class="fab fa-github"></i>
+
+                </a>
+
+                <a href="https://youtu.be/pivb5MaotJo" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch Walkthrough on YouTube">
+
+                <i class="fab fa-youtube"></i> Video
+
+                </a>
+
+                <a href="https://arpityadav626.github.io/smart-kitchen/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                Live Site <i class="fas fa-external-link-alt"></i>
+
+                </a>
+
+                </div>
+
+                </div>
+
+                </div>
+
+
+
+                <div class="project-card card-chronofact" data-project="chronofact" data-skills="python fastapi js html-css tailwind git github react nodejs express merkle rest-api docker linux db-security jwt-auth">
+
+                                                                
+
+                <div class="card-visual-slot">
+
+                <div class="card-visual-inner">
+
+                <img src="assets/chronofact-preview.jpg" alt="ChronoFact 2.0 Preview" class="card-preview-img" loading="lazy">
+
+                <div class="card-visual-overlay"></div>
+
+                <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> Section 63(4) BSA 2023 Compliant</span>
+
+                </div>
+
+                </div>
+
+                
+
+                <div class="card-step-row">
+
+                <div class="card-step-badge">03</div>
+
+                <div class="card-step-line" aria-hidden="true"></div>
+
+                </div>
+
+                
+
+                <div class="card-info-slot">
+
+                <h3 class="project-title">ChronoFact 2.0 Forensics Engine</h3>
+
+                <p class="project-summary">
+
+                Air-gapped digital evidence verification workbench utilizing Merkle tree cryptographic hashing (SHA-256) for immutable evidentiary audit trails, cross-source quote verification, and automated court-admissible BSA Section 63(4) statutory certificates.
+
+                </p>
+
+                <div class="tech-stack-pills">
+
+                <span data-skill="react">React</span>
+
+                <span data-skill="nodejs">Node.js</span>
+
+                <span data-skill="express">Express</span>
+
+                <span data-skill="db-security">Database Security</span>
+
+                <span data-skill="merkle">Merkle Hash</span>
+
+                <span data-skill="rest-api">REST APIs</span>
+
+                </div>
+
+                <div class="card-links">
+
+                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="chronofact">
+
+                Details <i class="fas fa-expand-alt"></i>
+
+                </button>
+
+                <a href="https://github.com/arpityadav626/chronofact" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                GitHub <i class="fab fa-github"></i>
+
+                </a>
+
+                <a href="https://youtu.be/J8VqyTlGd5w" target="_blank" class="card-btn youtube-btn sound-hover ripple-btn" title="Watch 3-Minute Walkthrough on YouTube">
+
+                <i class="fab fa-youtube"></i> Video
+
+                </a>
+
+                <a href="https://arpityadav626.github.io/chronofact/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                Live Site <i class="fas fa-external-link-alt"></i>
+
+                </a>
+
+                </div>
+
+                </div>
+
+                </div>
+
+
+
+                <div class="project-card card-aihub" data-project="ai-hub" data-skills="ai react typescript js tailwind threejs web-audio firebase github jwt-auth websockets">
+
+                                                                
+
+                <div class="card-visual-slot">
+
+                <div class="card-visual-inner">
+
+                <img src="assets/ai-hub-preview.jpg" alt="AI Hub Preview" class="card-preview-img" loading="lazy">
+
+                <div class="card-visual-overlay"></div>
+
+                <span class="badge live-badge visual-badge"><i class="fas fa-circle"></i> 130+ Platforms Indexed</span>
+
+                </div>
+
+                </div>
+
+                
+
+                <div class="card-step-row">
+
+                <div class="card-step-badge">04</div>
+
+                <div class="card-step-line" aria-hidden="true"></div>
+
+                </div>
+
+                
+
+                <div class="card-info-slot">
+
+                <h3 class="project-title">AI Hub — Unified AI &amp; Media Discovery</h3>
+
+                <p class="project-summary">
+
+                High-speed developer workspace aggregating 130+ global AI, streaming, and literature platforms. Features interactive Three.js 3D spatial node navigation, zero-latency search indexing, in-app 4K viewport, and ambient Web Audio synthesizer.
+
+                </p>
+
+                <div class="tech-stack-pills">
+
+                <span data-skill="react">React 19</span>
+
+                <span data-skill="typescript">TypeScript</span>
+
+                <span data-skill="threejs">Three.js</span>
+
+                <span data-skill="tailwind">Tailwind CSS</span>
+
+                <span data-skill="firebase">Firebase</span>
+
+                <span data-skill="web-audio">Web Audio API</span>
+
+                </div>
+
+                <div class="card-links">
+
+                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="ai-hub">
+
+                Details <i class="fas fa-expand-alt"></i>
+
+                </button>
+
+                <a href="https://github.com/arpityadav626/arpit.fun" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                GitHub <i class="fab fa-github"></i>
+
+                </a>
+
+                <a href="https://arpit-fun.web.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                Live Site <i class="fas fa-external-link-alt"></i>
+
+                </a>
+
+                </div>
+
+                </div>
+
+                </div>
+
+
+
+                <div class="project-card card-monolith" data-project="monolith-villa" data-skills="threejs web-audio shaders js vercel html-css">
+
+                                                                
+
+                <div class="card-visual-slot">
+
+                <div class="card-visual-inner">
+
+                <img src="assets/monolith-villa-preview.jpg" alt="Monolith Villa Preview" class="card-preview-img" loading="lazy">
+
+                <div class="card-visual-overlay"></div>
+
+                <span class="badge live-badge visual-badge"><i class="fas fa-cube"></i> Live WebGL 3D</span>
+
+                </div>
+
+                </div>
+
+                
+
+                <div class="card-step-row">
+
+                <div class="card-step-badge">05</div>
+
+                <div class="card-step-line" aria-hidden="true"></div>
+
+                </div>
+
+                
+
+                <div class="card-info-slot">
+
+                <h3 class="project-title">Monolith Villa — 3D Spatial Digital Twin</h3>
+
+                <p class="project-summary">
+
+                Photorealistic 3D spatial digital twin of a 14,200 sq.ft luxury villa engineered with scroll-interpolated camera splines, spatial HUD matrix projection, and procedural ambient audio.
+
+                </p>
+
+                <div class="tech-stack-pills">
+
+                <span data-skill="threejs">Three.js</span>
+
+                <span data-skill="shaders">GLSL Shaders &amp; PBR</span>
+
+                <span>3D WebGL</span>
+
+                <span data-skill="web-audio">Web Audio API</span>
+
+                <span data-skill="vercel">Vercel Edge</span>
+
+                </div>
+
+                <div class="card-links">
+
+                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="monolith-villa">
+
+                Details <i class="fas fa-expand-alt"></i>
+
+                </button>
+
+                <a href="https://monolith-villa.vercel.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                Live Site <i class="fas fa-external-link-alt"></i>
+
+                </a>
+
+                </div>
+
+                </div>
+
+                </div>
+
+
+
+                <div class="project-card card-monu" data-project="monu-egg-center" data-skills="firebase js tailwind vercel html-css">
+
+                                                                
+
+                <div class="card-visual-slot">
+
+                <div class="card-visual-inner">
+
+                <img src="assets/monu-egg-center-preview.jpg" alt="Monu Egg Center Cloud Kitchen & Smart QR Suite Preview" class="card-preview-img" loading="lazy">
+
+                <div class="card-visual-overlay"></div>
+
+                <span class="badge live-badge visual-badge"><i class="fas fa-store"></i> Live Commercial System</span>
+
+                </div>
+
+                </div>
+
+                
+
+                <div class="card-step-row">
+
+                <div class="card-step-badge">06</div>
+
+                <div class="card-step-line" aria-hidden="true"></div>
+
+                </div>
+
+                
+
+                <div class="card-info-slot">
+
+                <h3 class="project-title">Monu Egg Center — Cloud Kitchen &amp; Smart QR Suite</h3>
+
+                <p class="project-summary">
+
+                Commercial cloud kitchen digital ecosystem featuring real-time menu &amp; gym diet packs manager with Firebase Firestore sync, Google review rating funnel with automated clipboard injection, and print-ready digital table QR standees.
+
+                </p>
+
+                <div class="tech-stack-pills">
+
+                <span data-skill="firebase">Firebase Firestore</span>
+
+                <span data-skill="js">Cloud Realtime Sync</span>
+
+                <span data-skill="tailwind">Tailwind CSS</span>
+
+                <span data-skill="vercel">Vercel Edge</span>
+
+                <span>Smart QR Architecture</span>
+
+                <span>Google Maps API</span>
+
+                </div>
+
+                <div class="card-links">
+
+                <button class="card-btn primary sound-hover ripple-btn open-modal-btn" data-project="monu-egg-center">
+
+                Details <i class="fas fa-expand-alt"></i>
+
+                </button>
+
+                <a href="https://monu-egg-center.vercel.app/" target="_blank" class="card-btn outline sound-hover ripple-btn">
+
+                Live Site <i class="fas fa-external-link-alt"></i>
+
+                </a>
+
+                </div>
+
+                </div>
+
+                </div>
+
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================================
+
+             🟢 SECTION 4: TECHNICAL SKILLS (Aapke Saare Technical Skills)
+
+             - Languages (C, C++, JS, TS, Python)
+
+             - Frontend & Backend (React, Node, Express, Tailwind)
+
+             - 3D & Graphics (Three.js, GLSL Shaders, Web Audio)
+
+             - IoT & Hardware (ESP32, Arduino, Sensors)
+
+             - Tools & Databases (Git, GitHub, Vercel, Linux)
+
+             ======================================================== -->
+
+        <section class="section skills-section" id="skills">
+
+            <div class="section-header">
+
+                <span class="mono-tag">( 02 // CAPABILITIES )</span>
+
+                <h2 class="section-title">Technical Skills</h2>
+
+                <p class="section-desc">Categorized stack used for software engineering & hardware integration.</p>
+
+                <div class="skills-interactive-hint" id="skills-interactive-hint">
+
+                    <span class="hint-pulse"></span> <span id="hint-text">Hover or click any skill to highlight linked projects</span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="skills-categories-grid">
+
+                
+
+                <div class="skill-category-card">
+
+                    <div class="category-title"><i class="fas fa-terminal"></i> Languages</div>
+
+                    <div class="pill-group">
+
+                        <span class="skill-pill sound-hover" data-skill="c"><i class="fas fa-code"></i> C</span>
+
+                        <span class="skill-pill sound-hover" data-skill="cpp"><i class="fas fa-code"></i> C++</span>
+
+                        <span class="skill-pill sound-hover" data-skill="js"><i class="fab fa-js"></i> JavaScript</span>
+
+                        <span class="skill-pill sound-hover" data-skill="typescript"><i class="fab fa-js"></i> TypeScript</span>
+
+                        <span class="skill-pill sound-hover" data-skill="python"><i class="fab fa-python"></i> Python</span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="skill-category-card">
+
+                    <div class="category-title"><i class="fas fa-layer-group"></i> Frontend & Backend</div>
+
+                    <div class="pill-group">
+
+                        <span class="skill-pill sound-hover" data-skill="react"><i class="fab fa-react"></i> React</span>
+
+                        <span class="skill-pill sound-hover" data-skill="nodejs"><i class="fab fa-node-js"></i> Node.js</span>
+
+                        <span class="skill-pill sound-hover" data-skill="express"><i class="fas fa-server"></i> Express</span>
+
+                        <span class="skill-pill sound-hover" data-skill="rest-api"><i class="fas fa-network-wired"></i> REST APIs</span>
+
+                        <span class="skill-pill sound-hover" data-skill="websockets"><i class="fas fa-plug"></i> WebSockets</span>
+
+                        <span class="skill-pill sound-hover" data-skill="html-css"><i class="fab fa-html5"></i> HTML5 &amp; CSS3</span>
+
+                        <span class="skill-pill sound-hover" data-skill="tailwind"><i class="fas fa-wind"></i> Tailwind CSS</span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="skill-category-card">
+
+                    <div class="category-title"><i class="fas fa-brain"></i> AI &amp; Frontier Tech</div>
+
+                    <div class="pill-group">
+
+                        <span class="skill-pill sound-hover" data-skill="ai"><i class="fas fa-brain"></i> Generative AI &amp; LLMs</span>
+
+                        <span class="skill-pill sound-hover" data-skill="threejs"><i class="fas fa-cube"></i> Three.js / WebGL</span>
+
+                        <span class="skill-pill sound-hover" data-skill="shaders"><i class="fas fa-magic"></i> GLSL Shaders &amp; PBR</span>
+
+                        <span class="skill-pill sound-hover" data-skill="web-audio"><i class="fas fa-volume-up"></i> Web Audio API</span>
+
+                        <span class="skill-pill sound-hover" data-skill="firebase"><i class="fas fa-fire"></i> Google Firebase</span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="skill-category-card">
+
+                    <div class="category-title"><i class="fas fa-microchip"></i> IoT &amp; Hardware</div>
+
+                    <div class="pill-group">
+
+                        <span class="skill-pill sound-hover" data-skill="esp32"><i class="fas fa-memory"></i> ESP32</span>
+
+                        <span class="skill-pill sound-hover" data-skill="arduino"><i class="fas fa-microchip"></i> Arduino</span>
+
+                        <span class="skill-pill sound-hover" data-skill="sensors"><i class="fas fa-wave-square"></i> Sensors &amp; Actuators</span>
+
+                        <span class="skill-pill sound-hover" data-skill="embedded-c"><i class="fas fa-laptop-code"></i> Embedded C++</span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="skill-category-card">
+
+                    <div class="category-title"><i class="fas fa-tools"></i> Tools, Cloud &amp; DevOps</div>
+
+                    <div class="pill-group">
+
+                                                <span class="skill-pill sound-hover" data-skill="db-security"><i class="fas fa-shield-alt"></i> Database Security</span>
+
+                        <span class="skill-pill sound-hover" data-skill="jwt-auth"><i class="fas fa-key"></i> JWT / OAuth</span>
+
+                        <span class="skill-pill sound-hover" data-skill="linux"><i class="fab fa-linux"></i> Linux</span>
+
+                        <span class="skill-pill sound-hover" data-skill="docker"><i class="fab fa-docker"></i> Docker</span>
+
+                        <span class="skill-pill sound-hover" data-skill="git"><i class="fab fa-git-alt"></i> Git</span>
+
+                        <span class="skill-pill sound-hover" data-skill="github"><i class="fab fa-github"></i> GitHub</span>
+
+                        <span class="skill-pill sound-hover" data-skill="vercel"><i class="fas fa-cloud"></i> Vercel</span>
+
+                        <span class="skill-pill sound-hover" data-skill="postman"><i class="fas fa-paper-plane"></i> Postman</span>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================================
+
+             🟢 SECTION 3: ACHIEVEMENTS & MILESTONES (Hackathon & Certificates)
+
+             - Smart India Hackathon (SIH) Participant
+
+             - Competitive Programming & Problem Solving (C/C++)
+
+             - Technical Certifications & Badges
+
+             - B.Tech CSE (AI & ML) at Axis Institute
+
+             ======================================================== -->
+
+        <section class="section achievements-section" id="achievements">
+
+            <div class="section-header">
+
+                <span class="mono-tag">( 03 // HONORS )</span>
+
+                <h2 class="section-title">Achievements</h2>
+
+            </div>
+
+
+
+            <div class="achievements-container">
+
+                <div class="achievement-item">
+
+                    <div class="achieve-icon"><i class="fas fa-trophy"></i></div>
+
+                    <div class="achieve-content">
+
+                        <h4>Smart India Hackathon (SIH) 2026 — Hardware Edition</h4>
+
+                        <p>Engineered an end-to-end ESP32 Smart Helmet telemetry and ignition-interlock prototype for road safety innovation and real-time crash response.</p>
+
+                        <div class="achieve-links">
+
+                            <a href="assets/sih-certificate.jpg" target="_blank" class="achieve-link sound-hover"><i class="fas fa-certificate"></i> View Certificate ↗</a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="achievement-item">
+
+                    <div class="achieve-icon"><i class="fas fa-graduation-cap"></i></div>
+
+                    <div class="achieve-content">
+
+                        <h4>B.Tech in Computer Science &amp; Engineering (AI &amp; ML)</h4>
+
+                        <p>Undergraduate degree at <strong>Axis Institute of Technology and Management, Kanpur</strong> (Cohort: 2025 — 2029). Focus: Embedded Telemetry, Distributed Web Systems &amp; Database Security.</p>
+
+                        <div class="achieve-links">
+
+                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-university"></i> Axis Institute, Kanpur</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="achievement-item">
+
+                    <div class="achieve-icon"><i class="fas fa-code"></i></div>
+
+                    <div class="achieve-content">
+
+                        <h4>Competitive Programming &amp; Algorithmic Problem Solving</h4>
+
+                        <p>Active problem solver in C/C++ and Data Structures; deterministic hardware-software interlocks and algorithmic logic optimization.</p>
+
+                        <div class="achieve-links">
+
+                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-terminal"></i> C / C++ &amp; Data Structures</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="achievement-item">
+
+                    <div class="achieve-icon"><i class="fas fa-shield-alt"></i></div>
+
+                    <div class="achieve-content">
+
+                        <h4>Cybersuraksha Training &amp; Systems Defense — C3i Hub</h4>
+
+                        <p>Completed the intensive <strong>Cybersuraksha Training Program</strong> hosted by <strong>C3i Hub</strong>, covering foundational network defense, system audits, and vulnerability mitigation.</p>
+
+                        <div class="achieve-links">
+
+                            <span class="achieve-link sound-hover" style="cursor:default;"><i class="fas fa-shield-alt"></i> C3i Hub Certified</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================================
+
+             🟢 SECTION 4: CONTACT ME (Email, Social Handles & Form)
+
+             - Direct Email & Location (Kanpur, UP)
+
+             - Social Links (LinkedIn, GitHub)
+
+             - Formspree Contact Form
+
+             ======================================================== -->
+
+        <section class="section contact-section" id="contact">
+
+            <div class="section-header">
+
+                <span class="mono-tag">( 04 // LET'S TALK )</span>
+
+                <h2 class="section-title">Get In Touch</h2>
+
+                <p class="section-desc">Have a project idea, opportunity, or simply want to connect?</p>
+
+            </div>
+
+
+
+            <div class="contact-grid">
+
+                <div class="contact-card">
+
+                    <h3>Contact Details</h3>
+
+                    <p>Feel free to reach out directly through email or socials:</p>
+
+
+
+                    <div class="contact-detail-row">
+
+                        <i class="fas fa-envelope"></i>
+
+                        <div>
+
+                            <span class="label">Direct Email</span>
+
+                            <div class="email-copy-wrap">
+
+                                <a href="mailto:arpityadav6794@gmail.com" class="val sound-hover">arpityadav6794@gmail.com</a>
+
+                                <button type="button" class="copy-email-btn sound-hover" id="copy-email-btn" title="Copy email address" aria-label="Copy email address">
+
+                                    <i class="far fa-copy" id="copy-email-icon"></i>
+
+                                    <span class="copy-toast-bubble" id="copy-toast-bubble">Copied!</span>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="contact-detail-row">
+
+                        <i class="fas fa-map-marker-alt"></i>
+
+                        <div>
+
+                            <span class="label">Location</span>
+
+                            <span class="val">Kanpur, Uttar Pradesh, India</span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="contact-detail-row">
+
+                        <i class="fas fa-link"></i>
+
+                        <div>
+
+                            <span class="label">Social Handles</span>
+
+                            <div class="social-links-inline">
+
+                                <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" class="sound-hover">LinkedIn ↗</a>
+
+                                <a href="https://github.com/arpityadav626" target="_blank" class="sound-hover">GitHub ↗</a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <form class="contact-form" id="contact-form" action="https://formspree.io/f/moevgzjw" method="POST">
+
+                    <div class="form-group smooth-input-container">
+
+                        <input type="text" id="name" name="name" class="smooth-input" placeholder="Your Name" required spellcheck="false">
+
+                        <span class="smooth-measure-span" aria-hidden="true"></span>
+
+                        <div class="smooth-caret" aria-hidden="true"></div>
+
+                    </div>
+
+                    <div class="form-group smooth-input-container">
+
+                        <input type="text" id="email" name="email" class="smooth-input" placeholder="Your Email Address" required spellcheck="false" inputmode="email" autocomplete="email">
+
+                        <span class="smooth-measure-span" aria-hidden="true"></span>
+
+                        <div class="smooth-caret" aria-hidden="true"></div>
+
+                    </div>
+
+                    <div class="form-group smooth-input-container smooth-textarea-container">
+
+                        <textarea id="message" name="message" class="smooth-input" rows="5" placeholder="Your Message..." required spellcheck="false"></textarea>
+
+                        <span class="smooth-measure-span" aria-hidden="true"></span>
+
+                        <div class="smooth-caret" aria-hidden="true"></div>
+
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="btn btn-primary btn-submit sound-hover ripple-btn">
+
+                        <span>Send Message</span> <i class="fas fa-paper-plane"></i>
+
+                    </button>
+
+                    <p id="form-msg" class="form-msg"></p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ========================================================
+
+         🟢 SECTION 8: FOOTER (Copyright notice aur Back to Top button)
+
+         ======================================================== -->
+
+    <footer class="footer">
+
+        <div class="footer-content">
+
+            <p>&copy; 2026 <strong>Arpit Yadav</strong>. Built with precision and semantic code.</p>
+
+            <a href="#home" class="back-top sound-hover">Back to top ↑</a>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- ========================================================
+
+         🟢 SECTION 9: PROJECT DETAILS POPUP MODAL
+
+         (Jab user kisi project par "Details" button dabata hai, 
+
+          to ye popup window khulti hai. Iska pura content
+
+          script.js ke projectDetailsData se dynamically load hota hai)
+
+         ======================================================== -->
+
+    <div id="project-modal" class="project-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project Details">
+
+        <div class="modal-dialog-container">
+
+            <!-- Sleek Corner Integrated Close Button - Nestled symmetrically into the 24px corner curve -->
+
+            <button class="modal-corner-close-btn sound-hover" id="modal-close-btn" aria-label="Close details modal" title="Close (ESC)">
+
+                <i class="fas fa-times"></i>
+
+            </button>
+
+            <div class="project-modal-card" id="project-modal-card" data-lenis-prevent>
+
+                <!-- Integrated Subtle Gradient Reading Progress Bar -->
+
+                <div class="modal-scroll-progress-bar" id="modal-scroll-bar"></div>
+
+                <div id="modal-dynamic-content" class="modal-body-content">
+
+                    <!-- Populated dynamically with staggered cascade animations -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    
+
+
+
+    <script src="assets/three.min.js"></script>
+
+    <script src="assets/lenis.min.js"></script>
+
+    <script src="assets/gsap.min.js"></script>
+
+    <script src="assets/ScrollTrigger.min.js"></script>
+
+    <script src="script.js?v=7.5"></script>
+
+</body>
+
 </html>
