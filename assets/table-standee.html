@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Table Standee — Monu Egg Center</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      body { background: white; margin: 0; padding: 0; }
+      .no-print { display: none !important; }
+      .standee-card { box-shadow: none !important; border: 3px solid #000 !important; }
+    }
+  </style>
+</head>
+<body class="bg-neutral-100 min-h-screen flex flex-col items-center justify-center p-4 font-['Plus_Jakarta_Sans'] text-[#1b1c1a]">
+
+  <!-- Print Control Bar -->
+  <div class="no-print mb-6 flex items-center gap-3">
+    <button onclick="window.print()" class="px-6 py-2.5 bg-black text-white rounded-lg font-bold text-sm tracking-wide shadow-lg hover:bg-neutral-800 transition flex items-center gap-2 cursor-pointer">
+      🖨️ Print Standee / Save as PDF
+    </button>
+    <a href="index.html" class="px-5 py-2.5 bg-white border border-neutral-300 text-neutral-700 rounded-lg font-bold text-sm hover:bg-neutral-50 transition">
+      ← Back to Website
+    </a>
+  </div>
+
+  <!-- Standee Card Container (Standard A5 / Acrylic Standee Ratio) -->
+  <div class="standee-card bg-[#FBF9F5] border-4 border-[#1b1c1a] rounded-2xl shadow-[12px_12px_0px_#1b1c1a] max-w-sm w-full p-6 text-center relative overflow-hidden">
+    
+    <!-- Top Accent Banner -->
+    <div class="bg-[#1b1c1a] text-[#FBF9F5] -mx-6 -mt-6 p-4 mb-5 border-b-4 border-[#1b1c1a]">
+      <div class="flex items-center justify-center gap-2 mb-1">
+        <img src="favicon.svg" alt="Logo" class="w-8 h-8 object-contain"/>
+        <h1 class="font-['Space_Grotesk'] text-xl font-bold uppercase tracking-tight">Monu Egg Center</h1>
+      </div>
+      <p class="text-[11px] font-bold uppercase tracking-widest text-[#FDBE4F]">Kanpur • Est. 2012</p>
+    </div>
+
+    <!-- Instruction Title -->
+    <div class="mb-4">
+      <span class="inline-block bg-[#FDBE4F] text-[#1b1c1a] border border-[#1b1c1a] text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full mb-1.5 shadow-[1px_1px_0px_#1b1c1a]">
+        Table Digital Menu
+      </span>
+      <h2 class="font-['Space_Grotesk'] text-2xl font-extrabold uppercase tracking-tight text-[#1b1c1a]">
+        Scan To View Live Menu
+      </h2>
+      <p class="text-xs text-neutral-600 font-medium mt-0.5">
+        Point phone camera to explore curries, scrambles & gym packs
+      </p>
+    </div>
+
+    <!-- QR Code with Shadow Box -->
+    <div class="inline-block p-3 bg-white border-3 border-[#1b1c1a] rounded-xl shadow-[4px_4px_0px_#1b1c1a] my-2">
+      <img src="website-qr.png" alt="Scan for Monu Egg Center Menu" class="w-56 h-56 object-contain"/>
+    </div>
+
+    <!-- Features Pill -->
+    <div class="my-4 flex items-center justify-center gap-2 text-[11px] font-bold text-neutral-700">
+      <span class="flex items-center gap-1">⚡ Instant Load</span>
+      <span>•</span>
+      <span class="flex items-center gap-1">📱 No App Needed</span>
+      <span>•</span>
+      <span class="flex items-center gap-1">🍳 Live Prices</span>
+    </div>
+
+    <!-- Location & Contact Footer -->
+    <div class="pt-3 border-t-2 border-[#1b1c1a]/20 text-[11px] text-neutral-600 leading-snug">
+      <p class="font-bold text-[#1b1c1a]">127, 965, Gaushala Road, Saket Nagar, Kanpur</p>
+      <p class="mt-0.5 font-semibold text-neutral-800">Direct WhatsApp Orders: <strong>+91 73882 21133</strong></p>
+      <p class="text-[10px] text-neutral-500 uppercase tracking-wider mt-1">Open 7 Days • 10:00 AM – 11:00 PM</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
