@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arpit's Creative Lab — Interactive Sandbox &amp; Experiments</title>
+    
+    <!-- Favicon & Brand Icons -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <meta name="theme-color" content="#0d111a">
+
+    <!-- SEO Meta -->
+    <meta name="description" content="Arpit's Creative Lab — An independent experimental sandbox featuring interactive canvas physics, procedural Web Audio synthesizer, 3D living worlds, kinetic typography, and user creation uploads.">
+    <meta name="keywords" content="Arpit Yadav, Creative Lab, Web Audio API, Canvas Physics, Three.js, Skiper UI, Crowd Simulation, Creative Coding, Developer Playground">
+    <meta name="author" content="Arpit Yadav">
+
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Standalone Studio Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=2.5">
+</head>
+<body class="light-theme" data-mode="light">
+
+    <!-- Top Subpixel Scroll Indicator -->
+    <div class="top-progress-bar" id="top-progress-bar"></div>
+
+    <!-- 1. Sticky Navigation Header -->
+    <header class="lab-header">
+        <div class="lab-header-inner">
+            <div class="brand-group">
+                <a href="index.html" class="lab-brand" title="Arpit's Creative Lab">
+                    <span>arpity.me</span>
+                </a>
+                <span class="badge-lab">
+                    <span class="badge-lab-pulse"></span>
+                    CREATIVE LAB
+                </span>
+            </div>
+
+            <nav class="lab-nav">
+                <a href="#lab-physics" class="nav-pill-link">Physics</a>
+                <a href="#lab-audio" class="nav-pill-link">Web Audio</a>
+                <a href="#lab-3d" class="nav-pill-link">3D World</a>
+                <a href="#lab-kinetic" class="nav-pill-link">Kinetic</a>
+                <a href="#lab-monu-egg" class="nav-pill-link">Monu Egg</a>
+                <a href="#custom-creations-section" class="nav-pill-link">Uploads</a>
+                <a href="assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.4" class="nav-pill-link" target="_blank" rel="noopener noreferrer" title="View Latest Resume">
+                    <i class="fas fa-file-pdf"></i> Resume ↗
+                </a>
+                <a href="../index.html" class="nav-pill-link nav-portfolio-link" target="_blank" rel="noopener noreferrer" title="Visit Main Portfolio">
+                    Portfolio ↗
+                </a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="btn-upload-trigger" id="btn-upload-trigger" title="Upload a new creative experiment">
+                    <i class="fas fa-plus"></i> Upload Creation
+                </button>
+                <button class="icon-btn active" id="sound-toggle-btn" title="Toggle Procedural UI SFX">
+                    <i class="fas fa-volume-up" id="sound-toggle-icon"></i>
+                </button>
+                <button class="icon-btn" id="theme-toggle-btn" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon" id="theme-toggle-icon"></i>
+                </button>
+                <button class="icon-btn cmd-palette-trigger" title="Search &amp; Quick Actions (Ctrl + K)">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. Hero Section: Statement & Telemetry HUD -->
+        <section class="lab-hero">
+            <div class="lab-kicker">
+                <i class="fas fa-flask"></i> Standalone Creative Studio // Restored &amp; Living
+            </div>
+            <h1 class="lab-title">
+                Arpit's Creative Lab &amp; <span>Interactive Studio</span>
+            </h1>
+            <p class="lab-description">
+                An independent sandbox for interactive browser physics, procedural audio engines, 3D living canvases, and creative software experiments. Built as a dedicated creative playground alongside Arpit's engineering portfolio.
+            </p>
+
+            <!-- Telemetry HUD -->
+            <div class="telemetry-hud">
+                <div class="hud-item">
+                    <div class="hud-icon"><i class="fas fa-microchip"></i></div>
+                    <div class="hud-meta">
+                        <span class="hud-label">Restored Experiments</span>
+                        <span class="hud-value">9 Modules Active</span>
+                    </div>
+                </div>
+                <div class="hud-item">
+                    <div class="hud-icon"><i class="fas fa-wave-square"></i></div>
+                    <div class="hud-meta">
+                        <span class="hud-label">Audio Engine</span>
+                        <span class="hud-value">0 KB Procedural Web Audio</span>
+                    </div>
+                </div>
+                <div class="hud-item">
+                    <div class="hud-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="hud-meta">
+                        <span class="hud-label">Physics Target</span>
+                        <span class="hud-value">60 FPS Hardware Render</span>
+                    </div>
+                </div>
+                <div class="hud-item">
+                    <div class="hud-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <div class="hud-meta">
+                        <span class="hud-label">Your Uploads</span>
+                        <span class="hud-value" id="hud-upload-count">0 Custom</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Bar (Live Search & Categories) -->
+            <div class="controls-bar">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="lab-search-input" class="search-input" placeholder="Search experiments by name, tech stack, or audio..." autocomplete="off">
+                </div>
+                <div class="filter-tags">
+                    <button class="filter-btn active" data-filter="all">All Modules</button>
+                    <button class="filter-btn" data-filter="physics">Physics &amp; Crowd</button>
+                    <button class="filter-btn" data-filter="audio">Web Audio Synth</button>
+                    <button class="filter-btn" data-filter="3d">3D &amp; Canvases</button>
+                    <button class="filter-btn" data-filter="kinetic">Kinetic &amp; Motion</button>
+                    <button class="filter-btn" data-filter="tools">Developer Tools</button>
+                    <button class="filter-btn" data-filter="custom">Custom Uploads</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Bento Grid of Restored Experiments -->
+        <section class="lab-container">
+            <div class="bento-grid">
+
+                <!-- MODULE 1: NEVER WALK ALONE CROWD PHYSICS -->
+                <div class="bento-card bento-col-12" id="lab-physics" data-category="physics">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">01 // INTERACTIVE PHYSICS</span>
+                        <span class="badge-tag"><i class="fas fa-users"></i> Skiper 39 Canvas</span>
+                    </div>
+                    <h2 class="bento-card-title">Never Walk Alone — Walking Crowd Simulation</h2>
+                    <p class="bento-card-desc">
+                        Pure HTML5 Canvas multi-layered crowd physics simulation using sprite-sliced hand-drawn pedestrians. Peeps bob, walk with individual speeds, and respect depth sorting. <strong>Click anywhere inside the canvas to drop a new walker!</strong>
+                    </p>
+
+                    <div class="crowd-canvas-box" id="crowd-canvas-box">
+                        <canvas id="crowd-canvas"></canvas>
+                    </div>
+
+                    <div class="crowd-canvas-toolbar">
+                        <div class="toolbar-controls">
+                            <button class="btn-secondary" id="btn-spawn-peep">
+                                <i class="fas fa-user-plus"></i> Spawn Walker
+                            </button>
+                            <button class="btn-secondary" id="btn-invert-ink">
+                                <i class="fas fa-adjust"></i> Invert Ink Tone
+                            </button>
+                            <div class="slider-group">
+                                <span>Pace:</span>
+                                <input type="range" id="crowd-speed-slider" min="0.3" max="2.5" step="0.1" value="1.0" title="Adjust walking pace">
+                            </div>
+                        </div>
+                        <div class="crowd-stat-pill">
+                            Active Walkers: <strong id="crowd-count-val">28</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 2: COZY SFX WEB AUDIO SYNTHESIZER STUDIO -->
+                <div class="bento-card bento-col-8" id="lab-audio" data-category="audio">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">02 // PROCEDURAL SYNTHESIS</span>
+                        <span class="badge-tag"><i class="fas fa-waveform"></i> Web Audio API (0 KB)</span>
+                    </div>
+                    <h2 class="bento-card-title">Cozy SFX — Studio Soundboard &amp; Pentatonic Synth</h2>
+                    <p class="bento-card-desc">
+                        A real-time procedural frequency synthesizer with dynamic limiter, harmonic wave shaping, and real-time spectrum analysis. Every click is generated mathematically with zero external audio files.
+                    </p>
+
+                    <div class="synth-studio-wrap">
+                        <!-- Real-time Waveform Visualizer -->
+                        <div class="visualizer-canvas-box">
+                            <canvas id="audio-visualizer-canvas"></canvas>
+                            <div class="visualizer-overlay-info">
+                                <i class="fas fa-chart-bar"></i> Real-Time Frequency Analyser
+                            </div>
+                        </div>
+
+                        <!-- 8 Tactile Sound Pads -->
+                        <div class="soundboard-grid">
+                            <button class="sound-pad" data-sound="hover">
+                                <i class="fas fa-mouse-pointer pad-icon"></i>
+                                <span class="pad-title">Micro-Tick</span>
+                                <span class="pad-meta">Soft Hover</span>
+                            </button>
+                            <button class="sound-pad" data-sound="card">
+                                <i class="fas fa-layer-group pad-icon"></i>
+                                <span class="pad-title">Acoustic Thud</span>
+                                <span class="pad-meta">Warm Marimba</span>
+                            </button>
+                            <button class="sound-pad" data-sound="click">
+                                <i class="fas fa-toggle-on pad-icon"></i>
+                                <span class="pad-title">Haptic Switch</span>
+                                <span class="pad-meta">Mechanical Click</span>
+                            </button>
+                            <button class="sound-pad" data-sound="nav">
+                                <i class="fas fa-tint pad-icon"></i>
+                                <span class="pad-title">Liquid Bubble</span>
+                                <span class="pad-meta">Nav Tone</span>
+                            </button>
+                            <button class="sound-pad" data-sound="scroll">
+                                <i class="fas fa-arrows-alt-v pad-icon"></i>
+                                <span class="pad-title">Ratchet Tick</span>
+                                <span class="pad-meta">Scroll Step</span>
+                            </button>
+                            <button class="sound-pad" data-sound="key">
+                                <i class="fas fa-keyboard pad-icon"></i>
+                                <span class="pad-title">Linear Key</span>
+                                <span class="pad-meta">Type Switch</span>
+                            </button>
+                            <button class="sound-pad" data-sound="modal">
+                                <i class="fas fa-expand pad-icon"></i>
+                                <span class="pad-title">Modal Sweep</span>
+                                <span class="pad-meta">Filter Transit</span>
+                            </button>
+                            <button class="sound-pad" data-sound="chime">
+                                <i class="fas fa-bell pad-icon"></i>
+                                <span class="pad-title">Crystal Chime</span>
+                                <span class="pad-meta">Harmonic Bell</span>
+                            </button>
+                        </div>
+
+                        <!-- Playable Pentatonic Synth Keys -->
+                        <div class="pentatonic-keyboard">
+                            <button class="synth-key" data-freq="261.63">C4 <span>261Hz</span></button>
+                            <button class="synth-key" data-freq="293.66">D4 <span>293Hz</span></button>
+                            <button class="synth-key" data-freq="329.63">E4 <span>329Hz</span></button>
+                            <button class="synth-key" data-freq="392.00">G4 <span>392Hz</span></button>
+                            <button class="synth-key" data-freq="440.00">A4 <span>440Hz</span></button>
+                            <button class="synth-key" data-freq="523.25">C5 <span>523Hz</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 3: MULTILINGUAL NAMASTE PRELOADER -->
+                <div class="bento-card bento-col-4" id="lab-preloader" data-category="kinetic">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">03 // TYPOGRAPHIC MOTION</span>
+                        <span class="badge-tag">Dennis Snellenberg</span>
+                    </div>
+                    <h2 class="bento-card-title">Curved Liquid Curtain &amp; Namaste</h2>
+                    <p class="bento-card-desc">
+                        A Dennis Snellenberg-inspired preloader sequencing 9 international greetings with an organic liquid SVG curtain morph.
+                    </p>
+
+                    <div class="preloader-demo-box">
+                        <div class="demo-preloader-text">
+                            <span class="demo-preloader-dot"></span>
+                            <span id="demo-preloader-word">Namaste 🙏</span>
+                        </div>
+                        <svg class="demo-curve-svg" viewBox="0 0 100 60" preserveAspectRatio="none">
+                            <path id="demo-curve-path" d="M0 60 Q50 60 100 60 L100 60 L0 60 Z"></path>
+                        </svg>
+                    </div>
+
+                    <div class="card-action-links" style="justify-content: flex-end;">
+                        <button class="btn-secondary" id="btn-replay-namaste">
+                            <i class="fas fa-redo-alt"></i> Replay Intro
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MODULE 4: SYLVA LIVING WORLD 3D -->
+                <div class="bento-card bento-col-12" id="lab-3d" data-category="3d">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">04 // 3D PROCEDURAL WORLD</span>
+                        <span class="badge-tag"><i class="fas fa-cube"></i> Three.js / WebGL</span>
+                    </div>
+                    <h2 class="bento-card-title">Sylva — Procedural Living Moss Ecosystem</h2>
+                    <p class="bento-card-desc">
+                        An organic interactive 3D moss-root landscape engineered with WebGL procedural lighting, camera dampening, and reactive botany. Drag to rotate, pinch or scroll to zoom.
+                    </p>
+
+                    <div class="sylva-iframe-container" id="sylva-container">
+                        <iframe src="assets/sylva-living-world.html" class="sylva-iframe" title="Procedural Moss Root World" loading="lazy"></iframe>
+                    </div>
+
+                    <div class="sylva-actions-bar">
+                        <div class="tech-pills" style="margin-bottom:0;">
+                            <span>Three.js</span>
+                            <span>Procedural Shaders</span>
+                            <span>Organic Geometry</span>
+                        </div>
+                        <button class="btn-secondary" id="btn-sylva-fullscreen">
+                            <i class="fas fa-expand"></i> Fullscreen View
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MODULE 5: SKIPER 19 KINETIC PATH STROKE -->
+                <div class="bento-card bento-col-6" id="lab-kinetic" data-category="kinetic">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">05 // VECTOR KINEMATICS</span>
+                        <span class="badge-tag">Skiper 19 SVG</span>
+                    </div>
+                    <h2 class="bento-card-title">Kinetic Multi-Stop Gradient Stroke</h2>
+                    <p class="bento-card-desc">
+                        Dynamic SVG parametric path tracing with continuous subpixel curvature and non-scaling stroke architecture.
+                    </p>
+
+                    <div class="skiper19-canvas-preview">
+                        <svg class="skiper19-svg-interactive" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="skiper-preview-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#FF4F00" />
+                                    <stop offset="30%" stop-color="#7A69F9" />
+                                    <stop offset="70%" stop-color="#3BC4F2" />
+                                    <stop offset="100%" stop-color="#10B981" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M 20 100 C 80 20, 140 180, 200 100 C 260 20, 320 180, 380 100" stroke="rgba(150,150,150,0.15)" stroke-width="4" stroke-linecap="round" fill="none" />
+                            <path id="skiper19-interactive-path" d="M 20 100 C 80 20, 140 180, 200 100 C 260 20, 320 180, 380 100" stroke="url(#skiper-preview-grad)" stroke-width="4" stroke-linecap="round" fill="none" />
+                        </svg>
+                    </div>
+
+                    <div class="skiper-controls">
+                        <div class="slider-group" style="width:100%;">
+                            <span>Path Scrub:</span>
+                            <input type="range" id="skiper19-scrub" min="0" max="100" value="100" style="flex:1;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 6: TERMINAL CONFIG CARD & DEV TOOLS -->
+                <div class="bento-card bento-col-6" id="lab-tools" data-category="tools">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">06 // DEVELOPER CONSOLE</span>
+                        <span class="badge-tag"><i class="fas fa-terminal"></i> TypeScript Spec</span>
+                    </div>
+                    <h2 class="bento-card-title">Interactive Terminal &amp; Spotlight Palette</h2>
+                    <p class="bento-card-desc">
+                        Live system telemetry card with real UTC clock synchronization and direct Ctrl+K spotlight integration.
+                    </p>
+
+                    <div class="terminal-config-card">
+                        <div class="terminal-header">
+                            <div class="terminal-dots">
+                                <span class="dot dot-red"></span>
+                                <span class="dot dot-yellow"></span>
+                                <span class="dot dot-green"></span>
+                            </div>
+                            <div class="terminal-title">arpit.config.ts</div>
+                            <div class="terminal-status">
+                                <span class="pulse-dot-sm"></span> ONLINE // KANPUR
+                            </div>
+                        </div>
+
+                        <div class="terminal-body">
+                            <pre><code id="terminal-code-block"><span class="tok-kw">export const</span> <span class="tok-var">creativeLab</span>: <span class="tok-type">StudioProfile</span> = {
+  <span class="tok-prop">creator</span>: <span class="tok-str">"Arpit Yadav"</span>,
+  <span class="tok-prop">portfolio</span>: <span class="tok-str">"arpity.me"</span>,
+  <span class="tok-prop">stack</span>: [<span class="tok-str">"Web Audio API"</span>, <span class="tok-str">"Canvas 2D"</span>, <span class="tok-str">"Three.js"</span>],
+  <span class="tok-prop">customCreations</span>: <span class="tok-str">"Persisted in LocalStorage"</span>,
+  <span class="tok-prop">status</span>: <span class="tok-str tok-online">"CREATING // Open for Experiments"</span>
+};</code></pre>
+                        </div>
+
+                        <div class="terminal-footer">
+                            <div class="telemetry-item">
+                                <span class="lbl">CLOCK: </span>
+                                <span class="val" id="live-utc-clock">00:00:00 UTC</span>
+                            </div>
+                            <div class="telemetry-item">
+                                <span class="lbl">LATENCY: </span>
+                                <span class="val">&lt; 14ms</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="terminal-actions-bar">
+                        <button class="btn-secondary" id="copy-terminal-config">
+                            <i class="fas fa-copy"></i> Copy Config
+                        </button>
+                        <button class="btn-secondary cmd-palette-trigger">
+                            <i class="fas fa-search"></i> Open Spotlight (Ctrl+K)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MODULE 7: INTERACTIVE DEVELOPER PORTFOLIO ENGINE (PROJECT 04) -->
+                <div class="bento-card bento-col-8" data-category="tools">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">07 // RESTORED PORTFOLIO ENGINE</span>
+                        <span class="badge-tag">98+ Lighthouse</span>
+                    </div>
+                    <h2 class="bento-card-title">Interactive Developer Portfolio &amp; Audio Architecture</h2>
+                    <p class="bento-card-desc">
+                        The original interactive developer portfolio architecture engineered with zero frameworks, relational skill-to-project state mapping, and embedded sound synthesizer.
+                    </p>
+
+                    <div class="preview-card-img-wrap">
+                        <img src="assets/portfolio-preview.png" alt="Developer Portfolio Preview" class="preview-card-img" loading="lazy">
+                    </div>
+
+                    <div class="tech-pills">
+                        <span>Vanilla JS (ES6+)</span>
+                        <span>Web Audio API</span>
+                        <span>CSS Variables</span>
+                        <span>Firebase Hosting</span>
+                    </div>
+
+                    <div class="card-action-links">
+                        <a href="https://github.com/arpityadav626/arpityadav626.github.io" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            <i class="fab fa-github"></i> Repository
+                        </a>
+                        <a href="https://arpity.me/" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            <i class="fas fa-external-link-alt"></i> Main Portfolio ↗
+                        </a>
+                    </div>
+                </div>
+
+                <!-- MODULE 8: PROBLEM SOLVING & LEETCODE HUB -->
+                <div class="bento-card bento-col-4" data-category="tools">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">08 // ALGORITHMIC CORE</span>
+                        <span class="badge-tag">Data Structures</span>
+                    </div>
+                    <h2 class="bento-card-title">Algorithmic Problem Solving</h2>
+                    <p class="bento-card-desc">
+                        C/C++ problem solving across LeetCode &amp; GeeksforGeeks; certified in the <strong>GFG Code Catalyst</strong> coding contest.
+                    </p>
+
+                    <div class="tech-pills">
+                        <span>C / C++</span>
+                        <span>Trees &amp; Graphs</span>
+                        <span>Dynamic Programming</span>
+                        <span>Complexity Analysis</span>
+                    </div>
+
+                    <div class="card-action-links" style="margin-top:auto;">
+                        <a href="https://leetcode.com/u/arpityadav626/" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            <i class="fas fa-code"></i> LeetCode ↗
+                        </a>
+                        <a href="https://github.com/arpityadav626" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            <i class="fab fa-github"></i> GitHub ↗
+                        </a>
+                    </div>
+                </div>
+
+
+                <!-- MODULE 09: MONU EGG CENTER CLOUD KITCHEN & SMART QR SUITE -->
+                <div class="bento-card bento-col-12" id="lab-monu-egg" data-category="tools">
+                    <div class="bento-top-bar">
+                        <span class="bento-index">09 // PRODUCTION COMMERCIAL SYSTEM</span>
+                        <span class="badge-tag"><i class="fas fa-store"></i> Live Cloud Kitchen &amp; Smart QR</span>
+                    </div>
+                    <h2 class="bento-card-title">Monu Egg Center — Fast Food &amp; High-Protein Street Kitchen</h2>
+                    <p class="bento-card-desc">
+                        Commercial cloud kitchen digital platform built for Kanpur's popular street kitchen (Gaushala Road, Saket Nagar). Features real-time menu &amp; gym diet packs manager with Firebase Cloud Firestore sync, Google review rating funnel with automated clipboard injection, and print-ready digital table QR standees.
+                    </p>
+
+                    <div class="preview-card-img-wrap" style="height: 280px;">
+                        <img src="assets/monu-egg-center-preview.jpg" alt="Monu Egg Center Preview" class="preview-card-img" loading="lazy">
+                    </div>
+
+                    <div class="tech-pills">
+                        <span>Firebase Firestore</span>
+                        <span>Cloud Realtime Sync</span>
+                        <span>Tailwind CSS</span>
+                        <span>Vercel Edge</span>
+                        <span>Smart QR Standees</span>
+                        <span>Google Review Funnel</span>
+                        <span>Gym Diet Macros</span>
+                    </div>
+
+                    <div class="card-action-links">
+                        <a href="https://monu-egg-center.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="color:var(--accent-signal); font-weight:700;">
+                            <i class="fas fa-external-link-alt"></i> Live Digital Menu ↗
+                        </a>
+                        <a href="https://monu-egg-center.vercel.app/table-standee.html" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            <i class="fas fa-qrcode"></i> Table QR Standee ↗
+                        </a>
+                        <a href="https://monu-egg-center.vercel.app/review.html" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            <i class="fas fa-star"></i> Review Funnel ↗
+                        </a>
+                        <a href="https://github.com/arpityadav626/monu-egg-center" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            <i class="fab fa-github"></i> GitHub ↗
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. CUSTOM CREATIONS & USER UPLOADS SECTION -->
+        <section class="lab-container custom-creations-section" id="custom-creations-section">
+            <div class="lab-section-header">
+                <div>
+                    <span class="section-tagline">( 09 // YOUR CREATIVITY STUDIO )</span>
+                    <h2 class="section-heading">Custom Creations &amp; Uploaded Experiments</h2>
+                    <p class="section-summary">
+                        Upload your latest designs, shader canvases, audio synthesizers, or IoT prototypes. Everything is stored in your browser's persistent storage and can be exported as a JSON manifest.
+                    </p>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn-secondary" onclick="exportCreationsJSON()">
+                        <i class="fas fa-download"></i> Export JSON
+                    </button>
+                    <label class="btn-secondary" style="cursor:pointer;">
+                        <i class="fas fa-file-import"></i> Import JSON
+                        <input type="file" accept=".json" style="display:none;" onchange="importCreationsJSON(this)">
+                    </label>
+                    <button class="btn-upload-trigger" onclick="openUploadModal()">
+                        <i class="fas fa-plus"></i> Upload Creation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Grid -->
+            <div class="creations-grid" id="custom-creations-grid">
+                <!-- Fallback Empty State -->
+                <div class="empty-creations-state" id="empty-creations-state">
+                    <div class="empty-icon"><i class="fas fa-paint-brush"></i></div>
+                    <h3 class="empty-title">No Custom Creations Yet</h3>
+                    <p class="empty-desc">
+                        Ready to showcase your new creative experiments? Click the button below to upload a canvas shader, mini-game, UI component, or embedded prototype!
+                    </p>
+                    <button class="btn-upload-trigger" onclick="openUploadModal()">
+                        <i class="fas fa-plus"></i> Upload Your First Creation
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 5. UPLOAD CREATION MODAL OVERLAY -->
+    <div class="modal-backdrop" id="upload-creation-modal" role="dialog" aria-modal="true" aria-labelledby="upload-modal-title">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="upload-modal-title">
+                    <i class="fas fa-cloud-upload-alt" style="color:var(--accent-signal);"></i> Upload Creativity to Lab
+                </h3>
+                <button class="modal-close-btn" id="upload-close-btn" aria-label="Close upload modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form class="modal-form" id="upload-creation-form">
+                <div class="form-group">
+                    <label class="form-label" for="creation-title">Creation Title *</label>
+                    <input type="text" id="creation-title" class="form-input" placeholder="e.g. Fluid Particle Shader 2.0" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="creation-category">Discipline / Category *</label>
+                    <select id="creation-category" class="form-select">
+                        <option value="physics">Interactive Physics &amp; Canvases</option>
+                        <option value="audio">Procedural Audio &amp; Sound</option>
+                        <option value="3d">3D, WebGL &amp; Shaders</option>
+                        <option value="kinetic">Kinetic Motion &amp; Typography</option>
+                        <option value="tools">Developer Tools &amp; Hardware</option>
+                        <option value="custom">General Creative Coding</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="creation-desc">Description &amp; Engineering Concept *</label>
+                    <textarea id="creation-desc" class="form-textarea" placeholder="Explain the physics, audio logic, or inspiration behind this experiment..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="creation-tags">Tech Stack / Tags (Comma separated)</label>
+                    <input type="text" id="creation-tags" class="form-input" placeholder="e.g. Canvas 2D, WebGL, React, Three.js">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Upload Thumbnail / Screenshot</label>
+                    <div class="file-drop-area">
+                        <i class="fas fa-image" style="font-size:22px;color:var(--text-muted);margin-bottom:6px;"></i>
+                        <p style="font-size:12.5px;color:var(--text-secondary);margin:0;">
+                            Drag &amp; drop an image here or click to browse
+                        </p>
+                        <input type="file" id="creation-file-input" accept="image/*">
+                    </div>
+                    <div class="preview-thumb-box" id="file-preview-box">
+                        <img id="file-preview-img" src="" alt="Thumbnail preview">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="creation-img-url">Or Image URL (Optional)</label>
+                    <input type="url" id="creation-img-url" class="form-input" placeholder="https://example.com/screenshot.jpg">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="creation-demo-url">Live Demo Link (Optional)</label>
+                    <input type="url" id="creation-demo-url" class="form-input" placeholder="https://codepen.io/... or https://...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="creation-github-url">GitHub Repository (Optional)</label>
+                    <input type="url" id="creation-github-url" class="form-input" placeholder="https://github.com/arpityadav626/...">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeUploadModal()">Cancel</button>
+                    <button type="submit" class="btn-upload-trigger">
+                        <i class="fas fa-check"></i> Publish to Lab
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. COMMAND PALETTE (CTRL+K SPOTLIGHT SEARCH) -->
+    <div class="cmd-palette-backdrop" id="cmd-palette-modal" role="dialog" aria-modal="true" aria-label="Command Palette">
+        <div class="cmd-palette-dialog">
+            <div class="cmd-search-row">
+                <i class="fas fa-search" style="color:var(--text-muted);font-size:14px;"></i>
+                <input type="text" id="cmd-palette-input" class="cmd-search-input" placeholder="Search experiments, sounds, or jump to portfolio..." autocomplete="off">
+                <kbd class="cmd-esc-badge" id="cmd-close-esc">ESC</kbd>
+            </div>
+
+            <div class="cmd-results-list" id="cmd-palette-results">
+                <button type="button" class="cmd-item-btn" data-action="link" data-target="https://arpity.me/">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>Visit Main Engineering Portfolio (arpity.me)</span>
+                    </div>
+                    <span class="cmd-item-hint">Portfolio ↗</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="scroll" data-target="#lab-physics">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-users"></i>
+                        <span>Never Walk Alone Crowd Physics</span>
+                    </div>
+                    <span class="cmd-item-hint">Physics</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="scroll" data-target="#lab-audio">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-waveform"></i>
+                        <span>Cozy SFX Procedural Web Audio Studio</span>
+                    </div>
+                    <span class="cmd-item-hint">Web Audio</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="scroll" data-target="#lab-3d">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-cube"></i>
+                        <span>Sylva 3D Living Moss Ecosystem</span>
+                    </div>
+                    <span class="cmd-item-hint">Three.js</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="scroll" data-target="#lab-kinetic">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-pen-nib"></i>
+                        <span>Skiper 19 Kinetic Path &amp; Stroke</span>
+                    </div>
+                    <span class="cmd-item-hint">Kinetic</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="scroll" data-target="#lab-tools">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-terminal"></i>
+                        <span>arpit.config.ts Terminal Card</span>
+                    </div>
+                    <span class="cmd-item-hint">TypeScript</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="scroll" data-target="#lab-monu-egg">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-store"></i>
+                        <span>Monu Egg Center — Cloud Kitchen &amp; Smart QR</span>
+                    </div>
+                    <span class="cmd-item-hint">Live Commercial</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="scroll" data-target="#custom-creations-section">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-sparkles"></i>
+                        <span>Custom User Creations &amp; Uploads</span>
+                    </div>
+                    <span class="cmd-item-hint">Uploads</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="upload">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Upload a New Creative Experiment</span>
+                    </div>
+                    <span class="cmd-item-hint">+ Upload</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="theme">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-adjust"></i>
+                        <span>Toggle Theme Mode (Light / Dark)</span>
+                    </div>
+                    <span class="cmd-item-hint">Switch</span>
+                </button>
+
+                <button type="button" class="cmd-item-btn" data-action="sound">
+                    <div class="cmd-item-left">
+                        <i class="fas fa-volume-up"></i>
+                        <span>Toggle Procedural Web Audio</span>
+                    </div>
+                    <span class="cmd-item-hint">Mute/Unmute</span>
+                </button>
+            </div>
+
+            <div class="cmd-footer">
+                <span>Navigate <kbd>↑</kbd><kbd>↓</kbd></span>
+                <span>Select <kbd>↵</kbd></span>
+                <span>Close <kbd>ESC</kbd></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Standalone Studio Footer -->
+    <footer class="lab-footer">
+        <div class="lab-footer-inner">
+            <div class="footer-copy">
+                &copy; 2026 Arpit Yadav — Creative Lab &amp; Experimental Studio.
+            </div>
+            <div class="footer-links">
+                <a href="assets/Arpit_Yadav_Resume_Latest.pdf?v=2026.4" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fas fa-file-pdf"></i> Resume ↗</a>
+                <a href="https://arpity.me/" target="_blank" rel="noopener noreferrer" class="footer-link">Portfolio ↗</a>
+                <a href="https://github.com/arpityadav626" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub ↗</a>
+                <a href="https://www.linkedin.com/in/arpit-yadav-944983309/" target="_blank" rel="noopener noreferrer" class="footer-link">LinkedIn ↗</a>
+                <a href="https://leetcode.com/u/arpityadav626/" target="_blank" rel="noopener noreferrer" class="footer-link">LeetCode ↗</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Standalone Script -->
+    <script src="script.js?v=2.5"></script>
+</body>
+</html>

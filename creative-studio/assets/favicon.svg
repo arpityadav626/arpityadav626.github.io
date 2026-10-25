@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Obsidian luxury squircle background -->
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="#0A0A0B" stroke="#27272A" stroke-width="2"/>
+  
+  <!-- Architectural AY Monogram -->
+  <text x="64" y="80" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" 
+        font-size="56" 
+        font-weight="800" 
+        fill="#F6F5F2" 
+        text-anchor="middle" 
+        letter-spacing="-1">AY</text>
+</svg>
