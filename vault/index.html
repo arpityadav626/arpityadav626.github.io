@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Vault &amp; Workspace — Arpit Yadav</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg?v=2026.2">
+
+    <!-- Google Identity Services (OAuth 2.0 Token Client) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="vault-body">
+    <!-- Background Ambient Glow -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Header / Top Bar -->
+    <header class="vault-header">
+        <div class="vault-brand">
+            <span class="vault-logo-icon"><i class="fas fa-shield-halved"></i></span>
+            <div class="brand-text">
+                <span class="brand-title">Arpit<span class="accent-text">.Vault</span></span>
+                <span class="brand-sub">Google Drive Encrypted Workspace</span>
+            </div>
+        </div>
+
+        <div class="vault-header-actions">
+            <a href="../index.html" class="action-btn outline-btn" title="Return to Public Portfolio">
+                <i class="fas fa-arrow-left"></i> <span>Portfolio</span>
+            </a>
+            <div id="auth-header-btn-wrap">
+                <!-- Injected via script: Sign in / Sign out -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="vault-main">
+        <!-- 1. LOCKED / LOGIN SCREEN -->
+        <section id="locked-state" class="vault-section locked-section active">
+            <div class="gate-card">
+                <div class="gate-icon-pulse">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>Authenticated Personal Workspace</h2>
+                <p>Private cloud storage linked directly to your Google Drive account. Zero third-party databases, end-to-end encrypted password storage, and instantaneous document retrieval.</p>
+
+                <div class="gate-features">
+                    <div class="gf-item"><i class="fab fa-google-drive"></i> 15GB Cloud Storage</div>
+                    <div class="gf-item"><i class="fas fa-key"></i> Client-Side AES-256</div>
+                    <div class="gf-item"><i class="fas fa-file-shield"></i> Instant Doc Locker</div>
+                </div>
+
+                <div class="gate-actions">
+                    <button id="google-login-btn" class="google-auth-btn">
+                        <svg class="google-g" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        <span>Authorize Google Drive</span>
+                    </button>
+                </div>
+                <div id="login-status-msg" class="status-msg"></div>
+            </div>
+        </section>
+
+        <!-- 2. UNLOCKED / DASHBOARD SCREEN -->
+        <section id="unlocked-dashboard" class="vault-section dashboard-section">
+            <!-- Top Dashboard Stats Bar -->
+            <div class="stats-bar">
+                <div class="user-badge">
+                    <img id="user-avatar" src="" alt="Avatar" class="user-avatar" style="display:none;">
+                    <div class="user-info">
+                        <span id="user-name" class="user-name">Loading...</span>
+                        <span id="user-email" class="user-email"></span>
+                    </div>
+                </div>
+
+                <div class="quick-status">
+                    <span class="status-pill drive-connected"><i class="fas fa-check-circle"></i> Drive Sync Active</span>
+                    <span class="status-pill folder-id" id="vault-folder-status"><i class="fas fa-folder"></i> Arpit_Dev_Vault</span>
+                </div>
+            </div>
+
+            <!-- Vault Tabs -->
+            <div class="vault-tabs">
+                <button class="vtab-btn active" data-tab="tab-files">
+                    <i class="fas fa-folder-open"></i> Cloud Files &amp; Docs (<span id="files-count">0</span>)
+                </button>
+                <button class="vtab-btn" data-tab="tab-secrets">
+                    <i class="fas fa-user-secret"></i> Encrypted Credentials &amp; Keys (<span id="secrets-count">0</span>)
+                </button>
+                <button class="vtab-btn" data-tab="tab-notes">
+                    <i class="fas fa-clipboard-list"></i> Scratchpad &amp; Quick Notes
+                </button>
+            </div>
+
+            <!-- TAB 1: FILES & DOCUMENTS -->
+            <div id="tab-files" class="tab-pane active">
+                <div class="tab-actions-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="file-search-input" placeholder="Search files, documents, certificates...">
+                    </div>
+                    <div class="file-upload-wrap">
+                        <input type="file" id="file-uploader" multiple style="display:none;">
+                        <button class="primary-btn" onclick="document.getElementById('file-uploader').click()">
+                            <i class="fas fa-cloud-arrow-up"></i> Upload to Drive
+                        </button>
+                        <button class="refresh-btn" id="refresh-files-btn" title="Refresh files list">
+                            <i class="fas fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="upload-progress-container" class="upload-progress-container" style="display:none;">
+                    <div class="progress-info">
+                        <span id="upload-status-text">Uploading...</span>
+                        <span id="upload-percent-text">0%</span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div id="upload-progress-bar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Files Grid -->
+                <div id="files-grid" class="files-grid">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i> Loading Drive files...
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: ENCRYPTED CREDENTIALS -->
+            <div id="tab-secrets" class="tab-pane">
+                <div class="secrets-notice">
+                    <i class="fas fa-shield-cat"></i>
+                    <div>
+                        <strong>Client-Side AES-GCM Encrypted:</strong> Passwords and API keys are encrypted in your browser using your Master Passphrase before syncing to Google Drive.
+                    </div>
+                </div>
+
+                <!-- Master Key Prompt (if locked) -->
+                <div id="secrets-unlock-card" class="secrets-auth-card">
+                    <div class="sec-icon"><i class="fas fa-key"></i></div>
+                    <h3>Unlock Secret Credentials</h3>
+                    <p>Enter your local Master Passphrase to decrypt your stored passwords and tokens.</p>
+                    <div class="passphrase-input-wrap">
+                        <input type="password" id="master-passphrase-input" placeholder="Enter Master Passphrase...">
+                        <button id="unlock-secrets-btn" class="primary-btn">
+                            <i class="fas fa-unlock"></i> Decrypt
+                        </button>
+                    </div>
+                    <span class="hint-text">First time? Type any strong passphrase to initialize your encrypted store.</span>
+                </div>
+
+                <!-- Secrets Manager (Visible when decrypted) -->
+                <div id="secrets-manager-wrap" style="display: none;">
+                    <div class="tab-actions-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="secrets-search-input" placeholder="Search passwords, API keys, logins...">
+                        </div>
+                        <button class="primary-btn" id="open-new-secret-modal-btn">
+                            <i class="fas fa-plus"></i> Add New Credential
+                        </button>
+                        <button class="outline-btn" id="lock-secrets-btn">
+                            <i class="fas fa-lock"></i> Lock Vault
+                        </button>
+                    </div>
+
+                    <div id="secrets-list" class="secrets-list">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: SCRATCHPAD & QUICK NOTES -->
+            <div id="tab-notes" class="tab-pane">
+                <div class="notes-panel">
+                    <div class="notes-header">
+                        <div class="notes-meta">
+                            <i class="fas fa-pen-nib"></i>
+                            <span>Cloud Scratchpad (Auto-syncs to Google Drive)</span>
+                        </div>
+                        <div class="notes-status" id="notes-sync-status">All changes saved</div>
+                    </div>
+                    <textarea id="vault-notes-textarea" placeholder="Paste quick code snippets, terminal commands, temporary keys, or todos here..."></textarea>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Add New Secret -->
+    <div id="new-secret-modal" class="vault-modal" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-key"></i> Store New Credential</h3>
+                <button class="modal-close-btn" id="close-secret-modal-btn">&times;</button>
+            </div>
+            <form id="new-secret-form" class="modal-form">
+                <div class="form-group">
+                    <label>Title / Service Name *</label>
+                    <input type="text" id="sec-title" placeholder="e.g. GitHub PAT, AWS Console, MongoDB Atlas" required>
+                </div>
+                <div class="form-group">
+                    <label>Username / Email / Identifier</label>
+                    <input type="text" id="sec-user" placeholder="e.g. arpit@example.com, admin">
+                </div>
+                <div class="form-group">
+                    <label>Secret Value / Password / Token *</label>
+                    <div class="password-field-wrap">
+                        <input type="password" id="sec-pass" placeholder="Enter sensitive secret..." required>
+                        <button type="button" class="eye-toggle-btn" id="toggle-sec-pass"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="sec-cat">
+                        <option value="api-key">API Key / Token</option>
+                        <option value="password">Login / Password</option>
+                        <option value="ssh-key">SSH / Server Credential</option>
+                        <option value="license">Software License</option>
+                        <option value="other">Other Secret</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes / URL</label>
+                    <input type="text" id="sec-notes" placeholder="Optional notes or login URL">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="outline-btn" id="cancel-secret-btn">Cancel</button>
+                    <button type="submit" class="primary-btn"><i class="fas fa-shield-halved"></i> Encrypt &amp; Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="vault-toast" class="vault-toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

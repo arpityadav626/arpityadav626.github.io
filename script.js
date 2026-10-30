@@ -3762,3 +3762,34 @@ if (document.readyState === 'loading') {
 
 
 
+
+
+/* ======================================================================
+   STEALTH WORKSPACE / VAULT HOTKEY LISTENER
+   (Trigger via 'Ctrl + Shift + V' or Triple-click on brand logo)
+   ====================================================================== */
+(function() {
+    // 1. Keyboard Shortcut: Ctrl + Shift + V
+    window.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && (e.key === 'V' || e.key === 'v')) {
+            e.preventDefault();
+            window.location.href = 'vault/index.html';
+        }
+    });
+
+    // 2. Triple Click on brand logo
+    const brand = document.querySelector('.brand-link');
+    if (brand) {
+        let clickCount = 0;
+        let clickTimer = null;
+        brand.addEventListener('click', function(e) {
+            clickCount++;
+            clearTimeout(clickTimer);
+            if (clickCount >= 3) {
+                e.preventDefault();
+                window.location.href = 'vault/index.html';
+            }
+            clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+        });
+    }
+})();
