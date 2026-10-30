@@ -4715,17 +4715,26 @@ body[data-mode="light"] .skill-pill.skill-highlighted i {
         font-size: 16px !important;
         font-weight: 600 !important;
         color: var(--text-primary) !important;
-        padding: 10px 0 !important;
+        padding: 12px 6px !important;
         border: none !important;
         border-bottom: 1px solid var(--border-subtle) !important;
         border-radius: 0 !important;
         width: 100% !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
         text-decoration: none !important;
         transition: color 0.15s ease, padding-left 0.15s ease !important;
         -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .navbar .nav-link i {
+        font-size: 14px !important;
+        color: var(--accent-signal) !important;
+        width: 20px !important;
+        text-align: center !important;
+        flex-shrink: 0 !important;
     }
 
     .navbar .nav-link:active {
