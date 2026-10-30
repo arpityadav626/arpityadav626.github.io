@@ -294,46 +294,70 @@ body.vault-body {
 }
 
 /* ======================================================================
-   4. LOCKED GATE (BENTO ARCHITECTURAL CARD)
+   4. LOCKED GATE (ELEGANT CENTERED ARCHITECTURAL CARD)
    ====================================================================== */
 .locked-section {
-    padding: 20px 0;
+    width: 100%;
+    max-width: 480px;
+    margin: 48px auto 64px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+}
+
+.gate-hero-intro {
+    text-align: center;
+    max-width: 440px;
+    margin: 0 auto 26px;
+}
+
+.gate-hero-intro .section-tag-mono {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: inline-block;
+    font-family: var(--font-mono);
+}
+
+.gate-hero-intro .vault-hero-title {
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-family: var(--font-sans);
+    line-height: 1.15;
+}
+
+.gate-hero-intro .vault-hero-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-family: var(--font-sans);
 }
 
 .gate-card {
     background: #FFFFFF;
     border: 1px solid var(--border-hairline);
     border-radius: 16px;
-    padding: 36px 40px;
-    max-width: 520px;
+    padding: 34px 32px;
+    width: 100%;
+    max-width: 440px;
     margin: 0 auto;
-    box-shadow: var(--shadow-card);
+    box-shadow: 0 4px 24px rgba(17, 17, 16, 0.04), 0 1px 3px rgba(17, 17, 16, 0.02);
     transition: var(--transition);
-}
-
-.gate-card-title {
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-    font-family: var(--font-sans);
-}
-
-.gate-card-desc {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 22px;
 }
 
 .auth-toggle-tabs {
     display: flex;
     background: var(--bg-subtle);
     border: 1px solid var(--border-hairline);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 4px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     gap: 4px;
 }
 
@@ -342,19 +366,28 @@ body.vault-body {
     background: transparent;
     color: var(--text-secondary);
     border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    font-weight: 700;
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    font-weight: 600;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
     transition: all 0.2s ease;
+}
+
+.auth-tab-btn i {
+    font-size: 13px;
 }
 
 .auth-tab-btn.active {
     background: #FFFFFF;
     color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(17, 17, 16, 0.08);
+    box-shadow: 0 1px 4px rgba(17, 17, 16, 0.08);
 }
 
 .auth-box {
@@ -375,30 +408,40 @@ body.vault-body {
     position: relative;
 }
 
-.gate-input-group i {
+.gate-input-group i:first-child {
     position: absolute;
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-muted);
     font-size: 14px;
+    pointer-events: none;
 }
 
 .gate-input-group input {
     width: 100%;
+    height: 46px;
     background: var(--bg-canvas);
     border: 1px solid var(--border-hairline);
-    border-radius: 8px;
-    padding: 11px 40px 11px 40px;
+    border-radius: 10px;
+    padding: 0 42px 0 42px;
     color: var(--text-primary);
-    font-family: var(--font-mono);
     font-size: 14px;
+    font-family: var(--font-sans);
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .gate-input-group input:focus {
     border-color: var(--text-primary);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(17, 17, 16, 0.05);
+}
+
+.gate-input-group input::placeholder {
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
 }
 
 .eye-toggle-btn {
@@ -410,18 +453,64 @@ body.vault-body {
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 4px;
+    padding: 6px;
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: color 0.15s ease;
 }
+
 .eye-toggle-btn:hover {
     color: var(--text-primary);
 }
 
+.submit-auth-btn {
+    width: 100% !important;
+    height: 46px !important;
+    background: #111110 !important;
+    color: #FFFFFF !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 4px !important;
+    cursor: pointer !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(17, 17, 16, 0.12) !important;
+    transition: all 0.2s ease !important;
+}
+
+.submit-auth-btn:hover {
+    background: #222220 !important;
+    transform: translateY(-1px) !important;
+}
+
+.submit-auth-btn:active {
+    transform: scale(0.98) !important;
+}
+
 .gate-subtext {
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--text-muted);
-    font-family: var(--font-mono);
+    text-align: center;
     display: block;
+    margin-top: 14px;
+    line-height: 1.45;
+    font-family: var(--font-sans);
+}
+
+.auth-box-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-family: var(--font-sans);
 }
 
 .google-auth-btn {
@@ -430,8 +519,8 @@ body.vault-body {
     font-size: 14px;
     font-family: var(--font-sans);
     font-weight: 600;
-    padding: 11px 20px;
-    border-radius: 8px;
+    height: 46px;
+    border-radius: 10px;
     border: 1px solid var(--border-hairline);
     display: inline-flex;
     align-items: center;
@@ -439,7 +528,7 @@ body.vault-body {
     gap: 10px;
     width: 100%;
     cursor: pointer;
-    box-shadow: 0 1px 2px rgba(17, 17, 16, 0.04);
+    box-shadow: 0 1px 3px rgba(17, 17, 16, 0.05);
     transition: all 0.2s ease;
 }
 
@@ -448,9 +537,8 @@ body.vault-body {
     border-color: var(--text-primary);
 }
 
-.google-g {
-    width: 18px;
-    height: 18px;
+.google-auth-btn:active {
+    transform: scale(0.98);
 }
 
 .status-msg {
@@ -459,9 +547,6 @@ body.vault-body {
     font-family: var(--font-mono);
     min-height: 20px;
 }
-.status-msg.error { color: var(--danger); }
-.status-msg.info { color: var(--accent-signal); }
-.status-msg.success { color: var(--status-emerald); }
 
 /* ======================================================================
    5. UNLOCKED DASHBOARD & TABS
