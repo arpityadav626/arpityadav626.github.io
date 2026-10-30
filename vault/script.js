@@ -321,6 +321,106 @@
         }
     }
 
+    function logout() {
+        fbAuth.signOut().catch(() => {});
+        currentUser = null;
+        driveAccessToken = null;
+        masterKeyDerived = null;
+        decryptedSecrets = [];
+        localStorage.removeItem('arpit_drive_access_token');
+        localStorage.removeItem('arpit_drive_access_token_exp');
+
+        if (fbEmailInput) {
+            fbEmailInput.value = '';
+            fbEmailInput.type = 'password';
+            fbEmailInput.classList.remove('revealed');
+        }
+        if (fbPasswordInput) {
+            fbPasswordInput.value = '';
+            fbPasswordInput.type = 'password';
+            fbPasswordInput.classList.remove('revealed');
+        }
+        if (toggleFbEmail) toggleFbEmail.innerHTML = '<i class="fas fa-eye"></i>';
+        if (toggleFbPass) toggleFbPass.innerHTML = '<i class="fas fa-eye"></i>';
+
+        fbSubmitBtn.disabled = false;
+        fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
+        loginStatusMsg.textContent = '';
+
+        showLockedView();
+        showToast('Vault locked & Session purged', 'shield-halved');
+    }
+
+    function showLockedView() {
+        lockedSection.style.display = 'flex';
+        lockedSection.classList.add('active');
+        unlockedDashboard.style.display = 'none';
+        unlockedDashboard.classList.remove('active');
+        authHeaderBtnWrap.innerHTML = '';
+        loginStatusMsg.textContent = '';
+    }
+
+    function showUnlockedView() {
+        lockedSection.style.display = 'none';
+        lockedSection.classList.remove('active');
+        unlockedDashboard.style.display = 'block';
+        unlockedDashboard.classList.add('active');
+
+        authHeaderBtnWrap.innerHTML = `
+            <button class="action-btn outline-btn" id="logout-btn" title="Lock &amp; Sign Out">
+                <i class="fas fa-arrow-right-from-bracket"></i> <span>Lock Vault</span>
+            </button>
+        `;
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) logoutBtn.addEventListener('click', logout);
+    }
+
+    // ------------------------------------------------------------------
+    // DRIVE CORE TRANSPORT & FOLDER ENGINE
+    // ------------------------------------------------------------------
+    async function driveFetch(endpoint, options = {}) {
+        if (!driveAccessToken) {
+            throw new Error('Google Drive access token missing.');
+        }
+        options.headers = options.headers || {};
+        options.headers['Authorization'] = `Bearer ${driveAccessToken}`;
+        const res = await fetch(`https://www.googleapis.com/drive/v3/${endpoint}`, options);
+        if (res.status === 401) {
+            driveAccessToken = null;
+            localStorage.removeItem('arpit_drive_access_token');
+            throw new Error('Drive token expired.');
+        }
+        return res;
+    }
+
+    async function ensureVaultFolder() {
+        vaultFolderStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating folder...';
+        try {
+            const q = encodeURIComponent(`name = '${VAULT_FOLDER_NAME}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
+            const res = await driveFetch(`files?q=${q}&fields=files(id,name)`);
+            const data = await res.json();
+
+            if (data.files && data.files.length > 0) {
+                vaultFolderId = data.files[0].id;
+            } else {
+                const createRes = await driveFetch('files', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: VAULT_FOLDER_NAME,
+                        mimeType: 'application/vnd.google-apps.folder'
+                    })
+                });
+                const folderData = await createRes.json();
+                vaultFolderId = folderData.id;
+            }
+            vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive"></i> /${VAULT_FOLDER_NAME}`;
+        } catch (err) {
+            console.error('Error ensuring vault folder:', err);
+            vaultFolderStatus.innerHTML = '<i class="fas fa-folder-open"></i> /' + VAULT_FOLDER_NAME;
+        }
+    }
+
         // ------------------------------------------------------------------
     // 4. CATEGORIZED STORAGE & FILE MANAGEMENT (Images, Videos, Docs)
     // ------------------------------------------------------------------
