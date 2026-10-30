@@ -396,13 +396,14 @@
         console.error('Redirect sign-in error:', err);
     });
 
-    // Check existing Firebase Auth State
+    // Check existing Firebase Auth State (Guards Workspace Dashboard)
     fbAuth.onAuthStateChanged((user) => {
-        if (user && !currentUser) {
+        if (user) {
             currentUser = user;
             onVaultAuthenticated('Active Session');
-        } else if (!user) {
-            showLockedView();
+        } else {
+            // Unauthenticated -> redirect to dedicated login page
+            window.location.replace('login.html');
         }
     });
 
@@ -537,6 +538,7 @@
         decryptedSecrets = [];
         localStorage.removeItem('arpit_drive_access_token');
         localStorage.removeItem('arpit_drive_access_token_exp');
+        window.location.replace('login.html');
 
         if (fbEmailInput) {
             fbEmailInput.value = '';
@@ -560,12 +562,7 @@
     }
 
     function showLockedView() {
-        lockedSection.style.display = 'flex';
-        lockedSection.classList.add('active');
-        unlockedDashboard.style.display = 'none';
-        unlockedDashboard.classList.remove('active');
-        authHeaderBtnWrap.innerHTML = '';
-        loginStatusMsg.textContent = '';
+        window.location.replace('login.html');
     }
 
     
@@ -625,18 +622,12 @@
     }
 
 function showUnlockedView() {
-        lockedSection.style.display = 'none';
-        lockedSection.classList.remove('active');
-        unlockedDashboard.style.display = 'block';
-        unlockedDashboard.classList.add('active');
-
-        authHeaderBtnWrap.innerHTML = `
-            <button class="action-btn outline-btn" id="logout-btn" title="Lock &amp; Sign Out">
-                <i class="fas fa-arrow-right-from-bracket"></i> <span>Lock Vault</span>
-            </button>
-        `;
+        if (unlockedDashboard) {
+            unlockedDashboard.style.display = 'block';
+            unlockedDashboard.classList.add('active');
+        }
         const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) logoutBtn.addEventListener('click', logout);
+        if (logoutBtn) logoutBtn.onclick = logout;
     }
 
     // ------------------------------------------------------------------

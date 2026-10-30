@@ -449,8 +449,12 @@ body.vault-body {
 }
 
 .google-g {
-    width: 18px;
-    height: 18px;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
 }
 
 .status-msg {
