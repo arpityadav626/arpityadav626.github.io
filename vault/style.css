@@ -1,33 +1,37 @@
 /* ======================================================================
-   ARPIT VAULT — SWISS INDUSTRIAL ARCHITECTURAL THEME
-   (Exact Match to arpity.me Design System & Typography)
+   ARPIT VAULT — SWISS INDUSTRIAL ARCHITECTURAL PALETTE
+   Exact replica of https://arpity.me Design System & Typography
    ====================================================================== */
 
 :root {
-    --bg-canvas: #0A0A0B;
-    --bg-page: #0A0A0B;
-    --bg-surface: #121214;
-    --bg-card: #121214;
-    --bg-subtle: #1A1A1E;
-    --bg-card-hover: #1E1E24;
+    /* 85% Warm Technical Stone Background */
+    --bg-canvas: #F6F5F2;
+    --bg-page: #F6F5F2;
+    --bg-surface: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-subtle: #EFECE6;
+    --bg-card-hover: #E8E5DF;
 
-    --text-primary: #F4F4F6;
-    --text-secondary: #A1A1AA;
-    --text-muted: #71717A;
+    /* 12% Deep Carbon Ink */
+    --text-primary: #111110;
+    --text-secondary: #52514E;
+    --text-muted: #8A8884;
 
-    --border-hairline: #26262A;
-    --border-subtle: #26262A;
-    --border-focus: #FF5E1A;
-    --border-highlight: #FF5E1A;
+    /* 1px Crisp Architectural Borders */
+    --border-hairline: #E2DFD9;
+    --border-subtle: #E2DFD9;
+    --border-focus: #FF4F00;
+    --border-highlight: #111110;
 
-    --accent-signal: #FF5E1A;       /* Aerospace Signal Orange */
-    --accent-primary: #F4F4F6;
-    --accent-primary-light: #A1A1AA;
-    --accent-primary-rgb: 244, 244, 246;
+    /* 3% Aerospace Signal Orange */
+    --accent-signal: #FF4F00;
+    --accent-primary: #111110;
+    --accent-primary-light: #52514E;
 
     --status-emerald: #10B981;
     --danger: #EF4444;
-    --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.65);
+    --shadow-subtle: 0 4px 20px rgba(17, 17, 16, 0.04);
+    --shadow-card: 0 16px 36px rgba(17, 17, 16, 0.06);
 
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'Space Mono', 'SFMono-Regular', Consolas, monospace;
@@ -50,129 +54,109 @@ body.vault-body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Subtle Architectural Grid Overlay */
-body.vault-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 64px 64px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Header */
+/* ======================================================================
+   1. HEADER & NAVIGATION (Exact Match to arpity.me)
+   ====================================================================== */
 .vault-header {
-    position: relative;
-    z-index: 10;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 56px;
+    margin: 0;
+    padding: 0 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 2.5rem;
-    background: rgba(10, 10, 11, 0.85);
+    background: rgba(246, 245, 242, 0.94);
     backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-hairline);
+    z-index: 100;
 }
 
 .vault-brand {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 12px;
 }
 
-.vault-logo-icon {
+.brand-link-style {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.04em;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-hairline);
-    color: var(--accent-signal);
-    font-size: 1.1rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.vault-logo-icon:hover {
-    border-color: var(--accent-signal);
-    transform: rotate(5deg) scale(1.05);
+    gap: 8px;
 }
 
-.brand-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.brand-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-}
-
-.accent-text {
-    color: var(--accent-signal);
-}
-
-.brand-sub {
-    font-size: 0.72rem;
+.mono-tag-pill {
     font-family: var(--font-mono);
-    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-signal);
+    background: rgba(255, 79, 0, 0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 79, 0, 0.2);
     letter-spacing: 0.02em;
 }
 
 .vault-header-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 12px;
 }
 
-/* Buttons — Minimalist Swiss Tactile */
+/* Buttons — Swiss Minimalist Tactile */
 button, .action-btn {
     cursor: pointer;
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 12px;
     font-weight: 700;
     border-radius: 6px;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 6px;
     text-decoration: none;
     letter-spacing: 0.02em;
 }
 
 .primary-btn {
-    background: var(--accent-signal);
-    color: #ffffff;
-    border: 1px solid var(--accent-signal);
-    padding: 0.65rem 1.25rem;
-    box-shadow: 0 4px 18px rgba(255, 94, 26, 0.28);
+    background: var(--text-primary);
+    color: #FFFFFF;
+    border: 1px solid var(--text-primary);
+    padding: 0.55rem 1.15rem;
+    box-shadow: 0 4px 14px rgba(17, 17, 16, 0.12);
 }
 .primary-btn:hover {
-    background: #e04500;
-    border-color: #e04500;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 94, 26, 0.4);
+    background: #2a2a28;
+    border-color: #2a2a28;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(17, 17, 16, 0.2);
 }
 
 .outline-btn {
-    background: transparent;
+    background: var(--bg-surface);
     color: var(--text-secondary);
     border: 1px solid var(--border-hairline);
-    padding: 0.65rem 1.25rem;
+    padding: 0.55rem 1.15rem;
 }
 .outline-btn:hover {
     background: var(--bg-subtle);
     color: var(--text-primary);
-    border-color: var(--text-muted);
+    border-color: var(--text-primary);
 }
 
 .refresh-btn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
     border-radius: 6px;
@@ -184,10 +168,10 @@ button, .action-btn {
     transform: rotate(180deg);
 }
 
-/* Main Area */
+/* ======================================================================
+   2. MAIN CONTAINER & SECTION STRUCTURE
+   ====================================================================== */
 .vault-main {
-    position: relative;
-    z-index: 5;
     max-width: 1200px;
     margin: 0 auto;
     padding: 3rem 1.5rem;
@@ -214,7 +198,7 @@ button, .action-btn {
 .gate-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 2.75rem 2.5rem;
     max-width: 480px;
     width: 100%;
@@ -222,45 +206,42 @@ button, .action-btn {
     box-shadow: var(--shadow-card);
     position: relative;
     overflow: hidden;
-    animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gate-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent-signal), transparent);
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent-signal);
 }
 
 .gate-icon-pulse {
-    width: 58px;
-    height: 58px;
+    width: 52px;
+    height: 52px;
     margin: 0 auto 1.25rem;
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--bg-subtle);
     border: 1px solid var(--border-hairline);
     color: var(--accent-signal);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.gate-icon-pulse:hover {
-    transform: scale(1.1) rotate(5deg);
+    font-size: 1.3rem;
 }
 
 .gate-card h2 {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
 }
 
 .gate-card p {
     color: var(--text-secondary);
     font-size: 0.88rem;
-    line-height: 1.5;
+    line-height: 1.55;
     margin-bottom: 1.5rem;
 }
 
@@ -269,7 +250,7 @@ button, .action-btn {
     display: flex;
     background: var(--bg-subtle);
     border: 1px solid var(--border-hairline);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 3px;
     margin-bottom: 1.5rem;
     gap: 3px;
@@ -279,8 +260,8 @@ button, .action-btn {
     background: transparent;
     color: var(--text-secondary);
     border: none;
-    padding: 0.65rem 0.5rem;
-    border-radius: 6px;
+    padding: 0.6rem 0.5rem;
+    border-radius: 4px;
     font-size: 0.78rem;
     font-family: var(--font-mono);
 }
@@ -288,7 +269,7 @@ button, .action-btn {
     background: var(--bg-surface);
     color: var(--text-primary);
     border: 1px solid var(--border-hairline);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 6px rgba(17, 17, 16, 0.05);
 }
 
 /* Auth Boxes */
@@ -336,7 +317,7 @@ button, .action-btn {
     transition: border-color 0.2s ease;
 }
 .gate-input-group input:focus {
-    border-color: var(--accent-signal);
+    border-color: var(--text-primary);
 }
 .submit-auth-btn {
     width: 100%;
@@ -350,12 +331,12 @@ button, .action-btn {
 }
 
 .google-auth-btn {
-    background: var(--bg-canvas);
+    background: var(--bg-surface);
     color: var(--text-primary);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     font-family: var(--font-mono);
     font-weight: 700;
-    padding: 0.85rem 1.75rem;
+    padding: 0.8rem 1.75rem;
     border-radius: 6px;
     border: 1px solid var(--border-hairline);
     display: inline-flex;
@@ -366,8 +347,8 @@ button, .action-btn {
 }
 .google-auth-btn:hover {
     background: var(--bg-subtle);
-    border-color: var(--text-muted);
-    transform: translateY(-2px);
+    border-color: var(--text-primary);
+    transform: translateY(-1px);
 }
 .google-g {
     width: 18px;
@@ -384,18 +365,21 @@ button, .action-btn {
 .status-msg.info { color: var(--accent-signal); }
 .status-msg.success { color: var(--status-emerald); }
 
-/* 2. DASHBOARD SCREEN */
+/* ======================================================================
+   3. DASHBOARD BAR & VAULT TABS
+   ====================================================================== */
 .stats-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 1rem 1.5rem;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
+    box-shadow: var(--shadow-subtle);
     animation: fadeIn 0.3s ease;
 }
 
@@ -406,10 +390,10 @@ button, .action-btn {
 }
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    border: 1px solid var(--accent-signal);
+    border: 1px solid var(--border-hairline);
 }
 
 .user-info {
@@ -421,6 +405,7 @@ button, .action-btn {
     font-weight: 700;
     font-size: 0.95rem;
     letter-spacing: -0.02em;
+    color: var(--text-primary);
 }
 
 .user-email {
@@ -524,7 +509,7 @@ button, .action-btn {
     outline: none;
 }
 .search-box input:focus {
-    border-color: var(--accent-signal);
+    border-color: var(--text-primary);
 }
 
 .file-upload-wrap {
@@ -561,7 +546,7 @@ button, .action-btn {
     transition: width 0.2s ease;
 }
 
-/* Files Grid — Bento Style */
+/* Files Grid — Swiss Bento Style */
 .files-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -571,17 +556,18 @@ button, .action-btn {
 .file-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
+    box-shadow: var(--shadow-subtle);
 }
 .file-card:hover {
-    border-color: var(--border-focus);
-    transform: translateY(-3px);
+    border-color: var(--text-primary);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-card);
 }
 
@@ -594,7 +580,7 @@ button, .action-btn {
 
 .file-icon {
     font-size: 1.6rem;
-    color: var(--accent-signal);
+    color: var(--text-primary);
     flex-shrink: 0;
 }
 .file-icon.pdf { color: #f87171; }
@@ -650,8 +636,8 @@ button, .action-btn {
 }
 .file-btn:hover {
     color: var(--text-primary);
-    border-color: var(--accent-signal);
-    transform: translateY(-1px);
+    border-color: var(--text-primary);
+    background: var(--bg-card-hover);
 }
 .file-btn.delete-btn:hover {
     color: var(--danger);
@@ -670,14 +656,15 @@ button, .action-btn {
     font-size: 2.2rem;
     margin-bottom: 0.75rem;
     opacity: 0.4;
-    color: var(--accent-signal);
+    color: var(--text-primary);
 }
 
 /* Secrets / Passwords Tab */
 .secrets-notice {
-    background: rgba(255, 94, 26, 0.06);
-    border: 1px solid rgba(255, 94, 26, 0.2);
-    border-radius: 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-hairline);
+    border-left: 3px solid var(--accent-signal);
+    border-radius: 6px;
     padding: 0.9rem 1.25rem;
     display: flex;
     align-items: center;
@@ -686,6 +673,7 @@ button, .action-btn {
     font-size: 0.82rem;
     font-family: var(--font-mono);
     color: var(--text-secondary);
+    box-shadow: var(--shadow-subtle);
 }
 .secrets-notice i {
     color: var(--accent-signal);
@@ -695,7 +683,7 @@ button, .action-btn {
 .secrets-auth-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 2.5rem;
     max-width: 460px;
     margin: 2rem auto;
@@ -704,12 +692,13 @@ button, .action-btn {
 }
 .secrets-auth-card .sec-icon {
     font-size: 1.8rem;
-    color: var(--accent-signal);
+    color: var(--text-primary);
     margin-bottom: 1rem;
 }
 .secrets-auth-card h3 {
     margin-bottom: 0.5rem;
     font-size: 1.25rem;
+    color: var(--text-primary);
 }
 .secrets-auth-card p {
     font-size: 0.85rem;
@@ -733,7 +722,7 @@ button, .action-btn {
     font-size: 0.85rem;
 }
 .passphrase-input-wrap input:focus {
-    border-color: var(--accent-signal);
+    border-color: var(--text-primary);
 }
 .hint-text {
     font-size: 0.72rem;
@@ -750,16 +739,17 @@ button, .action-btn {
 .secret-item {
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 1rem 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+    box-shadow: var(--shadow-subtle);
     transition: all 0.2s ease;
 }
 .secret-item:hover {
-    border-color: var(--border-focus);
+    border-color: var(--text-primary);
     transform: translateX(2px);
 }
 
@@ -777,13 +767,15 @@ button, .action-btn {
     border-radius: 4px;
     background: var(--bg-subtle);
     border: 1px solid var(--border-hairline);
-    color: var(--accent-signal);
+    color: var(--text-primary);
+    font-weight: 700;
 }
 
 .secret-meta h4 {
     font-size: 0.9rem;
     font-weight: 700;
     margin-bottom: 0.2rem;
+    color: var(--text-primary);
 }
 .secret-meta span {
     font-size: 0.75rem;
@@ -798,24 +790,25 @@ button, .action-btn {
 }
 
 .copy-btn {
-    background: rgba(255, 94, 26, 0.08);
-    color: var(--accent-signal);
-    border: 1px solid rgba(255, 94, 26, 0.25);
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+    border: 1px solid var(--border-hairline);
     padding: 0.4rem 0.75rem;
     border-radius: 4px;
     font-size: 0.75rem;
 }
 .copy-btn:hover {
-    background: var(--accent-signal);
-    color: white;
+    background: var(--text-primary);
+    color: #FFFFFF;
 }
 
 /* Notes Tab */
 .notes-panel {
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 1.5rem;
+    box-shadow: var(--shadow-subtle);
 }
 .notes-header {
     display: flex;
@@ -853,14 +846,14 @@ button, .action-btn {
     resize: vertical;
 }
 .notes-panel textarea:focus {
-    border-color: var(--accent-signal);
+    border-color: var(--text-primary);
 }
 
 /* Modal */
 .vault-modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(17, 17, 16, 0.6);
     backdrop-filter: blur(8px);
     display: none;
     align-items: center;
@@ -875,7 +868,7 @@ button, .action-btn {
 .modal-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-hairline);
-    border-radius: 12px;
+    border-radius: 10px;
     width: 100%;
     max-width: 460px;
     padding: 1.75rem;
@@ -889,6 +882,7 @@ button, .action-btn {
 }
 .modal-header h3 {
     font-size: 1.15rem;
+    color: var(--text-primary);
 }
 .modal-close-btn {
     background: transparent;
@@ -920,7 +914,7 @@ button, .action-btn {
     outline: none;
 }
 .modal-form input:focus, .modal-form select:focus {
-    border-color: var(--accent-signal);
+    border-color: var(--text-primary);
 }
 .password-field-wrap {
     position: relative;
@@ -947,9 +941,9 @@ button, .action-btn {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    background: var(--bg-surface);
-    border: 1px solid var(--accent-signal);
-    color: var(--text-primary);
+    background: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    color: #FFFFFF;
     padding: 0.85rem 1.25rem;
     border-radius: 6px;
     font-size: 0.82rem;
@@ -981,7 +975,7 @@ button, .action-btn {
 }
 
 @media (max-width: 768px) {
-    .vault-header { padding: 1rem 1.25rem; }
+    .vault-header { padding: 0 1rem; }
     .vault-main { padding: 1.5rem 1rem; }
     .gate-card { padding: 2rem 1.5rem; }
     .tab-actions-bar { flex-direction: column; align-items: stretch; }
