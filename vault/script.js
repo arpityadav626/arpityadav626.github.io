@@ -329,6 +329,10 @@
 
         const provider = new firebase.auth.GoogleAuthProvider();
         provider.addScope('https://www.googleapis.com/auth/drive.file');
+        provider.setCustomParameters({
+            prompt: 'consent',
+            access_type: 'offline'
+        });
 
         try {
             const result = await fbAuth.signInWithPopup(provider);
@@ -424,20 +428,37 @@
         // 2. INSTANT LOCAL STORAGE RENDER
         await renderLocalVaultFiles();
 
-        // 3. DRIVE CONNECTION OR LOCAL MODE
+        // 3. DRIVE CONNECTION VERIFICATION & SYNC
         const isDriveValid = driveAccessToken && Date.now() < parseInt(driveTokenExpiry, 10);
         if (isDriveValid) {
-            if (vaultFolderStatus) vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive"></i> /${VAULT_FOLDER_NAME}`;
-            // Sync drive in background
             (async () => {
-                try {
-                    await ensureVaultFolder();
-                    await Promise.all([
-                        loadDriveFiles(false),
-                        syncCloudNotesFromDrive()
-                    ]);
-                } catch (syncErr) {
-                    console.warn('Background sync warning:', syncErr);
+                const check = await verifyGoogleDriveConnection();
+                if (check.ok) {
+                    if (vaultFolderStatus) {
+                        vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853;"></i> /${VAULT_FOLDER_NAME}`;
+                    }
+                    try {
+                        await ensureVaultFolder();
+                        await Promise.all([
+                            loadDriveFiles(false),
+                            syncCloudNotesFromDrive()
+                        ]);
+                    } catch (syncErr) {
+                        console.warn('Background sync warning:', syncErr);
+                    }
+                } else if (check.isDriveApiDisabled) {
+                    console.warn('Drive API disabled in Google Cloud:', check.message);
+                    if (vaultFolderStatus) {
+                        vaultFolderStatus.innerHTML = '<a href="https://console.cloud.google.com/apis/library/drive.googleapis.com?project=arpit-portfolio-2026" target="_blank" style="color:#FF4F00;font-weight:700;"><i class="fas fa-triangle-exclamation"></i> Enable Drive API in Google Cloud ↗</a>';
+                    }
+                    showToast('Drive API is not enabled in Google Cloud Console. Click header link to enable.', 'triangle-exclamation');
+                    updateDriveConnectButton();
+                } else {
+                    console.warn('Drive auth notice:', check.message || check.error);
+                    if (vaultFolderStatus) {
+                        vaultFolderStatus.innerHTML = '<i class="fas fa-database"></i> Local Vault Active';
+                    }
+                    updateDriveConnectButton();
                 }
             })();
         } else {
@@ -498,9 +519,13 @@
             driveBtn.title = 'Link Google Drive for multi-device sync';
             driveBtn.style.marginRight = '8px';
             driveBtn.addEventListener('click', async () => {
-                showToast('Connecting to Google Drive...', 'cloud');
+                showToast('Requesting Google Drive Permission...', 'cloud');
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.addScope('https://www.googleapis.com/auth/drive.file');
+                provider.setCustomParameters({
+                    prompt: 'consent',
+                    access_type: 'offline'
+                });
                 try {
                     const result = await fbAuth.signInWithPopup(provider);
                     if (result.credential && result.credential.accessToken) {
@@ -508,10 +533,24 @@
                         driveTokenExpiry = Date.now() + (3600 * 1000);
                         localStorage.setItem('arpit_drive_access_token', driveAccessToken);
                         localStorage.setItem('arpit_drive_access_token_exp', driveTokenExpiry);
-                        showToast('Google Drive Linked!', 'check');
-                        if (driveBtn) driveBtn.remove();
-                        await ensureVaultFolder();
-                        await loadDriveFiles(true);
+
+                        const check = await verifyGoogleDriveConnection();
+                        if (check.ok) {
+                            showToast(`Drive Connected (${check.user?.emailAddress || 'Ready'})!`, 'check');
+                            if (driveBtn) driveBtn.remove();
+                            if (vaultFolderStatus) {
+                                vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853;"></i> /${VAULT_FOLDER_NAME}`;
+                            }
+                            await ensureVaultFolder();
+                            await loadDriveFiles(true);
+                        } else if (check.isDriveApiDisabled) {
+                            showToast('Google Drive API disabled in project. Click header link to enable.', 'triangle-exclamation');
+                            if (vaultFolderStatus) {
+                                vaultFolderStatus.innerHTML = '<a href="https://console.cloud.google.com/apis/library/drive.googleapis.com?project=arpit-portfolio-2026" target="_blank" style="color:#FF4F00;font-weight:700;"><i class="fas fa-triangle-exclamation"></i> Enable Drive API in Google Cloud ↗</a>';
+                            }
+                        } else {
+                            showToast('Drive: ' + (check.message || check.error), 'circle-exclamation');
+                        }
                     }
                 } catch (err) {
                     if (err.code === 'auth/popup-blocked') {
@@ -541,6 +580,35 @@ function showUnlockedView() {
     }
 
     // ------------------------------------------------------------------
+    // ------------------------------------------------------------------
+    // GOOGLE DRIVE HEALTH & PERMISSION VERIFIER
+    // ------------------------------------------------------------------
+    async function verifyGoogleDriveConnection() {
+        if (!driveAccessToken) return { ok: false, error: 'No token' };
+        try {
+            const res = await fetch('https://www.googleapis.com/drive/v3/about?fields=user,storageQuota', {
+                headers: { Authorization: `Bearer ${driveAccessToken}` }
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok) {
+                return { ok: true, user: data.user, quota: data.storageQuota };
+            } else {
+                const msg = data.error?.message || `HTTP ${res.status}`;
+                const isDriveApiDisabled = msg.includes('has not been used in project') || msg.includes('it is disabled');
+                const isScopeMissing = msg.includes('Insufficient') || msg.includes('scope');
+                return {
+                    ok: false,
+                    status: res.status,
+                    message: msg,
+                    isDriveApiDisabled,
+                    isScopeMissing
+                };
+            }
+        } catch (e) {
+            return { ok: false, error: e.message };
+        }
+    }
+
     // DRIVE CORE TRANSPORT & FOLDER ENGINE
     // ------------------------------------------------------------------
     async function driveFetch(endpoint, options = {}) {
