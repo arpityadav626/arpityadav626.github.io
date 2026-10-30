@@ -51,11 +51,6 @@
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Client-Side Hardening & Security Policies -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://formspree.io; frame-src 'self' https://www.youtube.com https://arpit-fun.web.app; object-src 'none'; base-uri 'self';">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <link rel="preload" as="image" href="assets/profile.webp" type="image/webp" fetchpriority="high">
 
     <title>Arpit Yadav — Full Stack Developer | AI &amp; IoT Systems Engineer</title>
 
@@ -124,68 +119,42 @@
     <!-- Google Structured Data (JSON-LD) for Search Rich Results -->
 
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
+
     {
+
+      "@context": "https://schema.org",
+
       "@type": "Person",
-      "@id": "https://arpity.me/#person",
+
       "name": "Arpit Yadav",
+
       "url": "https://arpity.me/",
-      "image": "https://arpity.me/assets/profile.webp",
-      "jobTitle": "Full Stack Developer & IoT Systems Engineer",
-      "description": "B.Tech Computer Science (AI & ML) engineer specializing in high-performance web systems, FreeRTOS firmware, SIH 2026 Smart Helmet telemetry, and forensics engineering.",
+
+      "image": "https://arpity.me/assets/profile.jpg",
+
+      "jobTitle": "Full Stack Developer & IoT Enthusiast",
+
       "worksFor": {
+
         "@type": "Organization",
+
         "name": "Axis Institute of Technology and Management"
+
       },
-      "alumniOf": {
-        "@type": "EducationalOrganization",
-        "name": "Axis Institute of Technology and Management"
-      },
-      "hasOccupation": {
-        "@type": "Occupation",
-        "name": "Full Stack & IoT Systems Engineer",
-        "skills": "React 19, Next.js, Node.js, Python, FreeRTOS, ESP32 Firmware, Three.js, Web Audio API, SQLite FTS5, Merkle Forensics"
-      },
+
       "sameAs": [
+
         "https://www.linkedin.com/in/arpit-yadav-944983309/",
-        "https://github.com/arpityadav626",
-        "https://leetcode.com/u/arpityadav626/"
+
+        "https://github.com/arpityadav626"
+
       ],
-      "knowsAbout": [
-        "Full Stack Web Development",
-        "Embedded Systems & IoT",
-        "FreeRTOS & FSM Firmware",
-        "Computer Vision & AI/ML",
-        "Digital Forensics & Merkle Verification",
-        "Spatial 3D & Three.js",
-        "Web Audio Synthesis"
-      ]
-    },
-    {
-      "@type": "SoftwareApplication",
-      "@id": "https://arpity.me/#smart-helmet",
-      "name": "Smart Rider — IoT Helmet Telemetry",
-      "author": { "@id": "https://arpity.me/#person" },
-      "applicationCategory": "EmbeddedHardwareApplication",
-      "operatingSystem": "ESP32 / FreeRTOS",
-      "url": "https://github.com/arpityadav626/smart-helmet",
-      "description": "Real-time crash detection, GPS telemetry, and SIM800L GSM emergency alert system built for Smart India Hackathon 2026."
-    },
-    {
-      "@type": "SoftwareApplication",
-      "@id": "https://arpity.me/#chronofact",
-      "name": "ChronoFact 2.0 Forensics Engine",
-      "author": { "@id": "https://arpity.me/#person" },
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Web / Cross-platform",
-      "url": "https://github.com/arpityadav626/chronofact",
-      "description": "High-integrity digital forensics platform with cryptographic hash chaining and Merkle tree audit trail verification."
+
+      "knowsAbout": ["Full Stack Web Development", "IoT", "Arduino", "ESP32", "Python", "React", "JavaScript", "C++"]
+
     }
-  ]
-}
-</script>
+
+    </script>
 
     
 
@@ -197,7 +166,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     
 
@@ -206,7 +175,6 @@
 </head>
 
 <body class="light-theme" data-mode="light">
-    <a href="#home" class="skip-link">Skip to main content</a>
 
     <!-- 0. High-End Editorial Intro Preloader -->
 
@@ -216,7 +184,7 @@
 
         <div class="preloader-title-wrap">
 
-            <div class="preloader-headline" aria-label="Arpit Yadav" aria-hidden="true">
+            <h1 class="preloader-headline" aria-label="Arpit Yadav">
 
                 <span class="preloader-part preloader-left">Arpit</span>
 
@@ -400,10 +368,7 @@
 
                 <div class="card-visual-inner">
 
-                <picture>
-                            <source srcset="assets/smart-helmet-prototype.webp" type="image/webp">
-                            <img src="assets/smart-helmet-prototype.jpg" alt="Smart Helmet Telemetry Prototype" class="card-preview-img" loading="lazy" decoding="async" width="1024" height="1024">
-                        </picture>
+                <img src="assets/smart-helmet-prototype.jpg" alt="Smart Helmet Telemetry Prototype" class="card-preview-img" loading="lazy">
 
                 <div class="card-visual-overlay"></div>
 
@@ -485,10 +450,7 @@
 
                 <div class="card-visual-inner">
 
-                <picture>
-                            <source srcset="assets/smart-kitchen-prototype.webp" type="image/webp">
-                            <img src="assets/smart-kitchen-prototype.jpg" alt="SAFETY-FI 96X Prototype" class="card-preview-img" loading="lazy" decoding="async" width="1024" height="571">
-                        </picture>
+                <img src="assets/smart-kitchen-prototype.jpg" alt="SAFETY-FI 96X Prototype" class="card-preview-img" loading="lazy">
 
                 <div class="card-visual-overlay"></div>
 
@@ -576,10 +538,7 @@
 
                 <div class="card-visual-inner">
 
-                <picture>
-                            <source srcset="assets/chronofact-preview.webp" type="image/webp">
-                            <img src="assets/chronofact-preview.jpg" alt="ChronoFact 2.0 Preview" class="card-preview-img" loading="lazy" decoding="async" width="1024" height="571">
-                        </picture>
+                <img src="assets/chronofact-preview.jpg" alt="ChronoFact 2.0 Preview" class="card-preview-img" loading="lazy">
 
                 <div class="card-visual-overlay"></div>
 
@@ -669,10 +628,7 @@
 
                 <div class="card-visual-inner">
 
-                <picture>
-                            <source srcset="assets/ai-hub-preview.webp" type="image/webp">
-                            <img src="assets/ai-hub-preview.jpg" alt="AI Hub Preview" class="card-preview-img" loading="lazy" decoding="async" width="1024" height="571">
-                        </picture>
+                <img src="assets/ai-hub-preview.jpg" alt="AI Hub Preview" class="card-preview-img" loading="lazy">
 
                 <div class="card-visual-overlay"></div>
 
@@ -756,10 +712,7 @@
 
                 <div class="card-visual-inner">
 
-                <picture>
-                            <source srcset="assets/monolith-villa-preview.webp" type="image/webp">
-                            <img src="assets/monolith-villa-preview.jpg" alt="Monolith Villa Preview" class="card-preview-img" loading="lazy" decoding="async" width="1024" height="571">
-                        </picture>
+                <img src="assets/monolith-villa-preview.jpg" alt="Monolith Villa Preview" class="card-preview-img" loading="lazy">
 
                 <div class="card-visual-overlay"></div>
 
@@ -835,10 +788,7 @@
 
                 <div class="card-visual-inner">
 
-                <picture>
-                            <source srcset="assets/monu-egg-center-preview.webp" type="image/webp">
-                            <img src="assets/monu-egg-center-preview.jpg" alt="Monu Egg Center Cloud Kitchen & Smart QR Suite Preview" class="card-preview-img" loading="lazy" decoding="async" width="1024" height="571">
-                        </picture>
+                <img src="assets/monu-egg-center-preview.jpg" alt="Monu Egg Center Cloud Kitchen & Smart QR Suite Preview" class="card-preview-img" loading="lazy">
 
                 <div class="card-visual-overlay"></div>
 
@@ -1128,7 +1078,7 @@
 
                     <div class="achieve-content">
 
-                        <h3>Smart India Hackathon (SIH) 2026 — Hardware Edition</h3>
+                        <h4>Smart India Hackathon (SIH) 2026 — Hardware Edition</h4>
 
                         <p>Engineered an end-to-end ESP32 Smart Helmet telemetry and ignition-interlock prototype for road safety innovation and real-time crash response.</p>
 
@@ -1148,7 +1098,7 @@
 
                     <div class="achieve-content">
 
-                        <h3>B.Tech in Computer Science &amp; Engineering (AI &amp; ML)</h3>
+                        <h4>B.Tech in Computer Science &amp; Engineering (AI &amp; ML)</h4>
 
                         <p>Undergraduate degree at <strong>Axis Institute of Technology and Management, Kanpur</strong> (Cohort: 2025 — 2029). Focus: Embedded Telemetry, Distributed Web Systems &amp; Database Security.</p>
 
@@ -1168,7 +1118,7 @@
 
                     <div class="achieve-content">
 
-                        <h3>Competitive Programming Problem Solving (LeetCode &amp; GFG)</h3>
+                        <h4>Competitive Programming Problem Solving (LeetCode &amp; GFG)</h4>
 
                         <p>Solved <strong>250+ algorithmic problems</strong> across <strong>LeetCode</strong> and <strong>GeeksforGeeks</strong>; earned official certification in the <strong>GeeksforGeeks Code Catalyst</strong> coding contest.</p>
 
@@ -1190,7 +1140,7 @@
 
                     <div class="achieve-content">
 
-                        <h3>Cybersuraksha Training &amp; Systems Defense — C3i Hub</h3>
+                        <h4>Cybersuraksha Training &amp; Systems Defense — C3i Hub</h4>
 
                         <p>Completed the intensive <strong>Cybersuraksha Training Program</strong> hosted by <strong>C3i Hub</strong>, covering foundational network defense, system audits, and vulnerability mitigation.</p>
 
@@ -1210,7 +1160,7 @@
 
                     <div class="achieve-content">
 
-                        <h3>MongoDB Certified Developer Credentials</h3>
+                        <h4>MongoDB Certified Developer Credentials</h4>
 
                         <p>Earned verified digital badges on <strong>Credly</strong> for <strong>MongoDB Database Security</strong> and <strong>Student Basics</strong>, mastering NoSQL schema design and access security.</p>
 
@@ -1230,7 +1180,7 @@
 
                     <div class="achieve-content">
 
-                        <h3>Hackathons &amp; Competitive Athletics</h3>
+                        <h4>Hackathons &amp; Competitive Athletics</h4>
 
                         <p>Registered participant in <strong>Axis HackSprint 2.0</strong> and sprint competitor in the <strong>INFINITO 2K26</strong> sports meet, balancing high-impact software engineering with athletics.</p>
 
@@ -1472,15 +1422,15 @@
 
 
 
-    <script src="assets/three.min.js" defer></script>
+    <script src="assets/three.min.js"></script>
 
-    <script src="assets/lenis.min.js" defer></script>
+    <script src="assets/lenis.min.js"></script>
 
-    <script src="assets/gsap.min.js" defer></script>
+    <script src="assets/gsap.min.js"></script>
 
-    <script src="assets/ScrollTrigger.min.js" defer></script>
+    <script src="assets/ScrollTrigger.min.js"></script>
 
-    <script src="script.js?v=7.6" defer></script>
+    <script src="script.js?v=7.5"></script>
 
 </body>
 
