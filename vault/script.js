@@ -429,8 +429,11 @@
         // Merge Drive cache + local storage without duplicate IDs or names
         const merged = [...cachedDrive];
         localCombined.forEach(lf => {
-            if (!merged.some(m => m.id === lf.id || (lf.driveFileId && m.id === lf.driveFileId) || m.name === lf.name)) {
-                merged.push(lf);
+            const matchIndex = merged.findIndex(m => m.id === lf.id || (lf.driveFileId && m.id === lf.driveFileId) || m.name === lf.name);
+            if (matchIndex >= 0) {
+                merged[matchIndex] = { ...merged[matchIndex], ...lf };
+            } else {
+                merged.unshift(lf);
             }
         });
 
@@ -694,6 +697,34 @@ function showUnlockedView() {
         return res;
     }
 
+        // RFC 2387 multipart/related uploader for Google Drive API v3
+    async function uploadBlobToDrive(fileBlob, metadata, accessToken) {
+        if (!accessToken) throw new Error("No access token for Drive upload");
+        const boundary = "-------" + Math.random().toString(36).substring(2) + Date.now();
+        const delimiter = "\r\n--" + boundary + "\r\n";
+        const close_delim = "\r\n--" + boundary + "--";
+        const contentType = fileBlob.type || "application/octet-stream";
+        const metadataBlob = new Blob([JSON.stringify(metadata)], { type: "application/json; charset=UTF-8" });
+        const multipartBody = new Blob([
+            delimiter,
+            "Content-Type: application/json; charset=UTF-8\r\n\r\n",
+            metadataBlob,
+            delimiter,
+            "Content-Type: ", contentType, "\r\n\r\n",
+            fileBlob,
+            close_delim
+        ], { type: `multipart/related; boundary=${boundary}` });
+        const res = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": `multipart/related; boundary=${boundary}`
+            },
+            body: multipartBody
+        });
+        return res;
+    }
+
     async function ensureVaultFolder() {
         if (vaultFolderId && vaultFolderId !== 'undefined' && vaultFolderId !== 'null') {
             if (vaultFolderStatus) vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive"></i> /${VAULT_FOLDER_NAME}`;
@@ -787,20 +818,15 @@ function showUnlockedView() {
             await Promise.all(pending.map(async (lf) => {
                 try {
                     const metadata = { name: lf.name, parents: [vaultFolderId] };
-                    const form = new FormData();
-                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                    form.append('file', lf.blob);
-
-                    const uploadRes = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                        method: 'POST',
-                        headers: { Authorization: `Bearer ${driveAccessToken}` },
-                        body: form
-                    });
+                    const uploadRes = await uploadBlobToDrive(lf.blob, metadata, driveAccessToken);
                     if (uploadRes.ok) {
                         const upData = await uploadRes.json();
                         lf.syncedToDrive = true;
                         lf.driveFileId = upData.id;
                         await VaultDB.saveFile(lf);
+                        console.log("Synced local item to Google Drive:", lf.name);
+                    } else {
+                        console.warn("Drive sync failed for:", lf.name, uploadRes.status);
                     }
                 } catch (e) {
                     console.warn('Batch upload item warning:', lf.name, e);
@@ -1199,6 +1225,12 @@ function showUnlockedView() {
 
         if (uploadProgressContainer) uploadProgressContainer.style.display = 'block';
 
+        if (driveAccessToken && !vaultFolderId) {
+            try { await ensureVaultFolder(); } catch (_) {}
+        }
+        let driveUploadedCount = 0;
+        let driveErrorMsg = null;
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const pct = Math.round(((i + 1) / files.length) * 100);
@@ -1237,29 +1269,43 @@ function showUnlockedView() {
             if (driveAccessToken && vaultFolderId) {
                 try {
                     const metadata = { name: file.name, parents: [vaultFolderId] };
-                    const form = new FormData();
-                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                    form.append('file', file);
-
-                    const uploadRes = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                        method: 'POST',
-                        headers: { Authorization: `Bearer ${driveAccessToken}` },
-                        body: form
-                    });
+                    const uploadRes = await uploadBlobToDrive(file, metadata, driveAccessToken);
                     if (uploadRes.ok) {
                         const upData = await uploadRes.json();
                         record.syncedToDrive = true;
                         record.driveFileId = upData.id;
                         await VaultDB.saveFile(record);
+                        driveUploadedCount++;
+                    } else {
+                        const errJson = await uploadRes.json().catch(() => ({}));
+                        driveErrorMsg = errJson.error?.message || `HTTP ${uploadRes.status}`;
+                        console.warn("Drive upload error:", uploadRes.status, driveErrorMsg);
+                        if (uploadRes.status === 401) {
+                            driveAccessToken = null;
+                            localStorage.removeItem("arpit_drive_access_token");
+                            localStorage.removeItem("arpit_drive_access_token_exp");
+                            updateDriveConnectButton();
+                        }
                     }
                 } catch (driveErr) {
-                    console.warn('Drive upload error:', driveErr);
+                    driveErrorMsg = driveErr.message;
+                    console.warn("Drive upload error:", driveErr);
                 }
             }
         }
 
         if (uploadProgressContainer) uploadProgressContainer.style.display = 'none';
-        showToast(`Stored ${files.length} item(s) in Vault!`, 'shield-check');
+
+        if (driveUploadedCount > 0) {
+            showToast(`Uploaded ${driveUploadedCount} file(s) to Google Drive!`, 'cloud-check');
+        } else if (driveAccessToken && driveErrorMsg) {
+            showToast(`Saved locally in Vault (Drive: ${driveErrorMsg})`, 'triangle-exclamation');
+        } else if (driveAccessToken) {
+            showToast(`Stored ${files.length} item(s) in Vault!`, 'shield-check');
+        } else {
+            showToast(`Saved locally. Click [ Sync Drive ] in header to backup to Google Drive.`, 'database');
+            updateDriveConnectButton();
+        }
 
         await renderLocalVaultFiles();
         if (driveAccessToken && vaultFolderId) {
@@ -1451,17 +1497,11 @@ function showUnlockedView() {
                 });
             } else {
                 const metadata = { name: NOTES_FILE_NAME, parents: [vaultFolderId] };
-                const form = new FormData();
-                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                form.append('file', fileBlob);
-
-                const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                    method: 'POST',
-                    headers: { Authorization: `Bearer ${driveAccessToken}` },
-                    body: form
-                });
-                const data = await res.json();
-                notesDriveFileId = data.id;
+                const res = await uploadBlobToDrive(fileBlob, metadata, driveAccessToken);
+                if (res.ok) {
+                    const data = await res.json();
+                    notesDriveFileId = data.id;
+                }
             }
             if (notesSyncStatus) notesSyncStatus.innerHTML = `<i class="fas fa-check-circle"></i> Saved &amp; Synced (${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})})`;
         } catch (e) {
