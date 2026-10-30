@@ -1166,13 +1166,58 @@ function showUnlockedView() {
         });
     }
 
-    // Refresh Buttons
+    // Refresh & Drive Force-Sync Buttons
     if (refreshFilesBtns) {
         refreshFilesBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (driveAccessToken && vaultFolderId) loadDriveFiles();
-                else renderLocalVaultFiles();
+            btn.addEventListener('click', async () => {
+                const icon = btn.querySelector('i');
+                if (icon) icon.classList.add('fa-spin');
+                showToast('Syncing with Google Drive...', 'arrows-rotate');
+
+                const check = await verifyGoogleDriveConnection();
+                if (check.ok) {
+                    if (vaultFolderStatus) {
+                        vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853;"></i> /${VAULT_FOLDER_NAME}`;
+                    }
+                    try {
+                        await ensureVaultFolder();
+                        await syncLocalFilesToDrive();
+                        await Promise.all([
+                            loadDriveFiles(true),
+                            syncCloudNotesFromDrive()
+                        ]);
+                        showToast('Drive Synced Successfully!', 'check');
+                    } catch (e) {
+                        showToast('Sync completed: ' + e.message, 'check');
+                    }
+                } else {
+                    await renderLocalVaultFiles();
+                    showToast('Local Vault refreshed. Click [ Sync Drive ] to connect cloud.', 'database');
+                    updateDriveConnectButton();
+                }
+
+                if (icon) icon.classList.remove('fa-spin');
             });
+        });
+    }
+
+    // Header Folder Status Pill interactive Health-Check
+    if (vaultFolderStatus) {
+        vaultFolderStatus.style.cursor = 'pointer';
+        vaultFolderStatus.title = 'Click to test Google Drive sync status';
+        vaultFolderStatus.addEventListener('click', async () => {
+            showToast('Testing Google Drive connection...', 'cloud');
+            const check = await verifyGoogleDriveConnection();
+            if (check.ok) {
+                vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853;"></i> /${VAULT_FOLDER_NAME}`;
+                showToast(`Drive Active: ${check.user?.emailAddress || 'Connected'}`, 'check');
+                await ensureVaultFolder();
+                await syncLocalFilesToDrive();
+                await loadDriveFiles(true);
+            } else {
+                showToast(`Drive Status: ${check.message || check.error}`, 'triangle-exclamation');
+                updateDriveConnectButton();
+            }
         });
     }
 
