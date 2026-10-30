@@ -45,6 +45,7 @@
     const authBoxDrive = document.getElementById('auth-box-drive');
     const firebaseLoginForm = document.getElementById('firebase-login-form');
     const fbEmailInput = document.getElementById('fb-email');
+    const toggleFbEmail = document.getElementById('toggle-fb-email');
     const fbPasswordInput = document.getElementById('fb-password');
     const toggleFbPass = document.getElementById('toggle-fb-pass');
     const fbSubmitBtn = document.getElementById('fb-submit-btn');
@@ -122,11 +123,33 @@
         loginStatusMsg.textContent = '';
     });
 
-    toggleFbPass.addEventListener('click', () => {
-        const isPass = fbPasswordInput.type === 'password';
-        fbPasswordInput.type = isPass ? 'text' : 'password';
-        toggleFbPass.innerHTML = isPass ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-    });
+    if (toggleFbEmail) {
+        toggleFbEmail.addEventListener('click', () => {
+            const isMasked = fbEmailInput.type === 'password';
+            fbEmailInput.type = isMasked ? 'text' : 'password';
+            if (isMasked) {
+                fbEmailInput.classList.add('revealed');
+                toggleFbEmail.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                fbEmailInput.classList.remove('revealed');
+                toggleFbEmail.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    }
+
+    if (toggleFbPass) {
+        toggleFbPass.addEventListener('click', () => {
+            const isMasked = fbPasswordInput.type === 'password';
+            fbPasswordInput.type = isMasked ? 'text' : 'password';
+            if (isMasked) {
+                fbPasswordInput.classList.add('revealed');
+                toggleFbPass.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                fbPasswordInput.classList.remove('revealed');
+                toggleFbPass.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    }
 
     // ------------------------------------------------------------------
     // 2. FIREBASE EMAIL + PASSWORD AUTHENTICATION
@@ -146,6 +169,20 @@
         try {
             const userCredential = await fbAuth.signInWithEmailAndPassword(email, pass);
             currentUser = userCredential.user;
+            // Purge credentials immediately from DOM
+            if (fbEmailInput) {
+                fbEmailInput.value = '';
+                fbEmailInput.type = 'password';
+                fbEmailInput.classList.remove('revealed');
+            }
+            if (fbPasswordInput) {
+                fbPasswordInput.value = '';
+                fbPasswordInput.type = 'password';
+                fbPasswordInput.classList.remove('revealed');
+            }
+            if (toggleFbEmail) toggleFbEmail.innerHTML = '<i class="fas fa-eye"></i>';
+            if (toggleFbPass) toggleFbPass.innerHTML = '<i class="fas fa-eye"></i>';
+
             loginStatusMsg.className = 'status-msg success';
             loginStatusMsg.textContent = 'Identity Verified! Loading Workspace...';
             onVaultAuthenticated('Email/Password');
@@ -253,7 +290,19 @@
         localStorage.removeItem('arpit_drive_access_token');
         localStorage.removeItem('arpit_drive_access_token_exp');
 
-        fbPasswordInput.value = '';
+        if (fbEmailInput) {
+            fbEmailInput.value = '';
+            fbEmailInput.type = 'password';
+            fbEmailInput.classList.remove('revealed');
+        }
+        if (fbPasswordInput) {
+            fbPasswordInput.value = '';
+            fbPasswordInput.type = 'password';
+            fbPasswordInput.classList.remove('revealed');
+        }
+        if (toggleFbEmail) toggleFbEmail.innerHTML = '<i class="fas fa-eye"></i>';
+        if (toggleFbPass) toggleFbPass.innerHTML = '<i class="fas fa-eye"></i>';
+
         fbSubmitBtn.disabled = false;
         fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
         loginStatusMsg.textContent = '';
@@ -913,4 +962,35 @@
             '"': '&quot;'
         }[tag] || tag));
     }
+
+
+    // ==================================================================
+    // ANTI-AUTOFILL & CREDENTIAL LEAKAGE MITIGATION
+    // Prevents browser credential managers from storing or suggesting
+    // logins on public or shared computers.
+    // ==================================================================
+    try {
+        if (window.navigator && window.navigator.credentials && window.navigator.credentials.preventSilentAccess) {
+            window.navigator.credentials.preventSilentAccess().catch(() => {});
+        }
+    } catch (_) {}
+
+    function wipeCredentialsOnScreen() {
+        if (fbEmailInput && lockedSection.classList.contains('active') && !fbEmailInput.matches(':focus')) {
+            // Keep empty unless explicitly being typed
+            if (!fbEmailInput.value) fbEmailInput.value = '';
+        }
+        if (fbPasswordInput && lockedSection.classList.contains('active') && !fbPasswordInput.matches(':focus')) {
+            if (!fbPasswordInput.value) fbPasswordInput.value = '';
+        }
+    }
+
+    window.addEventListener('pageshow', wipeCredentialsOnScreen);
+    window.addEventListener('blur', () => {
+        // When tab is hidden/switched, ensure password is not hanging around if unauthenticated
+        if (lockedSection && lockedSection.classList.contains('active')) {
+            wipeCredentialsOnScreen();
+        }
+    });
+
 })();

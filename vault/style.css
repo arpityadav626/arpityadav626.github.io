@@ -309,7 +309,8 @@ button, .action-btn {
     background: var(--bg-canvas);
     border: 1px solid var(--border-hairline);
     border-radius: 6px;
-    padding: 0.75rem 1rem 0.75rem 2.6rem;
+    padding: 0.75rem 2.6rem 0.75rem 2.6rem;
+    letter-spacing: 0.05em;
     color: var(--text-primary);
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -979,4 +980,32 @@ button, .action-btn {
     .vault-main { padding: 1.5rem 1rem; }
     .gate-card { padding: 2rem 1.5rem; }
     .tab-actions-bar { flex-direction: column; align-items: stretch; }
+}
+
+
+/* ======================================================================
+   SECURITY MASKING & ANTI-AUTOFILL SYSTEM
+   Forces both Email and Password fields to render with dots (••••••)
+   and suppresses browser autofill background tints.
+   ====================================================================== */
+.masked-input {
+    -webkit-text-security: disc !important;
+    text-security: disc !important;
+    font-family: var(--font-mono) !important;
+}
+
+.masked-input.revealed {
+    -webkit-text-security: none !important;
+    text-security: none !important;
+}
+
+/* Force clean styling and eliminate browser yellow/blue autofill overrides */
+.gate-input-group input:-webkit-autofill,
+.gate-input-group input:-webkit-autofill:hover, 
+.gate-input-group input:-webkit-autofill:focus,
+.gate-input-group input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--text-primary) !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--bg-canvas) inset !important;
+    box-shadow: 0 0 0px 1000px var(--bg-canvas) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
