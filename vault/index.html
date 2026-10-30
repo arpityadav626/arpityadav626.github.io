@@ -1,210 +1,150 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arpit.Vault — Private Cloud Workspace</title>
+    <title>Personal Vault &amp; Workspace — Arpit Yadav</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="../favicon.svg?v=2026.2">
-
-    <!-- Google Fonts & Font Awesome Icons (Exact Typography of arpity.me) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Firebase SDK (Modular Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
-    <!-- Swiss Industrial Design System -->
-    <link rel="stylesheet" href="../style.css?v=2026.70">
-    <link rel="stylesheet" href="style.css?v=2026.70">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=2026.6">
 </head>
-<body class="light-theme vault-body" data-mode="light">
+<body class="vault-body">
+    <!-- Background Ambient Glow -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
 
-    <!-- Minimalist Header (Matching arpity.me) -->
-    <header class="header">
-        <div class="header-inner">
-            <div class="brand-group">
-                <a href="../index.html" class="brand-link">arpity.me</a>
-                <span class="vault-tag">( VAULT // DEV-WORKSPACE )</span>
+    <!-- Header / Top Bar -->
+    <header class="vault-header">
+        <div class="vault-brand">
+            <span class="vault-logo-icon"><i class="fas fa-shield-halved"></i></span>
+            <div class="brand-text">
+                <span class="brand-title">Arpit<span class="accent-text">.Vault</span></span>
+                <span class="brand-sub">Firebase &amp; Google Drive Cloud Workspace</span>
             </div>
+        </div>
 
-            <nav class="navbar" id="navbar">
-                <div id="auth-header-btn-wrap" style="display:inline-flex; align-items:center;">
-                    <!-- Drive status / connect injected dynamically -->
-                </div>
-                <a href="../index.html" class="nav-link nav-resume-link">Portfolio ↗</a>
-                <button class="action-btn outline-btn" id="logout-btn" title="Lock &amp; Sign Out">
-                    <i class="fas fa-arrow-right-from-bracket"></i> <span>Lock Vault</span>
-                </button>
-            </nav>
+        <div class="vault-header-actions">
+            <a href="../index.html" class="action-btn outline-btn" title="Return to Public Portfolio">
+                <i class="fas fa-arrow-left"></i> <span>Portfolio</span>
+            </a>
+            <div id="auth-header-btn-wrap">
+                <!-- Injected: Lock Vault Button -->
+            </div>
         </div>
     </header>
 
-    <!-- Main Container (1240px Centered Layout) -->
-    <main class="vault-page-wrap">
+    <!-- Main Container -->
+    <main class="vault-main">
+        <!-- 1. LOCKED / LOGIN SCREEN -->
+        <section id="locked-state" class="vault-section locked-section active">
+            <div class="gate-card">
+                <div class="gate-icon-pulse">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>Authenticated Personal Workspace</h2>
+                <p>Private personal cloud storage. Single-sign-on connects directly to your Google Drive via Firebase Authentication.</p>
 
-        
+                <div class="gate-features">
+                    <div class="gf-item"><i class="fab fa-google-drive"></i> 15GB Drive Storage</div>
+                    <div class="gf-item"><i class="fas fa-fire"></i> Firebase Secured</div>
+                    <div class="gf-item"><i class="fas fa-key"></i> Client-Side AES-256</div>
+                </div>
+
+                <div class="gate-actions">
+                    <button id="firebase-google-auth-btn" class="google-auth-btn">
+                        <svg class="google-g" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        <span>Sign In with Google Drive</span>
+                    </button>
+                </div>
+
+                <div id="login-status-msg" class="status-msg"></div>
+            </div>
+        </section>
 
         <!-- 2. UNLOCKED / DASHBOARD SCREEN -->
-        <section id="unlocked-dashboard" class="vault-section dashboard-section active">
-            <!-- Header Section (Matching '( 01 // SELECTED WORK )' from arpity.me) -->
-            <div class="vault-workspace-header" id="vault-content">
-                <div>
-                    <span class="section-tag-mono">( 01 // CLOUD REPOSITORY )</span>
-                    <h1 class="vault-hero-title">Cloud Workspace</h1>
-                    <p class="vault-hero-subtitle">Dedicated categories for Images, Videos, Documents, and Persistent Auto-Synced Notepad.</p>
+        <section id="unlocked-dashboard" class="vault-section dashboard-section">
+            <!-- Top Dashboard Stats Bar -->
+            <div class="stats-bar">
+                <div class="user-badge">
+                    <img id="user-avatar" src="" alt="Avatar" class="user-avatar" style="display:none;">
+                    <div class="user-info">
+                        <span id="user-name" class="user-name">Loading...</span>
+                        <span id="user-email" class="user-email"></span>
+                    </div>
                 </div>
-                <!-- Status Pills -->
-                <div class="social-bar">
-                    <span class="direct-line-pill"><i class="fas fa-user-check"></i> <span id="user-name">Admin</span></span>
-                    <span class="direct-line-pill"><i class="fas fa-folder"></i> <span id="vault-folder-status">Arpit_Dev_Vault</span></span>
-                    <span class="direct-line-pill drive-connected" id="auth-mode-pill"><i class="fas fa-shield-check"></i> Secured</span>
+
+                <div class="quick-status">
+                    <span class="status-pill drive-connected"><i class="fas fa-check-circle"></i> Firebase &amp; Drive Synced</span>
+                    <span class="status-pill folder-id" id="vault-folder-status"><i class="fas fa-folder"></i> Arpit_Dev_Vault</span>
                 </div>
             </div>
 
-            <!-- Vault Tabs (User Sections: Images, Videos, Documents, Notepad, Secrets) -->
+            <!-- Vault Tabs -->
             <div class="vault-tabs">
-                <button class="vtab-btn active" data-tab="tab-images">
-                    <i class="fas fa-image"></i> Images (<span id="images-count">0</span>)
-                </button>
-                <button class="vtab-btn" data-tab="tab-videos">
-                    <i class="fas fa-film"></i> Videos (<span id="videos-count">0</span>)
-                </button>
-                <button class="vtab-btn" data-tab="tab-docs">
-                    <i class="fas fa-file-lines"></i> Documents (<span id="docs-count">0</span>)
-                </button>
-                <button class="vtab-btn" data-tab="tab-notes">
-                    <i class="fas fa-pen-to-square"></i> Notepad
+                <button class="vtab-btn active" data-tab="tab-files">
+                    <i class="fas fa-folder-open"></i> Cloud Files &amp; Docs (<span id="files-count">0</span>)
                 </button>
                 <button class="vtab-btn" data-tab="tab-secrets">
-                    <i class="fas fa-key"></i> Passwords &amp; Keys (<span id="secrets-count">0</span>)
+                    <i class="fas fa-user-secret"></i> Encrypted Credentials &amp; Keys (<span id="secrets-count">0</span>)
+                </button>
+                <button class="vtab-btn" data-tab="tab-notes">
+                    <i class="fas fa-clipboard-list"></i> Scratchpad &amp; Quick Notes
                 </button>
             </div>
 
-            <!-- Global Upload Progress Indicator -->
-            <div id="upload-progress-container" class="upload-progress-container" style="display:none;">
-                <div class="progress-info">
-                    <span id="upload-status-text">Uploading to Cloud Vault...</span>
-                    <span id="upload-percent-text">0%</span>
-                </div>
-                <div class="progress-bar-track">
-                    <div id="upload-progress-bar" class="progress-bar-fill"></div>
-                </div>
-            </div>
-
-            <!-- Hidden File Input Triggers -->
-            <input type="file" id="image-uploader" accept="image/*" multiple style="display:none;">
-            <input type="file" id="video-uploader" accept="video/*" multiple style="display:none;">
-            <input type="file" id="doc-uploader" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.rar,.7z,.tar,.gz,.json,.js,.html,.css,.py,.cpp,.c,.ino,.md" multiple style="display:none;">
-            <input type="file" id="file-uploader" multiple style="display:none;">
-
-            <!-- TAB 1: IMAGES -->
-            <div id="tab-images" class="tab-pane active">
+            <!-- TAB 1: FILES & DOCUMENTS -->
+            <div id="tab-files" class="tab-pane active">
                 <div class="tab-actions-bar">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="images-search-input" placeholder="Search photos, PNGs, JPGs, SVGs...">
+                        <input type="text" id="file-search-input" placeholder="Search files, documents, certificates...">
                     </div>
                     <div class="file-upload-wrap">
-                        <button class="hero-action-btn primary-action" id="upload-image-btn">
-                            <i class="fas fa-cloud-arrow-up"></i> Upload Images
+                        <input type="file" id="file-uploader" multiple style="display:none;">
+                        <button class="primary-btn" id="upload-trigger-btn">
+                            <i class="fas fa-cloud-arrow-up"></i> Upload to Drive
                         </button>
-                        <button class="refresh-btn refresh-files-btn" title="Refresh Images">
+                        <button class="refresh-btn" id="refresh-files-btn" title="Refresh files list">
                             <i class="fas fa-rotate"></i>
                         </button>
                     </div>
                 </div>
 
-                <div id="images-grid" class="files-grid media-grid">
-                    <div class="empty-state">
-                        <i class="fas fa-images"></i>
-                        <h3>Images Storage</h3>
-                        <p>No photos yet, or click "Upload Images" to store artwork and media.</p>
+                <div id="upload-progress-container" class="upload-progress-container" style="display:none;">
+                    <div class="progress-info">
+                        <span id="upload-status-text">Uploading to Google Drive...</span>
+                        <span id="upload-percent-text">0%</span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div id="upload-progress-bar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Files Grid -->
+                <div id="files-grid" class="files-grid">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i> Syncing files from Google Drive...
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2: VIDEOS -->
-            <div id="tab-videos" class="tab-pane">
-                <div class="tab-actions-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="videos-search-input" placeholder="Search videos, MP4, MKV, WebM...">
-                    </div>
-                    <div class="file-upload-wrap">
-                        <button class="hero-action-btn primary-action" id="upload-video-btn">
-                            <i class="fas fa-cloud-arrow-up"></i> Upload Video
-                        </button>
-                        <button class="refresh-btn refresh-files-btn" title="Refresh Videos">
-                            <i class="fas fa-rotate"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="videos-grid" class="files-grid media-grid">
-                    <div class="empty-state">
-                        <i class="fas fa-film"></i>
-                        <h3>Videos Locker</h3>
-                        <p>No recordings yet. Click "Upload Video" to store MP4 and clips.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: DOCUMENTS -->
-            <div id="tab-docs" class="tab-pane">
-                <div class="tab-actions-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="docs-search-input" placeholder="Search documents, PDFs, certificates, code, archives...">
-                    </div>
-                    <div class="file-upload-wrap">
-                        <button class="hero-action-btn primary-action" id="upload-doc-btn">
-                            <i class="fas fa-cloud-arrow-up"></i> Upload Document
-                        </button>
-                        <button class="refresh-btn refresh-files-btn" title="Refresh Documents">
-                            <i class="fas fa-rotate"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="docs-grid" class="files-grid">
-                    <div class="empty-state">
-                        <i class="fas fa-file-lines"></i>
-                        <h3>Documents Vault</h3>
-                        <p>No documents yet. Store PDFs, Resumes, and Code here.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: PERMANENT NOTEPAD -->
-            <div id="tab-notes" class="tab-pane">
-                <div class="notes-panel">
-                    <div class="notes-header">
-                        <div class="notes-meta">
-                            <i class="fas fa-pen-nib" style="color:var(--accent-signal)"></i>
-                            <span>Personal Cloud Notepad (Always Saved)</span>
-                        </div>
-                        <div class="notes-actions-wrap">
-                            <span class="notes-status" id="notes-sync-status"><i class="fas fa-check-circle"></i> Permanent Auto-Save Active</span>
-                            <span class="notes-counter" id="notes-char-count">0 chars | 0 words</span>
-                            <button class="action-btn outline-btn" id="copy-notes-btn" title="Copy All Text"><i class="fas fa-copy"></i> Copy</button>
-                            <button class="action-btn outline-btn" id="download-notes-btn" title="Download note as .txt"><i class="fas fa-download"></i> Save .txt</button>
-                            <button class="action-btn outline-btn" id="clear-notes-btn" title="Clear notepad"><i class="fas fa-eraser"></i> Clear</button>
-                        </div>
-                    </div>
-                    <textarea id="vault-notes-textarea" placeholder="Personal Notepad: Type or paste whatever you want here... Notes, temporary keys, todos, thoughts, code, or links. It is permanently saved and will never disappear."></textarea>
-                </div>
-            </div>
-
-            <!-- TAB 5: ENCRYPTED CREDENTIALS -->
+            <!-- TAB 2: ENCRYPTED CREDENTIALS -->
             <div id="tab-secrets" class="tab-pane">
                 <div class="secrets-notice">
                     <i class="fas fa-shield-cat"></i>
                     <div>
-                        <strong>Client-Side AES-GCM Encrypted:</strong> Passwords and API keys are encrypted in your browser using your Master Passphrase before syncing.
+                        <strong>Client-Side AES-GCM Encrypted:</strong> Passwords and API keys are encrypted in your browser using your Master Passphrase before syncing to Drive.
                     </div>
                 </div>
 
@@ -215,7 +155,7 @@
                     <p>Enter your Master Passphrase to decrypt your stored passwords, tokens, and keys.</p>
                     <div class="passphrase-input-wrap">
                         <input type="password" id="master-passphrase-input" placeholder="Enter Master Passphrase...">
-                        <button id="unlock-secrets-btn" class="hero-action-btn primary-action">
+                        <button id="unlock-secrets-btn" class="primary-btn">
                             <i class="fas fa-unlock"></i> Decrypt
                         </button>
                     </div>
@@ -229,10 +169,10 @@
                             <i class="fas fa-search"></i>
                             <input type="text" id="secrets-search-input" placeholder="Search passwords, API keys, logins...">
                         </div>
-                        <button class="hero-action-btn primary-action" id="open-new-secret-modal-btn">
+                        <button class="primary-btn" id="open-new-secret-modal-btn">
                             <i class="fas fa-plus"></i> Add New Credential
                         </button>
-                        <button class="action-btn outline-btn" id="lock-secrets-btn">
+                        <button class="outline-btn" id="lock-secrets-btn">
                             <i class="fas fa-lock"></i> Lock Vault
                         </button>
                     </div>
@@ -240,6 +180,20 @@
                     <div id="secrets-list" class="secrets-list">
                         <!-- Rendered dynamically -->
                     </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: SCRATCHPAD & QUICK NOTES -->
+            <div id="tab-notes" class="tab-pane">
+                <div class="notes-panel">
+                    <div class="notes-header">
+                        <div class="notes-meta">
+                            <i class="fas fa-pen-nib"></i>
+                            <span>Cloud Scratchpad (Direct Drive Auto-sync)</span>
+                        </div>
+                        <div class="notes-status" id="notes-sync-status">Ready</div>
+                    </div>
+                    <textarea id="vault-notes-textarea" placeholder="Paste quick code snippets, terminal commands, temporary keys, or todos here..."></textarea>
                 </div>
             </div>
         </section>
@@ -283,8 +237,8 @@
                     <input type="text" id="sec-notes" placeholder="Optional notes or login URL">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="action-btn outline-btn" id="cancel-secret-btn">Cancel</button>
-                    <button type="submit" class="hero-action-btn primary-action"><i class="fas fa-shield-halved"></i> Encrypt &amp; Save</button>
+                    <button type="button" class="outline-btn" id="cancel-secret-btn">Cancel</button>
+                    <button type="submit" class="primary-btn"><i class="fas fa-shield-halved"></i> Encrypt &amp; Save</button>
                 </div>
             </form>
         </div>
@@ -293,6 +247,6 @@
     <!-- Notification Toast -->
     <div id="vault-toast" class="vault-toast"></div>
 
-    <script src="script.js?v=2026.70"></script>
+    <script src="script.js?v=2026.6"></script>
 </body>
 </html>
