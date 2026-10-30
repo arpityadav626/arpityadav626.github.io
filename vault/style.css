@@ -1268,3 +1268,63 @@ body.vault-body {
     .navbar { gap: 14px !important; }
     .navbar .nav-link:not(.nav-resume-link) { display: none !important; }
 }
+
+
+/* Brand group in header */
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vault-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-signal);
+    background: rgba(255, 79, 0, 0.08);
+    border: 1px solid rgba(255, 79, 0, 0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+}
+
+/* Gate Hero Intro */
+.gate-hero-intro {
+    text-align: center;
+    max-width: 680px;
+    margin: 10px auto 32px;
+}
+
+.vault-hero-title {
+    font-size: clamp(32px, 3.8vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-family: var(--font-sans);
+    line-height: 1.15;
+}
+
+.vault-hero-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-family: var(--font-sans);
+}
+
+/* Dashboard Workspace Header */
+.vault-workspace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border-hairline);
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.vault-workspace-header .vault-hero-title {
+    margin-bottom: 4px;
+}
