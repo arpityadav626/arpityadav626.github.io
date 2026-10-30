@@ -1,3 +1,17 @@
+
+function escapeHTML(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, function(tag) {
+        return ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag);
+    });
+}
+
 /**
 
  * Copyright 2026 Arpit Yadav (https://arpity.me)
@@ -1974,7 +1988,7 @@ function openProjectModal(projectId) {
 
     if (progressBar) progressBar.style.setProperty('--modal-scroll-pct', '0%');
 
-    playModalSound(true);
+    if (typeof window.playModalSound === 'function') window.playModalSound(true);
 
 }
 
@@ -1994,7 +2008,7 @@ function closeProjectModal() {
 
     document.body.style.overflow = '';
 
-    playModalSound(false);
+    if (typeof window.playModalSound === 'function') window.playModalSound(false);
 
     // Pause any playing iframe
 
@@ -2438,7 +2452,7 @@ function highlightProjectsBySkill(skillKey, isClick = false) {
 
         hintElement.classList.add('hint-active');
 
-        const formattedName = formatSkillName(skillKey);
+        const formattedName = escapeHTML(formatSkillName(skillKey));
 
         if (matchCount > 0) {
 

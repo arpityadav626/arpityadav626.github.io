@@ -63,7 +63,25 @@
         if (!audioCtx) return;
         if (audioCtx.state === 'suspended') {
             audioCtx.resume().then(() => cb && cb(audioCtx.currentTime)).catch(() => {});
-        } else {
+        }
+
+    // Node Lifecycle & Memory Deallocation Helper
+    function autoCleanup(osc, extraNodes) {
+        if (!osc) return;
+        osc.onended = () => {
+            try {
+                osc.disconnect();
+                if (Array.isArray(extraNodes)) {
+                    extraNodes.forEach(node => {
+                        if (node && typeof node.disconnect === 'function') {
+                            node.disconnect();
+                        }
+                    });
+                }
+            } catch (e) {}
+        };
+    }
+ else {
             cb && cb(audioCtx.currentTime);
         }
     }
@@ -88,6 +106,7 @@
             osc.connect(filter);
             filter.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.024);
@@ -115,6 +134,7 @@
             osc.connect(filter);
             filter.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.06);
@@ -136,6 +156,7 @@
 
             osc.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.03);
@@ -157,6 +178,7 @@
 
             osc.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.08);
@@ -178,6 +200,7 @@
 
             osc.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.016);
@@ -199,6 +222,7 @@
 
             osc.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.022);
@@ -225,6 +249,7 @@
 
             osc.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.13);
@@ -248,6 +273,7 @@
 
                 osc.connect(gain);
                 gain.connect(masterCompressor);
+                autoCleanup(osc, [gain]);
 
                 osc.start(noteTime);
                 osc.stop(noteTime + 0.46);
@@ -269,6 +295,7 @@
 
             osc.connect(gain);
             gain.connect(masterCompressor);
+            autoCleanup(osc, [gain, filter]);
 
             osc.start(t);
             osc.stop(t + 0.4);
@@ -1270,6 +1297,26 @@
         initCommandPalette();
         renderCustomCreations();
         updateTelemetryUploadCount();
+    });
+
+
+
+    // AudioContext Suspension on Tab Inactivity (Prevents CPU / Battery drain)
+    document.addEventListener('visibilitychange', () => {
+        if (!audioCtx) return;
+        if (document.hidden) {
+            audioCtx.suspend().catch(() => {});
+        } else if (soundEnabled) {
+            audioCtx.resume().catch(() => {});
+        }
+    });
+
+    // Close AudioContext on Page Teardown
+    window.addEventListener('pagehide', () => {
+        if (audioCtx && audioCtx.state !== 'closed') {
+            audioCtx.close().catch(() => {});
+            audioCtx = null;
+        }
     });
 
 })();

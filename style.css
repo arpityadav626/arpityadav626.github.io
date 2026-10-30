@@ -1415,7 +1415,7 @@ body[data-mode="light"] .project-card.skill-dimmed {
     flex-shrink: 0;
 }
 
-.achieve-content h4 {
+.achieve-content h3, .achieve-content h4 {
     font-size: 17px;
     margin-bottom: 6px;
 }
@@ -4800,4 +4800,46 @@ body[data-mode="light"] .skill-pill.skill-highlighted i {
         background: #F6F5F2 !important;
         color: #0A0A0B !important;
     }
+}
+
+
+/* ======================================================================
+   ACCESSIBILITY & HARDENING (WCAG 2.2 AA COMPLIANCE)
+   ====================================================================== */
+:focus-visible {
+    outline: 2px solid var(--accent, #6366f1);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--accent, #6366f1) !important;
+    outline-offset: 3px !important;
+}
+
+.skip-link {
+    position: absolute;
+    top: -999px;
+    left: 1.5rem;
+    z-index: 100000;
+    padding: 0.75rem 1.25rem;
+    background: #0d111a;
+    color: #6366f1;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid #6366f1;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    transition: top 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+    top: 1.25rem;
 }
