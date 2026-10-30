@@ -184,11 +184,11 @@
                 </div>
             </div>
 
-            <!-- Hidden File Input Triggers -->
-            <input type="file" id="image-uploader" accept="image/*" multiple style="display:none;">
-            <input type="file" id="video-uploader" accept="video/*" multiple style="display:none;">
-            <input type="file" id="doc-uploader" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.rar,.7z,.tar,.gz,.json,.js,.html,.css,.py,.cpp,.c,.ino,.md" multiple style="display:none;">
-            <input type="file" id="file-uploader" multiple style="display:none;">
+            <!-- Hidden File Input Triggers (off-screen for robust mobile & iOS file dialog triggering) -->
+            <input type="file" id="image-uploader" accept="image/*" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
+            <input type="file" id="video-uploader" accept="video/*" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
+            <input type="file" id="doc-uploader" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
+            <input type="file" id="file-uploader" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
 
             <!-- TAB 1: IMAGES -->
             <div id="tab-images" class="tab-pane active">

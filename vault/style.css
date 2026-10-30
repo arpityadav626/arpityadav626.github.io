@@ -1515,7 +1515,8 @@ button:active, .vtab-btn:active, .hero-action-btn:active, .refresh-btn:active {
         display: none !important;
     }
     #btn-connect-drive-header span {
-        display: none !important;
+        display: inline !important;
+        font-size: 0.72rem !important;
     }
 
     .vault-page-wrap {

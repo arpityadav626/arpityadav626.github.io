@@ -110,17 +110,22 @@
     // ==================================================================
     function getTombstones() {
         try {
-            return JSON.parse(localStorage.getItem('arpit_vault_tombstones') || '[]');
+            const list = JSON.parse(localStorage.getItem('arpit_vault_tombstones') || '[]');
+            const cutoff = Date.now() - (7 * 24 * 3600 * 1000); // 7-day retention
+            return list.filter(t => t && t.id && t.time && t.time > cutoff);
         } catch (_) {
             return [];
         }
     }
 
     function addTombstone(name, id) {
+        if (!id) return;
         const list = getTombstones();
-        list.push({ name, id, time: Date.now() });
-        if (list.length > 200) list.shift();
-        localStorage.setItem('arpit_vault_tombstones', JSON.stringify(list));
+        if (!list.some(t => t.id === id)) {
+            list.push({ id, time: Date.now() });
+            if (list.length > 200) list.shift();
+            localStorage.setItem('arpit_vault_tombstones', JSON.stringify(list));
+        }
     }
 
     // DOM ELEMENTS
@@ -380,15 +385,25 @@
         }
     });
 
-    // Mobile & Redirect Auth Handler
-    fbAuth.getRedirectResult().then((result) => {
+    // Mobile & Redirect Auth Handler (Seamless instant sync on phone)
+    fbAuth.getRedirectResult().then(async (result) => {
         if (result && result.credential && result.credential.accessToken) {
             driveAccessToken = result.credential.accessToken;
             driveTokenExpiry = Date.now() + (3600 * 1000);
             localStorage.setItem('arpit_drive_access_token', driveAccessToken);
             localStorage.setItem('arpit_drive_access_token_exp', driveTokenExpiry);
-        }
-        if (result && result.user) {
+
+            if (result.user) currentUser = result.user;
+            showUnlockedView();
+            if (vaultFolderStatus) {
+                vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853;"></i> /${VAULT_FOLDER_NAME}`;
+            }
+            await ensureVaultFolder();
+            await syncLocalFilesToDrive();
+            await loadDriveFiles(true);
+            await syncCloudNotesFromDrive();
+            showToast('Google Drive Connected &amp; Synced!', 'cloud-check');
+        } else if (result && result.user) {
             currentUser = result.user;
             onVaultAuthenticated('Google Account (Mobile Redirect)');
         }
@@ -512,16 +527,22 @@
         if (autoSyncSchedulerInitialized) return;
         autoSyncSchedulerInitialized = true;
 
-        // 1. Silent sync every 25 seconds while tab is active
+        // 1. High-frequency real-time sync every 12 seconds while tab is active
         setInterval(() => {
             if (!document.hidden && currentUser && driveAccessToken) {
                 autoSyncDriveBackground(false);
             }
-        }, 25000);
+        }, 12000);
 
         // 2. Instant auto-sync whenever user opens / switches to tab (Phone & Desktop)
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && currentUser && driveAccessToken) {
+                autoSyncDriveBackground(false);
+            }
+        });
+
+        window.addEventListener('pageshow', () => {
+            if (currentUser && driveAccessToken) {
                 autoSyncDriveBackground(false);
             }
         });
@@ -774,8 +795,9 @@ function showUnlockedView() {
     let currentVideos = [];
     let currentDocs = [];
 
-    function categorizeFile(filename, mimeType = '') {
-        const ext = (filename.split('.').pop() || '').toLowerCase();
+    function categorizeFile(filename = '', mimeType = '') {
+        const safeName = (filename || '').toLowerCase();
+        const ext = (safeName.split('.').pop() || '').toLowerCase();
         const mime = (mimeType || '').toLowerCase();
 
         const imageExts = ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif', 'bmp', 'ico', 'tiff', 'heic', 'avif'];
@@ -842,7 +864,7 @@ function showUnlockedView() {
     // Fast Non-Blocking Auto-Sync Engine (Runs automatically every 20s and on tab focus)
     async function autoSyncDriveBackground(showNotification = false) {
         if (isAutoSyncRunning) return;
-        if (!driveAccessToken || Date.now() >= parseInt(driveTokenExpiry, 10)) return;
+        if (!driveAccessToken) return;
 
         isAutoSyncRunning = true;
         try {
@@ -860,11 +882,10 @@ function showUnlockedView() {
 
             const tombstones = getTombstones();
 
-            // Purge any tombstoned files from local DB
+            // Purge deleted items from local DB ONLY by exact ID (never by generic file name)
             for (const tb of tombstones) {
-                const localMatches = (await VaultDB.getAllFiles()).filter(lf => lf.name === tb.name || lf.id === tb.id || lf.driveFileId === tb.id);
-                for (const lm of localMatches) {
-                    await VaultDB.deleteFile(lm.id);
+                if (tb.id) {
+                    await VaultDB.deleteFile(tb.id);
                 }
             }
 
@@ -877,8 +898,8 @@ function showUnlockedView() {
                     notesDriveFileId = f.id;
                     return false;
                 }
-                // If file was deleted, prune it from Drive and skip
-                if (tombstones.some(tb => tb.name === f.name || tb.id === f.id)) {
+                // Only skip if exact cloud file ID was tombstoned
+                if (tombstones.some(tb => tb.id === f.id)) {
                     driveFetch(`files/${f.id}`, { method: 'DELETE' }).catch(() => {});
                     return false;
                 }
@@ -889,8 +910,9 @@ function showUnlockedView() {
 
             // If a local file was previously synced to Drive, but is now MISSING from Drive:
             // It means it was deleted on phone! Purge it from local DB so it never resurrects!
+            // Only remove local copy if it had a driveFileId that was deleted from Drive
             for (const lf of localDbFiles) {
-                if (lf.syncedToDrive && !driveFiltered.some(df => df.id === lf.driveFileId || df.name === lf.name)) {
+                if (lf.syncedToDrive && lf.driveFileId && !driveFiltered.some(df => df.id === lf.driveFileId)) {
                     await VaultDB.deleteFile(lf.id);
                 }
             }
@@ -1331,9 +1353,14 @@ function showUnlockedView() {
     }
 
     if (uploadDocBtn && docUploader) {
-        uploadDocBtn.addEventListener('click', () => docUploader.click());
+        uploadDocBtn.addEventListener('click', (e) => {
+            if (e && e.preventDefault) e.preventDefault();
+            docUploader.click();
+        });
         docUploader.addEventListener('change', (e) => {
-            handleFileUpload(Array.from(e.target.files));
+            if (e.target.files && e.target.files.length > 0) {
+                handleFileUpload(Array.from(e.target.files));
+            }
             docUploader.value = '';
         });
     }
