@@ -296,17 +296,25 @@
         localStorage.removeItem('arpit_vault_token');
         localStorage.removeItem('arpit_vault_token_exp');
 
-        lockedSection.classList.add('active');
-        unlockedDashboard.classList.remove('active');
-        authHeaderBtnWrap.innerHTML = '';
+        // Reset and show login gate
+        fbPasswordInput.value = '';
         loginStatusMsg.textContent = '';
         fbSubmitBtn.disabled = false;
         fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
+
+        lockedSection.style.display = 'flex';
+        lockedSection.classList.add('active');
+        unlockedDashboard.style.display = 'none';
+        unlockedDashboard.classList.remove('active');
+        authHeaderBtnWrap.innerHTML = '';
+
         showToast('Vault locked & Session purged', 'shield-halved');
     }
 
     function showUnlockedView() {
+        lockedSection.style.display = 'none';
         lockedSection.classList.remove('active');
+        unlockedDashboard.style.display = 'block';
         unlockedDashboard.classList.add('active');
 
         authHeaderBtnWrap.innerHTML = `
