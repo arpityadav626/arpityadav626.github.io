@@ -193,7 +193,7 @@ button, .action-btn {
     display: none;
 }
 .locked-section.active {
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 65vh;
