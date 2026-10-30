@@ -934,6 +934,17 @@
     }
 
 
+    
+    const heroNotepadTrigger = document.getElementById('hero-notepad-trigger');
+    if (heroNotepadTrigger) {
+        heroNotepadTrigger.addEventListener('click', () => {
+            const notesTabBtn = document.querySelector('.vtab-btn[data-tab="tab-notes"]');
+            if (notesTabBtn) notesTabBtn.click();
+            const tabNotes = document.getElementById('tab-notes');
+            if (tabNotes) tabNotes.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+
     // Tab Navigation
     tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
