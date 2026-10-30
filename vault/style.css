@@ -294,70 +294,46 @@ body.vault-body {
 }
 
 /* ======================================================================
-   4. LOCKED GATE (ELEGANT CENTERED ARCHITECTURAL CARD)
+   4. LOCKED GATE (BENTO ARCHITECTURAL CARD)
    ====================================================================== */
 .locked-section {
-    width: 100%;
-    max-width: 480px;
-    margin: 48px auto 64px;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important;
-}
-
-.gate-hero-intro {
-    text-align: center;
-    max-width: 440px;
-    margin: 0 auto 26px;
-}
-
-.gate-hero-intro .section-tag-mono {
-    font-size: 11px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    display: inline-block;
-    font-family: var(--font-mono);
-}
-
-.gate-hero-intro .vault-hero-title {
-    font-size: clamp(28px, 4vw, 36px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-    font-family: var(--font-sans);
-    line-height: 1.15;
-}
-
-.gate-hero-intro .vault-hero-subtitle {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    font-family: var(--font-sans);
+    padding: 20px 0;
 }
 
 .gate-card {
     background: #FFFFFF;
     border: 1px solid var(--border-hairline);
     border-radius: 16px;
-    padding: 34px 32px;
-    width: 100%;
-    max-width: 440px;
+    padding: 36px 40px;
+    max-width: 520px;
     margin: 0 auto;
-    box-shadow: 0 4px 24px rgba(17, 17, 16, 0.04), 0 1px 3px rgba(17, 17, 16, 0.02);
+    box-shadow: var(--shadow-card);
     transition: var(--transition);
+}
+
+.gate-card-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    font-family: var(--font-sans);
+}
+
+.gate-card-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 22px;
 }
 
 .auth-toggle-tabs {
     display: flex;
     background: var(--bg-subtle);
     border: 1px solid var(--border-hairline);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 4px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     gap: 4px;
 }
 
@@ -366,28 +342,19 @@ body.vault-body {
     background: transparent;
     color: var(--text-secondary);
     border: none;
-    padding: 9px 12px;
-    border-radius: 7px;
-    font-size: 13px;
-    font-family: var(--font-sans);
-    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    font-weight: 700;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    white-space: nowrap;
     transition: all 0.2s ease;
-}
-
-.auth-tab-btn i {
-    font-size: 13px;
 }
 
 .auth-tab-btn.active {
     background: #FFFFFF;
     color: var(--text-primary);
-    box-shadow: 0 1px 4px rgba(17, 17, 16, 0.08);
+    box-shadow: 0 1px 3px rgba(17, 17, 16, 0.08);
 }
 
 .auth-box {
@@ -408,40 +375,30 @@ body.vault-body {
     position: relative;
 }
 
-.gate-input-group i:first-child {
+.gate-input-group i {
     position: absolute;
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-muted);
     font-size: 14px;
-    pointer-events: none;
 }
 
 .gate-input-group input {
     width: 100%;
-    height: 46px;
     background: var(--bg-canvas);
     border: 1px solid var(--border-hairline);
-    border-radius: 10px;
-    padding: 0 42px 0 42px;
+    border-radius: 8px;
+    padding: 11px 40px 11px 40px;
     color: var(--text-primary);
+    font-family: var(--font-mono);
     font-size: 14px;
-    font-family: var(--font-sans);
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    transition: border-color 0.2s ease;
 }
 
 .gate-input-group input:focus {
     border-color: var(--text-primary);
-    background: #FFFFFF;
-    box-shadow: 0 0 0 3px rgba(17, 17, 16, 0.05);
-}
-
-.gate-input-group input::placeholder {
-    color: var(--text-muted);
-    font-family: var(--font-sans);
-    font-size: 13.5px;
 }
 
 .eye-toggle-btn {
@@ -453,64 +410,18 @@ body.vault-body {
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 6px;
+    padding: 4px;
     font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: color 0.15s ease;
 }
-
 .eye-toggle-btn:hover {
     color: var(--text-primary);
 }
 
-.submit-auth-btn {
-    width: 100% !important;
-    height: 46px !important;
-    background: #111110 !important;
-    color: #FFFFFF !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    border-radius: 10px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    margin-top: 4px !important;
-    cursor: pointer !important;
-    border: none !important;
-    box-shadow: 0 2px 8px rgba(17, 17, 16, 0.12) !important;
-    transition: all 0.2s ease !important;
-}
-
-.submit-auth-btn:hover {
-    background: #222220 !important;
-    transform: translateY(-1px) !important;
-}
-
-.submit-auth-btn:active {
-    transform: scale(0.98) !important;
-}
-
 .gate-subtext {
-    font-size: 11.5px;
+    font-size: 12px;
     color: var(--text-muted);
-    text-align: center;
+    font-family: var(--font-mono);
     display: block;
-    margin-top: 14px;
-    line-height: 1.45;
-    font-family: var(--font-sans);
-}
-
-.auth-box-desc {
-    font-size: 13.5px;
-    color: var(--text-secondary);
-    text-align: center;
-    margin-bottom: 20px;
-    line-height: 1.5;
-    font-family: var(--font-sans);
 }
 
 .google-auth-btn {
@@ -519,8 +430,8 @@ body.vault-body {
     font-size: 14px;
     font-family: var(--font-sans);
     font-weight: 600;
-    height: 46px;
-    border-radius: 10px;
+    padding: 11px 20px;
+    border-radius: 8px;
     border: 1px solid var(--border-hairline);
     display: inline-flex;
     align-items: center;
@@ -528,7 +439,7 @@ body.vault-body {
     gap: 10px;
     width: 100%;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(17, 17, 16, 0.05);
+    box-shadow: 0 1px 2px rgba(17, 17, 16, 0.04);
     transition: all 0.2s ease;
 }
 
@@ -537,8 +448,9 @@ body.vault-body {
     border-color: var(--text-primary);
 }
 
-.google-auth-btn:active {
-    transform: scale(0.98);
+.google-g {
+    width: 18px;
+    height: 18px;
 }
 
 .status-msg {
@@ -547,6 +459,9 @@ body.vault-body {
     font-family: var(--font-mono);
     min-height: 20px;
 }
+.status-msg.error { color: var(--danger); }
+.status-msg.info { color: var(--accent-signal); }
+.status-msg.success { color: var(--status-emerald); }
 
 /* ======================================================================
    5. UNLOCKED DASHBOARD & TABS
@@ -1480,24 +1395,6 @@ body.vault-body .navbar .action-btn {
     border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-/* ======================================================================
-   MOBILE-NATIVE RESPONSIVE DESIGN SYSTEM (Smartphones & Tablets)
-   ====================================================================== */
-
-html, body {
-    -webkit-tap-highlight-color: transparent !important;
-}
-
-button, .btn, .hero-action-btn, .vtab-btn, .refresh-btn, .file-card, .direct-line-pill {
-    touch-action: manipulation;
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-button:active, .vtab-btn:active, .hero-action-btn:active, .refresh-btn:active {
-    transform: scale(0.97) !important;
-}
-
 /* Vault Horizontal Scroll Tabs for Mobile */
 .vault-tabs {
     display: flex !important;
@@ -1522,19 +1419,6 @@ button:active, .vtab-btn:active, .hero-action-btn:active, .refresh-btn:active {
     font-size: 13px !important;
 }
 
-/* Desktop Hover Only (prevents sticky hover on touch devices) */
-@media (hover: hover) and (pointer: fine) {
-    .file-card:hover {
-        border-color: #111110 !important;
-        box-shadow: var(--shadow-hover) !important;
-        transform: translateY(-3px) !important;
-    }
-    .file-card:hover .media-thumb-img {
-        transform: scale(1.04);
-    }
-}
-
-/* Tablets (<= 768px) */
 @media (max-width: 768px) {
     .vault-page-wrap {
         width: 94% !important;
@@ -1550,8 +1434,8 @@ button:active, .vtab-btn:active, .hero-action-btn:active, .refresh-btn:active {
     }
 
     .files-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
-        gap: 12px !important;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+        gap: 14px !important;
     }
 
     .tab-actions-bar {
@@ -1559,281 +1443,68 @@ button:active, .vtab-btn:active, .hero-action-btn:active, .refresh-btn:active {
         align-items: flex-start !important;
         gap: 12px !important;
     }
+
+    .tab-actions-left,
+    .tab-actions-right {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
 }
 
-/* Smart Mobile (<= 640px: iPhone, Android, Pixel) */
-@media (max-width: 640px) {
-    .header {
-        height: 52px !important;
-    }
-    .header-inner {
-        width: 94% !important;
-        gap: 6px !important;
-    }
+@media (max-width: 480px) {
     .brand-group {
         gap: 6px !important;
-        min-width: 0 !important;
     }
-    .brand-link {
-        font-size: 14px !important;
-    }
+
     .vault-tag {
         font-size: 9px !important;
-        padding: 2px 6px !important;
+        padding: 2px 5px !important;
         letter-spacing: 0 !important;
     }
-    .vault-tag .vault-tag-sub {
-        display: none !important;
-    }
-    .navbar {
-        gap: 6px !important;
-    }
-    .navbar .nav-resume-link,
-    .navbar .action-btn {
-        padding: 6px 10px !important;
-        font-size: 11px !important;
-        height: 32px !important;
-        border-radius: 999px !important;
-        white-space: nowrap !important;
-    }
-    #logout-btn span {
-        display: none !important;
-    }
-    #btn-connect-drive-header span {
-        display: none !important;
-    }
 
-    .vault-page-wrap {
-        width: 92% !important;
-        margin: 14px auto 36px !important;
-        padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
-    }
-
-    .vault-workspace-header {
-        margin: 12px 0 16px !important;
-        padding-bottom: 14px !important;
-        gap: 10px !important;
-    }
-    .section-tag-mono {
-        font-size: 10px !important;
-        letter-spacing: 0.5px !important;
-        margin-bottom: 4px !important;
-        display: inline-block !important;
-    }
     .vault-hero-title {
-        font-size: 22px !important;
-        line-height: 1.2 !important;
-        letter-spacing: -0.4px !important;
-        margin-bottom: 4px !important;
+        font-size: 26px !important;
     }
+
     .vault-hero-subtitle {
-        font-size: 12px !important;
-        line-height: 1.45 !important;
-        color: var(--text-secondary) !important;
+        font-size: 13px !important;
     }
 
-    .social-bar {
-        width: 100% !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 6px !important;
-        margin-top: 6px !important;
-    }
-    .direct-line-pill {
-        font-size: 11px !important;
-        padding: 4px 8px !important;
-        border-radius: 6px !important;
-    }
-
-    /* Swipeable Horizontal Tabs */
-    .vault-tabs {
-        display: flex !important;
-        gap: 6px !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        scroll-snap-type: x mandatory !important;
-        padding-bottom: 6px !important;
-        margin-bottom: 16px !important;
-        border-bottom: 1px solid var(--border-hairline) !important;
-        scrollbar-width: none !important;
-    }
-    .vtab-btn {
-        flex-shrink: 0 !important;
-        scroll-snap-align: start !important;
-        padding: 8px 12px !important;
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        gap: 6px !important;
-        border-radius: 6px !important;
-    }
-    .vtab-btn i {
-        font-size: 12px !important;
-    }
-
-    /* Tab Actions: Full-width search + flex upload row */
-    .tab-actions-bar {
-        display: flex !important;
+    .auth-toggle-tabs {
         flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 8px !important;
-        margin-bottom: 14px !important;
+        gap: 6px !important;
     }
-    .search-box {
+
+    .auth-tab-btn {
         width: 100% !important;
-        min-width: 0 !important;
-        position: relative !important;
-    }
-    .search-box input {
-        width: 100% !important;
-        height: 42px !important;
-        font-size: 16px !important; /* Critical: 16px prevents iOS Safari auto-zoom */
-        padding: 0 14px 0 38px !important;
-        border-radius: 8px !important;
-        background: #FFFFFF !important;
-        border: 1px solid var(--border-hairline) !important;
-    }
-    .search-box i {
-        left: 14px !important;
-        font-size: 13px !important;
-        color: var(--text-muted) !important;
-    }
-    .file-upload-wrap {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        width: 100% !important;
-    }
-    .file-upload-wrap .hero-action-btn {
-        flex: 1 !important;
-        height: 42px !important;
-        padding: 0 14px !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        border-radius: 8px !important;
         justify-content: center !important;
-        margin: 0 !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
-    }
-    .file-upload-wrap .refresh-btn {
-        width: 42px !important;
-        height: 42px !important;
-        min-width: 42px !important;
-        flex-shrink: 0 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 8px !important;
-        margin: 0 !important;
-        background: #FFFFFF !important;
-        border: 1px solid var(--border-hairline) !important;
-        color: var(--text-primary) !important;
-    }
-
-    /* Media Grid: Modern 2-column gallery for Photos & Videos */
-    .files-grid.media-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        margin-bottom: 24px !important;
-    }
-    .file-card.media-card {
-        padding: 8px !important;
-        border-radius: 12px !important;
-    }
-    .media-preview-container {
-        border-radius: 8px !important;
-        margin-bottom: 8px !important;
-        aspect-ratio: 4 / 3 !important;
-    }
-    .file-card .file-title {
-        font-size: 11px !important;
-        font-weight: 600 !important;
-        line-height: 1.3 !important;
-        max-width: 100% !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-    .file-card .file-meta {
-        font-size: 10px !important;
-        color: var(--text-muted) !important;
-    }
-    .file-card-bottom {
-        padding-top: 6px !important;
-        margin-top: 4px !important;
-    }
-    .file-actions .file-btn {
-        width: 28px !important;
-        height: 28px !important;
-        font-size: 10px !important;
-        border-radius: 6px !important;
-    }
-
-    /* Documents: Clean 1-column list */
-    #docs-grid.files-grid {
-        grid-template-columns: 1fr !important;
-        gap: 8px !important;
-    }
-    #docs-grid .file-card {
-        padding: 12px 14px !important;
-        border-radius: 10px !important;
-    }
-    #docs-grid .file-card-top {
-        margin-bottom: 6px !important;
-    }
-
-    /* Clean Empty State */
-    .empty-state {
-        padding: 32px 16px !important;
-        border-radius: 12px !important;
-        margin: 6px 0 !important;
-    }
-    .empty-state i {
-        font-size: 2.2rem !important;
-        margin-bottom: 10px !important;
-    }
-    .empty-state h3 {
-        font-size: 15px !important;
-        margin-bottom: 4px !important;
-    }
-    .empty-state p {
+        padding: 10px !important;
         font-size: 12px !important;
-        line-height: 1.45 !important;
-        max-width: 100% !important;
     }
 
-    /* Notepad on Mobile */
-    .notes-panel {
-        padding: 14px !important;
-        border-radius: 12px !important;
+    .files-grid {
+        grid-template-columns: 1fr !important;
     }
-    .notes-panel textarea {
-        min-height: 240px !important;
-        font-size: 14px !important;
+
+    .workspace-meta {
+        width: 100% !important;
+        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .notepad-container {
         padding: 12px !important;
     }
+
+    .notepad-textarea {
+        min-height: 280px !important;
+        font-size: 13px !important;
+    }
+
     .notepad-footer {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 8px !important;
-    }
-    .notepad-tools {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: space-between !important;
-    }
-
-    /* Mobile Bottom Toast (Safe Area Aware) */
-    .vault-toast {
-        left: 16px !important;
-        right: 16px !important;
-        bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-        width: auto !important;
-        max-width: none !important;
-        padding: 10px 14px !important;
-        font-size: 12px !important;
-        border-radius: 8px !important;
-        text-align: center !important;
-        justify-content: center !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
     }
 }

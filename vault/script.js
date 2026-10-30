@@ -210,7 +210,7 @@
         if (!toastEl) return;
         toastEl.innerHTML = `<i class="fas fa-${icon}"></i> <span>${msg}</span>`;
         toastEl.classList.add('active');
-        setTimeout(() => toastEl.classList.remove('active'), 2200);
+        setTimeout(() => toastEl.classList.remove('active'), 3500);
     }
 
     // ------------------------------------------------------------------
@@ -441,9 +441,7 @@
 
     async function onVaultAuthenticated(modeName) {
         showUnlockedView();
-        if (modeName !== 'Active Session') {
-            showToast(`Authenticated via ${modeName}!`, 'shield-check');
-        }
+        showToast(`Authenticated via ${modeName}!`, 'shield-check');
 
         if (currentUser) {
             userName.textContent = currentUser.displayName || 'Vault Admin';
