@@ -406,22 +406,37 @@
         }
     });
 
-    // 0ms Instant Cache Reader
-    function loadCachedDriveFiles() {
+    // 0ms Unified Instant Local + Cache Loader
+    async function loadAllInitialFiles() {
+        let cachedDrive = [];
         try {
-            const cached = localStorage.getItem('arpit_vault_drive_cache');
-            if (cached) {
-                const parsed = JSON.parse(cached);
+            const raw = localStorage.getItem('arpit_vault_drive_cache');
+            if (raw) {
+                const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                    allDriveFiles = parsed;
-                    partitionAndRenderFiles(parsed);
-                    return true;
+                    cachedDrive = parsed;
                 }
             }
-        } catch (e) {
-            console.warn('Cache load warning:', e);
-        }
-        return false;
+        } catch (_) {}
+
+        const dbFiles = await VaultDB.getAllFiles().catch(() => []);
+        const metaFiles = JSON.parse(localStorage.getItem('arpit_vault_local_files_meta') || '[]');
+        const localCombined = [...dbFiles];
+        metaFiles.forEach(mf => {
+            if (!localCombined.some(c => c.id === mf.id)) localCombined.push(mf);
+        });
+
+        // Merge Drive cache + local storage without duplicate IDs or names
+        const merged = [...cachedDrive];
+        localCombined.forEach(lf => {
+            if (!merged.some(m => m.id === lf.id || (lf.driveFileId && m.id === lf.driveFileId) || m.name === lf.name)) {
+                merged.push(lf);
+            }
+        });
+
+        allDriveFiles = merged;
+        partitionAndRenderFiles(merged);
+        return merged;
     }
 
     async function onVaultAuthenticated(modeName) {
@@ -439,14 +454,11 @@
 
         authModePill.innerHTML = `<i class="fas fa-lock"></i> Secured`;
 
-        // 1. INSTANT 0ms RENDER FROM LOCAL CACHE
-        const hasCachedFiles = loadCachedDriveFiles();
+        // 1. INSTANT 0ms RENDER FROM UNIFIED CACHE (NO EMPTY SPINNER LOOP)
+        await loadAllInitialFiles();
         loadCloudNotes(); // loads local notepad instantly in 0ms
 
-        // 2. INSTANT LOCAL STORAGE RENDER
-        await renderLocalVaultFiles();
-
-        // 3. DRIVE CONNECTION VERIFICATION & SYNC
+        // 2. CHECK DRIVE CONNECTION AND SYNC SILENTLY IN BACKGROUND
         const isDriveValid = driveAccessToken && Date.now() < parseInt(driveTokenExpiry, 10);
         if (isDriveValid) {
             (async () => {
@@ -478,31 +490,7 @@
                     }
                     updateDriveConnectButton();
                 }
-            
-    // ==================================================================
-    // FULL AUTO-SYNC SCHEDULER: SILENT BACKGROUND POLLING & VISIBILITY
-    // ==================================================================
-    // 1. Silent sync every 20 seconds while tab is open
-    setInterval(() => {
-        if (!document.hidden && currentUser && driveAccessToken) {
-            autoSyncDriveBackground(false);
-        }
-    }, 20000);
-
-    // 2. Instant auto-sync whenever user opens / switches to tab (Phone & Desktop)
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && currentUser && driveAccessToken) {
-            autoSyncDriveBackground(false);
-        }
-    });
-
-    window.addEventListener('focus', () => {
-        if (currentUser && driveAccessToken) {
-            autoSyncDriveBackground(false);
-        }
-    });
-
-})();
+            })();
         } else {
             if (vaultFolderStatus) {
                 vaultFolderStatus.innerHTML = '<i class="fas fa-database"></i> Local Vault Active';
@@ -510,6 +498,36 @@
             updateDriveConnectButton();
         }
     }
+
+    // ==================================================================
+    // FULL AUTO-SYNC SCHEDULER: SILENT BACKGROUND POLLING & VISIBILITY
+    // ==================================================================
+    let autoSyncSchedulerInitialized = false;
+    function initAutoSyncScheduler() {
+        if (autoSyncSchedulerInitialized) return;
+        autoSyncSchedulerInitialized = true;
+
+        // 1. Silent sync every 25 seconds while tab is active
+        setInterval(() => {
+            if (!document.hidden && currentUser && driveAccessToken) {
+                autoSyncDriveBackground(false);
+            }
+        }, 25000);
+
+        // 2. Instant auto-sync whenever user opens / switches to tab (Phone & Desktop)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && currentUser && driveAccessToken) {
+                autoSyncDriveBackground(false);
+            }
+        });
+
+        window.addEventListener('focus', () => {
+            if (currentUser && driveAccessToken) {
+                autoSyncDriveBackground(false);
+            }
+        });
+    }
+    initAutoSyncScheduler();
 
     function logout() {
         fbAuth.signOut().catch(() => {});
@@ -750,18 +768,7 @@ function showUnlockedView() {
     }
 
     async function renderLocalVaultFiles() {
-        const dbFiles = await VaultDB.getAllFiles();
-        const metaFiles = JSON.parse(localStorage.getItem('arpit_vault_local_files_meta') || '[]');
-        
-        // Merge without duplicates
-        const combined = [...dbFiles];
-        metaFiles.forEach(mf => {
-            if (!combined.some(c => c.id === mf.id)) combined.push(mf);
-        });
-
-        allDriveFiles = combined;
-        partitionAndRenderFiles(combined);
-        return combined;
+        return await loadAllInitialFiles();
     }
 
     // ------------------------------------------------------------------
@@ -891,24 +898,12 @@ function showUnlockedView() {
             return;
         }
 
-        // If local items already displayed, run high-speed silent sync!
-        if (allDriveFiles.length > 0 && !forceSpinner) {
-            await autoSyncDriveBackground(false);
-            return;
+        try {
+            await autoSyncDriveBackground(forceSpinner);
+        } catch (e) {
+            console.warn('loadDriveFiles note:', e.message);
+            await renderLocalVaultFiles();
         }
-
-        if (forceSpinner || allDriveFiles.length === 0) {
-            if (imagesGrid) imagesGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing images...</div>';
-            if (videosGrid) videosGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing videos...</div>';
-            if (docsGrid) docsGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing documents...</div>';
-        }
-
-        await autoSyncDriveBackground(false);
-
-        // Ensure spinners are wiped
-        if (imagesGrid && imagesGrid.querySelector('.loading-state')) renderImages(currentImages);
-        if (videosGrid && videosGrid.querySelector('.loading-state')) renderVideos(currentVideos);
-        if (docsGrid && docsGrid.querySelector('.loading-state')) renderDocs(currentDocs);
     }
 
     async function syncCloudNotesFromDrive() {

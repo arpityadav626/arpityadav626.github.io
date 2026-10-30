@@ -18,8 +18,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <!-- Swiss Industrial Design System -->
-    <link rel="stylesheet" href="../style.css?v=2026.45">
-    <link rel="stylesheet" href="style.css?v=2026.45">
+    <link rel="stylesheet" href="../style.css?v=2026.50">
+    <link rel="stylesheet" href="style.css?v=2026.50">
 </head>
 <body class="light-theme vault-body" data-mode="light">
 
@@ -207,8 +207,10 @@
                 </div>
 
                 <div id="images-grid" class="files-grid media-grid">
-                    <div class="loading-state">
-                        <i class="fas fa-spinner fa-spin"></i> Loading images...
+                    <div class="empty-state">
+                        <i class="fas fa-images"></i>
+                        <h3>Images Storage</h3>
+                        <p>No photos yet, or click "Upload Images" to store artwork and media.</p>
                     </div>
                 </div>
             </div>
@@ -231,8 +233,10 @@
                 </div>
 
                 <div id="videos-grid" class="files-grid media-grid">
-                    <div class="loading-state">
-                        <i class="fas fa-spinner fa-spin"></i> Loading videos...
+                    <div class="empty-state">
+                        <i class="fas fa-film"></i>
+                        <h3>Videos Locker</h3>
+                        <p>No recordings yet. Click "Upload Video" to store MP4 and clips.</p>
                     </div>
                 </div>
             </div>
@@ -255,8 +259,10 @@
                 </div>
 
                 <div id="docs-grid" class="files-grid">
-                    <div class="loading-state">
-                        <i class="fas fa-spinner fa-spin"></i> Loading documents...
+                    <div class="empty-state">
+                        <i class="fas fa-file-lines"></i>
+                        <h3>Documents Vault</h3>
+                        <p>No documents yet. Store PDFs, Resumes, and Code here.</p>
                     </div>
                 </div>
             </div>
@@ -375,6 +381,6 @@
     <!-- Notification Toast -->
     <div id="vault-toast" class="vault-toast"></div>
 
-    <script src="script.js?v=2026.45"></script>
+    <script src="script.js?v=2026.50"></script>
 </body>
 </html>
