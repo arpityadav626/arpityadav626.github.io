@@ -1,22 +1,39 @@
 /* ======================================================================
-   ARPIT VAULT — GOOGLE DRIVE & CLIENT-SIDE AES-256 VAULT ENGINE
+   ARPIT VAULT — DUAL AUTH (FIREBASE + GOOGLE DRIVE) & AES ENGINE
    ====================================================================== */
 
 (function () {
     'use strict';
 
-    // CONFIGURATION
-    const CLIENT_ID = '162159968578-oh5f0jh1rot9e9b4n59uj8lt05tdgbro.apps.googleusercontent.com';
-    const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
+    // CONFIGURATIONS
+    const GOOGLE_CLIENT_ID = '162159968578-oh5f0jh1rot9e9b4n59uj8lt05tdgbro.apps.googleusercontent.com';
+    const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
+
+    const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyAMMoUSW6BUvpNf0m9d8eHd3yT3MtNoV1w",
+        authDomain: "arpit-portfolio-2026.firebaseapp.com",
+        projectId: "arpit-portfolio-2026",
+        storageBucket: "arpit-portfolio-2026.firebasestorage.app",
+        messagingSenderId: "126845421146",
+        appId: "1:126845421146:web:20c4cd6a1e1ea0adaf3a63"
+    };
+
     const VAULT_FOLDER_NAME = 'Arpit_Dev_Vault';
     const SECRETS_FILE_NAME = 'vault_secrets.enc';
     const NOTES_FILE_NAME = 'vault_scratchpad.txt';
 
+    // INITIALIZE FIREBASE APP
+    if (!firebase.apps.length) {
+        firebase.initializeApp(FIREBASE_CONFIG);
+    }
+    const fbAuth = firebase.auth();
+
     // APP STATE
+    let authMode = null; // 'firebase' or 'google'
     let tokenClient = null;
-    let accessToken = localStorage.getItem('arpit_vault_token') || null;
-    let tokenExpiry = localStorage.getItem('arpit_vault_token_exp') || 0;
-    let currentUser = null;
+    let driveAccessToken = localStorage.getItem('arpit_vault_token') || null;
+    let driveTokenExpiry = localStorage.getItem('arpit_vault_token_exp') || 0;
+    let currentFirebaseUser = null;
     let vaultFolderId = null;
     let allDriveFiles = [];
     let decryptedSecrets = [];
@@ -28,13 +45,25 @@
     // DOM ELEMENTS
     const lockedSection = document.getElementById('locked-state');
     const unlockedDashboard = document.getElementById('unlocked-dashboard');
+    const tabBtnFirebase = document.getElementById('tab-btn-firebase');
+    const tabBtnDrive = document.getElementById('tab-btn-drive');
+    const authBoxFirebase = document.getElementById('auth-box-firebase');
+    const authBoxDrive = document.getElementById('auth-box-drive');
+    const firebaseLoginForm = document.getElementById('firebase-login-form');
+    const fbEmailInput = document.getElementById('fb-email');
+    const fbPasswordInput = document.getElementById('fb-password');
+    const toggleFbPass = document.getElementById('toggle-fb-pass');
+    const fbSubmitBtn = document.getElementById('fb-submit-btn');
     const googleLoginBtn = document.getElementById('google-login-btn');
-    const authHeaderBtnWrap = document.getElementById('auth-header-btn-wrap');
     const loginStatusMsg = document.getElementById('login-status-msg');
+    const authHeaderBtnWrap = document.getElementById('auth-header-btn-wrap');
     const userAvatar = document.getElementById('user-avatar');
     const userName = document.getElementById('user-name');
     const userEmail = document.getElementById('user-email');
+    const authModePill = document.getElementById('auth-mode-pill');
     const vaultFolderStatus = document.getElementById('vault-folder-status');
+    const driveConnectPrompt = document.getElementById('drive-connect-prompt');
+    const inlineDriveAuthBtn = document.getElementById('inline-drive-auth-btn');
 
     // Tabs
     const tabButtons = document.querySelectorAll('.vtab-btn');
@@ -43,6 +72,7 @@
     // Files Tab
     const filesGrid = document.getElementById('files-grid');
     const fileUploader = document.getElementById('file-uploader');
+    const uploadTriggerBtn = document.getElementById('upload-trigger-btn');
     const fileSearchInput = document.getElementById('file-search-input');
     const refreshFilesBtn = document.getElementById('refresh-files-btn');
     const filesCount = document.getElementById('files-count');
@@ -74,9 +104,6 @@
     // Toast
     const toastEl = document.getElementById('vault-toast');
 
-    // ------------------------------------------------------------------
-    // 1. NOTIFICATION TOAST HELPER
-    // ------------------------------------------------------------------
     function showToast(msg, icon = 'info') {
         if (!toastEl) return;
         toastEl.innerHTML = `<i class="fas fa-${icon}"></i> <span>${msg}</span>`;
@@ -85,48 +112,138 @@
     }
 
     // ------------------------------------------------------------------
-    // 2. GOOGLE OAUTH 2.0 TOKEN CLIENT SETUP
+    // 1. GATE AUTH TABS (Firebase Email vs Google Drive)
     // ------------------------------------------------------------------
-    function initGoogleAuth() {
+    tabBtnFirebase.addEventListener('click', () => {
+        tabBtnFirebase.classList.add('active');
+        tabBtnDrive.classList.remove('active');
+        authBoxFirebase.classList.add('active');
+        authBoxDrive.classList.remove('active');
+        loginStatusMsg.textContent = '';
+    });
+
+    tabBtnDrive.addEventListener('click', () => {
+        tabBtnDrive.classList.add('active');
+        tabBtnFirebase.classList.remove('active');
+        authBoxDrive.classList.add('active');
+        authBoxFirebase.classList.remove('active');
+        loginStatusMsg.textContent = '';
+    });
+
+    toggleFbPass.addEventListener('click', () => {
+        const isPass = fbPasswordInput.type === 'password';
+        fbPasswordInput.type = isPass ? 'text' : 'password';
+        toggleFbPass.innerHTML = isPass ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+    });
+
+    // ------------------------------------------------------------------
+    // 2. FIREBASE EMAIL + PASSWORD AUTHENTICATION
+    // ------------------------------------------------------------------
+    firebaseLoginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = fbEmailInput.value.trim();
+        const pass = fbPasswordInput.value;
+
+        if (!email || !pass) return;
+
+        fbSubmitBtn.disabled = true;
+        fbSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+        loginStatusMsg.className = 'status-msg info';
+        loginStatusMsg.textContent = 'Verifying credentials with Firebase Auth...';
+
+        try {
+            const userCredential = await fbAuth.signInWithEmailAndPassword(email, pass);
+            currentFirebaseUser = userCredential.user;
+            authMode = 'firebase';
+            loginStatusMsg.className = 'status-msg success';
+            loginStatusMsg.textContent = 'Identity Verified! Loading Workspace...';
+            onFirebaseAuthenticated();
+        } catch (err) {
+            console.error('Firebase Auth Error:', err);
+            fbSubmitBtn.disabled = false;
+            fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
+            loginStatusMsg.className = 'status-msg error';
+            loginStatusMsg.textContent = 'Auth failed: ' + (err.message || 'Invalid credentials');
+        }
+    });
+
+    // Firebase Auth State Listener (Auto-resume session)
+    fbAuth.onAuthStateChanged((user) => {
+        if (user && !authMode) {
+            currentFirebaseUser = user;
+            authMode = 'firebase';
+            onFirebaseAuthenticated();
+        }
+    });
+
+    function onFirebaseAuthenticated() {
+        showUnlockedView();
+        showToast('Authenticated via Firebase Security!', 'shield-check');
+
+        userName.textContent = currentFirebaseUser.displayName || 'Vault Admin';
+        userEmail.textContent = currentFirebaseUser.email;
+        authModePill.innerHTML = '<i class="fas fa-fire"></i> Firebase Secured';
+
+        // Check if Google Drive token is also present
+        if (driveAccessToken && Date.now() < parseInt(driveTokenExpiry, 10)) {
+            driveConnectPrompt.style.display = 'none';
+            initDriveEnvironment();
+        } else {
+            driveConnectPrompt.style.display = 'flex';
+            filesGrid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fab fa-google-drive"></i>
+                    <h3>Google Drive Linking Available</h3>
+                    <p>To view, upload, and sync files with your 15GB Drive storage, click "Connect Drive" above.</p>
+                </div>
+            `;
+            vaultFolderStatus.innerHTML = '<i class="fas fa-link-slash"></i> Drive Pending';
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // 3. GOOGLE IDENTITY SERVICES (OAuth 2.0 Token Client for Drive)
+    // ------------------------------------------------------------------
+    function initGoogleAuthClient() {
         if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
-            setTimeout(initGoogleAuth, 300);
+            setTimeout(initGoogleAuthClient, 300);
             return;
         }
 
         tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: CLIENT_ID,
-            scope: SCOPES,
+            client_id: GOOGLE_CLIENT_ID,
+            scope: GOOGLE_SCOPES,
             callback: (response) => {
                 if (response.error) {
                     console.error('Google Auth Error:', response);
                     loginStatusMsg.className = 'status-msg error';
-                    loginStatusMsg.textContent = 'Auth failed: ' + (response.error_description || response.error);
+                    loginStatusMsg.textContent = 'Google Auth failed: ' + (response.error_description || response.error);
                     return;
                 }
 
-                accessToken = response.access_token;
+                driveAccessToken = response.access_token;
                 const expiresInMs = (parseInt(response.expires_in, 10) || 3600) * 1000;
-                tokenExpiry = Date.now() + expiresInMs;
+                driveTokenExpiry = Date.now() + expiresInMs;
 
-                localStorage.setItem('arpit_vault_token', accessToken);
-                localStorage.setItem('arpit_vault_token_exp', tokenExpiry);
+                localStorage.setItem('arpit_vault_token', driveAccessToken);
+                localStorage.setItem('arpit_vault_token_exp', driveTokenExpiry);
 
-                loginStatusMsg.className = 'status-msg info';
-                loginStatusMsg.textContent = 'Token acquired! Loading Drive environment...';
-
-                onAuthenticated();
+                authMode = 'google';
+                driveConnectPrompt.style.display = 'none';
+                showUnlockedView();
+                onGoogleDriveAuthenticated();
             }
         });
 
-        // Check if existing valid token in localStorage
-        if (accessToken && Date.now() < parseInt(tokenExpiry, 10)) {
-            onAuthenticated();
-        } else {
-            showLockedView();
+        // If existing token and not logged via firebase
+        if (!authMode && driveAccessToken && Date.now() < parseInt(driveTokenExpiry, 10)) {
+            authMode = 'google';
+            showUnlockedView();
+            onGoogleDriveAuthenticated();
         }
     }
 
-    googleLoginBtn.addEventListener('click', () => {
+    function triggerGoogleAuth() {
         if (!tokenClient) {
             showToast('Google API client is initializing. Please wait 2 seconds...', 'spinner fa-spin');
             return;
@@ -134,24 +251,58 @@
         loginStatusMsg.className = 'status-msg info';
         loginStatusMsg.textContent = 'Opening Google Authorization dialog...';
         tokenClient.requestAccessToken({ prompt: 'consent' });
-    });
+    }
+
+    googleLoginBtn.addEventListener('click', triggerGoogleAuth);
+    inlineDriveAuthBtn.addEventListener('click', triggerGoogleAuth);
+
+    async function onGoogleDriveAuthenticated() {
+        showToast('Google Drive Connected!', 'check-circle');
+        authModePill.innerHTML = '<i class="fab fa-google-drive"></i> Drive Active';
+
+        try {
+            const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: { Authorization: `Bearer ${driveAccessToken}` }
+            });
+            if (userRes.ok) {
+                const u = await userRes.json();
+                userName.textContent = u.name || 'Arpit Yadav';
+                userEmail.textContent = u.email;
+                if (u.picture) {
+                    userAvatar.src = u.picture;
+                    userAvatar.style.display = 'block';
+                }
+            }
+        } catch (e) {}
+
+        await initDriveEnvironment();
+    }
+
+    async function initDriveEnvironment() {
+        await ensureVaultFolder();
+        await loadDriveFiles();
+        await loadCloudNotes();
+    }
 
     function logout() {
-        accessToken = null;
-        currentUser = null;
+        if (fbAuth.currentUser) {
+            fbAuth.signOut().catch(() => {});
+        }
+        authMode = null;
+        currentFirebaseUser = null;
+        driveAccessToken = null;
         masterKeyDerived = null;
         decryptedSecrets = [];
         localStorage.removeItem('arpit_vault_token');
         localStorage.removeItem('arpit_vault_token_exp');
-        showLockedView();
-        showToast('Vault locked & Session closed', 'shield-halved');
-    }
 
-    function showLockedView() {
         lockedSection.classList.add('active');
         unlockedDashboard.classList.remove('active');
         authHeaderBtnWrap.innerHTML = '';
         loginStatusMsg.textContent = '';
+        fbSubmitBtn.disabled = false;
+        fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
+        showToast('Vault locked & Session purged', 'shield-halved');
     }
 
     function showUnlockedView() {
@@ -167,51 +318,19 @@
     }
 
     // ------------------------------------------------------------------
-    // 3. POST-AUTH INITIALIZATION
-    // ------------------------------------------------------------------
-    async function onAuthenticated() {
-        showUnlockedView();
-        showToast('Google Drive Connected Successfully!', 'check-circle');
-
-        // Fetch User Profile
-        try {
-            const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                headers: { Authorization: `Bearer ${accessToken}` }
-            });
-            if (userRes.ok) {
-                currentUser = await userRes.json();
-                userName.textContent = currentUser.name || 'Arpit Yadav';
-                userEmail.textContent = currentUser.email || '';
-                if (currentUser.picture) {
-                    userAvatar.src = currentUser.picture;
-                    userAvatar.style.display = 'block';
-                }
-            }
-        } catch (e) {
-            console.warn('Could not fetch userinfo:', e);
-        }
-
-        // Initialize dedicated Vault folder in Drive
-        await ensureVaultFolder();
-
-        // Load files
-        await loadDriveFiles();
-
-        // Load Scratchpad
-        await loadCloudNotes();
-    }
-
-    // ------------------------------------------------------------------
-    // 4. GOOGLE DRIVE API INTEGRATION
+    // 4. GOOGLE DRIVE API CALLS
     // ------------------------------------------------------------------
     async function driveFetch(endpoint, options = {}) {
+        if (!driveAccessToken) {
+            throw new Error('Google Drive not authorized for this session.');
+        }
         options.headers = options.headers || {};
-        options.headers['Authorization'] = `Bearer ${accessToken}`;
+        options.headers['Authorization'] = `Bearer ${driveAccessToken}`;
         const res = await fetch(`https://www.googleapis.com/drive/v3/${endpoint}`, options);
         if (res.status === 401) {
-            // Token expired
-            logout();
-            throw new Error('Session expired. Please sign in again.');
+            driveAccessToken = null;
+            localStorage.removeItem('arpit_vault_token');
+            throw new Error('Drive token expired. Re-authenticate Drive.');
         }
         return res;
     }
@@ -219,7 +338,6 @@
     async function ensureVaultFolder() {
         vaultFolderStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating folder...';
         try {
-            // Check if folder exists
             const q = encodeURIComponent(`name = '${VAULT_FOLDER_NAME}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
             const res = await driveFetch(`files?q=${q}&fields=files(id,name)`);
             const data = await res.json();
@@ -227,7 +345,6 @@
             if (data.files && data.files.length > 0) {
                 vaultFolderId = data.files[0].id;
             } else {
-                // Create dedicated folder
                 const createRes = await driveFetch('files', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -242,12 +359,12 @@
             vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive"></i> /${VAULT_FOLDER_NAME}`;
         } catch (err) {
             console.error('Error ensuring vault folder:', err);
-            vaultFolderStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Folder Sync Error';
+            vaultFolderStatus.innerHTML = '<i class="fas fa-folder-open"></i> /' + VAULT_FOLDER_NAME;
         }
     }
 
     async function loadDriveFiles() {
-        if (!vaultFolderId) return;
+        if (!vaultFolderId || !driveAccessToken) return;
         filesGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing files from Google Drive...</div>';
 
         try {
@@ -256,7 +373,6 @@
             const data = await res.json();
             const rawFiles = data.files || [];
 
-            // Filter out system files like secrets and scratchpad
             allDriveFiles = rawFiles.filter(f => {
                 if (f.name === SECRETS_FILE_NAME) {
                     secretsDriveFileId = f.id;
@@ -273,7 +389,7 @@
             filesCount.textContent = allDriveFiles.length;
         } catch (err) {
             console.error('Failed to load drive files:', err);
-            filesGrid.innerHTML = `<div class="empty-state"><i class="fas fa-circle-exclamation"></i><p>Failed to sync files: ${err.message}</p></div>`;
+            filesGrid.innerHTML = `<div class="empty-state"><i class="fas fa-circle-exclamation"></i><p>${err.message}</p></div>`;
         }
     }
 
@@ -332,10 +448,7 @@
                 </div>
             `;
 
-            // Download handler
             card.querySelector('.download-btn').addEventListener('click', () => downloadFile(f.id, f.name));
-
-            // Delete handler
             card.querySelector('.delete-btn').addEventListener('click', () => deleteFile(f.id, f.name));
 
             filesGrid.appendChild(card);
@@ -372,10 +485,18 @@
         }
     }
 
-    // File Upload Handler (Multipart Upload to Drive)
+    uploadTriggerBtn.addEventListener('click', () => {
+        if (!driveAccessToken) {
+            showToast('Please connect Google Drive first to upload files', 'plug');
+            triggerGoogleAuth();
+            return;
+        }
+        fileUploader.click();
+    });
+
     fileUploader.addEventListener('change', async (e) => {
         const files = Array.from(e.target.files);
-        if (!files.length || !vaultFolderId) return;
+        if (!files.length || !vaultFolderId || !driveAccessToken) return;
 
         uploadProgressContainer.style.display = 'block';
 
@@ -397,7 +518,7 @@
 
                 await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
                     method: 'POST',
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    headers: { Authorization: `Bearer ${driveAccessToken}` },
                     body: form
                 });
             } catch (err) {
@@ -411,9 +532,10 @@
         await loadDriveFiles();
     });
 
-    refreshFilesBtn.addEventListener('click', loadDriveFiles);
+    refreshFilesBtn.addEventListener('click', () => {
+        if (driveAccessToken) loadDriveFiles();
+    });
 
-    // Search Files Filter
     fileSearchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase().trim();
         if (!term) {
@@ -427,7 +549,6 @@
     // ------------------------------------------------------------------
     // 5. CLIENT-SIDE AES-GCM ENCRYPTED SECRETS VAULT
     // ------------------------------------------------------------------
-    // Web Crypto API helpers
     async function deriveKey(passphrase, salt) {
         const enc = new TextEncoder();
         const keyMaterial = await crypto.subtle.importKey(
@@ -460,7 +581,6 @@
             enc.encode(plainText)
         );
 
-        // Concatenate IV + Encrypted Data and encode as base64
         const combined = new Uint8Array(iv.length + encrypted.byteLength);
         combined.set(iv, 0);
         combined.set(new Uint8Array(encrypted), iv.length);
@@ -480,7 +600,6 @@
         return new TextDecoder().decode(decrypted);
     }
 
-    // Unlock Master Passphrase
     unlockSecretsBtn.addEventListener('click', async () => {
         const pass = masterPassphraseInput.value.trim();
         if (!pass) {
@@ -489,17 +608,20 @@
         }
 
         try {
-            // Fixed salt for local user master key derivation
             const salt = new TextEncoder().encode('arpit_yadav_vault_salt_v1');
             masterKeyDerived = await deriveKey(pass, salt);
 
-            // Fetch secrets file from Drive if exists
             let rawCipher = null;
-            if (secretsDriveFileId) {
+
+            // Check if drive file exists
+            if (driveAccessToken && secretsDriveFileId) {
                 const res = await driveFetch(`files/${secretsDriveFileId}?alt=media`);
-                if (res.ok) {
-                    rawCipher = await res.text();
-                }
+                if (res.ok) rawCipher = await res.text();
+            }
+
+            // Fallback to local encrypted storage if drive not linked
+            if (!rawCipher) {
+                rawCipher = localStorage.getItem('arpit_vault_secrets_local');
             }
 
             if (rawCipher) {
@@ -512,7 +634,6 @@
                     return;
                 }
             } else {
-                // New empty store
                 decryptedSecrets = [];
             }
 
@@ -521,7 +642,7 @@
             masterPassphraseInput.value = '';
             renderSecrets(decryptedSecrets);
             secretsCount.textContent = decryptedSecrets.length;
-            showToast('Secrets Vault Decrypted & Unlocked', 'unlock');
+            showToast('Secrets Decrypted & Unlocked', 'unlock');
         } catch (e) {
             console.error('Decryption failed:', e);
             showToast('Decryption error: ' + e.message, 'circle-exclamation');
@@ -577,7 +698,6 @@
                 </div>
             `;
 
-            // Reveal/Hide Toggle
             const toggleBtn = div.querySelector('.toggle-view-btn');
             const passSpan = div.querySelector(`#pass-val-${index}`);
             let revealed = false;
@@ -587,7 +707,6 @@
                 toggleBtn.innerHTML = revealed ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
             });
 
-            // 1-Click Copy with auto-clear indication
             div.querySelector('.copy-btn').addEventListener('click', (e) => {
                 navigator.clipboard.writeText(item.secret).then(() => {
                     const original = e.currentTarget.innerHTML;
@@ -599,11 +718,10 @@
                 });
             });
 
-            // Delete Secret
             div.querySelector('.delete-secret-btn').addEventListener('click', async () => {
                 if (!confirm(`Delete credential "${item.title}"?`)) return;
                 decryptedSecrets.splice(index, 1);
-                await syncSecretsToDrive();
+                await syncSecretsToCloud();
                 renderSecrets(decryptedSecrets);
                 secretsCount.textContent = decryptedSecrets.length;
             });
@@ -612,52 +730,53 @@
         });
     }
 
-    async function syncSecretsToDrive() {
-        if (!masterKeyDerived || !vaultFolderId) return;
-        showToast('Encrypting & Syncing to Drive...', 'spinner fa-spin');
+    async function syncSecretsToCloud() {
+        if (!masterKeyDerived) return;
+        showToast('Encrypting & Syncing...', 'spinner fa-spin');
 
         try {
             const plain = JSON.stringify(decryptedSecrets);
             const cipher = await encryptData(plain, masterKeyDerived);
 
-            const fileContent = new Blob([cipher], { type: 'text/plain' });
+            // Always store encrypted locally
+            localStorage.setItem('arpit_vault_secrets_local', cipher);
 
-            if (secretsDriveFileId) {
-                // Update existing
-                await fetch(`https://www.googleapis.com/upload/drive/v3/files/${secretsDriveFileId}?uploadType=media`, {
-                    method: 'PATCH',
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'Content-Type': 'text/plain'
-                    },
-                    body: fileContent
-                });
-            } else {
-                // Create new
-                const metadata = {
-                    name: SECRETS_FILE_NAME,
-                    parents: [vaultFolderId]
-                };
-                const form = new FormData();
-                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                form.append('file', fileContent);
+            // If drive linked, store in drive too
+            if (driveAccessToken && vaultFolderId) {
+                const fileContent = new Blob([cipher], { type: 'text/plain' });
 
-                const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                    method: 'POST',
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                    body: form
-                });
-                const data = await res.json();
-                secretsDriveFileId = data.id;
+                if (secretsDriveFileId) {
+                    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${secretsDriveFileId}?uploadType=media`, {
+                        method: 'PATCH',
+                        headers: {
+                            Authorization: `Bearer ${driveAccessToken}`,
+                            'Content-Type': 'text/plain'
+                        },
+                        body: fileContent
+                    });
+                } else {
+                    const metadata = { name: SECRETS_FILE_NAME, parents: [vaultFolderId] };
+                    const form = new FormData();
+                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                    form.append('file', fileContent);
+
+                    const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${driveAccessToken}` },
+                        body: form
+                    });
+                    const data = await res.json();
+                    secretsDriveFileId = data.id;
+                }
             }
-            showToast('Encrypted secrets stored safely in Drive!', 'shield-check');
+            showToast('Encrypted secrets stored safely!', 'shield-check');
         } catch (err) {
             console.error('Sync secrets error:', err);
             showToast('Sync error: ' + err.message, 'circle-exclamation');
         }
     }
 
-    // Modal Events
+    // Modal
     openNewSecretModalBtn.addEventListener('click', () => {
         newSecretModal.classList.add('active');
         document.getElementById('sec-title').focus();
@@ -694,13 +813,12 @@
             created: Date.now()
         });
 
-        await syncSecretsToDrive();
+        await syncSecretsToCloud();
         renderSecrets(decryptedSecrets);
         secretsCount.textContent = decryptedSecrets.length;
         closeSecretModal();
     });
 
-    // Search Secrets Filter
     secretsSearchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase().trim();
         if (!term) {
@@ -716,10 +834,15 @@
     });
 
     // ------------------------------------------------------------------
-    // 6. CLOUD SCRATCHPAD / QUICK NOTES
+    // 6. CLOUD SCRATCHPAD / NOTES
     // ------------------------------------------------------------------
     async function loadCloudNotes() {
-        if (!vaultFolderId) return;
+        if (!driveAccessToken || !vaultFolderId) {
+            const localNote = localStorage.getItem('arpit_vault_scratchpad_local');
+            if (localNote) notesTextarea.value = localNote;
+            return;
+        }
+
         try {
             if (notesDriveFileId) {
                 const res = await driveFetch(`files/${notesDriveFileId}?alt=media`);
@@ -741,8 +864,14 @@
     });
 
     async function saveCloudNotes() {
-        if (!vaultFolderId) return;
         const content = notesTextarea.value;
+        localStorage.setItem('arpit_vault_scratchpad_local', content);
+
+        if (!driveAccessToken || !vaultFolderId) {
+            notesSyncStatus.textContent = `Saved locally at ${new Date().toLocaleTimeString()}`;
+            return;
+        }
+
         const fileBlob = new Blob([content], { type: 'text/plain' });
 
         try {
@@ -750,37 +879,32 @@
                 await fetch(`https://www.googleapis.com/upload/drive/v3/files/${notesDriveFileId}?uploadType=media`, {
                     method: 'PATCH',
                     headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        Authorization: `Bearer ${driveAccessToken}`,
                         'Content-Type': 'text/plain'
                     },
                     body: fileBlob
                 });
             } else {
-                const metadata = {
-                    name: NOTES_FILE_NAME,
-                    parents: [vaultFolderId]
-                };
+                const metadata = { name: NOTES_FILE_NAME, parents: [vaultFolderId] };
                 const form = new FormData();
                 form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
                 form.append('file', fileBlob);
 
                 const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
                     method: 'POST',
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    headers: { Authorization: `Bearer ${driveAccessToken}` },
                     body: form
                 });
                 const data = await res.json();
                 notesDriveFileId = data.id;
             }
-            notesSyncStatus.textContent = `Saved at ${new Date().toLocaleTimeString()}`;
+            notesSyncStatus.textContent = `Synced to Drive at ${new Date().toLocaleTimeString()}`;
         } catch (e) {
             notesSyncStatus.textContent = 'Sync error: ' + e.message;
         }
     }
 
-    // ------------------------------------------------------------------
-    // 7. UTILS & TAB NAVIGATION
-    // ------------------------------------------------------------------
+    // Tab Navigation
     tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             tabButtons.forEach(b => b.classList.remove('active'));
@@ -812,6 +936,6 @@
         }[tag] || tag));
     }
 
-    // Start Auth Loop
-    initGoogleAuth();
+    // Start Auth Client
+    initGoogleAuthClient();
 })();
