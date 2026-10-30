@@ -105,6 +105,24 @@
     let notesDriveFileId = null;
     let notesSaveTimeout = null;
 
+    // ==================================================================
+    // GLOBAL DELETED TOMBSTONES (Prevents zombie file resurrection)
+    // ==================================================================
+    function getTombstones() {
+        try {
+            return JSON.parse(localStorage.getItem('arpit_vault_tombstones') || '[]');
+        } catch (_) {
+            return [];
+        }
+    }
+
+    function addTombstone(name, id) {
+        const list = getTombstones();
+        list.push({ name, id, time: Date.now() });
+        if (list.length > 200) list.shift();
+        localStorage.setItem('arpit_vault_tombstones', JSON.stringify(list));
+    }
+
     // DOM ELEMENTS
     const lockedSection = document.getElementById('locked-state');
     const unlockedDashboard = document.getElementById('unlocked-dashboard');
@@ -805,6 +823,16 @@ function showUnlockedView() {
             const data = await res.json();
             const rawFiles = data.files || [];
 
+            const tombstones = getTombstones();
+
+            // Purge any tombstoned files from local DB
+            for (const tb of tombstones) {
+                const localMatches = (await VaultDB.getAllFiles()).filter(lf => lf.name === tb.name || lf.id === tb.id || lf.driveFileId === tb.id);
+                for (const lm of localMatches) {
+                    await VaultDB.deleteFile(lm.id);
+                }
+            }
+
             const driveFiltered = rawFiles.filter(f => {
                 if (f.name === SECRETS_FILE_NAME) {
                     secretsDriveFileId = f.id;
@@ -814,11 +842,26 @@ function showUnlockedView() {
                     notesDriveFileId = f.id;
                     return false;
                 }
+                // If file was deleted, prune it from Drive and skip
+                if (tombstones.some(tb => tb.name === f.name || tb.id === f.id)) {
+                    driveFetch(`files/${f.id}`, { method: 'DELETE' }).catch(() => {});
+                    return false;
+                }
                 return true;
             });
 
             const localDbFiles = await VaultDB.getAllFiles();
-            const localOnly = localDbFiles.filter(lf => !driveFiltered.some(df => df.id === lf.id || df.name === lf.name));
+
+            // If a local file was previously synced to Drive, but is now MISSING from Drive:
+            // It means it was deleted on phone! Purge it from local DB so it never resurrects!
+            for (const lf of localDbFiles) {
+                if (lf.syncedToDrive && !driveFiltered.some(df => df.id === lf.driveFileId || df.name === lf.name)) {
+                    await VaultDB.deleteFile(lf.id);
+                }
+            }
+
+            const activeDbFiles = await VaultDB.getAllFiles();
+            const localOnly = activeDbFiles.filter(lf => !driveFiltered.some(df => df.id === lf.id || df.name === lf.name));
 
             const freshList = [...localOnly, ...driveFiltered];
             
@@ -1094,21 +1137,62 @@ function showUnlockedView() {
     }
 
     async function deleteFile(fileId, fileName) {
-        if (!confirm(`Delete "${fileName}"?`)) return;
+        if (!confirm(`Permanently delete "${fileName}"?`)) return;
         try {
-            await VaultDB.deleteFile(fileId);
+            // 1. Mark as tombstoned so no other device resurrects it
+            addTombstone(fileName, fileId);
 
-            allDriveFiles = allDriveFiles.filter(f => f.id !== fileId);
+            // 2. Delete from local VaultDB
+            await VaultDB.deleteFile(fileId);
+            const allLocal = await VaultDB.getAllFiles();
+            for (const item of allLocal) {
+                if (item.id === fileId || item.name === fileName || item.driveFileId === fileId) {
+                    await VaultDB.deleteFile(item.id);
+                }
+            }
+
+            // 3. Remove from UI and cache immediately (0ms instant response)
+            allDriveFiles = allDriveFiles.filter(f => f.id !== fileId && f.name !== fileName && f.driveFileId !== fileId);
             localStorage.setItem('arpit_vault_drive_cache', JSON.stringify(allDriveFiles));
             partitionAndRenderFiles(allDriveFiles);
             showToast(`Deleted ${fileName}`, 'trash');
 
-            if (driveAccessToken && fileId && !fileId.startsWith('item_') && !fileId.startsWith('local_')) {
-                driveFetch(`files/${fileId}`, { method: 'DELETE' }).catch(() => {});
+            // 4. Delete from Google Drive cloud
+            if (driveAccessToken) {
+                const isDriveId = fileId && !fileId.startsWith('item_') && !fileId.startsWith('local_');
+                let targetDriveId = isDriveId ? fileId : null;
+
+                if (!targetDriveId) {
+                    const match = allLocal.find(f => f.name === fileName || f.id === fileId);
+                    if (match && match.driveFileId) targetDriveId = match.driveFileId;
+                }
+
+                if (targetDriveId) {
+                    await driveFetch(`files/${targetDriveId}`, { method: 'DELETE' }).catch(async () => {
+                        await driveFetch(`files/${targetDriveId}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ trashed: true })
+                        }).catch(() => {});
+                    });
+                } else if (vaultFolderId) {
+                    // Query by exact name in folder and delete
+                    try {
+                        const safeName = fileName.replace(/'/g, "\\'");
+                        const q = encodeURIComponent(`'${vaultFolderId}' in parents and name = '${safeName}' and trashed = false`);
+                        const searchRes = await driveFetch(`files?q=${q}&fields=files(id)`);
+                        const searchData = await searchRes.json();
+                        if (searchData.files && searchData.files.length > 0) {
+                            for (const df of searchData.files) {
+                                await driveFetch(`files/${df.id}`, { method: 'DELETE' }).catch(() => {});
+                            }
+                        }
+                    } catch (_) {}
+                }
             }
         } catch (e) {
+            console.error('Delete error:', e);
             showToast('Delete notice: ' + e.message, 'circle-exclamation');
-            renderLocalVaultFiles();
         }
     }
 
@@ -1160,11 +1244,17 @@ function showUnlockedView() {
                     form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
                     form.append('file', file);
 
-                    await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                    const uploadRes = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${driveAccessToken}` },
                         body: form
                     });
+                    if (uploadRes.ok) {
+                        const upData = await uploadRes.json();
+                        record.syncedToDrive = true;
+                        record.driveFileId = upData.id;
+                        await VaultDB.saveFile(record);
+                    }
                 } catch (driveErr) {
                     console.warn('Drive upload error:', driveErr);
                 }
