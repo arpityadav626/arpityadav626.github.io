@@ -12,7 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026.9">
+    <link rel="stylesheet" href="style.css?v=2026.10">
 </head>
 <body class="vault-body">
     <!-- Background Ambient Glow -->
@@ -156,56 +156,135 @@
                 </div>
             </div>
 
-            <!-- Vault Tabs -->
+            <!-- Vault Tabs (User Sections: Images, Videos, Documents, Notepad, Secrets) -->
             <div class="vault-tabs">
-                <button class="vtab-btn active" data-tab="tab-files">
-                    <i class="fas fa-folder-open"></i> Cloud Files &amp; Docs (<span id="files-count">0</span>)
+                <button class="vtab-btn active" data-tab="tab-images">
+                    <i class="fas fa-image"></i> Images (<span id="images-count">0</span>)
                 </button>
-                <button class="vtab-btn" data-tab="tab-secrets">
-                    <i class="fas fa-user-secret"></i> Encrypted Credentials &amp; Keys (<span id="secrets-count">0</span>)
+                <button class="vtab-btn" data-tab="tab-videos">
+                    <i class="fas fa-film"></i> Videos (<span id="videos-count">0</span>)
+                </button>
+                <button class="vtab-btn" data-tab="tab-docs">
+                    <i class="fas fa-file-lines"></i> Documents (<span id="docs-count">0</span>)
                 </button>
                 <button class="vtab-btn" data-tab="tab-notes">
-                    <i class="fas fa-clipboard-list"></i> Scratchpad &amp; Quick Notes
+                    <i class="fas fa-pen-to-square"></i> Notepad
+                </button>
+                <button class="vtab-btn" data-tab="tab-secrets">
+                    <i class="fas fa-key"></i> Passwords &amp; Keys (<span id="secrets-count">0</span>)
                 </button>
             </div>
 
-            <!-- TAB 1: FILES & DOCUMENTS -->
-            <div id="tab-files" class="tab-pane active">
+            <!-- Global Upload Progress Indicator -->
+            <div id="upload-progress-container" class="upload-progress-container" style="display:none;">
+                <div class="progress-info">
+                    <span id="upload-status-text">Uploading to Cloud Vault...</span>
+                    <span id="upload-percent-text">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div id="upload-progress-bar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <!-- Hidden File Input Triggers -->
+            <input type="file" id="image-uploader" accept="image/*" multiple style="display:none;">
+            <input type="file" id="video-uploader" accept="video/*" multiple style="display:none;">
+            <input type="file" id="doc-uploader" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.rar,.7z,.tar,.gz,.json,.js,.html,.css,.py,.cpp,.c,.ino,.md" multiple style="display:none;">
+            <input type="file" id="file-uploader" multiple style="display:none;">
+
+            <!-- TAB 1: IMAGES -->
+            <div id="tab-images" class="tab-pane active">
                 <div class="tab-actions-bar">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="file-search-input" placeholder="Search files, documents, certificates...">
+                        <input type="text" id="images-search-input" placeholder="Search photos, PNGs, JPGs, SVGs...">
                     </div>
                     <div class="file-upload-wrap">
-                        <input type="file" id="file-uploader" multiple style="display:none;">
-                        <button class="primary-btn" id="upload-trigger-btn">
-                            <i class="fas fa-cloud-arrow-up"></i> Upload File
+                        <button class="primary-btn" id="upload-image-btn">
+                            <i class="fas fa-cloud-arrow-up"></i> Upload Images
                         </button>
-                        <button class="refresh-btn" id="refresh-files-btn" title="Refresh files list">
+                        <button class="refresh-btn refresh-files-btn" title="Refresh Images">
                             <i class="fas fa-rotate"></i>
                         </button>
                     </div>
                 </div>
 
-                <div id="upload-progress-container" class="upload-progress-container" style="display:none;">
-                    <div class="progress-info">
-                        <span id="upload-status-text">Uploading to Cloud...</span>
-                        <span id="upload-percent-text">0%</span>
-                    </div>
-                    <div class="progress-bar-track">
-                        <div id="upload-progress-bar" class="progress-bar-fill"></div>
-                    </div>
-                </div>
-
-                <!-- Files Grid -->
-                <div id="files-grid" class="files-grid">
+                <div id="images-grid" class="files-grid media-grid">
                     <div class="loading-state">
-                        <i class="fas fa-spinner fa-spin"></i> Loading cloud workspace...
+                        <i class="fas fa-spinner fa-spin"></i> Loading images...
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2: ENCRYPTED CREDENTIALS -->
+            <!-- TAB 2: VIDEOS -->
+            <div id="tab-videos" class="tab-pane">
+                <div class="tab-actions-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="videos-search-input" placeholder="Search videos, MP4, MKV, WebM...">
+                    </div>
+                    <div class="file-upload-wrap">
+                        <button class="primary-btn" id="upload-video-btn">
+                            <i class="fas fa-cloud-arrow-up"></i> Upload Video
+                        </button>
+                        <button class="refresh-btn refresh-files-btn" title="Refresh Videos">
+                            <i class="fas fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="videos-grid" class="files-grid media-grid">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i> Loading videos...
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: DOCUMENTS -->
+            <div id="tab-docs" class="tab-pane">
+                <div class="tab-actions-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="docs-search-input" placeholder="Search documents, PDFs, certificates, code, archives...">
+                    </div>
+                    <div class="file-upload-wrap">
+                        <button class="primary-btn" id="upload-doc-btn">
+                            <i class="fas fa-cloud-arrow-up"></i> Upload Document
+                        </button>
+                        <button class="refresh-btn refresh-files-btn" title="Refresh Documents">
+                            <i class="fas fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="docs-grid" class="files-grid">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i> Loading documents...
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: PERMANENT NOTEPAD -->
+            <div id="tab-notes" class="tab-pane">
+                <div class="notes-panel">
+                    <div class="notes-header">
+                        <div class="notes-meta">
+                            <i class="fas fa-pen-nib" style="color:var(--accent-signal)"></i>
+                            <span>Personal Cloud Notepad (Always Saved)</span>
+                        </div>
+                        <div class="notes-actions-wrap">
+                            <span class="notes-status" id="notes-sync-status"><i class="fas fa-check-circle"></i> Permanent Auto-Save Active</span>
+                            <span class="notes-counter" id="notes-char-count">0 chars | 0 words</span>
+                            <button class="action-btn outline-btn" id="copy-notes-btn" title="Copy All Text"><i class="fas fa-copy"></i> Copy</button>
+                            <button class="action-btn outline-btn" id="download-notes-btn" title="Download note as .txt"><i class="fas fa-download"></i> Save .txt</button>
+                            <button class="action-btn outline-btn" id="clear-notes-btn" title="Clear notepad"><i class="fas fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+                    <textarea id="vault-notes-textarea" placeholder="Personal Notepad: Type or paste whatever you want here... Notes, temporary keys, todos, thoughts, code, or links. It is permanently saved and will never disappear."></textarea>
+                </div>
+            </div>
+
+            <!-- TAB 5: ENCRYPTED CREDENTIALS -->
             <div id="tab-secrets" class="tab-pane">
                 <div class="secrets-notice">
                     <i class="fas fa-shield-cat"></i>
@@ -248,17 +327,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- TAB 3: SCRATCHPAD & QUICK NOTES -->
-            <div id="tab-notes" class="tab-pane">
-                <div class="notes-panel">
-                    <div class="notes-header">
-                        <div class="notes-meta">
-                            <i class="fas fa-pen-nib"></i>
-                            <span>Cloud Scratchpad (Encrypted auto-sync)</span>
-                        </div>
-                        <div class="notes-status" id="notes-sync-status">Ready</div>
-                    </div>
                     <textarea id="vault-notes-textarea" placeholder="Paste quick code snippets, terminal commands, temporary keys, or todos here..."></textarea>
                 </div>
             </div>
@@ -313,6 +381,6 @@
     <!-- Notification Toast -->
     <div id="vault-toast" class="vault-toast"></div>
 
-    <script src="script.js?v=2026.9"></script>
+    <script src="script.js?v=2026.10"></script>
 </body>
 </html>
