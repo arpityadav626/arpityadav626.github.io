@@ -722,6 +722,43 @@ function showUnlockedView() {
         return combined;
     }
 
+    // ------------------------------------------------------------------
+    // CLOUD REPLICATION: AUTO-SYNC LOCAL LAPTOP FILES TO GOOGLE DRIVE
+    // ------------------------------------------------------------------
+    async function syncLocalFilesToDrive() {
+        if (!driveAccessToken || !vaultFolderId) return;
+        try {
+            const localFiles = await VaultDB.getAllFiles();
+            for (const lf of localFiles) {
+                if (!lf.syncedToDrive && lf.blob) {
+                    try {
+                        const metadata = { name: lf.name, parents: [vaultFolderId] };
+                        const form = new FormData();
+                        form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                        form.append('file', lf.blob);
+
+                        const uploadRes = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                            method: 'POST',
+                            headers: { Authorization: `Bearer ${driveAccessToken}` },
+                            body: form
+                        });
+                        if (uploadRes.ok) {
+                            const upData = await uploadRes.json();
+                            lf.syncedToDrive = true;
+                            lf.driveFileId = upData.id;
+                            await VaultDB.saveFile(lf);
+                            console.log('Synced local item to Google Drive:', lf.name);
+                        }
+                    } catch (e) {
+                        console.warn('Sync item warning:', lf.name, e);
+                    }
+                }
+            }
+        } catch (err) {
+            console.warn('Sync local files to drive error:', err);
+        }
+    }
+
     async function loadDriveFiles(forceSpinner = false) {
         if (!driveAccessToken) {
             await renderLocalVaultFiles();
@@ -736,6 +773,9 @@ function showUnlockedView() {
             await renderLocalVaultFiles();
             return;
         }
+
+        // Auto-replicate any pending local laptop files to Drive
+        syncLocalFilesToDrive().catch(() => {});
 
         if (forceSpinner || allDriveFiles.length === 0) {
             if (imagesGrid) imagesGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing images...</div>';
