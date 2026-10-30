@@ -176,12 +176,17 @@
     // ------------------------------------------------------------------
     // 2. FIREBASE EMAIL + PASSWORD AUTHENTICATION
     // ------------------------------------------------------------------
-    firebaseLoginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = fbEmailInput.value.trim();
-        const pass = fbPasswordInput.value;
+    async function handleFirebaseLogin(e) {
+        if (e && e.preventDefault) e.preventDefault();
 
-        if (!email || !pass) return;
+        const email = (fbEmailInput.value || '').trim();
+        const pass = fbPasswordInput.value || '';
+
+        if (!email || !pass) {
+            loginStatusMsg.className = 'status-msg error';
+            loginStatusMsg.textContent = 'Please enter both Email and Master Password.';
+            return;
+        }
 
         fbSubmitBtn.disabled = true;
         fbSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
@@ -191,6 +196,7 @@
         try {
             const userCredential = await fbAuth.signInWithEmailAndPassword(email, pass);
             currentUser = userCredential.user;
+
             // Purge credentials immediately from DOM
             if (fbEmailInput) {
                 fbEmailInput.value = '';
@@ -213,9 +219,37 @@
             fbSubmitBtn.disabled = false;
             fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
             loginStatusMsg.className = 'status-msg error';
-            loginStatusMsg.textContent = 'Auth failed: ' + (err.message || 'Invalid credentials');
+
+            let msg = 'Authentication failed: ' + (err.message || 'Invalid credentials');
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                msg = 'Incorrect email or password. Please verify your credentials.';
+            } else if (err.code === 'auth/invalid-email') {
+                msg = 'Invalid email address format.';
+            } else if (err.code === 'auth/too-many-requests') {
+                msg = 'Too many failed login attempts. Please wait a moment and try again.';
+            } else if (err.code === 'auth/network-request-failed') {
+                msg = 'Network connection error. Check your internet connection.';
+            }
+            loginStatusMsg.textContent = msg;
         }
-    });
+    }
+
+    if (firebaseLoginForm) {
+        firebaseLoginForm.addEventListener('submit', handleFirebaseLogin);
+    }
+    if (fbSubmitBtn) {
+        fbSubmitBtn.addEventListener('click', handleFirebaseLogin);
+    }
+    if (fbEmailInput) {
+        fbEmailInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleFirebaseLogin(e);
+        });
+    }
+    if (fbPasswordInput) {
+        fbPasswordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleFirebaseLogin(e);
+        });
+    }
 
     // ------------------------------------------------------------------
     // 3. FIREBASE GOOGLE AUTH + DRIVE SCOPE
@@ -855,11 +889,6 @@
     }
 
     window.addEventListener('pageshow', wipeCredentialsOnScreen);
-    window.addEventListener('blur', () => {
-        // When tab is hidden/switched, ensure password is not hanging around if unauthenticated
-        if (lockedSection && lockedSection.classList.contains('active')) {
-            wipeCredentialsOnScreen();
-        }
-    });
+// Blur wipe removed to prevent premature credential clearance
 
 })();

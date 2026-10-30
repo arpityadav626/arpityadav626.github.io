@@ -12,7 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026.10">
+    <link rel="stylesheet" href="style.css?v=2026.11">
 </head>
 <body class="vault-body">
     <!-- Background Ambient Glow -->
@@ -68,7 +68,7 @@
                         <input type="password" name="fake_password_trap" tabindex="-1" autocomplete="current-password">
                     </div>
 
-                    <form id="firebase-login-form" class="gate-form" autocomplete="off" onsubmit="return false;">
+                    <form id="firebase-login-form" class="gate-form" autocomplete="off">
                         <div class="gate-input-group">
                             <i class="fas fa-user-astronaut"></i>
                             <input type="password" 
@@ -76,15 +76,13 @@
                                    name="vault_sec_uid_token" 
                                    placeholder="Admin Identifier / Email" 
                                    required 
-                                   autocomplete="new-password"
+                                   autocomplete="off"
                                    autocorrect="off" 
                                    autocapitalize="off" 
                                    spellcheck="false"
                                    data-lpignore="true"
                                    data-1p-ignore="true"
                                    data-form-type="other"
-                                   readonly
-                                   onfocus="this.removeAttribute('readonly');"
                                    class="masked-input">
                             <button type="button" class="eye-toggle-btn" id="toggle-fb-email" title="Show/Hide Identifier">
                                 <i class="fas fa-eye"></i>
@@ -104,8 +102,6 @@
                                    data-lpignore="true"
                                    data-1p-ignore="true"
                                    data-form-type="other"
-                                   readonly
-                                   onfocus="this.removeAttribute('readonly');"
                                    class="masked-input">
                             <button type="button" class="eye-toggle-btn" id="toggle-fb-pass" title="Show/Hide Password">
                                 <i class="fas fa-eye"></i>
@@ -381,6 +377,6 @@
     <!-- Notification Toast -->
     <div id="vault-toast" class="vault-toast"></div>
 
-    <script src="script.js?v=2026.10"></script>
+    <script src="script.js?v=2026.11"></script>
 </body>
 </html>
