@@ -1261,15 +1261,6 @@ body.vault-body {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-@media (max-width: 768px) {
-    .vault-page-wrap { width: 92%; margin: 24px auto 40px; }
-    .hero-title { font-size: 34px !important; }
-    .gate-card { padding: 24px 20px; }
-    .navbar { gap: 14px !important; }
-    .navbar .nav-link:not(.nav-resume-link) { display: none !important; }
-}
-
-
 /* Brand group in header */
 .brand-group {
     display: flex;
@@ -1297,7 +1288,7 @@ body.vault-body {
 }
 
 .vault-hero-title {
-    font-size: clamp(32px, 3.8vw, 44px);
+    font-size: clamp(28px, 4vw, 44px);
     font-weight: 800;
     letter-spacing: -0.035em;
     color: var(--text-primary);
@@ -1327,4 +1318,193 @@ body.vault-body {
 
 .vault-workspace-header .vault-hero-title {
     margin-bottom: 4px;
+}
+
+/* ======================================================================
+   MOBILE & RESPONSIVE PERFECTION FOR VAULT (< 768px & < 480px)
+   ====================================================================== */
+
+/* Critical: Override root style.css mobile rules that hide .navbar */
+body.vault-body .header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    background: rgba(246, 245, 242, 0.96) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid var(--border-hairline) !important;
+}
+
+[data-mode="dark"] body.vault-body .header,
+body.dark-theme.vault-body .header {
+    background: rgba(10, 10, 11, 0.96) !important;
+}
+
+body.vault-body .header .header-inner {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 1240px !important;
+    margin: 0 auto !important;
+    padding: 0 16px !important;
+    height: 56px !important;
+}
+
+body.vault-body .navbar {
+    display: flex !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    z-index: 10 !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+body.vault-body .navbar .nav-link,
+body.vault-body .navbar .action-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 6px 12px !important;
+    border: 1px solid var(--border-hairline) !important;
+    border-radius: 6px !important;
+    background: #FFFFFF !important;
+    color: var(--text-primary) !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+[data-mode="dark"] body.vault-body .navbar .nav-link,
+[data-mode="dark"] body.vault-body .navbar .action-btn {
+    background: var(--bg-surface) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Vault Horizontal Scroll Tabs for Mobile */
+.vault-tabs {
+    display: flex !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    white-space: nowrap !important;
+    border-bottom: 1px solid var(--border-hairline) !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 20px !important;
+}
+
+.vault-tabs::-webkit-scrollbar {
+    display: none !important;
+}
+
+.vtab-btn {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+}
+
+@media (max-width: 768px) {
+    .vault-page-wrap {
+        width: 94% !important;
+        margin: 18px auto 40px !important;
+    }
+
+    .gate-card {
+        padding: 24px 18px !important;
+    }
+
+    .gate-input-group input {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    }
+
+    .files-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+        gap: 14px !important;
+    }
+
+    .tab-actions-bar {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+
+    .tab-actions-left,
+    .tab-actions-right {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-group {
+        gap: 6px !important;
+    }
+
+    .vault-tag {
+        font-size: 9px !important;
+        padding: 2px 5px !important;
+        letter-spacing: 0 !important;
+    }
+
+    .vault-hero-title {
+        font-size: 26px !important;
+    }
+
+    .vault-hero-subtitle {
+        font-size: 13px !important;
+    }
+
+    .auth-toggle-tabs {
+        flex-direction: column !important;
+        gap: 6px !important;
+    }
+
+    .auth-tab-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 10px !important;
+        font-size: 12px !important;
+    }
+
+    .files-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .workspace-meta {
+        width: 100% !important;
+        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .notepad-container {
+        padding: 12px !important;
+    }
+
+    .notepad-textarea {
+        min-height: 280px !important;
+        font-size: 13px !important;
+    }
+
+    .notepad-footer {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
 }

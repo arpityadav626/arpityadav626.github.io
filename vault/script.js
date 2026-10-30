@@ -28,7 +28,7 @@
     let driveAccessToken = localStorage.getItem('arpit_drive_access_token') || null;
     let driveTokenExpiry = localStorage.getItem('arpit_drive_access_token_exp') || 0;
     let currentUser = null;
-    let vaultFolderId = null;
+    let vaultFolderId = localStorage.getItem('arpit_vault_folder_id') || null;
     let allDriveFiles = [];
     let decryptedSecrets = [];
     let masterKeyDerived = null;
@@ -278,9 +278,31 @@
             onVaultAuthenticated('Google Account');
         } catch (err) {
             console.error('Firebase Google Auth Error:', err);
+            if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request') {
+                loginStatusMsg.className = 'status-msg info';
+                loginStatusMsg.textContent = 'Opening Google sign-in window...';
+                await fbAuth.signInWithRedirect(provider);
+                return;
+            }
             loginStatusMsg.className = 'status-msg error';
             loginStatusMsg.textContent = 'Sign-in failed: ' + (err.message || 'Access cancelled');
         }
+    });
+
+    // Mobile & Redirect Auth Handler
+    fbAuth.getRedirectResult().then((result) => {
+        if (result && result.credential && result.credential.accessToken) {
+            driveAccessToken = result.credential.accessToken;
+            driveTokenExpiry = Date.now() + (3600 * 1000);
+            localStorage.setItem('arpit_drive_access_token', driveAccessToken);
+            localStorage.setItem('arpit_drive_access_token_exp', driveTokenExpiry);
+        }
+        if (result && result.user) {
+            currentUser = result.user;
+            onVaultAuthenticated('Google Account (Mobile Redirect)');
+        }
+    }).catch(err => {
+        console.error('Redirect sign-in error:', err);
     });
 
     // Check existing Firebase Auth State
@@ -292,6 +314,24 @@
             showLockedView();
         }
     });
+
+    // 0ms Instant Cache Reader
+    function loadCachedDriveFiles() {
+        try {
+            const cached = localStorage.getItem('arpit_vault_drive_cache');
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    allDriveFiles = parsed;
+                    partitionAndRenderFiles(parsed);
+                    return true;
+                }
+            }
+        } catch (e) {
+            console.warn('Cache load warning:', e);
+        }
+        return false;
+    }
 
     async function onVaultAuthenticated(modeName) {
         showUnlockedView();
@@ -308,15 +348,35 @@
 
         authModePill.innerHTML = `<i class="fas fa-lock"></i> Secured`;
 
-        // If drive access token is present, load drive files
+        // 1. INSTANT 0ms RENDER FROM LOCAL CACHE
+        const hasCachedFiles = loadCachedDriveFiles();
+        loadCloudNotes(); // loads local notepad instantly in 0ms
+
+        // 2. PARALLEL BACKGROUND SYNC WITH GOOGLE DRIVE
         if (driveAccessToken && Date.now() < parseInt(driveTokenExpiry, 10)) {
-            await ensureVaultFolder();
-            await loadDriveFiles();
-            await loadCloudNotes();
+            if (!hasCachedFiles) {
+                if (imagesGrid) imagesGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing images...</div>';
+                if (videosGrid) videosGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing videos...</div>';
+                if (docsGrid) docsGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing documents...</div>';
+            }
+
+            (async () => {
+                try {
+                    if (!vaultFolderId) {
+                        await ensureVaultFolder();
+                    } else {
+                        vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive"></i> /${VAULT_FOLDER_NAME}`;
+                    }
+                    await Promise.all([
+                        loadDriveFiles(false),
+                        syncCloudNotesFromDrive()
+                    ]);
+                } catch (syncErr) {
+                    console.warn('Background sync warning:', syncErr);
+                }
+            })();
         } else {
-            // Load local encrypted items
             renderLocalVaultFiles();
-            loadCloudNotes();
             vaultFolderStatus.innerHTML = '<i class="fas fa-folder"></i> Local Encrypted Store';
         }
     }
@@ -394,6 +454,10 @@
     }
 
     async function ensureVaultFolder() {
+        if (vaultFolderId) {
+            vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive"></i> /${VAULT_FOLDER_NAME}`;
+            return vaultFolderId;
+        }
         vaultFolderStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating folder...';
         try {
             const q = encodeURIComponent(`name = '${VAULT_FOLDER_NAME}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
@@ -402,6 +466,7 @@
 
             if (data.files && data.files.length > 0) {
                 vaultFolderId = data.files[0].id;
+                localStorage.setItem('arpit_vault_folder_id', vaultFolderId);
             } else {
                 const createRes = await driveFetch('files', {
                     method: 'POST',
@@ -413,8 +478,10 @@
                 });
                 const folderData = await createRes.json();
                 vaultFolderId = folderData.id;
+                localStorage.setItem('arpit_vault_folder_id', vaultFolderId);
             }
             vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive"></i> /${VAULT_FOLDER_NAME}`;
+            return vaultFolderId;
         } catch (err) {
             console.error('Error ensuring vault folder:', err);
             vaultFolderStatus.innerHTML = '<i class="fas fa-folder-open"></i> /' + VAULT_FOLDER_NAME;
@@ -459,16 +526,20 @@
         partitionAndRenderFiles(stored);
     }
 
-    async function loadDriveFiles() {
-        if (!vaultFolderId || !driveAccessToken) return;
+    async function loadDriveFiles(forceSpinner = false) {
+        if (!driveAccessToken) return;
+        if (!vaultFolderId) await ensureVaultFolder();
+        if (!vaultFolderId) return;
 
-        if (imagesGrid) imagesGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing images...</div>';
-        if (videosGrid) videosGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing videos...</div>';
-        if (docsGrid) docsGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing documents...</div>';
+        if (forceSpinner || allDriveFiles.length === 0) {
+            if (imagesGrid) imagesGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing images...</div>';
+            if (videosGrid) videosGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing videos...</div>';
+            if (docsGrid) docsGrid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Syncing documents...</div>';
+        }
 
         try {
             const q = encodeURIComponent(`'${vaultFolderId}' in parents and trashed = false`);
-            const res = await driveFetch(`files?q=${q}&fields=files(id,name,mimeType,size,modifiedTime,webViewLink,webContentLink,thumbnailLink)&orderBy=modifiedTime desc`);
+            const res = await driveFetch(`files?q=${q}&fields=files(id,name,mimeType,size,modifiedTime,webViewLink,webContentLink,thumbnailLink,iconLink)&orderBy=modifiedTime desc`);
             const data = await res.json();
             const rawFiles = data.files || [];
 
@@ -484,10 +555,47 @@
                 return true;
             });
 
+            localStorage.setItem('arpit_vault_drive_cache', JSON.stringify(allDriveFiles));
             partitionAndRenderFiles(allDriveFiles);
         } catch (err) {
             console.error('Failed to load drive files:', err);
-            renderLocalVaultFiles();
+            if (err.message && err.message.includes('404')) {
+                localStorage.removeItem('arpit_vault_folder_id');
+                vaultFolderId = null;
+                await ensureVaultFolder();
+                if (vaultFolderId) await loadDriveFiles(false);
+            } else if (allDriveFiles.length === 0) {
+                renderLocalVaultFiles();
+            }
+        }
+    }
+
+    async function syncCloudNotesFromDrive() {
+        if (!driveAccessToken || !vaultFolderId) return;
+        try {
+            if (!notesDriveFileId) {
+                const q = encodeURIComponent(`'${vaultFolderId}' in parents and name = '${NOTES_FILE_NAME}' and trashed = false`);
+                const res = await driveFetch(`files?q=${q}&fields=files(id)`);
+                const data = await res.json();
+                if (data.files && data.files.length > 0) {
+                    notesDriveFileId = data.files[0].id;
+                }
+            }
+            if (notesDriveFileId) {
+                const res = await driveFetch(`files/${notesDriveFileId}?alt=media`);
+                if (res.ok) {
+                    const text = await res.text();
+                    const localPermanent = localStorage.getItem('arpit_vault_notepad_permanent');
+                    if (text && notesTextarea && (!notesTextarea.value || notesTextarea.value === localPermanent)) {
+                        notesTextarea.value = text;
+                        localStorage.setItem('arpit_vault_notepad_permanent', text);
+                        updateNotepadStats();
+                        if (notesSyncStatus) notesSyncStatus.innerHTML = '<i class="fas fa-check-circle"></i> Synced with Google Drive';
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Sync cloud notes error:', e);
         }
     }
 
@@ -670,9 +778,11 @@
         if (!confirm(`Delete "${fileName}"?`)) return;
         try {
             if (driveAccessToken) {
-                await driveFetch(`files/${fileId}`, { method: 'DELETE' });
+                allDriveFiles = allDriveFiles.filter(f => f.id !== fileId);
+                localStorage.setItem('arpit_vault_drive_cache', JSON.stringify(allDriveFiles));
+                partitionAndRenderFiles(allDriveFiles);
                 showToast(`Deleted ${fileName}`, 'trash');
-                await loadDriveFiles();
+                await driveFetch(`files/${fileId}`, { method: 'DELETE' });
             } else {
                 let localMeta = JSON.parse(localStorage.getItem('arpit_vault_local_files_meta') || '[]');
                 localMeta = localMeta.filter(f => f.id !== fileId);
@@ -682,6 +792,7 @@
             }
         } catch (e) {
             showToast('Delete failed: ' + e.message, 'circle-exclamation');
+            await loadDriveFiles(true);
         }
     }
 

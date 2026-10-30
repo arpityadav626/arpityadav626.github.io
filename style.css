@@ -4801,3 +4801,15 @@ body[data-mode="light"] .skill-pill.skill-highlighted i {
         color: #0A0A0B !important;
     }
 }
+
+
+/* Vault Navigation Helpers */
+.nav-vault-link i {
+    margin-right: 5px;
+    font-size: 11px;
+    opacity: 0.85;
+}
+.footer-vault-link:hover {
+    opacity: 1 !important;
+    color: var(--accent-signal) !important;
+}
