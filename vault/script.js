@@ -1014,6 +1014,7 @@
                                 vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853;"></i> /${VAULT_FOLDER_NAME}`;
                             }
                             await ensureVaultFolder();
+                            await syncLocalFilesToDrive();
                             await loadDriveFiles(true);
                         } else if (check.isDriveApiDisabled) {
                             showToast('Google Drive API disabled in project. Click header link to enable.', 'triangle-exclamation');
