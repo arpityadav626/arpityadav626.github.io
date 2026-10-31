@@ -90,6 +90,93 @@
                     resolve(false);
                 }
             });
+        },
+        async clearAll() {
+            const db = await this.init();
+            if (!db) return false;
+            return new Promise((resolve) => {
+                try {
+                    const tx = db.transaction('vault_files', 'readwrite');
+                    const store = tx.objectStore('vault_files');
+                    store.clear();
+                    tx.oncomplete = () => resolve(true);
+                    tx.onerror = () => resolve(false);
+                } catch (_) {
+                    resolve(false);
+                }
+            });
+        }
+    };
+
+    // ==================================================================
+    // ADMIN IDENTITY VERIFICATION & WHITELIST (STRICT SECURITY)
+    // ==================================================================
+    const AUTHORIZED_ADMIN_EMAILS = [
+        'arpityadav6794@gmail.com'
+    ];
+
+    function isAuthorizedAdmin(email) {
+        if (!email) return false;
+        return AUTHORIZED_ADMIN_EMAILS.includes(email.trim().toLowerCase());
+    }
+
+    // ==================================================================
+    // CLIENT-SIDE AES-GCM (PBKDF2 100k) ZERO-KNOWLEDGE CRYPTO ENGINE
+    // ==================================================================
+    const CryptoEngine = {
+        async deriveKey(passphrase, salt) {
+            const enc = new TextEncoder();
+            const baseKey = await crypto.subtle.importKey(
+                'raw',
+                enc.encode(passphrase),
+                'PBKDF2',
+                false,
+                ['deriveKey']
+            );
+            return crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: salt,
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                baseKey,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        },
+
+        async encrypt(plainObj, passphrase) {
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await this.deriveKey(passphrase, salt);
+            const data = new TextEncoder().encode(JSON.stringify(plainObj));
+            const encrypted = await crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv: iv },
+                key,
+                data
+            );
+            return JSON.stringify({
+                salt: Array.from(salt),
+                iv: Array.from(iv),
+                data: Array.from(new Uint8Array(encrypted)),
+                v: 1
+            });
+        },
+
+        async decrypt(packedString, passphrase) {
+            const packed = JSON.parse(packedString);
+            const salt = new Uint8Array(packed.salt);
+            const iv = new Uint8Array(packed.iv);
+            const encrypted = new Uint8Array(packed.data);
+            const key = await this.deriveKey(passphrase, salt);
+            const decrypted = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv },
+                key,
+                encrypted
+            );
+            return JSON.parse(new TextDecoder().decode(decrypted));
         }
     };
 
@@ -206,6 +293,268 @@
     const newSecretForm = document.getElementById('new-secret-form');
     const secPass = document.getElementById('sec-pass');
     const toggleSecPass = document.getElementById('toggle-sec-pass');
+
+    let currentMasterPassphrase = null;
+
+    // Render decrypted secrets list
+    function renderSecrets(items) {
+        if (!secretsList) return;
+        const list = items || decryptedSecrets || [];
+        if (secretsCount) secretsCount.textContent = list.length;
+        if (list.length === 0) {
+            secretsList.innerHTML = '<div class="empty-state" style="padding:28px 16px;"><i class="fas fa-key"></i><h3>No Stored Credentials</h3><p>Click "Store New Credential" to save passwords, API keys, or tokens encrypted with AES-GCM.</p></div>';
+            return;
+        }
+
+        secretsList.innerHTML = list.map((sec, idx) => {
+            const catBadge = (sec.cat || 'other').toUpperCase();
+            return `
+                <div class="secret-item" data-idx="${idx}">
+                    <div class="secret-info">
+                        <span class="secret-badge">${escapeHTML(catBadge)}</span>
+                        <div class="secret-meta">
+                            <h4>${escapeHTML(sec.title)}</h4>
+                            <span>${escapeHTML(sec.user || 'No username')}</span>
+                            ${sec.notes ? `<div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${escapeHTML(sec.notes)}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="secret-actions">
+                        <span class="secret-val-display" id="sec-val-${idx}">••••••••</span>
+                        <button type="button" class="copy-btn sec-reveal-btn" data-idx="${idx}" title="Reveal / Hide"><i class="fas fa-eye"></i></button>
+                        <button type="button" class="copy-btn sec-copy-btn" data-idx="${idx}" title="Copy Secret"><i class="fas fa-copy"></i> Copy</button>
+                        <button type="button" class="copy-btn sec-delete-btn" data-idx="${idx}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Attach item handlers
+        secretsList.querySelectorAll('.sec-reveal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-idx'), 10);
+                const display = document.getElementById(`sec-val-${idx}`);
+                const item = decryptedSecrets[idx];
+                if (!display || !item) return;
+                if (display.textContent === '••••••••') {
+                    display.textContent = item.pass;
+                    btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                } else {
+                    display.textContent = '••••••••';
+                    btn.innerHTML = '<i class="fas fa-eye"></i>';
+                }
+            });
+        });
+
+        secretsList.querySelectorAll('.sec-copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.getAttribute('data-idx'), 10);
+                const item = decryptedSecrets[idx];
+                if (!item || !item.pass) return;
+                navigator.clipboard.writeText(item.pass).then(() => {
+                    showToast('Secret copied to clipboard!', 'copy');
+                }).catch(() => {
+                    showToast('Could not access clipboard', 'triangle-exclamation');
+                });
+            });
+        });
+
+        secretsList.querySelectorAll('.sec-delete-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const idx = parseInt(btn.getAttribute('data-idx'), 10);
+                const item = decryptedSecrets[idx];
+                if (!item) return;
+                if (confirm(`Delete credential "${item.title}"?`)) {
+                    decryptedSecrets.splice(idx, 1);
+                    await saveAndSyncSecrets();
+                    renderSecrets(decryptedSecrets);
+                    showToast('Credential removed', 'trash');
+                }
+            });
+        });
+    }
+
+    // Save and sync encrypted payload
+    async function saveAndSyncSecrets() {
+        if (!currentMasterPassphrase) return;
+        try {
+            const encryptedStr = await CryptoEngine.encrypt(decryptedSecrets, currentMasterPassphrase);
+            localStorage.setItem('arpit_vault_secrets_enc', encryptedStr);
+
+            if (driveAccessToken && vaultFolderId) {
+                const blob = new Blob([encryptedStr], { type: 'application/json' });
+                if (secretsDriveFileId) {
+                    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${secretsDriveFileId}?uploadType=media`, {
+                        method: 'PATCH',
+                        headers: {
+                            Authorization: `Bearer ${driveAccessToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: blob
+                    });
+                } else {
+                    const metadata = { name: SECRETS_FILE_NAME, parents: [vaultFolderId] };
+                    const res = await uploadBlobToDrive(blob, metadata, driveAccessToken);
+                    if (res.ok) {
+                        const data = await res.json();
+                        secretsDriveFileId = data.id;
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Error encrypting and syncing secrets:', err);
+            showToast('Encryption sync error: ' + err.message, 'triangle-exclamation');
+        }
+    }
+
+    // Unlock secrets handler
+    if (unlockSecretsBtn && masterPassphraseInput) {
+        unlockSecretsBtn.addEventListener('click', async () => {
+            const passphrase = (masterPassphraseInput.value || '').trim();
+            if (!passphrase) {
+                showToast('Please enter your Master Passphrase', 'key');
+                return;
+            }
+
+            unlockSecretsBtn.disabled = true;
+            unlockSecretsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Decrypting...';
+
+            try {
+                let encryptedPayload = localStorage.getItem('arpit_vault_secrets_enc');
+
+                // Try fetching from Google Drive if available
+                if (driveAccessToken && vaultFolderId && !encryptedPayload) {
+                    if (!secretsDriveFileId) {
+                        const q = encodeURIComponent(`'${vaultFolderId}' in parents and name = '${SECRETS_FILE_NAME}' and trashed = false`);
+                        const res = await driveFetch(`files?q=${q}&fields=files(id)`);
+                        const data = await res.json();
+                        if (data.files && data.files.length > 0) {
+                            secretsDriveFileId = data.files[0].id;
+                        }
+                    }
+                    if (secretsDriveFileId) {
+                        const res = await driveFetch(`files/${secretsDriveFileId}?alt=media`);
+                        if (res.ok) {
+                            encryptedPayload = await res.text();
+                        }
+                    }
+                }
+
+                if (encryptedPayload) {
+                    const decrypted = await CryptoEngine.decrypt(encryptedPayload, passphrase);
+                    decryptedSecrets = Array.isArray(decrypted) ? decrypted : [];
+                } else {
+                    decryptedSecrets = [];
+                }
+
+                currentMasterPassphrase = passphrase;
+                masterPassphraseInput.value = '';
+                secretsUnlockCard.style.display = 'none';
+                secretsManagerWrap.style.display = 'block';
+                renderSecrets(decryptedSecrets);
+                showToast('Secrets Decrypted Successfully!', 'lock-open');
+            } catch (err) {
+                console.error('Decryption failed:', err);
+                showToast('Incorrect Master Passphrase or corrupted data', 'triangle-exclamation');
+            } finally {
+                unlockSecretsBtn.disabled = false;
+                unlockSecretsBtn.innerHTML = '<i class="fas fa-lock-open"></i> Decrypt Credentials';
+            }
+        });
+
+        masterPassphraseInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') unlockSecretsBtn.click();
+        });
+    }
+
+    // Lock secrets
+    if (lockSecretsBtn) {
+        lockSecretsBtn.addEventListener('click', () => {
+            currentMasterPassphrase = null;
+            decryptedSecrets = [];
+            if (secretsList) secretsList.innerHTML = '';
+            if (secretsCount) secretsCount.textContent = '0';
+            secretsManagerWrap.style.display = 'none';
+            secretsUnlockCard.style.display = 'block';
+            showToast('Credentials locked from memory', 'shield-halved');
+        });
+    }
+
+    // Search secrets
+    if (secretsSearchInput) {
+        secretsSearchInput.addEventListener('input', (e) => {
+            const query = (e.target.value || '').toLowerCase().trim();
+            if (!query) {
+                renderSecrets(decryptedSecrets);
+                return;
+            }
+            const filtered = decryptedSecrets.filter(s => 
+                (s.title && s.title.toLowerCase().includes(query)) ||
+                (s.user && s.user.toLowerCase().includes(query)) ||
+                (s.notes && s.notes.toLowerCase().includes(query)) ||
+                (s.cat && s.cat.toLowerCase().includes(query))
+            );
+            renderSecrets(filtered);
+        });
+    }
+
+    // Modal Add Secret
+    if (openNewSecretModalBtn && newSecretModal) {
+        openNewSecretModalBtn.addEventListener('click', () => {
+            newSecretModal.style.display = 'flex';
+            newSecretModal.setAttribute('aria-hidden', 'false');
+            const titleInput = document.getElementById('sec-title');
+            if (titleInput) titleInput.focus();
+        });
+    }
+
+    function closeSecretModal() {
+        if (!newSecretModal) return;
+        newSecretModal.style.display = 'none';
+        newSecretModal.setAttribute('aria-hidden', 'true');
+        if (newSecretForm) newSecretForm.reset();
+        if (secPass) secPass.type = 'password';
+    }
+
+    if (closeSecretModalBtn) closeSecretModalBtn.addEventListener('click', closeSecretModal);
+    if (cancelSecretBtn) cancelSecretBtn.addEventListener('click', closeSecretModal);
+
+    if (toggleSecPass && secPass) {
+        toggleSecPass.addEventListener('click', () => {
+            const isPassword = secPass.type === 'password';
+            secPass.type = isPassword ? 'text' : 'password';
+            toggleSecPass.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+        });
+    }
+
+    if (newSecretForm) {
+        newSecretForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = (document.getElementById('sec-title').value || '').trim();
+            const user = (document.getElementById('sec-user').value || '').trim();
+            const pass = (document.getElementById('sec-pass').value || '').trim();
+            const cat = (document.getElementById('sec-cat').value || 'other').trim();
+            const notes = (document.getElementById('sec-notes').value || '').trim();
+
+            if (!title || !pass) {
+                showToast('Title and Secret are required', 'triangle-exclamation');
+                return;
+            }
+
+            decryptedSecrets.push({
+                title,
+                user,
+                pass,
+                cat,
+                notes,
+                date: new Date().toISOString()
+            });
+
+            await saveAndSyncSecrets();
+            renderSecrets(decryptedSecrets);
+            closeSecretModal();
+            showToast('Credential Encrypted &amp; Saved!', 'shield-check');
+        });
+    }
 
 
     // Toast
@@ -458,6 +807,15 @@
     }
 
     async function onVaultAuthenticated(modeName) {
+        if (!currentUser || !isAuthorizedAdmin(currentUser.email)) {
+            console.warn('Unauthorized identity rejected:', currentUser ? currentUser.email : 'null');
+            await logout(true);
+            loginStatusMsg.className = 'status-msg error';
+            loginStatusMsg.textContent = 'Access Denied: This vault is private. Registered admin identity required.';
+            showToast('Access Denied: Unauthorized Identity', 'shield-xmark');
+            return;
+        }
+
         showUnlockedView();
         if (modeName !== 'Active Session') {
             showToast(`Authenticated via ${modeName}!`, 'shield-check');
@@ -555,14 +913,39 @@
     }
     initAutoSyncScheduler();
 
-    function logout() {
-        fbAuth.signOut().catch(() => {});
+    async function logout(isSecurityPurge = false) {
+        try {
+            await fbAuth.signOut();
+        } catch (_) {}
+
         currentUser = null;
         driveAccessToken = null;
         masterKeyDerived = null;
         decryptedSecrets = [];
+        currentMasterPassphrase = null;
+        allDriveFiles = [];
+
+        // Purge tokens & cloud cache
         localStorage.removeItem('arpit_drive_access_token');
         localStorage.removeItem('arpit_drive_access_token_exp');
+        localStorage.removeItem('arpit_vault_drive_cache');
+        localStorage.removeItem('arpit_vault_local_files_meta');
+        localStorage.removeItem('arpit_vault_notepad_permanent');
+        localStorage.removeItem('arpit_vault_folder_id');
+
+        // Purge IndexedDB cache
+        try {
+            await VaultDB.clearAll();
+        } catch (_) {}
+
+        // Empty DOM grids so zero sensitive content exists in memory
+        if (imagesGrid) imagesGrid.innerHTML = '';
+        if (videosGrid) videosGrid.innerHTML = '';
+        if (documentsGrid) documentsGrid.innerHTML = '';
+        if (notesTextarea) notesTextarea.value = '';
+        if (secretsList) secretsList.innerHTML = '';
+        if (secretsManagerWrap) secretsManagerWrap.style.display = 'none';
+        if (secretsUnlockCard) secretsUnlockCard.style.display = 'block';
 
         if (fbEmailInput) {
             fbEmailInput.value = '';
@@ -574,6 +957,9 @@
             fbPasswordInput.type = 'password';
             fbPasswordInput.classList.remove('revealed');
         }
+        if (masterPassphraseInput) {
+            masterPassphraseInput.value = '';
+        }
         if (toggleFbEmail) toggleFbEmail.innerHTML = '<i class="fas fa-eye"></i>';
         if (toggleFbPass) toggleFbPass.innerHTML = '<i class="fas fa-eye"></i>';
 
@@ -582,7 +968,7 @@
         loginStatusMsg.textContent = '';
 
         showLockedView();
-        showToast('Vault locked & Session purged', 'shield-halved');
+        showToast(isSecurityPurge ? 'Unauthorized attempt blocked: Session wiped' : 'Vault locked & All local cache wiped', 'shield-halved');
     }
 
     function showLockedView() {

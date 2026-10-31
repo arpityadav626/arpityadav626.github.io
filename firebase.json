@@ -8,7 +8,31 @@
       "**/node_modules/**",
       "**/*.bat",
       "**/*.cmd",
-      "**/*.exe"
+      "**/*.exe",
+      "**/*.py",
+      "**/*.pptx",
+      "**/*.ino",
+      "**/*.md",
+      "snapshots/**",
+      "scratch/**",
+      "__pycache__/**",
+      "stitch-project/**",
+      "smart_kitchen/**",
+      "templates/**",
+      "arpity-me/**",
+      "monu-egg-center/**",
+      "creative-studio/**"
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+          { "key": "X-XSS-Protection", "value": "1; mode=block" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        ]
+      }
     ]
   }
 }
