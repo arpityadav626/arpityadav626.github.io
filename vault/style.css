@@ -1403,10 +1403,13 @@ html, body {
     -webkit-tap-highlight-color: transparent !important;
 }
 
-button, .btn, .hero-action-btn, .vtab-btn, .refresh-btn, .file-card, .direct-line-pill {
+button, .btn, .hero-action-btn, .vtab-btn, .refresh-btn, .direct-line-pill {
     touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
+}
+.file-card {
+    touch-action: pan-y !important;
 }
 
 button:active, .vtab-btn:active, .hero-action-btn:active, .refresh-btn:active {
@@ -1752,4 +1755,37 @@ button:active, .vtab-btn:active, .hero-action-btn:active, .refresh-btn:active {
         justify-content: center !important;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
     }
+}
+
+
+/* ======================================================================
+   MOBILE SCROLL GUARANTEE & BUTTERY-SMOOTH TOUCH PANNING
+   Enables natural, unrestricted vertical scrolling across all mobile browsers
+   ====================================================================== */
+html,
+body.vault-body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    height: auto !important;
+    min-height: 100% !important;
+}
+
+body.vault-body .vault-page-wrap {
+    touch-action: pan-y !important;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 20px)) !important;
+    min-height: calc(100vh - 60px) !important;
+}
+
+.files-grid,
+.file-card,
+.media-preview-container,
+.media-thumb-img,
+.tab-pane,
+.tab-pane.active,
+.vault-section,
+.dashboard-section {
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
 }

@@ -852,7 +852,7 @@
             return `
                 <div class="file-card media-card" data-id="${img.id}">
                     <div class="media-preview-container">
-                        <img src="${cdnThumb}" alt="${escapeHTML(img.name)}" class="media-thumb-img" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\"fas fa-image media-icon-placeholder image\\"></i>';">
+                        <img src="${cdnThumb}" alt="${escapeHTML(img.name)}" class="media-thumb-img" loading="lazy">
                     </div>
                     <div class="file-details">
                         <div class="file-name" title="${escapeHTML(img.name)}">${escapeHTML(img.name)}</div>
@@ -862,7 +862,7 @@
                         <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);"><i class="fab fa-google-drive" style="color:#00C853;"></i> Synced</span>
                         <div class="file-actions">
                             <button type="button" class="file-btn view-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" data-url="${viewUrl}" title="Preview"><i class="fas fa-eye"></i></button>
-                            <button type="button" class="file-btn download-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" data-mime="${escapeHTML(img.mimeType || '')}" title="Direct Download"><i class="fas fa-arrow-down-to-line"></i></button>
+                            <button type="button" class="file-btn download-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" data-mime="${escapeHTML(img.mimeType || '')}" title="Direct Download"><i class="fas fa-download"></i></button>
                             <button type="button" class="file-btn del-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -904,7 +904,7 @@
                         <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);"><i class="fab fa-google-drive" style="color:#00C853;"></i> Synced</span>
                         <div class="file-actions">
                             <a href="${viewUrl}" target="_blank" class="file-btn" title="Play Video in Drive"><i class="fas fa-play"></i></a>
-                            <button type="button" class="file-btn download-btn" data-id="${vid.id}" data-name="${escapeHTML(vid.name)}" data-mime="${escapeHTML(vid.mimeType || '')}" title="Direct Download"><i class="fas fa-arrow-down-to-line"></i></button>
+                            <button type="button" class="file-btn download-btn" data-id="${vid.id}" data-name="${escapeHTML(vid.name)}" data-mime="${escapeHTML(vid.mimeType || '')}" title="Direct Download"><i class="fas fa-download"></i></button>
                             <button type="button" class="file-btn del-btn" data-id="${vid.id}" data-name="${escapeHTML(vid.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -949,7 +949,7 @@
                         <div class="file-actions">
                             <button type="button" class="file-btn view-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" data-url="${viewUrl}" title="Preview Document"><i class="fas fa-eye"></i></button>
                             <a href="${viewUrl}" target="_blank" class="file-btn" title="Open in Google Drive"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                            <button type="button" class="file-btn download-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" data-mime="${escapeHTML(doc.mimeType || '')}" title="Direct Download"><i class="fas fa-arrow-down-to-line"></i></button>
+                            <button type="button" class="file-btn download-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" data-mime="${escapeHTML(doc.mimeType || '')}" title="Direct Download"><i class="fas fa-download"></i></button>
                             <button type="button" class="file-btn del-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -961,6 +961,15 @@
     }
 
     function attachCardHandlers(container) {
+        container.querySelectorAll('.media-thumb-img').forEach(img => {
+            img.onerror = () => {
+                img.style.display = 'none';
+                if (img.parentElement) {
+                    img.parentElement.innerHTML = '<i class="fas fa-image media-icon-placeholder image"></i>';
+                }
+            };
+        });
+
         container.querySelectorAll('.download-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
