@@ -671,8 +671,8 @@
 
         try {
             const data = await DRIVE_RELAY.listFiles();
-            if (data && data.success) {
-                const freshFiles = data.files || [];
+            if (data && (data.success || Array.isArray(data.files) || data.files)) {
+                const freshFiles = Array.isArray(data.files) ? data.files : [];
                 allDriveFiles = freshFiles;
                 SafeStorage.setItem('arpit_vault_drive_cache', JSON.stringify(freshFiles));
                 partitionAndRenderFiles(freshFiles);
