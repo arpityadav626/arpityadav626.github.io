@@ -352,9 +352,26 @@
         </div>
     </div>
 
+        <!-- Media & Document Preview Modal -->
+    <div id="preview-modal" class="vault-modal" style="display:none;" aria-hidden="true">
+        <div class="modal-card" style="max-width:850px; width:92%;">
+            <div class="modal-header">
+                <h3 id="modal-title" style="font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><i class="fas fa-file"></i> Preview</h3>
+                <button class="modal-close-btn" id="close-preview-btn">&times;</button>
+            </div>
+            <div id="modal-body" style="padding:16px; min-height:300px; display:flex; align-items:center; justify-content:center;">
+                <!-- dynamic iframe or img -->
+            </div>
+            <div class="modal-actions" style="justify-content:flex-end; gap:8px;">
+                <a href="#" id="modal-download-btn" class="action-btn outline-btn" target="_blank"><i class="fas fa-arrow-down-to-line"></i> Download</a>
+                <button type="button" class="action-btn outline-btn" id="close-preview-modal-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Toast -->
     <div id="vault-toast" class="vault-toast"></div>
 
-    <script src="script.js?v=1793438324389"></script>
+    <script src="script.js?v=1793438797326"></script>
 </body>
 </html>

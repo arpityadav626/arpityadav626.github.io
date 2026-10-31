@@ -1,6 +1,6 @@
 /* ======================================================================
    ARPIT VAULT — HEADLESS GOOGLE DRIVE DIRECT RELAY ENGINE
-   Zero Gmail Popups &middot; Master ID/Password Direct Cloud Sync
+   Connected to Arpit_Dev_Vault &middot; Direct ID/Password Sync
    ====================================================================== */
 
 (function () {
@@ -168,124 +168,45 @@
         }
     };
 
-    // ==================================================================
-    // INDEXEDDB VAULT ENGINE (Fast Local Cache with Instant 0ms Access)
-    // ==================================================================
-    const VaultDB = {
-        db: null,
-        async init() {
-            if (this.db) return this.db;
-            return new Promise((resolve) => {
-                const req = indexedDB.open('ArpitVaultStore', 2);
-                req.onupgradeneeded = (e) => {
-                    const db = e.target.result;
-                    if (!db.objectStoreNames.contains('vault_files')) {
-                        db.createObjectStore('vault_files', { keyPath: 'id' });
-                    }
-                };
-                req.onsuccess = (e) => {
-                    this.db = e.target.result;
-                    resolve(this.db);
-                };
-                req.onerror = () => resolve(null);
-            });
-        },
-        async getAllFiles() {
-            const db = await this.init();
-            if (!db) return [];
-            return new Promise((resolve) => {
-                try {
-                    const tx = db.transaction('vault_files', 'readonly');
-                    const store = tx.objectStore('vault_files');
-                    const req = store.getAll();
-                    req.onsuccess = () => resolve(req.result || []);
-                    req.onerror = () => resolve([]);
-                } catch (_) {
-                    resolve([]);
-                }
-            });
-        },
-        async saveFile(record) {
-            const db = await this.init();
-            if (!db) return false;
-            return new Promise((resolve) => {
-                try {
-                    const tx = db.transaction('vault_files', 'readwrite');
-                    const store = tx.objectStore('vault_files');
-                    store.put(record);
-                    tx.oncomplete = () => resolve(true);
-                    tx.onerror = () => resolve(false);
-                } catch (_) {
-                    resolve(false);
-                }
-            });
-        },
-        async deleteFile(id) {
-            const db = await this.init();
-            if (!db) return false;
-            return new Promise((resolve) => {
-                try {
-                    const tx = db.transaction('vault_files', 'readwrite');
-                    const store = tx.objectStore('vault_files');
-                    store.delete(id);
-                    tx.oncomplete = () => resolve(true);
-                    tx.onerror = () => resolve(false);
-                } catch (_) {
-                    resolve(false);
-                }
-            });
-        },
-        async clearAll() {
-            const db = await this.init();
-            if (!db) return false;
-            return new Promise((resolve) => {
-                try {
-                    const tx = db.transaction('vault_files', 'readwrite');
-                    const store = tx.objectStore('vault_files');
-                    store.clear();
-                    tx.oncomplete = () => resolve(true);
-                    tx.onerror = () => resolve(false);
-                } catch (_) {
-                    resolve(false);
-                }
-            });
-        }
-    };
-
     // APP STATE
     let currentUser = null;
     let allDriveFiles = [];
+    let currentImages = [];
+    let currentVideos = [];
+    let currentDocs = [];
     let decryptedSecrets = [];
     let currentMasterPassphrase = null;
     let notesSaveTimeout = null;
+    let isFetchingFiles = false;
 
-    // DOM ELEMENTS
+    // DOM ELEMENTS (EXACT MATCH WITH VAULT/INDEX.HTML)
     const lockedSection = document.getElementById('locked-state');
     const unlockedDashboard = document.getElementById('unlocked-dashboard');
     const firebaseLoginForm = document.getElementById('firebase-login-form');
     const fbEmailInput = document.getElementById('fb-email');
-    const toggleFbEmail = document.getElementById('toggle-fb-email');
     const fbPasswordInput = document.getElementById('fb-password');
-    const toggleFbPass = document.getElementById('toggle-fb-pass');
     const fbSubmitBtn = document.getElementById('fb-submit-btn');
     const loginStatusMsg = document.getElementById('login-status-msg');
     const authHeaderBtnWrap = document.getElementById('auth-header-btn-wrap');
-    const userAvatar = document.getElementById('user-avatar');
     const userName = document.getElementById('user-name');
-    const userEmail = document.getElementById('user-email');
     const authModePill = document.getElementById('auth-mode-pill');
     const vaultFolderStatus = document.getElementById('vault-folder-status');
 
-    // UI Stats
+    // UI Stats Counters
     const imagesCount = document.getElementById('images-count');
     const videosCount = document.getElementById('videos-count');
     const docsCount = document.getElementById('docs-count');
-    const storageUsageText = document.getElementById('storage-usage-text');
+    const secretsCount = document.getElementById('secrets-count');
 
-    // Grid Containers
-    const imagesGrid = document.getElementById('grid-images');
-    const videosGrid = document.getElementById('grid-videos');
-    const documentsGrid = document.getElementById('grid-documents');
+    // Grid Containers (MATCHING EXACT HTML IDs: images-grid, videos-grid, docs-grid)
+    const imagesGrid = document.getElementById('images-grid');
+    const videosGrid = document.getElementById('videos-grid');
+    const documentsGrid = document.getElementById('docs-grid');
+
+    // Search Inputs
+    const imagesSearchInput = document.getElementById('images-search-input');
+    const videosSearchInput = document.getElementById('videos-search-input');
+    const docsSearchInput = document.getElementById('docs-search-input');
 
     // Upload Triggers
     const uploadImageBtn = document.getElementById('upload-image-btn');
@@ -294,12 +215,15 @@
     const imageUploader = document.getElementById('image-uploader');
     const videoUploader = document.getElementById('video-uploader');
     const docUploader = document.getElementById('doc-uploader');
+    const fileUploader = document.getElementById('file-uploader');
+
+    // Upload Progress
     const uploadProgressContainer = document.getElementById('upload-progress-container');
     const uploadProgressBar = document.getElementById('upload-progress-bar');
     const uploadPercentText = document.getElementById('upload-percent-text');
+    const uploadStatusText = document.getElementById('upload-status-text');
 
-    // Global Dropzone
-    const globalDropzone = document.getElementById('global-dropzone');
+    // Navigation Tabs
     const tabButtons = document.querySelectorAll('.vtab-btn');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
@@ -309,12 +233,12 @@
     const modalBody = document.getElementById('modal-body');
     const modalDownloadBtn = document.getElementById('modal-download-btn');
     const closePreviewBtn = document.getElementById('close-preview-btn');
+    const closePreviewModalBtn = document.getElementById('close-preview-modal-btn');
 
     // Notepad Tab
     const notesTextarea = document.getElementById('vault-notes-textarea');
     const notesSyncStatus = document.getElementById('notes-sync-status');
     const notesCharCount = document.getElementById('notes-char-count');
-    const notesWordCount = document.getElementById('notes-word-count');
     const copyNotesBtn = document.getElementById('copy-notes-btn');
     const downloadNotesBtn = document.getElementById('download-notes-btn');
     const clearNotesBtn = document.getElementById('clear-notes-btn');
@@ -326,7 +250,6 @@
     const unlockSecretsBtn = document.getElementById('unlock-secrets-btn');
     const lockSecretsBtn = document.getElementById('lock-secrets-btn');
     const secretsList = document.getElementById('secrets-list');
-    const secretsCount = document.getElementById('secrets-count');
     const secretsSearchInput = document.getElementById('secrets-search-input');
     const openNewSecretModalBtn = document.getElementById('open-new-secret-modal-btn');
     const newSecretModal = document.getElementById('new-secret-modal');
@@ -344,23 +267,6 @@
         toastEl.innerHTML = `<i class="fas fa-${icon}"></i> <span>${msg}</span>`;
         toastEl.classList.add('active');
         setTimeout(() => toastEl.classList.remove('active'), 2500);
-    }
-
-    // Toggle Eye Handlers for inputs
-    if (toggleFbEmail && fbEmailInput) {
-        toggleFbEmail.addEventListener('click', () => {
-            const isMasked = fbEmailInput.type === 'password';
-            fbEmailInput.type = isMasked ? 'text' : 'password';
-            toggleFbEmail.innerHTML = isMasked ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-        });
-    }
-
-    if (toggleFbPass && fbPasswordInput) {
-        toggleFbPass.addEventListener('click', () => {
-            const isMasked = fbPasswordInput.type === 'password';
-            fbPasswordInput.type = isMasked ? 'text' : 'password';
-            toggleFbPass.innerHTML = isMasked ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-        });
     }
 
     // ------------------------------------------------------------------
@@ -387,15 +293,8 @@
             const userCredential = await fbAuth.signInWithEmailAndPassword(email, pass);
             currentUser = userCredential.user;
 
-            // Purge credentials immediately from DOM
-            if (fbEmailInput) {
-                fbEmailInput.value = '';
-                fbEmailInput.type = 'password';
-            }
-            if (fbPasswordInput) {
-                fbPasswordInput.value = '';
-                fbPasswordInput.type = 'password';
-            }
+            if (fbEmailInput) fbEmailInput.value = '';
+            if (fbPasswordInput) fbPasswordInput.value = '';
 
             loginStatusMsg.className = 'status-msg success';
             loginStatusMsg.textContent = 'Identity Verified! Loading Cloud Workspace...';
@@ -433,7 +332,6 @@
         });
     }
 
-    // Check existing Firebase Auth State
     fbAuth.onAuthStateChanged((user) => {
         if (user && !currentUser) {
             currentUser = user;
@@ -448,7 +346,7 @@
             console.warn('Unauthorized identity rejected:', currentUser ? currentUser.email : 'null');
             await logout(true);
             loginStatusMsg.className = 'status-msg error';
-            loginStatusMsg.textContent = 'Access Denied: This vault is private. Registered admin identity required.';
+            loginStatusMsg.textContent = 'Access Denied: Registered admin identity required.';
             showToast('Access Denied: Unauthorized Identity', 'shield-xmark');
             return;
         }
@@ -458,18 +356,20 @@
             showToast(`Vault Unlocked via ${modeName}!`, 'shield-check');
         }
 
-        if (currentUser) {
+        if (currentUser && userName) {
             userName.textContent = currentUser.displayName || 'Arpit Yadav';
-            userEmail.textContent = currentUser.email;
         }
 
-        authModePill.innerHTML = `<i class="fas fa-cloud-check" style="color:#00C853;"></i> Live Cloud Synced`;
+        if (authModePill) {
+            authModePill.innerHTML = `<i class="fas fa-cloud-check" style="color:#00C853;"></i> Live Cloud Synced`;
+        }
         if (vaultFolderStatus) {
             vaultFolderStatus.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853;"></i> /${VAULT_FOLDER_NAME}`;
         }
 
-        // Load cached files instantly, then fetch live from Google Drive
-        await loadAllInitialFiles();
+        // 1. Instant Cache Load
+        loadFromCache();
+        // 2. Fresh Live Load from Google Drive Relay
         loadDriveFiles(false);
     }
 
@@ -507,16 +407,9 @@
         currentMasterPassphrase = null;
         allDriveFiles = [];
 
-        // Purge tokens & cloud cache
         localStorage.removeItem('arpit_vault_drive_cache');
         localStorage.removeItem('arpit_vault_notepad_permanent');
 
-        // Purge IndexedDB cache
-        try {
-            await VaultDB.clearAll();
-        } catch (_) {}
-
-        // Empty DOM grids so zero sensitive content exists in memory
         if (imagesGrid) imagesGrid.innerHTML = '';
         if (videosGrid) videosGrid.innerHTML = '';
         if (documentsGrid) documentsGrid.innerHTML = '';
@@ -525,24 +418,16 @@
         if (secretsManagerWrap) secretsManagerWrap.style.display = 'none';
         if (secretsUnlockCard) secretsUnlockCard.style.display = 'block';
 
-        if (fbEmailInput) {
-            fbEmailInput.value = '';
-            fbEmailInput.type = 'password';
-        }
-        if (fbPasswordInput) {
-            fbPasswordInput.value = '';
-            fbPasswordInput.type = 'password';
-        }
-        if (masterPassphraseInput) {
-            masterPassphraseInput.value = '';
-        }
+        if (fbEmailInput) fbEmailInput.value = '';
+        if (fbPasswordInput) fbPasswordInput.value = '';
+        if (masterPassphraseInput) masterPassphraseInput.value = '';
 
         fbSubmitBtn.disabled = false;
         fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
         loginStatusMsg.textContent = '';
 
         showLockedView();
-        showToast(isSecurityPurge ? 'Unauthorized attempt blocked: Session wiped' : 'Vault locked & All local cache wiped', 'shield-halved');
+        showToast(isSecurityPurge ? 'Unauthorized attempt blocked: Session wiped' : 'Vault locked &amp; cache wiped', 'shield-halved');
     }
 
     // ------------------------------------------------------------------
@@ -562,24 +447,20 @@
     }
 
     function partitionAndRenderFiles(files) {
-        const images = files.filter(f => categorizeFile(f.name, f.mimeType) === 'image');
-        const videos = files.filter(f => categorizeFile(f.name, f.mimeType) === 'video');
-        const docs = files.filter(f => categorizeFile(f.name, f.mimeType) === 'doc');
+        currentImages = files.filter(f => categorizeFile(f.name, f.mimeType) === 'image');
+        currentVideos = files.filter(f => categorizeFile(f.name, f.mimeType) === 'video');
+        currentDocs = files.filter(f => categorizeFile(f.name, f.mimeType) === 'doc');
 
-        if (imagesCount) imagesCount.textContent = images.length;
-        if (videosCount) videosCount.textContent = videos.length;
-        if (docsCount) docsCount.textContent = docs.length;
+        if (imagesCount) imagesCount.textContent = currentImages.length;
+        if (videosCount) videosCount.textContent = currentVideos.length;
+        if (docsCount) docsCount.textContent = currentDocs.length;
 
-        // Calculate total size
-        const totalBytes = files.reduce((acc, f) => acc + (f.size || 0), 0);
-        if (storageUsageText) storageUsageText.textContent = `${formatBytes(totalBytes)} Cloud Stored`;
-
-        renderImages(images);
-        renderVideos(videos);
-        renderDocs(docs);
+        renderImages(currentImages);
+        renderVideos(currentVideos);
+        renderDocs(currentDocs);
     }
 
-    async function loadAllInitialFiles() {
+    function loadFromCache() {
         try {
             const raw = localStorage.getItem('arpit_vault_drive_cache');
             if (raw) {
@@ -590,15 +471,7 @@
                 }
             }
         } catch (_) {}
-
-        const dbFiles = await VaultDB.getAllFiles().catch(() => []);
-        if (dbFiles.length > 0 && allDriveFiles.length === 0) {
-            allDriveFiles = dbFiles;
-            partitionAndRenderFiles(allDriveFiles);
-        }
     }
-
-    let isFetchingFiles = false;
 
     async function loadDriveFiles(showToastNotice = false) {
         if (isFetchingFiles) return;
@@ -612,47 +485,61 @@
                 localStorage.setItem('arpit_vault_drive_cache', JSON.stringify(freshFiles));
                 partitionAndRenderFiles(freshFiles);
 
-                // Update notes if fetched
-                if (data.notes && notesTextarea && (!notesTextarea.value || notesTextarea.value === localStorage.getItem('arpit_vault_notepad_permanent'))) {
-                    notesTextarea.value = data.notes;
-                    localStorage.setItem('arpit_vault_notepad_permanent', data.notes);
-                    updateNotepadStats();
-                    if (notesSyncStatus) notesSyncStatus.innerHTML = '<i class="fas fa-check-circle"></i> Synced with Google Drive';
+                if (data.notes && notesTextarea) {
+                    const localNotes = localStorage.getItem('arpit_vault_notepad_permanent');
+                    if (!notesTextarea.value || notesTextarea.value === localNotes) {
+                        notesTextarea.value = data.notes;
+                        localStorage.setItem('arpit_vault_notepad_permanent', data.notes);
+                        updateNotepadStats();
+                        if (notesSyncStatus) notesSyncStatus.innerHTML = '<i class="fas fa-check-circle" style="color:#00C853;"></i> Synced with Google Drive';
+                    }
                 }
 
                 if (showToastNotice) {
-                    showToast(`Synced ${freshFiles.length} file(s) from Google Drive`, 'cloud-arrow-down');
+                    showToast(`Synced ${freshFiles.length} item(s) from Google Drive`, 'cloud-arrow-down');
                 }
             } else if (data && data.error) {
                 console.warn('Drive Relay Error:', data.error);
             }
         } catch (err) {
-            console.warn('Background sync network error:', err);
+            console.warn('Sync error:', err);
         } finally {
             isFetchingFiles = false;
         }
     }
 
-    // Auto-sync every 20 seconds and on tab focus
+    // Auto-sync every 15 seconds & on tab focus
     setInterval(() => {
-        if (currentUser && unlockedDashboard.classList.contains('active')) {
+        if (currentUser && unlockedDashboard && unlockedDashboard.classList.contains('active')) {
             loadDriveFiles(false);
         }
-    }, 20000);
+    }, 15000);
 
     window.addEventListener('focus', () => {
-        if (currentUser && unlockedDashboard.classList.contains('active')) {
+        if (currentUser && unlockedDashboard && unlockedDashboard.classList.contains('active')) {
             loadDriveFiles(false);
         }
     });
 
+    // Refresh Buttons Handler
+    document.querySelectorAll('.refresh-files-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.querySelector('i')?.classList.add('fa-spin');
+            showToast('Syncing with Google Drive...', 'rotate');
+            loadDriveFiles(true).then(() => {
+                setTimeout(() => btn.querySelector('i')?.classList.remove('fa-spin'), 600);
+            });
+        });
+    });
+
     // ------------------------------------------------------------------
-    // FILE UPLOAD (DIRECT CLOUD SYNC)
+    // FILE UPLOAD (DIRECT CLOUD SYNC VIA GOOGLE APPS SCRIPT RELAY)
     // ------------------------------------------------------------------
     async function handleFileUpload(files) {
         if (!files || !files.length) return;
 
         if (uploadProgressContainer) uploadProgressContainer.style.display = 'block';
+        if (uploadStatusText) uploadStatusText.textContent = 'Uploading to Google Drive...';
         let uploadedCount = 0;
 
         for (let i = 0; i < files.length; i++) {
@@ -666,7 +553,6 @@
                 const res = await DRIVE_RELAY.uploadFile(file);
                 if (res && res.success) {
                     uploadedCount++;
-                    // Add directly to local list for instant feedback
                     allDriveFiles.unshift({
                         id: res.id,
                         name: res.name || file.name,
@@ -689,12 +575,10 @@
 
         if (uploadedCount > 0) {
             showToast(`Uploaded ${uploadedCount} file(s) to Google Drive!`, 'cloud-check');
-            // Refresh from cloud
             setTimeout(() => loadDriveFiles(false), 800);
         }
     }
 
-    // Attach File Upload Listeners
     if (uploadImageBtn && imageUploader) {
         uploadImageBtn.addEventListener('click', () => imageUploader.click());
         imageUploader.addEventListener('change', (e) => {
@@ -719,33 +603,8 @@
         });
     }
 
-    // Drag and Drop
-    if (globalDropzone) {
-        ['dragenter', 'dragover'].forEach(evt => {
-            globalDropzone.addEventListener(evt, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                globalDropzone.classList.add('drag-active');
-            });
-        });
-
-        ['dragleave', 'drop'].forEach(evt => {
-            globalDropzone.addEventListener(evt, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                globalDropzone.classList.remove('drag-active');
-            });
-        });
-
-        globalDropzone.addEventListener('drop', (e) => {
-            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
-                handleFileUpload(Array.from(e.dataTransfer.files));
-            }
-        });
-    }
-
     // ------------------------------------------------------------------
-    // RENDER FUNCTIONS (IMAGES, VIDEOS, DOCUMENTS)
+    // RENDER FUNCTIONS (USING STYLE.CSS .file-card AND .media-card)
     // ------------------------------------------------------------------
     function renderImages(items) {
         if (!imagesGrid) return;
@@ -753,8 +612,8 @@
             imagesGrid.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-images"></i>
-                    <h3>No Images Stored Yet</h3>
-                    <p>Click "Upload Images" to save photos, PNGs, and artwork directly in your vault.</p>
+                    <h3>Images Storage</h3>
+                    <p>No photos yet. Click "Upload Images" to save photos, PNGs, and artwork.</p>
                 </div>
             `;
             return;
@@ -763,23 +622,23 @@
         imagesGrid.innerHTML = items.map(img => {
             const viewUrl = img.webViewLink || `https://drive.google.com/file/d/${img.id}/view`;
             const downloadUrl = `https://drive.google.com/uc?id=${img.id}&export=download`;
-            const thumbUrl = `https://drive.google.com/thumbnail?id=${img.id}&sz=w600`;
+            const cdnThumb = `https://lh3.googleusercontent.com/d/${img.id}`;
 
             return `
-                <div class="vault-card image-card" data-id="${img.id}">
-                    <div class="card-media-wrap">
-                        <img src="${thumbUrl}" alt="${escapeHTML(img.name)}" loading="lazy" onerror="this.src='../assets/portfolio-preview.png'">
-                        <div class="card-overlay">
-                            <button class="action-btn-circle view-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" data-url="${viewUrl}" title="Preview"><i class="fas fa-eye"></i></button>
-                            <a href="${downloadUrl}" download="${escapeHTML(img.name)}" target="_blank" class="action-btn-circle" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
-                            <button class="action-btn-circle del-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
-                        </div>
+                <div class="file-card media-card" data-id="${img.id}">
+                    <div class="media-preview-container">
+                        <img src="${cdnThumb}" alt="${escapeHTML(img.name)}" class="media-thumb-img" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\"fas fa-image media-icon-placeholder image\\"></i>';">
                     </div>
-                    <div class="card-details">
-                        <span class="card-title" title="${escapeHTML(img.name)}">${escapeHTML(img.name)}</span>
-                        <div class="card-meta">
-                            <span>${formatBytes(img.size)}</span>
-                            <span>${new Date(img.modifiedTime).toLocaleDateString()}</span>
+                    <div class="file-details">
+                        <div class="file-name" title="${escapeHTML(img.name)}">${escapeHTML(img.name)}</div>
+                        <div class="file-meta">${formatBytes(img.size)} &middot; ${new Date(img.modifiedTime).toLocaleDateString()}</div>
+                    </div>
+                    <div class="file-card-bottom">
+                        <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);"><i class="fab fa-google-drive" style="color:#00C853;"></i> Synced</span>
+                        <div class="file-actions">
+                            <button type="button" class="file-btn view-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" data-url="${viewUrl}" title="Preview"><i class="fas fa-eye"></i></button>
+                            <a href="${downloadUrl}" download="${escapeHTML(img.name)}" target="_blank" class="file-btn" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
+                            <button type="button" class="file-btn del-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
                 </div>
@@ -795,8 +654,8 @@
             videosGrid.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-film"></i>
-                    <h3>No Videos Stored Yet</h3>
-                    <p>Upload demo screencasts, mp4 recordings, and presentation clips.</p>
+                    <h3>Videos Locker</h3>
+                    <p>No recordings yet. Click "Upload Video" to store MP4 and clips.</p>
                 </div>
             `;
             return;
@@ -807,20 +666,21 @@
             const downloadUrl = `https://drive.google.com/uc?id=${vid.id}&export=download`;
 
             return `
-                <div class="vault-card video-card" data-id="${vid.id}">
-                    <div class="card-media-wrap video-placeholder">
-                        <i class="fas fa-play-circle" style="font-size:42px; color:var(--brand-accent, #FF4F00);"></i>
-                        <div class="card-overlay">
-                            <a href="${viewUrl}" target="_blank" class="action-btn-circle" title="Play Video"><i class="fas fa-play"></i></a>
-                            <a href="${downloadUrl}" target="_blank" class="action-btn-circle" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
-                            <button class="action-btn-circle del-btn" data-id="${vid.id}" data-name="${escapeHTML(vid.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
-                        </div>
+                <div class="file-card media-card" data-id="${vid.id}">
+                    <div class="media-preview-container">
+                        <i class="fas fa-play-circle media-icon-placeholder video"></i>
+                        <div class="play-overlay"><i class="fas fa-play"></i></div>
                     </div>
-                    <div class="card-details">
-                        <span class="card-title" title="${escapeHTML(vid.name)}">${escapeHTML(vid.name)}</span>
-                        <div class="card-meta">
-                            <span>${formatBytes(vid.size)}</span>
-                            <span>${new Date(vid.modifiedTime).toLocaleDateString()}</span>
+                    <div class="file-details">
+                        <div class="file-name" title="${escapeHTML(vid.name)}">${escapeHTML(vid.name)}</div>
+                        <div class="file-meta">${formatBytes(vid.size)} &middot; ${new Date(vid.modifiedTime).toLocaleDateString()}</div>
+                    </div>
+                    <div class="file-card-bottom">
+                        <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);"><i class="fab fa-google-drive" style="color:#00C853;"></i> Synced</span>
+                        <div class="file-actions">
+                            <a href="${viewUrl}" target="_blank" class="file-btn" title="Play Video in Drive"><i class="fas fa-play"></i></a>
+                            <a href="${downloadUrl}" target="_blank" class="file-btn" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
+                            <button type="button" class="file-btn del-btn" data-id="${vid.id}" data-name="${escapeHTML(vid.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
                 </div>
@@ -836,8 +696,8 @@
             documentsGrid.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-file-lines"></i>
-                    <h3>No Documents Stored Yet</h3>
-                    <p>Click "Upload Documents" to store PDFs, reports, resumes, or code archives.</p>
+                    <h3>Documents Vault</h3>
+                    <p>No documents yet. Store PDFs, Resumes, and Code here.</p>
                 </div>
             `;
             return;
@@ -846,22 +706,26 @@
         documentsGrid.innerHTML = items.map(doc => {
             const viewUrl = doc.webViewLink || `https://drive.google.com/file/d/${doc.id}/view`;
             const downloadUrl = `https://drive.google.com/uc?id=${doc.id}&export=download`;
+            const isPdf = (doc.name || '').toLowerCase().endsWith('.pdf');
 
             return `
-                <div class="vault-card doc-card" data-id="${doc.id}">
-                    <div class="card-media-wrap doc-placeholder">
-                        <i class="fas fa-file-pdf" style="font-size:38px; color:#FF3B30;"></i>
-                        <div class="card-overlay">
-                            <a href="${viewUrl}" target="_blank" class="action-btn-circle" title="Open in Google Drive"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                            <a href="${downloadUrl}" target="_blank" class="action-btn-circle" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
-                            <button class="action-btn-circle del-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
+                <div class="file-card" data-id="${doc.id}">
+                    <div class="file-card-top">
+                        <div class="file-icon ${isPdf ? 'pdf' : 'doc'}">
+                            <i class="${isPdf ? 'fas fa-file-pdf' : 'fas fa-file-lines'}"></i>
+                        </div>
+                        <div class="file-details">
+                            <div class="file-name" title="${escapeHTML(doc.name)}">${escapeHTML(doc.name)}</div>
+                            <div class="file-meta">${formatBytes(doc.size)} &middot; ${new Date(doc.modifiedTime).toLocaleDateString()}</div>
                         </div>
                     </div>
-                    <div class="card-details">
-                        <span class="card-title" title="${escapeHTML(doc.name)}">${escapeHTML(doc.name)}</span>
-                        <div class="card-meta">
-                            <span>${formatBytes(doc.size)}</span>
-                            <span>${new Date(doc.modifiedTime).toLocaleDateString()}</span>
+                    <div class="file-card-bottom">
+                        <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);"><i class="fab fa-google-drive" style="color:#00C853;"></i> Synced</span>
+                        <div class="file-actions">
+                            <button type="button" class="file-btn view-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" data-url="${viewUrl}" title="Preview Document"><i class="fas fa-eye"></i></button>
+                            <a href="${viewUrl}" target="_blank" class="file-btn" title="Open in Google Drive"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                            <a href="${downloadUrl}" target="_blank" class="file-btn" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
+                            <button type="button" class="file-btn del-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
                 </div>
@@ -877,7 +741,7 @@
                 e.stopPropagation();
                 const id = btn.getAttribute('data-id');
                 const name = btn.getAttribute('data-name');
-                if (confirm(`Delete "${name}" from your cloud vault?`)) {
+                if (confirm(`Delete "${name}" from your Google Drive?`)) {
                     btn.disabled = true;
                     showToast(`Deleting ${name}...`, 'trash');
                     try {
@@ -886,9 +750,9 @@
                             allDriveFiles = allDriveFiles.filter(f => f.id !== id);
                             localStorage.setItem('arpit_vault_drive_cache', JSON.stringify(allDriveFiles));
                             partitionAndRenderFiles(allDriveFiles);
-                            showToast(`Removed "${name}" from Google Drive`, 'trash');
+                            showToast(`Moved "${name}" to Google Drive trash`, 'trash');
                         } else {
-                            showToast('Could not delete: ' + (res?.error || 'Error'), 'triangle-exclamation');
+                            showToast('Delete error: ' + (res?.error || 'Failed'), 'triangle-exclamation');
                         }
                     } catch (err) {
                         showToast('Delete error: ' + err.message, 'triangle-exclamation');
@@ -910,19 +774,50 @@
 
     function openPreviewModal(title, url, id) {
         if (!previewModal) return;
-        modalTitle.textContent = title;
-        modalBody.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" style="width:100%; height:75vh; border:none; border-radius:8px;"></iframe>`;
+        if (modalTitle) modalTitle.innerHTML = `<i class="fab fa-google-drive" style="color:#00C853; margin-right:6px;"></i> ${escapeHTML(title)}`;
+        if (modalBody) {
+            modalBody.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" style="width:100%; height:75vh; border:none; border-radius:8px;"></iframe>`;
+        }
         if (modalDownloadBtn) {
             modalDownloadBtn.href = `https://drive.google.com/uc?id=${id}&export=download`;
             modalDownloadBtn.download = title;
         }
         previewModal.style.display = 'flex';
+        previewModal.setAttribute('aria-hidden', 'false');
     }
 
-    if (closePreviewBtn && previewModal) {
-        closePreviewBtn.addEventListener('click', () => {
-            previewModal.style.display = 'none';
-            modalBody.innerHTML = '';
+    function closePreview() {
+        if (!previewModal) return;
+        previewModal.style.display = 'none';
+        previewModal.setAttribute('aria-hidden', 'true');
+        if (modalBody) modalBody.innerHTML = '';
+    }
+
+    if (closePreviewBtn) closePreviewBtn.addEventListener('click', closePreview);
+    if (closePreviewModalBtn) closePreviewModalBtn.addEventListener('click', closePreview);
+
+    // Live Search Handlers
+    if (imagesSearchInput) {
+        imagesSearchInput.addEventListener('input', (e) => {
+            const q = (e.target.value || '').toLowerCase().trim();
+            const filtered = q ? currentImages.filter(f => f.name.toLowerCase().includes(q)) : currentImages;
+            renderImages(filtered);
+        });
+    }
+
+    if (videosSearchInput) {
+        videosSearchInput.addEventListener('input', (e) => {
+            const q = (e.target.value || '').toLowerCase().trim();
+            const filtered = q ? currentVideos.filter(f => f.name.toLowerCase().includes(q)) : currentVideos;
+            renderVideos(filtered);
+        });
+    }
+
+    if (docsSearchInput) {
+        docsSearchInput.addEventListener('input', (e) => {
+            const q = (e.target.value || '').toLowerCase().trim();
+            const filtered = q ? currentDocs.filter(f => f.name.toLowerCase().includes(q)) : currentDocs;
+            renderDocs(filtered);
         });
     }
 
@@ -933,10 +828,6 @@
         if (!notesTextarea) return;
         const val = notesTextarea.value || '';
         if (notesCharCount) notesCharCount.textContent = val.length;
-        if (notesWordCount) {
-            const words = val.trim() ? val.trim().split(/\s+/).length : 0;
-            notesWordCount.textContent = words;
-        }
     }
 
     if (notesTextarea) {
@@ -1094,7 +985,6 @@
         try {
             const encryptedStr = await CryptoEngine.encrypt(decryptedSecrets, currentMasterPassphrase);
             localStorage.setItem('arpit_vault_secrets_enc', encryptedStr);
-            // Save to drive relay
             const blob = new Blob([encryptedStr], { type: 'application/json' });
             await DRIVE_RELAY.uploadFile(blob, SECRETS_FILE_NAME);
         } catch (err) {
