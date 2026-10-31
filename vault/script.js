@@ -177,7 +177,7 @@
     // GOOGLE DRIVE CLOUD RELAY (HEADLESS - ZERO GMAIL LOGIN POPUP)
     // ==================================================================
     const DRIVE_RELAY = {
-        url: 'https://script.google.com/macros/s/AKfycbz4xJVbny6Lv6u__Z9U60HcslR24-DJR8wjacinVFhTXJM2nE_mxmdSZSfw4MROk0s/exec',
+        url: 'https://script.google.com/macros/s/AKfycbw8FH54QwdoLJMf-3yZbSz3KlRbkXFwi9zd-ZIjfqbOBTE4tqr2ygRG5yQjXd105peYeA/exec',
         secret: 'ArpitVault@2026',
 
         async listFiles() {
