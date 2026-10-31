@@ -23,6 +23,143 @@
         firebase.initializeApp(FIREBASE_CONFIG);
     }
     const fbAuth = firebase.auth();
+    // Enforce SESSION persistence (closing browser/tab instantly destroys authentication session)
+    try {
+        fbAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
+    } catch (_) {}
+
+    // SAFE STORAGE (Safe across Incognito, private tabs, quota exceeded & restricted iframes)
+    const SafeStorage = {
+        mem: {},
+        getItem(key) {
+            try {
+                return (typeof window !== 'undefined' && window.localStorage) ? window.SafeStorage.getItem(key) : (this.mem[key] || null);
+            } catch (e) {
+                return this.mem[key] || null;
+            }
+        },
+        setItem(key, val) {
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) window.SafeStorage.setItem(key, val);
+            } catch (e) {}
+            this.mem[key] = val;
+        },
+        removeItem(key) {
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) window.SafeStorage.removeItem(key);
+            } catch (e) {}
+            delete this.mem[key];
+        }
+    };
+
+    // ZERO-LEAK INACTIVITY & BACKGROUND AUTO-LOCK MANAGER
+    const AutoLockManager = {
+        idleLimitSeconds: 180,       // 3 minutes idle auto-lock
+        backgroundLimitSeconds: 60,  // 60 seconds background tab auto-lock
+        secondsRemaining: 180,
+        timerInterval: null,
+        backgroundTimestamp: null,
+        hasWarned: false,
+
+        init() {
+            const resetActivity = () => this.recordActivity();
+            ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+                window.addEventListener(evt, resetActivity, { passive: true });
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    this.backgroundTimestamp = Date.now();
+                } else {
+                    if (this.backgroundTimestamp && currentUser) {
+                        const secondsAway = Math.floor((Date.now() - this.backgroundTimestamp) / 1000);
+                        if (secondsAway >= this.backgroundLimitSeconds) {
+                            this.triggerLock(`Security Auto-Lock: Tab was inactive in background for ${secondsAway}s.`);
+                            return;
+                        }
+                    }
+                    this.backgroundTimestamp = null;
+                }
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && currentUser) {
+                    this.triggerLock('Emergency Panic Lock engaged (ESC key).');
+                }
+            });
+        },
+
+        start() {
+            this.stop();
+            this.secondsRemaining = this.idleLimitSeconds;
+            this.hasWarned = false;
+            this.updateUI();
+
+            this.timerInterval = setInterval(() => {
+                if (!currentUser) {
+                    this.stop();
+                    return;
+                }
+                this.secondsRemaining--;
+                this.updateUI();
+
+                if (this.secondsRemaining === 30 && !this.hasWarned) {
+                    this.hasWarned = true;
+                    showToast('Inactivity Notice: Vault will lock in 30 seconds!', 'clock');
+                }
+
+                if (this.secondsRemaining <= 0) {
+                    this.triggerLock('Vault automatically locked after 3 minutes of inactivity.');
+                }
+            }, 1000);
+        },
+
+        recordActivity() {
+            if (!currentUser) return;
+            this.secondsRemaining = this.idleLimitSeconds;
+            if (this.hasWarned) {
+                this.hasWarned = false;
+            }
+            this.updateUI();
+        },
+
+        updateUI() {
+            const countdownEl = document.getElementById('idle-countdown');
+            const pillEl = document.getElementById('idle-timer-pill');
+            if (!countdownEl || !pillEl) return;
+
+            if (currentUser) {
+                pillEl.style.display = 'inline-flex';
+                const mins = Math.floor(this.secondsRemaining / 60);
+                const secs = this.secondsRemaining % 60;
+                countdownEl.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if (this.secondsRemaining <= 30) {
+                    pillEl.style.color = '#FF3B30';
+                    pillEl.style.borderColor = 'rgba(255,59,48,0.4)';
+                } else {
+                    pillEl.style.color = 'var(--text-muted)';
+                    pillEl.style.borderColor = 'var(--border-subtle)';
+                }
+            } else {
+                pillEl.style.display = 'none';
+            }
+        },
+
+        triggerLock(reason = 'Vault locked automatically.') {
+            this.stop();
+            showToast(reason, 'shield-halved');
+            logout(false);
+        },
+
+        stop() {
+            if (this.timerInterval) {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+            }
+            this.secondsRemaining = this.idleLimitSeconds;
+            this.updateUI();
+        }
+    };
 
     // ==================================================================
     // ADMIN IDENTITY VERIFICATION & WHITELIST (STRICT SECURITY)
@@ -44,7 +181,20 @@
         secret: 'ArpitVault@2026',
 
         async listFiles() {
-            const res = await fetch(`${this.url}?action=list&secret=${encodeURIComponent(this.secret)}`);
+            const res = await fetch(`${this.url}?action=list&secret=${encodeURIComponent(this.secret)}`, {
+                mode: 'cors',
+                credentials: 'omit',
+                redirect: 'follow'
+            });
+            return await res.json();
+        },
+
+        async downloadBlob(id) {
+            const res = await fetch(`${this.url}?action=download_blob&id=${id}&secret=${encodeURIComponent(this.secret)}`, {
+                mode: 'cors',
+                credentials: 'omit',
+                redirect: 'follow'
+            });
             return await res.json();
         },
 
@@ -73,6 +223,9 @@
 
             const res = await fetch(this.url, {
                 method: 'POST',
+                mode: 'cors',
+                credentials: 'omit',
+                redirect: 'follow',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             });
@@ -87,6 +240,9 @@
             };
             const res = await fetch(this.url, {
                 method: 'POST',
+                mode: 'cors',
+                credentials: 'omit',
+                redirect: 'follow',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             });
@@ -101,12 +257,45 @@
             };
             const res = await fetch(this.url, {
                 method: 'POST',
+                mode: 'cors',
+                credentials: 'omit',
+                redirect: 'follow',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             });
             return await res.json();
         }
     };
+
+    // DIRECT BLOB DOWNLOAD (100% immune to Google accounts or Incognito cookie blocks)
+    async function downloadFileDirect(id, name, mimeType) {
+        showToast(`Preparing download: ${name}...`, 'cloud-arrow-down');
+        try {
+            const data = await DRIVE_RELAY.downloadBlob(id);
+            if (data && data.base64) {
+                const byteChars = atob(data.base64);
+                const byteNumbers = new Uint8Array(byteChars.length);
+                for (let i = 0; i < byteChars.length; i++) {
+                    byteNumbers[i] = byteChars.charCodeAt(i);
+                }
+                const blob = new Blob([byteNumbers], { type: data.mimeType || mimeType || 'application/octet-stream' });
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = data.name || name || 'download';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+                showToast(`Downloaded ${name}!`, 'circle-check');
+                return;
+            }
+        } catch (e) {
+            console.warn('Direct blob fetch failed, falling back to public link:', e);
+        }
+        window.open(`https://drive.google.com/uc?id=${id}&export=download`, '_blank');
+        showToast(`Download link triggered`, 'circle-check');
+    }
 
     // ==================================================================
     // CLIENT-SIDE AES-GCM (PBKDF2 100k) ZERO-KNOWLEDGE CRYPTO ENGINE
@@ -352,6 +541,7 @@
         }
 
         showUnlockedView();
+        AutoLockManager.start();
         if (modeName !== 'Active Session') {
             showToast(`Vault Unlocked via ${modeName}!`, 'shield-check');
         }
@@ -374,6 +564,7 @@
     }
 
     function showLockedView() {
+        AutoLockManager.stop();
         lockedSection.style.display = 'flex';
         lockedSection.classList.add('active');
         unlockedDashboard.style.display = 'none';
@@ -406,9 +597,10 @@
         decryptedSecrets = [];
         currentMasterPassphrase = null;
         allDriveFiles = [];
+        AutoLockManager.stop();
 
-        localStorage.removeItem('arpit_vault_drive_cache');
-        localStorage.removeItem('arpit_vault_notepad_permanent');
+        SafeStorage.removeItem('arpit_vault_drive_cache');
+        SafeStorage.removeItem('arpit_vault_notepad_permanent');
 
         if (imagesGrid) imagesGrid.innerHTML = '';
         if (videosGrid) videosGrid.innerHTML = '';
@@ -462,7 +654,7 @@
 
     function loadFromCache() {
         try {
-            const raw = localStorage.getItem('arpit_vault_drive_cache');
+            const raw = SafeStorage.getItem('arpit_vault_drive_cache');
             if (raw) {
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -482,14 +674,14 @@
             if (data && data.success) {
                 const freshFiles = data.files || [];
                 allDriveFiles = freshFiles;
-                localStorage.setItem('arpit_vault_drive_cache', JSON.stringify(freshFiles));
+                SafeStorage.setItem('arpit_vault_drive_cache', JSON.stringify(freshFiles));
                 partitionAndRenderFiles(freshFiles);
 
                 if (data.notes && notesTextarea) {
-                    const localNotes = localStorage.getItem('arpit_vault_notepad_permanent');
+                    const localNotes = SafeStorage.getItem('arpit_vault_notepad_permanent');
                     if (!notesTextarea.value || notesTextarea.value === localNotes) {
                         notesTextarea.value = data.notes;
-                        localStorage.setItem('arpit_vault_notepad_permanent', data.notes);
+                        SafeStorage.setItem('arpit_vault_notepad_permanent', data.notes);
                         updateNotepadStats();
                         if (notesSyncStatus) notesSyncStatus.innerHTML = '<i class="fas fa-check-circle" style="color:#00C853;"></i> Synced with Google Drive';
                     }
@@ -637,7 +829,7 @@
                         <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);"><i class="fab fa-google-drive" style="color:#00C853;"></i> Synced</span>
                         <div class="file-actions">
                             <button type="button" class="file-btn view-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" data-url="${viewUrl}" title="Preview"><i class="fas fa-eye"></i></button>
-                            <a href="${downloadUrl}" download="${escapeHTML(img.name)}" target="_blank" class="file-btn" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
+                            <button type="button" class="file-btn download-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" data-mime="${escapeHTML(img.mimeType || '')}" title="Direct Download"><i class="fas fa-arrow-down-to-line"></i></button>
                             <button type="button" class="file-btn del-btn" data-id="${img.id}" data-name="${escapeHTML(img.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -679,7 +871,7 @@
                         <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);"><i class="fab fa-google-drive" style="color:#00C853;"></i> Synced</span>
                         <div class="file-actions">
                             <a href="${viewUrl}" target="_blank" class="file-btn" title="Play Video in Drive"><i class="fas fa-play"></i></a>
-                            <a href="${downloadUrl}" target="_blank" class="file-btn" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
+                            <button type="button" class="file-btn download-btn" data-id="${vid.id}" data-name="${escapeHTML(vid.name)}" data-mime="${escapeHTML(vid.mimeType || '')}" title="Direct Download"><i class="fas fa-arrow-down-to-line"></i></button>
                             <button type="button" class="file-btn del-btn" data-id="${vid.id}" data-name="${escapeHTML(vid.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -724,7 +916,7 @@
                         <div class="file-actions">
                             <button type="button" class="file-btn view-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" data-url="${viewUrl}" title="Preview Document"><i class="fas fa-eye"></i></button>
                             <a href="${viewUrl}" target="_blank" class="file-btn" title="Open in Google Drive"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                            <a href="${downloadUrl}" target="_blank" class="file-btn" title="Download"><i class="fas fa-arrow-down-to-line"></i></a>
+                            <button type="button" class="file-btn download-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" data-mime="${escapeHTML(doc.mimeType || '')}" title="Direct Download"><i class="fas fa-arrow-down-to-line"></i></button>
                             <button type="button" class="file-btn del-btn" data-id="${doc.id}" data-name="${escapeHTML(doc.name)}" title="Delete" style="color:#FF3B30;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -736,6 +928,17 @@
     }
 
     function attachCardHandlers(container) {
+        container.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                const name = btn.getAttribute('data-name');
+                const mime = btn.getAttribute('data-mime');
+                downloadFileDirect(id, name, mime);
+            });
+        });
+
         container.querySelectorAll('.del-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.stopPropagation();
@@ -748,7 +951,7 @@
                         const res = await DRIVE_RELAY.deleteFile(id);
                         if (res && res.success) {
                             allDriveFiles = allDriveFiles.filter(f => f.id !== id);
-                            localStorage.setItem('arpit_vault_drive_cache', JSON.stringify(allDriveFiles));
+                            SafeStorage.setItem('arpit_vault_drive_cache', JSON.stringify(allDriveFiles));
                             partitionAndRenderFiles(allDriveFiles);
                             showToast(`Moved "${name}" to Google Drive trash`, 'trash');
                         } else {
@@ -781,6 +984,10 @@
         if (modalDownloadBtn) {
             modalDownloadBtn.href = `https://drive.google.com/uc?id=${id}&export=download`;
             modalDownloadBtn.download = title;
+            modalDownloadBtn.onclick = (e) => {
+                e.preventDefault();
+                downloadFileDirect(id, title);
+            };
         }
         previewModal.style.display = 'flex';
         previewModal.setAttribute('aria-hidden', 'false');
@@ -842,7 +1049,7 @@
     async function saveCloudNotes() {
         if (!notesTextarea) return;
         const content = notesTextarea.value;
-        localStorage.setItem('arpit_vault_notepad_permanent', content);
+        SafeStorage.setItem('arpit_vault_notepad_permanent', content);
 
         try {
             const res = await DRIVE_RELAY.saveNotes(content);
@@ -883,7 +1090,7 @@
         clearNotesBtn.addEventListener('click', () => {
             if (confirm('Are you sure you want to clear your notepad?')) {
                 notesTextarea.value = '';
-                localStorage.removeItem('arpit_vault_notepad_permanent');
+                SafeStorage.removeItem('arpit_vault_notepad_permanent');
                 updateNotepadStats();
                 saveCloudNotes();
                 showToast('Notepad cleared', 'trash');
@@ -984,7 +1191,7 @@
         if (!currentMasterPassphrase) return;
         try {
             const encryptedStr = await CryptoEngine.encrypt(decryptedSecrets, currentMasterPassphrase);
-            localStorage.setItem('arpit_vault_secrets_enc', encryptedStr);
+            SafeStorage.setItem('arpit_vault_secrets_enc', encryptedStr);
             const blob = new Blob([encryptedStr], { type: 'application/json' });
             await DRIVE_RELAY.uploadFile(blob, SECRETS_FILE_NAME);
         } catch (err) {
@@ -1004,7 +1211,7 @@
             unlockSecretsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Decrypting...';
 
             try {
-                let encryptedPayload = localStorage.getItem('arpit_vault_secrets_enc');
+                let encryptedPayload = SafeStorage.getItem('arpit_vault_secrets_enc');
 
                 if (encryptedPayload) {
                     const decrypted = await CryptoEngine.decrypt(encryptedPayload, passphrase);
@@ -1139,5 +1346,8 @@
             '"': '&quot;'
         }[tag] || tag));
     }
+
+    // Initialize Auto-Lock Inactivity Listeners
+    AutoLockManager.init();
 
 })();
