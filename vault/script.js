@@ -23,30 +23,32 @@
         firebase.initializeApp(FIREBASE_CONFIG);
     }
     const fbAuth = firebase.auth();
-    // Enforce SESSION persistence (closing browser/tab instantly destroys authentication session)
+    // STRICT ZERO-RESIDUAL SECURITY: In-Memory Only persistence
+    // Ensures refresh, tab close, or new session ALWAYS starts strictly locked!
     try {
-        fbAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
+        fbAuth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(() => {});
+        fbAuth.signOut().catch(() => {});
     } catch (_) {}
 
-    // SAFE STORAGE (Safe across Incognito, private tabs, quota exceeded & restricted iframes)
+    // SAFE STORAGE (In-memory safe across Incognito, private tabs, quota limits)
     const SafeStorage = {
         mem: {},
         getItem(key) {
             try {
-                return (typeof window !== 'undefined' && window.localStorage) ? window.SafeStorage.getItem(key) : (this.mem[key] || null);
+                return (typeof window !== 'undefined' && window.sessionStorage) ? window.sessionStorage.getItem(key) : (this.mem[key] || null);
             } catch (e) {
                 return this.mem[key] || null;
             }
         },
         setItem(key, val) {
             try {
-                if (typeof window !== 'undefined' && window.localStorage) window.SafeStorage.setItem(key, val);
+                if (typeof window !== 'undefined' && window.sessionStorage) window.sessionStorage.setItem(key, val);
             } catch (e) {}
             this.mem[key] = val;
         },
         removeItem(key) {
             try {
-                if (typeof window !== 'undefined' && window.localStorage) window.SafeStorage.removeItem(key);
+                if (typeof window !== 'undefined' && window.sessionStorage) window.sessionStorage.removeItem(key);
             } catch (e) {}
             delete this.mem[key];
         }
@@ -461,6 +463,8 @@
     // ------------------------------------------------------------------
     // AUTHENTICATION FLOW (FIREBASE EMAIL & MASTER PASSWORD)
     // ------------------------------------------------------------------
+    let isExplicitLogin = false;
+
     async function handleFirebaseLogin(e) {
         if (e && e.preventDefault) e.preventDefault();
 
@@ -479,6 +483,8 @@
         loginStatusMsg.textContent = 'Verifying credentials...';
 
         try {
+            isExplicitLogin = true;
+            await fbAuth.setPersistence(firebase.auth.Auth.Persistence.NONE);
             const userCredential = await fbAuth.signInWithEmailAndPassword(email, pass);
             currentUser = userCredential.user;
 
@@ -489,6 +495,7 @@
             loginStatusMsg.textContent = 'Identity Verified! Loading Cloud Workspace...';
             await onVaultAuthenticated('Master ID/Password');
         } catch (err) {
+            isExplicitLogin = false;
             console.error('Firebase Auth Error:', err);
             fbSubmitBtn.disabled = false;
             fbSubmitBtn.innerHTML = '<i class="fas fa-fingerprint"></i> Authenticate Vault';
@@ -521,14 +528,39 @@
         });
     }
 
+    // AUTH STATE LISTENER: ZERO AUTO-LOGIN (Forces Locked State on Every Refresh/Load)
     fbAuth.onAuthStateChanged((user) => {
+        if (!isExplicitLogin) {
+            // Unsolicited auth state (from cache/refresh) - immediately purge and lock
+            if (user) {
+                fbAuth.signOut().catch(() => {});
+            }
+            currentUser = null;
+            showLockedView();
+            return;
+        }
+
         if (user && !currentUser) {
             currentUser = user;
-            onVaultAuthenticated('Active Session');
+            onVaultAuthenticated('Master ID/Password');
         } else if (!user) {
+            isExplicitLogin = false;
             showLockedView();
         }
     });
+
+    // INSTANT PURGE ON TAB CLOSE OR REFRESH
+    const purgeSessionState = () => {
+        isExplicitLogin = false;
+        currentUser = null;
+        try { fbAuth.signOut().catch(() => {}); } catch (_) {}
+        SafeStorage.removeItem('arpit_vault_drive_cache');
+        SafeStorage.removeItem('arpit_vault_notepad_permanent');
+        SafeStorage.removeItem('arpit_vault_secrets_enc');
+    };
+
+    window.addEventListener('beforeunload', purgeSessionState);
+    window.addEventListener('pagehide', purgeSessionState);
 
     async function onVaultAuthenticated(modeName) {
         if (!currentUser || !isAuthorizedAdmin(currentUser.email)) {
@@ -593,6 +625,7 @@
             await fbAuth.signOut();
         } catch (_) {}
 
+        isExplicitLogin = false;
         currentUser = null;
         decryptedSecrets = [];
         currentMasterPassphrase = null;
