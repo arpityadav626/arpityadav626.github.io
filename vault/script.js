@@ -166,13 +166,14 @@
     // ==================================================================
     // ADMIN IDENTITY VERIFICATION & WHITELIST (STRICT SECURITY)
     // ==================================================================
-    const AUTHORIZED_ADMIN_EMAILS = [
-        'arpityadav6794@gmail.com'
+    // Obfuscated Admin Fingerprint (Zero Plaintext Email Exposure on GitHub)
+    const AUTHORIZED_ADMIN_IDENTITIES = [
+        atob('YXJwaXR5YWRhdjY3OTRAZ21haWwuY29t')
     ];
 
     function isAuthorizedAdmin(email) {
         if (!email) return false;
-        return AUTHORIZED_ADMIN_EMAILS.includes(email.trim().toLowerCase());
+        return AUTHORIZED_ADMIN_IDENTITIES.includes(email.trim().toLowerCase());
     }
 
     // ==================================================================
