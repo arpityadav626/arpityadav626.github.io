@@ -179,7 +179,7 @@
     // GOOGLE DRIVE CLOUD RELAY (HEADLESS & BANK-GRADE TOKEN AUTHENTICATED)
     // ==================================================================
     const DRIVE_RELAY = {
-        url: 'https://script.google.com/macros/s/AKfycbxOZmMJKQKvkRNFDh-C1BSKT01SsSxMVS3g3D510sqTqixeOwMnbIF87aAEqYSIZF3Iww/exec',
+        url: 'https://script.google.com/macros/s/AKfycbyLItOiSpfcygLXoSWB7-Na6fxR1Ez1k04xhdGbeaVeW64wlf5MgQ4FfwIz7Lul03S3SQ/exec',
         secret: atob('QXJwaXRWYXVsdEAyMDI2'),
 
         async getIdToken() {
