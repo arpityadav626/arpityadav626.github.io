@@ -3757,3 +3757,52 @@ if (document.readyState === 'loading') {
 
 
 /* Command Palette (Ctrl+K): Removed */
+
+/* ======================================================================
+   STEALTH WORKSPACE / VAULT HOTKEY & MOBILE TOUCH TRIGGER
+   (Trigger via 'Ctrl + Shift + V', Triple-click, or Mobile Long-Press on brand logo)
+   ====================================================================== */
+(function() {
+    // 1. Keyboard Shortcut: Ctrl + Shift + V (Desktop)
+    window.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && (e.key === 'V' || e.key === 'v')) {
+            e.preventDefault();
+            window.location.href = 'vault/index.html';
+        }
+    });
+
+    // 2. Multi-click & Mobile Long-press on brand logo
+    const brand = document.querySelector('.brand-link');
+    if (brand) {
+        let clickCount = 0;
+        let clickTimer = null;
+        let pressTimer = null;
+
+        brand.addEventListener('click', function(e) {
+            clickCount++;
+            clearTimeout(clickTimer);
+            if (clickCount >= 3) {
+                e.preventDefault();
+                window.location.href = 'vault/index.html';
+                clickCount = 0;
+                return;
+            }
+            clickTimer = setTimeout(() => { clickCount = 0; }, 500);
+        });
+
+        // Mobile touch: 600ms hold on brand logo triggers vault entry
+        brand.addEventListener('touchstart', function(e) {
+            pressTimer = setTimeout(() => {
+                if (navigator.vibrate) navigator.vibrate(50);
+                window.location.href = 'vault/index.html';
+            }, 600);
+        }, { passive: true });
+
+        brand.addEventListener('touchend', function() {
+            clearTimeout(pressTimer);
+        });
+        brand.addEventListener('touchcancel', function() {
+            clearTimeout(pressTimer);
+        });
+    }
+})();
