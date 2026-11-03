@@ -1,23 +1,15 @@
 // ======================================================================
-// ARPIT VAULT - GOOGLE APPS SCRIPT RELAY (BANK-GRADE HARDENED v2.0)
-// Security Profile:
-// - Zero Static Secrets (Authenticated exclusively via Google Firebase JWT)
-// - Cryptographic UID Verification (Admin UID enforced via Google Identity Toolkit)
-// - ScriptProperties Configuration (No hardcoded credentials or IDs in code)
-// - POST-Only Engine (doGet disabled with 405 Method Not Allowed)
-// - Strict Folder Boundary Check (Rejects any file ID outside designated FOLDER_ID)
-// - 100% Private (Zero public sharing; lockDownOnce() migrates legacy public files)
-// - Concurrency Protection (LockService script lock on write operations)
-// - Generic Error Sanitization (Zero stack trace or internal error leakage)
+// ARPIT VAULT - GOOGLE APPS SCRIPT RELAY (BANK-GRADE HARDENED v2.1)
+// Refinements:
+// - Fast JWT 3-part structure check before UrlFetchApp (Prevents quota exhaustion)
+// - Overwrite / Trash existing file with same name on upload (Prevents notepad bloat)
+// - Strict 20MB Base64 payload limit & 100-char sanitized name limit
+// - Cryptographic UID Verification via Google Identity Toolkit
+// - Folder isolation & Boundary check on download/delete
+// - POST-Only Engine (doGet returns 405 Method Not Allowed)
+// - 100% Private (No public sharing; lockDownOnce utility)
 // ======================================================================
 
-// ----------------------------------------------------------------------
-// CONFIGURATION VIA SCRIPT PROPERTIES
-// ----------------------------------------------------------------------
-// Set these in Apps Script: Project Settings (gear icon) > Script Properties
-// 1. ADMIN_UID        : Your unique Firebase Auth User UID (e.g. from Firebase Console > Authentication)
-// 2. FIREBASE_API_KEY : AIzaSyAMMoUSW6BUvpNf0m9d8eHd3yT3MtNoV1w
-// 3. FOLDER_ID        : Google Drive Folder ID of 'Arpit_Dev_Vault'
 function getConfig() {
   var props = PropertiesService.getScriptProperties();
   return {
@@ -30,8 +22,6 @@ function getConfig() {
 // ----------------------------------------------------------------------
 // 1. ONE-TIME MIGRATION UTILITY: LOCK DOWN TO PRIVATE
 // ----------------------------------------------------------------------
-// Run this function ONCE from the Apps Script editor to convert the entire
-// vault folder and all legacy files to 100% PRIVATE (removes anyone-with-link).
 function lockDownOnce() {
   var config = getConfig();
   if (!config.folderId) {
@@ -53,14 +43,14 @@ function lockDownOnce() {
 }
 
 // ----------------------------------------------------------------------
-// 2. CRYPTOGRAPHIC TOKEN VERIFICATION
+// 2. CRYPTOGRAPHIC TOKEN VERIFICATION (With Pre-Fetch Quota Guard)
 // ----------------------------------------------------------------------
 function verifyAdminToken(idToken, config) {
-  if (!idToken || typeof idToken !== 'string' || idToken.length < 100) {
-    return false;
+  // Fast structure check: A valid Firebase JWT must have 3 dot-separated segments
+  if (!idToken || typeof idToken !== 'string' || idToken.length < 100 || idToken.split('.').length !== 3) {
+    return false; // Rejects garbage tokens immediately without consuming UrlFetchApp quota
   }
   if (!config.apiKey || !config.adminUid) {
-    Logger.log("Missing configuration: ADMIN_UID or FIREBASE_API_KEY in Script Properties.");
     return false;
   }
 
@@ -77,15 +67,12 @@ function verifyAdminToken(idToken, config) {
       var data = JSON.parse(response.getContentText());
       if (data.users && data.users.length > 0) {
         var user = data.users[0];
-        // Enforce exact matching of the immutable Firebase Admin UID
         if (user.localId && user.localId === config.adminUid) {
-          return true; // Cryptographically Verified Admin!
+          return true; // Legitimate Admin Verified
         }
       }
     }
-  } catch (err) {
-    Logger.log("Token verification error: " + err.toString());
-  }
+  } catch (err) {}
   return false;
 }
 
@@ -95,16 +82,13 @@ function verifyAdminToken(idToken, config) {
 function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     error: "Method Not Allowed. All relay actions require authenticated POST."
-  }))
-  .setMimeType(ContentService.MimeType.JSON);
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 // ----------------------------------------------------------------------
 // 4. POST REQUEST HANDLER (PRIMARY RELAY ENGINE)
 // ----------------------------------------------------------------------
 function doPost(e) {
-  var output = { success: false, error: "Request failed" };
-
   try {
     if (!e || !e.postData || !e.postData.contents) {
       return respondJson({ error: "Invalid request payload" }, 400);
@@ -126,13 +110,10 @@ function doPost(e) {
 
     var folder = DriveApp.getFolderById(config.folderId);
 
-    // ------------------------------------------------------------------
-    // ACTION: LIST FILES (Metadata only; NO public URLs)
-    // ------------------------------------------------------------------
+    // ACTION: LIST FILES
     if (action === "list") {
       var files = folder.getFiles();
       var list = [];
-
       while (files.hasNext()) {
         var f = files.next();
         list.push({
@@ -143,17 +124,11 @@ function doPost(e) {
           modifiedTime: f.getLastUpdated().toISOString()
         });
       }
-
-      list.sort(function(a, b) {
-        return new Date(b.modifiedTime) - new Date(a.modifiedTime);
-      });
-
+      list.sort(function(a, b) { return new Date(b.modifiedTime) - new Date(a.modifiedTime); });
       return respondJson({ success: true, files: list });
     }
 
-    // ------------------------------------------------------------------
-    // ACTION: DOWNLOAD BLOB (Strict Parent Folder Verification)
-    // ------------------------------------------------------------------
+    // ACTION: DOWNLOAD BLOB (Strict Boundary Verification)
     if (action === "download_blob") {
       var fileId = payload.id;
       if (!isValidFileId(fileId)) {
@@ -161,8 +136,6 @@ function doPost(e) {
       }
 
       var file = DriveApp.getFileById(fileId);
-
-      // Verify file belongs strictly to the designated vault folder
       if (!isChildOfVault(file, config.folderId)) {
         return respondJson({ error: "Access Denied: File outside vault boundary" }, 403);
       }
@@ -176,39 +149,38 @@ function doPost(e) {
       });
     }
 
-    // ------------------------------------------------------------------
-    // ACTION: UPLOAD (Concurrency Script Lock + Strict Private)
-    // ------------------------------------------------------------------
+    // ACTION: UPLOAD (Size Cap, Name Sanitization, Overwrite Existing File)
     if (action === "upload") {
       var lock = LockService.getScriptLock();
       try {
-        lock.waitLock(15000); // Wait up to 15s for write lock
+        lock.waitLock(15000);
       } catch (lockErr) {
         return respondJson({ error: "Server busy, please retry" }, 429);
       }
 
       try {
         var base64Data = payload.base64;
-        var fileName = payload.name;
-
-        // Validation
-        if (!base64Data || !fileName || typeof fileName !== 'string' || fileName.length > 255) {
+        if (typeof base64Data !== 'string' || base64Data.length > 28000000) {
           lock.releaseLock();
-          return respondJson({ error: "Invalid upload parameters" }, 400);
+          return respondJson({ error: "Payload exceeds 20MB limit" }, 413);
         }
 
-        // Payload size protection (~30MB Base64 limit)
-        if (base64Data.length > 35000000) {
-          lock.releaseLock();
-          return respondJson({ error: "Payload exceeds maximum limit (20MB raw file)" }, 413);
-        }
+        var fileName = String(payload.name || "file").slice(0, 100);
 
         var decoded = Utilities.base64Decode(base64Data);
         var newBlob = Utilities.newBlob(decoded, payload.mimeType || "application/octet-stream", fileName);
 
         var createdFile = folder.createFile(newBlob);
-        // Ensure strictly private (no public sharing)
         createdFile.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
+
+        // Safe Overwrite: Trash older versions only AFTER new file is successfully created
+        var existing = folder.getFilesByName(fileName);
+        while (existing.hasNext()) {
+          var oldFile = existing.next();
+          if (oldFile.getId() !== createdFile.getId()) {
+            oldFile.setTrashed(true);
+          }
+        }
 
         lock.releaseLock();
 
@@ -224,9 +196,7 @@ function doPost(e) {
       }
     }
 
-    // ------------------------------------------------------------------
-    // ACTION: DELETE (Strict Parent Folder Verification)
-    // ------------------------------------------------------------------
+    // ACTION: DELETE
     if (action === "delete") {
       var delFileId = payload.id;
       if (!isValidFileId(delFileId)) {
@@ -243,16 +213,10 @@ function doPost(e) {
     }
 
   } catch (err) {
-    Logger.log("Internal unhandled error: " + err.toString());
     return respondJson({ error: "Internal processing error" }, 500);
   }
-
-  return respondJson(output);
 }
 
-// ----------------------------------------------------------------------
-// HELPER FUNCTIONS
-// ----------------------------------------------------------------------
 function respondJson(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);

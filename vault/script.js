@@ -43,7 +43,11 @@
 
     const SECRETS_FILE_NAME = 'vault_secrets.enc';
     const NOTEPAD_FILE_NAME = 'vault_notepad.enc';
-    const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB Apps Script payload limit
+    const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB practical limit to prevent memory spikes
+    let isFilePickerOpen = false;
+
+    // Safe MIME whitelist for in-browser preview (HTML, SVG, PDF are intentionally excluded to eliminate XSS/sandbox escapes)
+    const PREVIEWABLE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'video/mp4', 'video/webm'];
 
     // Hardened Apps Script Deployment URL (POST Only)
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-qBiLba7VYVIzMKafg3EUvLR26XNeCYdLA3_T7IYNlgoVQuTlAAd4c1ZyzAhPpvilgA/exec';
@@ -180,8 +184,14 @@
             });
 
             window.addEventListener('blur', () => {
-                if (currentUser) {
+                if (currentUser && !isFilePickerOpen) {
                     this.triggerLock('Window blur/focus lost');
+                }
+            });
+
+            window.addEventListener('focus', () => {
+                if (isFilePickerOpen) {
+                    setTimeout(() => { isFilePickerOpen = false; }, 400);
                 }
             });
 
@@ -196,6 +206,9 @@
     // ------------------------------------------------------------------
     const CryptoEngine = {
         async deriveKey(passphrase, salt, iterations = 600000) {
+            if (typeof passphrase !== 'string' || passphrase.length === 0) {
+                throw new Error('Vault locked: Master Passphrase is required.');
+            }
             const enc = new TextEncoder();
             const baseKey = await crypto.subtle.importKey(
                 'raw',
@@ -219,6 +232,9 @@
         },
 
         async encrypt(plainObj, passphrase) {
+            if (typeof passphrase !== 'string' || passphrase.length < 12) {
+                throw new Error('Security policy: Master Passphrase must be at least 12 characters.');
+            }
             const salt = crypto.getRandomValues(new Uint8Array(16)); // 16 bytes
             const iv = crypto.getRandomValues(new Uint8Array(12));   // 12 bytes
             const iterations = 600000;
@@ -872,9 +888,9 @@
         for (let i = 0; i < total; i++) {
             const file = files[i];
 
-            // Size enforcement: Max 20MB
+            // Size enforcement: Max 5MB practical limit
             if (file.size > MAX_FILE_SIZE_BYTES) {
-                showToast(`Skipped ${file.name}: Exceeds 20MB security limit.`, 'triangle-exclamation');
+                showToast(`Rejected ${file.name}: Exceeds 5MB security limit.`, 'triangle-exclamation');
                 continue;
             }
 
@@ -934,26 +950,47 @@
     }
 
     if (uploadImageBtn && imageUploader) {
-        uploadImageBtn.addEventListener('click', () => imageUploader.click());
+        uploadImageBtn.addEventListener('click', () => {
+            isFilePickerOpen = true;
+            imageUploader.click();
+        });
         imageUploader.addEventListener('change', (e) => {
+            isFilePickerOpen = false;
             handleEncryptedUpload(Array.from(e.target.files));
             e.target.value = '';
+        });
+        imageUploader.addEventListener('cancel', () => {
+            isFilePickerOpen = false;
         });
     }
 
     if (uploadVideoBtn && videoUploader) {
-        uploadVideoBtn.addEventListener('click', () => videoUploader.click());
+        uploadVideoBtn.addEventListener('click', () => {
+            isFilePickerOpen = true;
+            videoUploader.click();
+        });
         videoUploader.addEventListener('change', (e) => {
+            isFilePickerOpen = false;
             handleEncryptedUpload(Array.from(e.target.files));
             e.target.value = '';
+        });
+        videoUploader.addEventListener('cancel', () => {
+            isFilePickerOpen = false;
         });
     }
 
     if (uploadDocBtn && docUploader) {
-        uploadDocBtn.addEventListener('click', () => docUploader.click());
+        uploadDocBtn.addEventListener('click', () => {
+            isFilePickerOpen = true;
+            docUploader.click();
+        });
         docUploader.addEventListener('change', (e) => {
+            isFilePickerOpen = false;
             handleEncryptedUpload(Array.from(e.target.files));
             e.target.value = '';
+        });
+        docUploader.addEventListener('cancel', () => {
+            isFilePickerOpen = false;
         });
     }
 
@@ -988,7 +1025,9 @@
         for (let i = 0; i < len; i++) {
             bytes[i] = binStr.charCodeAt(i);
         }
-        const blob = new Blob([bytes], { type: decryptedPayload.type || 'application/octet-stream' });
+        // Convert base64 payload data to Blob (Enforce octet-stream for non-whitelisted types to neutralize XSS/HTML/SVG)
+        const safeMimeType = PREVIEWABLE_TYPES.includes(decryptedPayload.type) ? decryptedPayload.type : 'application/octet-stream';
+        const blob = new Blob([bytes], { type: safeMimeType });
         const blobUrl = createSafeObjectURL(blob);
 
         const fileRecord = {
@@ -1012,7 +1051,10 @@
             if (previewModalBody) {
                 previewModalBody.replaceChildren();
 
-                if (record.type.startsWith('image/')) {
+                const isImage = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(record.type);
+                const isVideo = ['video/mp4', 'video/webm'].includes(record.type);
+
+                if (isImage) {
                     const img = safeEl('img', {
                         attrs: {
                             src: record.blobUrl,
@@ -1021,7 +1063,7 @@
                         }
                     });
                     previewModalBody.appendChild(img);
-                } else if (record.type.startsWith('video/')) {
+                } else if (isVideo) {
                     const video = safeEl('video', {
                         attrs: {
                             src: record.blobUrl,
@@ -1030,23 +1072,17 @@
                         }
                     });
                     previewModalBody.appendChild(video);
-                } else if (record.type === 'application/pdf') {
-                    const iframe = safeEl('iframe', {
-                        attrs: {
-                            src: record.blobUrl,
-                            style: 'width:100%;height:70vh;border:none;'
-                        }
-                    });
-                    previewModalBody.appendChild(iframe);
                 } else {
-                    const genericView = safeEl('div', {
+                    // Safe Isolated Download Box for HTML, SVG, PDF, Executables, Docs (Zero DOM/iframe execution)
+                    const safeDownloadView = safeEl('div', {
                         attrs: { style: 'text-align:center;padding:32px;' }
                     }, [
-                        safeEl('i', { className: 'fas fa-file-circle-check', attrs: { style: 'font-size:48px;color:#00C853;margin-bottom:12px;' } }),
+                        safeEl('i', { className: 'fas fa-shield-halved', attrs: { style: 'font-size:48px;color:#00e5ff;margin-bottom:16px;' } }),
                         safeEl('h4', { text: record.name }),
-                        safeEl('p', { text: `Decrypted ${formatBytes(record.size)}. Ready for direct download.` })
+                        safeEl('p', { text: `File type (${record.type || 'unknown'}) is isolated from in-browser execution.` }),
+                        safeEl('p', { text: `Size: ${formatBytes(record.size)}. Direct download available below.` })
                     ]);
-                    previewModalBody.appendChild(genericView);
+                    previewModalBody.appendChild(safeDownloadView);
                 }
             }
 
