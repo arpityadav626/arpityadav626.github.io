@@ -176,25 +176,6 @@
                 window.addEventListener(evt, () => this.reset(), { passive: true });
             });
 
-            // Instant lock on tab hidden or window blur
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden && currentUser) {
-                    this.triggerLock('Tab switched/hidden');
-                }
-            });
-
-            window.addEventListener('blur', () => {
-                if (currentUser && !isFilePickerOpen) {
-                    this.triggerLock('Window blur/focus lost');
-                }
-            });
-
-            window.addEventListener('focus', () => {
-                if (isFilePickerOpen) {
-                    setTimeout(() => { isFilePickerOpen = false; }, 400);
-                }
-            });
-
             window.addEventListener('beforeunload', () => {
                 purgeAllSessionMemory();
             });
@@ -643,8 +624,9 @@
         }
     }
 
-    if (firebaseLoginForm) firebaseLoginForm.addEventListener('submit', handleFirebaseLogin);
-    if (fbSubmitBtn) fbSubmitBtn.addEventListener('click', handleFirebaseLogin);
+    if (firebaseLoginForm) {
+        firebaseLoginForm.addEventListener('submit', handleFirebaseLogin);
+    }
 
     fbAuth.onAuthStateChanged((user) => {
         if (!isExplicitLogin) {
