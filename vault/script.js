@@ -46,7 +46,7 @@
     const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB Apps Script payload limit
 
     // Hardened Apps Script Deployment URL (POST Only)
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGBYXCYuZZzjyPu3kEhqkiAy_xQRKq4mP-6gmI05P8rDx87deHWPJertXKjTo7_34yjQ/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-qBiLba7VYVIzMKafg3EUvLR26XNeCYdLA3_T7IYNlgoVQuTlAAd4c1ZyzAhPpvilgA/exec';
 
     // INITIALIZE FIREBASE APP
     if (!firebase.apps.length) {
