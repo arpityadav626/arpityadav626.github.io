@@ -213,8 +213,8 @@
         },
 
         async encrypt(plainObj, passphrase) {
-            if (typeof passphrase !== 'string' || passphrase.length < 12) {
-                throw new Error('Security policy: Master Passphrase must be at least 12 characters.');
+            if (typeof passphrase !== 'string' || passphrase.length === 0) {
+                throw new Error('Master Passphrase is required.');
             }
             const salt = crypto.getRandomValues(new Uint8Array(16)); // 16 bytes
             const iv = crypto.getRandomValues(new Uint8Array(12));   // 12 bytes
@@ -367,7 +367,15 @@
         },
 
         async uploadEncryptedBlob(blobString, randomFileName) {
-            const base64 = btoa(unescape(encodeURIComponent(blobString)));
+            const bytes = new TextEncoder().encode(blobString);
+            let binary = '';
+            const len = bytes.length;
+            const chunk = 8192;
+            for (let i = 0; i < len; i += chunk) {
+                binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + chunk, len)));
+            }
+            const base64 = btoa(binary);
+
             return await this.postAction('upload', {
                 name: randomFileName,
                 mimeType: 'application/octet-stream',
@@ -855,11 +863,12 @@
     async function handleEncryptedUpload(files) {
         if (!files || files.length === 0) return;
         if (!currentMasterPassphrase) {
-            showToast('Master Passphrase required to encrypt files. Unlock Passwords tab first!', 'key');
-            // Switch to secrets tab to prompt for passphrase
-            const secretsTabBtn = document.querySelector('[data-tab="tab-secrets"]');
-            if (secretsTabBtn) secretsTabBtn.click();
-            return;
+            const entered = window.prompt('Master Passphrase required to encrypt & upload files.\nPlease enter your Master Passphrase:');
+            if (!entered || !entered.trim()) {
+                showToast('Upload cancelled: Master Passphrase required.', 'key');
+                return;
+            }
+            currentMasterPassphrase = entered.trim();
         }
 
         if (uploadProgressContainer) uploadProgressContainer.style.display = 'block';
@@ -1416,10 +1425,8 @@
             }
 
             const passphrase = (masterPassphraseInput.value || '').trim();
-            const evaluation = evaluatePassphrase(passphrase);
-
-            if (!evaluation.valid) {
-                showToast(evaluation.label, 'triangle-exclamation');
+            if (!passphrase) {
+                showToast('Please enter your Master Passphrase', 'triangle-exclamation');
                 return;
             }
 
