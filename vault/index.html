@@ -1,12 +1,390 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=../index.html">
-    <title>Redirecting...</title>
-    <script>window.location.replace('../index.html');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#F6F5F2">
+    <title>Arpit.Vault — Private Cloud Workspace</title>
+    
+    <!-- Security & Crawling Protections (Hardened CSP, No-Referrer, No-Index) -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; img-src 'self' blob: data:; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self';">
+
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg?v=2026.2">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons with Subresource Integrity (SRI) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
+
+    <!-- Firebase SDK with Subresource Integrity (SRI) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" integrity="sha384-yuGdyIzzYtOBlBG6JOWn+Ey9kpq7HocusNuxEGyyohr1eEyXpeEyehIIXC/hznw4" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" integrity="sha384-lI+CxEx/bCvWP1b0OK13j5HTrTZP7yf1xle8TVOFq2smz6KC1RChTarRV/RHP5PP" crossorigin="anonymous"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../style.css?v=2026.57">
+    <link rel="stylesheet" href="style.css?v=2026.58">
 </head>
-<body style="background:#0d0d0d;margin:0;">
+<body class="light-theme vault-body" data-mode="light">
+
+    <!-- Minimalist Header (Matching arpity.me) -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="brand-group">
+                <a href="../index.html" class="brand-link">arpity.me</a>
+                <span class="vault-tag">( VAULT <span class="vault-tag-sub">// SECURE-DEV-WORKSPACE</span> )</span>
+            </div>
+
+            <nav class="navbar" id="navbar">
+                <a href="../index.html" class="nav-link nav-resume-link">Portfolio ↗</a>
+                <div id="auth-header-btn-wrap" style="display:inline-flex; align-items:center;">
+                    <!-- Lock Vault injected dynamically via JS -->
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container (1240px Centered Layout) -->
+    <main class="vault-page-wrap">
+
+        <!-- 1. LOCKED / AUTHENTICATION GATE -->
+        <section id="locked-state" class="vault-section locked-section active">
+            <div class="gate-card">
+                <!-- 1A: FIREBASE EMAIL + PASSWORD FORM -->
+                <div id="auth-box-firebase" class="auth-box active" style="width:100%;">
+                    <div style="text-align:center; margin-bottom:20px;">
+                        <h3 style="font-size:19px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">
+                            <i class="fas fa-shield-halved" style="color:#FF4F00; margin-right:6px;"></i> Private Cloud Vault
+                        </h3>
+                        <p style="font-size:12px; color:var(--text-muted); margin:0;">
+                            Zero-Knowledge Encrypted &middot; Admin Token Authentication
+                        </p>
+                    </div>
+
+                    <form id="firebase-login-form" class="gate-form" autocomplete="off">
+                        <div class="gate-input-group">
+                            <i class="fas fa-user-astronaut"></i>
+                            <input type="password" 
+                                   id="fb-email" 
+                                   name="vault_sec_uid_token" 
+                                   placeholder="Admin Identifier / Email" 
+                                   required 
+                                   autocomplete="off"
+                                   autocorrect="off" 
+                                   autocapitalize="off" 
+                                   spellcheck="false"
+                                   data-lpignore="true"
+                                   data-1p-ignore="true"
+                                   data-form-type="other"
+                                   class="masked-input">
+                        </div>
+                        <div class="gate-input-group">
+                            <i class="fas fa-shield-halved"></i>
+                            <input type="password" 
+                                   id="fb-password" 
+                                   name="vault_sec_pwd_token" 
+                                   placeholder="Master Authentication Password" 
+                                   required 
+                                   autocomplete="new-password"
+                                   autocorrect="off" 
+                                   autocapitalize="off" 
+                                   spellcheck="false"
+                                   data-lpignore="true"
+                                   data-1p-ignore="true"
+                                   data-form-type="other"
+                                   class="masked-input">
+                        </div>
+                        <button type="submit" class="hero-action-btn primary-action submit-auth-btn" id="fb-submit-btn" style="width:100%; justify-content:center;">
+                            <i class="fas fa-fingerprint"></i> Authenticate Session
+                        </button>
+                    </form>
+                    <span class="gate-subtext">Direct Firebase Auth: In-memory token verified server-side.</span>
+                </div>
+
+                <div id="login-status-msg" class="status-msg"></div>
+            </div>
+        </section>
+
+        <!-- 2. UNLOCKED / DASHBOARD SCREEN -->
+        <section id="unlocked-dashboard" class="vault-section dashboard-section" style="display:none;">
+            <!-- Header Section -->
+            <div class="vault-workspace-header" id="vault-content">
+                <div>
+                    <span class="section-tag-mono">( 01 // ENCRYPTED REPOSITORY )</span>
+                    <h1 class="vault-hero-title">Cloud Workspace</h1>
+                    <p class="vault-hero-subtitle">Client-Side Zero-Knowledge Encrypted Files, Notes, and Passwords.</p>
+                </div>
+                <!-- Status Pills -->
+                <div class="social-bar">
+                    <span class="direct-line-pill" id="idle-timer-pill" style="display:none; color:var(--text-muted);"><i class="fas fa-stopwatch"></i> Auto-lock: <span id="idle-countdown">3:00</span></span>
+                    <span class="direct-line-pill"><i class="fas fa-user-check"></i> <span id="user-name">Admin</span></span>
+                    <span class="direct-line-pill"><i class="fas fa-shield-check"></i> <span id="vault-folder-status">E2E Encrypted</span></span>
+                    <span class="direct-line-pill drive-connected" id="auth-mode-pill"><i class="fas fa-lock"></i> Zero-Knowledge</span>
+                </div>
+            </div>
+
+            <!-- Vault Tabs -->
+            <div class="vault-tabs">
+                <button class="vtab-btn active" data-tab="tab-images">
+                    <i class="fas fa-image"></i> Images (<span id="images-count">0</span>)
+                </button>
+                <button class="vtab-btn" data-tab="tab-videos">
+                    <i class="fas fa-film"></i> Videos (<span id="videos-count">0</span>)
+                </button>
+                <button class="vtab-btn" data-tab="tab-docs">
+                    <i class="fas fa-file-lines"></i> Documents (<span id="docs-count">0</span>)
+                </button>
+                <button class="vtab-btn" data-tab="tab-notes">
+                    <i class="fas fa-pen-to-square"></i> Notepad (Encrypted)
+                </button>
+                <button class="vtab-btn" data-tab="tab-secrets">
+                    <i class="fas fa-key"></i> Passwords &amp; Keys (<span id="secrets-count">0</span>)
+                </button>
+            </div>
+
+            <!-- Global Upload Progress Indicator -->
+            <div id="upload-progress-container" class="upload-progress-container" style="display:none;">
+                <div class="progress-info">
+                    <span id="upload-status-text">Encrypting and uploading...</span>
+                    <span id="upload-percent-text">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div id="upload-progress-bar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <!-- Hidden File Input Triggers -->
+            <input type="file" id="image-uploader" accept="image/*" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
+            <input type="file" id="video-uploader" accept="video/mp4,video/webm" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
+            <input type="file" id="doc-uploader" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
+            <input type="file" id="file-uploader" multiple style="position:fixed;top:-10000px;left:-10000px;opacity:0;pointer-events:none;">
+
+            <!-- TAB 1: IMAGES -->
+            <div id="tab-images" class="tab-pane active">
+                <div class="tab-actions-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="images-search-input" placeholder="Search decrypted photos...">
+                    </div>
+                    <div class="file-upload-wrap">
+                        <button class="hero-action-btn primary-action" id="upload-image-btn">
+                            <i class="fas fa-cloud-arrow-up"></i> Encrypt &amp; Upload Images
+                        </button>
+                        <button class="refresh-btn refresh-files-btn" title="Refresh Images">
+                            <i class="fas fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="images-grid" class="files-grid media-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-images"></i>
+                        <h3>Images Storage</h3>
+                        <p>No photos stored yet, or click "Encrypt &amp; Upload Images" (Max 20MB per file).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: VIDEOS -->
+            <div id="tab-videos" class="tab-pane">
+                <div class="tab-actions-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="videos-search-input" placeholder="Search decrypted clips...">
+                    </div>
+                    <div class="file-upload-wrap">
+                        <button class="hero-action-btn primary-action" id="upload-video-btn">
+                            <i class="fas fa-cloud-arrow-up"></i> Encrypt &amp; Upload Video (Max 20MB)
+                        </button>
+                        <button class="refresh-btn refresh-files-btn" title="Refresh Videos">
+                            <i class="fas fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="videos-grid" class="files-grid media-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-film"></i>
+                        <h3>Videos Locker</h3>
+                        <p>Short encrypted MP4 clips only (Max 20 MB). Large media should not be stored in Apps Script.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: DOCUMENTS -->
+            <div id="tab-docs" class="tab-pane">
+                <div class="tab-actions-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="docs-search-input" placeholder="Search decrypted documents...">
+                    </div>
+                    <div class="file-upload-wrap">
+                        <button class="hero-action-btn primary-action" id="upload-doc-btn">
+                            <i class="fas fa-cloud-arrow-up"></i> Encrypt &amp; Upload Document
+                        </button>
+                        <button class="refresh-btn refresh-files-btn" title="Refresh Documents">
+                            <i class="fas fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="docs-grid" class="files-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-file-lines"></i>
+                        <h3>Documents Vault</h3>
+                        <p>No documents yet. Client-side encrypted before cloud dispatch.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: PERMANENT NOTEPAD (CLIENT-SIDE ENCRYPTED) -->
+            <div id="tab-notes" class="tab-pane">
+                <div class="notes-panel">
+                    <div class="notes-header">
+                        <div class="notes-meta">
+                            <i class="fas fa-pen-nib" style="color:var(--accent-signal)"></i>
+                            <span>Personal Notepad (AES-256 Encrypted on Google Drive)</span>
+                        </div>
+                        <div class="notes-actions-wrap">
+                            <span class="notes-status" id="notes-sync-status"><i class="fas fa-shield-halved"></i> E2E Encrypted</span>
+                            <span class="notes-counter" id="notes-char-count">0 chars | 0 words</span>
+                            <button class="action-btn outline-btn" id="copy-notes-btn" title="Copy All Text"><i class="fas fa-copy"></i> Copy</button>
+                            <button class="action-btn outline-btn" id="download-notes-btn" title="Download note as .txt"><i class="fas fa-download"></i> Save .txt</button>
+                            <button class="action-btn outline-btn" id="clear-notes-btn" title="Clear notepad"><i class="fas fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+                    <textarea id="vault-notes-textarea" placeholder="Personal Notepad: Notes here are encrypted locally with your Master Passphrase before syncing to Drive. They cannot be read in plaintext by Google or anyone else."></textarea>
+                </div>
+            </div>
+
+            <!-- TAB 5: ENCRYPTED CREDENTIALS -->
+            <div id="tab-secrets" class="tab-pane">
+                <div class="secrets-notice">
+                    <i class="fas fa-shield-cat"></i>
+                    <div>
+                        <strong>Client-Side Zero-Knowledge Crypto (PBKDF2 600,000 + AES-256-GCM):</strong> Master passphrase is never sent to the network. Minimum 12 characters enforced.
+                    </div>
+                </div>
+
+                <!-- Master Key Prompt (if locked) -->
+                <div id="secrets-unlock-card" class="secrets-auth-card">
+                    <div class="sec-icon"><i class="fas fa-key"></i></div>
+                    <h3>Unlock Secret Credentials</h3>
+                    <p>Enter your Master Passphrase to derive the 256-bit encryption key and decrypt your vault.</p>
+                    <div class="passphrase-input-wrap">
+                        <input type="password" id="master-passphrase-input" placeholder="Enter Master Passphrase (min 12 chars)...">
+                        <button id="unlock-secrets-btn" class="hero-action-btn primary-action">
+                            <i class="fas fa-unlock"></i> Decrypt
+                        </button>
+                    </div>
+
+                    <!-- Passphrase Strength Meter -->
+                    <div class="passphrase-strength-container" id="passphrase-strength-container" style="margin-top:12px; width:100%; max-width:380px;">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                            <span style="color:var(--text-muted);">Passphrase Strength:</span>
+                            <span id="strength-label" style="font-weight:700; color:#FF5252;">Too Short (Min 12)</span>
+                        </div>
+                        <div style="width:100%; height:4px; background:rgba(0,0,0,0.1); border-radius:2px; overflow:hidden;">
+                            <div id="strength-bar" style="width:0%; height:100%; background:#FF5252; transition:all 0.3s ease;"></div>
+                        </div>
+                        <div id="passphrase-rule-hint" style="font-size:11px; color:#FF5252; margin-top:4px;">Required: Min 12 chars + mixed case, digits or symbols.</div>
+                    </div>
+
+                    <span class="hint-text" id="passphrase-cooldown-notice" style="display:none; color:#FF5252; font-weight:600; margin-top:8px;"></span>
+                </div>
+
+                <!-- Secrets Manager (Visible when decrypted) -->
+                <div id="secrets-manager-wrap" style="display: none;">
+                    <div class="tab-actions-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="secrets-search-input" placeholder="Search passwords, API keys, logins...">
+                        </div>
+                        <button class="hero-action-btn primary-action" id="open-new-secret-modal-btn">
+                            <i class="fas fa-plus"></i> Add New Credential
+                        </button>
+                        <button class="action-btn outline-btn" id="lock-secrets-btn">
+                            <i class="fas fa-lock"></i> Lock Vault
+                        </button>
+                    </div>
+
+                    <div id="secrets-list" class="secrets-list">
+                        <!-- Rendered dynamically via safe DOM APIs -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Add New Secret -->
+    <div id="new-secret-modal" class="vault-modal" aria-hidden="true" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-key"></i> Store New Credential</h3>
+                <button class="modal-close-btn" id="close-secret-modal-btn">&times;</button>
+            </div>
+            <form id="new-secret-form" class="modal-form">
+                <div class="form-group">
+                    <label>Title / Service Name *</label>
+                    <input type="text" id="sec-title" placeholder="e.g. GitHub PAT, AWS Console, MongoDB" required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label>Username / Email / Identifier</label>
+                    <input type="text" id="sec-user" placeholder="e.g. admin, me@example.com" maxlength="150">
+                </div>
+                <div class="form-group">
+                    <label>Secret Value / Password / Token *</label>
+                    <div class="password-field-wrap">
+                        <input type="password" id="sec-pass" placeholder="Enter sensitive secret..." required maxlength="500">
+                        <button type="button" class="eye-toggle-btn" id="toggle-sec-pass"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="sec-cat">
+                        <option value="api-key">API Key / Token</option>
+                        <option value="password">Login / Password</option>
+                        <option value="ssh-key">SSH / Server Credential</option>
+                        <option value="license">Software License</option>
+                        <option value="other">Other Secret</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes / URL</label>
+                    <input type="text" id="sec-notes" placeholder="Optional notes or login URL" maxlength="300">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="action-btn outline-btn" id="cancel-secret-btn">Cancel</button>
+                    <button type="submit" class="hero-action-btn primary-action"><i class="fas fa-shield-halved"></i> Encrypt &amp; Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Media & Document Preview Modal (Direct Decrypted Blob Stream) -->
+    <div id="preview-modal" class="vault-modal" style="display:none;" aria-hidden="true">
+        <div class="modal-card" style="max-width:850px; width:92%;">
+            <div class="modal-header">
+                <h3 id="modal-title" style="font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><i class="fas fa-file"></i> Decrypted Preview</h3>
+                <button class="modal-close-btn" id="close-preview-btn">&times;</button>
+            </div>
+            <div id="modal-body" style="padding:16px; min-height:300px; display:flex; align-items:center; justify-content:center;">
+                <!-- dynamic decrypted preview safely appended -->
+            </div>
+            <div class="modal-actions" style="justify-content:flex-end; gap:8px;">
+                <a href="#" id="modal-download-btn" class="action-btn outline-btn"><i class="fas fa-arrow-down-to-line"></i> Download Decrypted</a>
+                <button type="button" class="action-btn outline-btn" id="close-preview-modal-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="vault-toast" class="vault-toast"></div>
+
+    <script src="script.js?v=20261103_hardened_v1"></script>
 </body>
 </html>

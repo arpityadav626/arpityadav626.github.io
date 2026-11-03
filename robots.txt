@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /vault/
+Disallow: /vault/*
 Allow: /
 
 Sitemap: https://arpity.me/sitemap.xml

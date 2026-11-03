@@ -1,4 +1,14 @@
+# Secrets and Credentials
+.env
+.env.*
+*.pem
+*.key
+service-account*.json
+
+# Backups and Local artifacts
+_vault_backup/
+
+# Firebase & OS
 .firebase/
 .DS_Store
 Thumbs.db
-_vault_backup/

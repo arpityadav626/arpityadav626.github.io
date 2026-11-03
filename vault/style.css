@@ -1806,3 +1806,19 @@ body.vault-body .vault-page-wrap {
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch !important;
 }
+
+/* Passphrase Strength Meter */
+.passphrase-strength-container {
+    margin-top: 12px;
+    width: 100%;
+    max-width: 380px;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+[data-mode=" dark\] .passphrase-strength-container {
+ background: rgba(255, 255, 255, 0.03);
+ border-color: rgba(255, 255, 255, 0.08);
+}
+
