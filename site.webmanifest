@@ -1,0 +1,38 @@
+{
+  "name": "Arpit Yadav | Engineering Portfolio",
+  "short_name": "Arpit Yadav",
+  "description": "Full Stack Developer, AI & IoT Systems Engineer portfolio of Arpit Yadav (arpity.me)",
+  "icons": [
+    {
+      "src": "/icon-48x48.png?v=2026.ay",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-96x96.png?v=2026.ay",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192x192.png?v=2026.ay",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png?v=2026.ay",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png?v=2026.ay",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "theme_color": "#0A0A0B",
+  "background_color": "#0A0A0B",
+  "display": "standalone"
+}
