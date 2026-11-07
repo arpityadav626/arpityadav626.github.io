@@ -2330,7 +2330,15 @@ function formatSkillName(key) {
 
         'merkle': 'Merkle Tree Hashing',
 
-        'iot': 'IoT Telemetry & GSM'
+        'iot': 'IoT Telemetry & GSM',
+        'gsm-gps': 'SIM800L Telemetry (Gsm/Gps)',
+        'fsm': 'FSM Firmware',
+        'freertos': 'FreeRTOS',
+        'sqlite': 'SQLite (FTS5)',
+        'cicd': 'GitHub Actions (CI/CD)',
+        'nextjs': 'Next.js',
+        'fastapi': 'FastAPI',
+        'sql': 'SQL'
 
     };
 
@@ -2339,6 +2347,20 @@ function formatSkillName(key) {
 }
 
 
+
+/**
+ * Universal smooth scrolling with custom header offset
+ */
+function smoothScrollToElement(element, offset = 0) {
+    if (!element) return;
+    const scrollY = window.scrollY !== undefined ? window.scrollY : (window.pageYOffset || document.documentElement.scrollTop || 0);
+    const elementPosition = element.getBoundingClientRect().top;
+    const targetTop = elementPosition + scrollY + offset;
+    window.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: 'smooth'
+    });
+}
 
 function highlightProjectsBySkill(skillKey, isClick = false) {
 
