@@ -64,6 +64,10 @@ function playCozyChime() {}
 
 
 
+function playModalSound() {}
+
+
+
 /* ========================================================
 
    2. PRELOADER (REMOVED - HERO IMMEDIATE ACTIVATION)
