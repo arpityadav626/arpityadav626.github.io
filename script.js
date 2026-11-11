@@ -64,10 +64,6 @@ function playCozyChime() {}
 
 
 
-function playModalSound() {}
-
-
-
 /* ========================================================
 
    2. PRELOADER (REMOVED - HERO IMMEDIATE ACTIVATION)
@@ -1793,92 +1789,6 @@ const projectDetailsData = {
             { label: 'Table QR Standee', icon: 'fas fa-qrcode', href: 'https://monu-egg-center.vercel.app/table-standee.html', external: true },
 
             { label: 'Review Funnel', icon: 'fas fa-star', href: 'https://monu-egg-center.vercel.app/review.html', external: true }
-
-        ]
-
-    },
-
-    'coffee-stains': {
-
-        index: '07 // INTERACTIVE EDITORIAL & MOTION WEB',
-
-        badge: '<span class="badge live-badge"><i class="fas fa-circle"></i> Live on Vercel Edge</span>',
-
-        title: 'Coffee Stains & Crumpled Pages — Interactive Literary Web Tribute',
-
-        subtitle: 'Scroll-choreographed editorial web experience honoring Gaurvi Mishra\'s poetry collection, engineered with Next.js 16 (App Router + Turbopack), React 19, TypeScript, Tailwind CSS v4, GSAP ScrollTrigger, Lenis inertia, and procedural HTML5 2D Canvas physics.',
-
-        image: 'assets/coffee-stains-preview.jpg',
-
-        imageCaption: 'Hero Canvas Viewport with Procedural Coffee-Ring Stains & InkTypewriter Engine',
-
-        blocks: [
-
-            {
-
-                title: '<i class="fas fa-bullseye"></i> Concept & Editorial Direction',
-
-                content: 'Architected as an atmospheric dark-espresso interactive web experience honoring the prose and poetry of <strong>Gaurvi Mishra</strong>. Rather than static pages, the site unfolds sequentially across five thematic movements (<em>Cosmic, Silence, Gravity, Kintsugi, The Poet</em>), pairing serif typography and paper-grain SVG textures with responsive motion primitives.'
-
-            },
-
-            {
-
-                title: '<i class="fas fa-cogs"></i> Motion Systems & Interactive Craft',
-
-                content: 'Engineered bespoke interactive modules including click-to-spawn <strong>HTML5 2D Canvas</strong> expanding coffee stains and drifting crumpled paper flecks, mouse-parallax <strong>InkTypewriter</strong> sequencing, a <strong>24-fragment GSAP Kintsugi mosaic</strong> that scatters and welds with golden hairline glow on scroll, and a <strong>3D perspective origami envelope</strong> with attached cone-flap geometry and zero-shift word-by-word calligraphy reveal.'
-
-            },
-
-            {
-
-                title: '<i class="fas fa-project-diagram"></i> Architecture & Rendering Pipeline',
-
-                diagram: `[NEXT.JS 16 APP ROUTER + TURBOPACK + REACT 19]
-
-├── Lenis Inertial Smooth Scroll Loop (1.4s Exponential Damping)
-
-├── HTML5 2D Canvas Engines (CoffeeCanvas, RainCanvas, FeatherCanvas)
-
-├── GSAP 3.15 + ScrollTrigger Choreography (5 Thematic Chapters + Carousel)
-
-├── Procedural 24-Shard Kintsugi Grid (Scatter Physics -> Golden Weld)
-
-└── 3D Origami Dedication Envelope (380ms Z-Handoff + Ink Word Reveal)
-
-        │
-
-        ▼ (SSR Hydration Safety & Zero Layout Shift Guards)
-
-[PRODUCTION EDGE DEPLOYMENT]
-
-└── Vercel Global Edge Network ──► https://coffee-stains-tribute.vercel.app/`
-
-            },
-
-            {
-
-                title: '<i class="fas fa-sliders-h"></i> ATS Quantifiable Engineering Bullets',
-
-                bullets: [
-
-                    '<strong>Engineered</strong> an interactive multi-chapter web platform using <strong>Next.js 16 (Turbopack), React 19, TypeScript, and Tailwind CSS v4</strong>, unifying custom design tokens, editorial serif web fonts, and SVG fractal-noise paper textures.',
-
-                    '<strong>Built</strong> hardware-friendly <strong>HTML5 2D Canvas</strong> particle systems and <strong>GSAP ScrollTrigger</strong> pipelines synchronized with <strong>Lenis</strong> smooth scrolling while eliminating React SSR hydration mismatches via deterministic client-mount guards.',
-
-                    '<strong>Architected</strong> a CSS 3D-perspective interactive dedication envelope featuring synchronized geometric flap depth switching (<code>380ms</code> z-index handoff) and zero-reflow opacity-revealed word choreography, deployed live on <strong>Vercel Edge</strong>.'
-
-                ]
-
-            }
-
-        ],
-
-        notice: '<strong>Live Production:</strong> Deployed cleanly on Vercel Edge Network (<a href="https://coffee-stains-tribute.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-primary); font-weight:600; text-decoration:underline;">coffee-stains-tribute.vercel.app</a>) with responsive centering across mobile, tablet, and desktop viewports.',
-
-        actions: [
-
-            { label: 'Live Tribute Site', icon: 'fas fa-external-link-alt', href: 'https://coffee-stains-tribute.vercel.app/', external: true, primary: true }
 
         ]
 
