@@ -1796,6 +1796,85 @@ const projectDetailsData = {
 
         ]
 
+    },
+
+    'luxe-wear': {
+
+        index: '07 // EDITORIAL WEB & 360° MOTION ARCHITECTURE',
+
+        badge: '<span class="badge live-badge"><i class="fas fa-circle"></i> Live on GitHub Pages</span>',
+
+        title: 'Luxe Wear — Architectural Menswear Showcase & 360° Scroll Film',
+
+        subtitle: 'Quiet-luxury menswear editorial built with Next.js 16 (Static Export), React 19, TypeScript, Tailwind CSS v4, Lenis momentum scrolling, GSAP ScrollTrigger choreography, and a 360-frame WebP sub-frame blended turntable.',
+
+        image: 'assets/luxe-wear-preview.jpg',
+
+        imageCaption: 'Luxe Wear Hero Viewport — Split Serif Display & Studio-Lit Obsidian Overshirt',
+
+        blocks: [
+
+            {
+
+                title: '<i class="fas fa-bullseye"></i> Concept & Visual Direction',
+
+                content: 'Engineered as an ultra-restrained architectural apparel flagship presenting a cohesive obsidian capsule ("Drop 01"). Alternates calibrated light intervals (<code>#E6E1D7</code> warm stone and <code>#D8D3C9</code> capsule cards) with deep obsidian macro studies, full-screen serif menu choreography, a 1.8s wordmark reveal preloader, and a responsive sizing bag drawer.'
+
+            },
+
+            {
+
+                title: '<i class="fas fa-cogs"></i> 360° Garment Film & Studio Imaging',
+
+                content: 'Engineered a precision <strong>360-frame WebP turntable</strong> (<code>0.50°/step</code>) with dual-frame alpha cross-blending in HTML5 Canvas 2D. Cold-load first paint requests only <code>frame_0001.webp</code> before lazily hydrating the rotation buffer, paired with un-premultiplied limestone studio cutouts so dark twill fabrics hold crisp depth across every backdrop.'
+
+            },
+
+            {
+
+                title: '<i class="fas fa-project-diagram"></i> Architecture & Rendering Pipeline',
+
+                diagram: `[NEXT.JS 16 STATIC EXPORT + REACT 19 + TYPESCRIPT 5]
+├── 1.8s Wordmark Preloader + Full-Screen Serif Menu & Bag Drawer (XS-XL)
+├── Hero Stage (Studio-Lit Obsidian Overshirt + Deferred Turntable Hydration)
+├── Pinned Garment Film (360 WebP Frames · 0.50°/step · 2-Frame Sub-Frame Blend)
+├── Unified Light Intervals (#E6E1D7 Cloth & #D8D3C9 Capsule Cutouts)
+└── Full-Bleed Lookbook Plates (100svh Architectural Frames + Bottom Captions)
+        │
+        ▼ (Lenis 1.3 Smooth Scroll + GSAP 3.15 ScrollTrigger Sync)
+[GITHUB PAGES STATIC DEPLOYMENT]
+└── Automated GitHub Actions CI/CD ──► https://arpity.me/luxe-wear/`
+
+            },
+
+            {
+
+                title: '<i class="fas fa-sliders-h"></i> Engineering Highlights & Verified Metrics',
+
+                bullets: [
+
+                    '<strong>Engineered</strong> an editorial menswear platform with <strong>Next.js 16 (Static Export), React 19, TypeScript, and Tailwind CSS v4</strong>, pairing custom display serif typography with unified contrast tokens and a persistent sizing bag drawer.',
+
+                    '<strong>Built</strong> a scroll-pinned <strong>360-frame HTML5 Canvas 2D turntable</strong> synchronized via <strong>GSAP ScrollTrigger</strong> and <strong>Lenis</strong> inertia, achieving <strong>100% scroll-tick frame updates</strong> (<code>231/231</code> ticks, <code>0</code> blank frames) while fetching only <code>frame_0001.webp</code> on cold hero paint.',
+
+                    '<strong>Developed</strong> an un-premultiplied limestone cutout pipeline with edge color decontamination for high-contrast garment presentation across dark obsidian and stone surfaces, scoring <strong>Lighthouse 99 Desktop / 97 Mobile Performance</strong> and <strong>100/100 Accessibility, Best Practices & SEO</strong> (<code>0</code> CLS).'
+
+                ]
+
+            }
+
+        ],
+
+        notice: '<strong>Live Editorial Deployment:</strong> Statically exported and deployed via GitHub Actions CI/CD to GitHub Pages (<a href="https://arpity.me/luxe-wear/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-primary); font-weight:600; text-decoration:underline;">arpity.me/luxe-wear</a>) with source published on GitHub.',
+
+        actions: [
+
+            { label: 'Live Editorial Site', icon: 'fas fa-external-link-alt', href: 'https://arpity.me/luxe-wear/', external: true, primary: true },
+
+            { label: 'Source Code', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/luxe-wear', external: true }
+
+        ]
+
     }
 
 };
