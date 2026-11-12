@@ -1835,9 +1835,9 @@ const projectDetailsData = {
                 title: '<i class="fas fa-project-diagram"></i> Architecture & Rendering Pipeline',
 
                 diagram: `[NEXT.JS 16 STATIC EXPORT + REACT 19 + TYPESCRIPT 5]
-├── 1.8s Wordmark Preloader + Full-Screen Serif Menu & Bag Drawer (XS-XL)
+├── 1.8s Wordmark Preloader + Full-Screen Serif Menu & Bag Drawer (S-XL, Focus-Trapped)
 ├── Hero Stage (Studio-Lit Obsidian Overshirt + Deferred Turntable Hydration)
-├── Pinned Garment Film (360 WebP Frames · 0.50°/step · 2-Frame Sub-Frame Blend)
+├── Pinned Garment Film (360 WebP · Mobile 2x Stride 181 Frames · Sub-Frame Blend)
 ├── Unified Light Intervals (#E6E1D7 Cloth & #D8D3C9 Capsule Cutouts)
 └── Full-Bleed Lookbook Plates (100svh Architectural Frames + Bottom Captions)
         │
@@ -1855,9 +1855,9 @@ const projectDetailsData = {
 
                     '<strong>Engineered</strong> an editorial menswear platform with <strong>Next.js 16 (Static Export), React 19, TypeScript, and Tailwind CSS v4</strong>, pairing custom display serif typography with unified contrast tokens and a persistent sizing bag drawer.',
 
-                    '<strong>Built</strong> a scroll-pinned <strong>360-frame HTML5 Canvas 2D turntable</strong> synchronized via <strong>GSAP ScrollTrigger</strong> and <strong>Lenis</strong> inertia, achieving <strong>100% scroll-tick frame updates</strong> (<code>231/231</code> ticks, <code>0</code> blank frames) while fetching only <code>frame_0001.webp</code> on cold hero paint.',
+                    '<strong>Built</strong> a scroll-pinned <strong>360-frame HTML5 Canvas 2D turntable</strong> synchronized via <strong>GSAP ScrollTrigger</strong> and <strong>Lenis</strong> inertia, achieving <strong>100% scroll-tick frame updates</strong> (<code>201/201</code> desktop ticks, <code>0</code> blank frames), cutting mobile sequence bandwidth by <strong>49.4%</strong> via adaptive 2x stride while fetching only <code>frame_0001.webp</code> on cold hero paint.',
 
-                    '<strong>Developed</strong> an un-premultiplied limestone cutout pipeline with edge color decontamination for high-contrast garment presentation across dark obsidian and stone surfaces, scoring <strong>Lighthouse 99 Desktop / 97 Mobile Performance</strong> and <strong>100/100 Accessibility, Best Practices & SEO</strong> (<code>0</code> CLS).'
+                    '<strong>Developed</strong> an un-premultiplied limestone cutout pipeline with edge color decontamination for high-contrast garment presentation across dark obsidian and stone surfaces, scoring <strong>Lighthouse 99 Desktop / 96 Mobile Performance</strong> and <strong>100/100 Accessibility, Best Practices & SEO</strong> (<code>0</code> CLS).'
 
                 ]
 
