@@ -1875,6 +1875,51 @@ const projectDetailsData = {
 
         ]
 
+    },
+    'himalayan-expedition': {
+        index: '08 // EXPEDITION WEB & BOOKING ARCHITECTURE',
+        badge: '<span class="badge live-badge"><i class="fas fa-mountain"></i> Live on Vercel</span>',
+        title: 'Himalayan Expedition — Winter Travel & WhatsApp Booking Platform',
+        subtitle: 'Cinematic, mobile-first 7-day college expedition booking and itinerary platform engineered with pure vanilla ES6+, SVG coordinate routing, interactive canvas snowfall, sticky photo cross-fading, dynamic packing checklist sync, and multi-coordinator WhatsApp automation.',
+        image: 'assets/himalayan-expedition-preview.jpg',
+        imageCaption: 'Himalayan Expedition Hero & Itinerary Viewport — Mountain Silhouettes, Canvas Snowfall & Boarding-Pass Architecture',
+        blocks: [
+            {
+                title: '<i class="fas fa-bullseye"></i> Concept & Visual Direction',
+                content: 'Engineered as a boutique Himalayan expedition platform ("Himalayan night to snow-dawn") breaking away from generic college templates. Features alternating full-bleed dark-night (<code>#0A1428</code>) and snow-white (<code>#F4F8FB</code>) sections, Bricolage Grotesque and DM Sans typography scale, inline SVG mountain silhouettes, and an ultra-lightweight snowfall particle canvas.'
+            },
+            {
+                title: '<i class="fas fa-route"></i> Interactive Route & Itinerary Choreography',
+                content: 'Features a procedural <strong>SVG route circuit</strong> that draws its path on scroll, linking Kanpur, Manali, Solang, Sissu, Kullu, and Kasol. The itinerary features a desktop <strong>sticky split-view</strong> that cross-fades full-height photography as days scroll by, mirrored on mobile with a sticky horizontal scroll-snap day chip bar.'
+            },
+            {
+                title: '<i class="fas fa-project-diagram"></i> Architecture & Engineering Pipeline',
+                diagram: `[SINGLE-FILE VANILLA WEB ARCHITECTURE · < 140 KB]
+├── Night-Sky Parallax Hero (Snowfall Particle Canvas + 100svh Fallback)
+├── Interactive SVG Circuit Track (Scroll-Triggered Stroke-Dashoffset Drawing)
+├── Split-View Itinerary (Viewport-Driven Day Photo Cross-Fading Engine)
+├── Boarding-Pass Pricing Ticket (Perforation Notches + 3-Stage Milestone Stepper)
+├── Offline-Ready Pack Checklist (Category Filter + LocalStorage Real-time Sync)
+└── Multi-Coordinator Desk (Instant WhatsApp Dispatch to 3 Assigned Numbers)
+        │
+        ▼ (Single Self-Contained HTML5/CSS3/Vanilla JS Bundle)
+[VERCEL EDGE GLOBAL DEPLOYMENT]
+└── Production URL ──► https://collegetripbrochure.vercel.app`
+            },
+            {
+                title: '<i class="fas fa-sliders-h"></i> Engineering Highlights & Verified Features',
+                bullets: [
+                    '<strong>100% Client-Side Architecture:</strong> Zero-dependency single-file application under 140 KB featuring responsive CSS custom properties, clamp() fluid typography, and pure vanilla ES6+ logic.',
+                    '<strong>Multi-Coordinator WhatsApp Automation:</strong> Pre-formats student booking inquiries addressed to the chosen coordinator (+91 91400 79872, +91 63878 34374, or +91 92354 00526) with automated validation and tap-to-call fallbacks.',
+                    '<strong>Offline State Persistence:</strong> Interactive student packing checklist with progress ring, category tabs, and real-time synchronization backed by browser localStorage.',
+                    '<strong>Mobile-First Performance:</strong> 100svh responsive viewport handling, bottom thumb-zone action bar, hardware-accelerated transforms, and smooth 60fps canvas animation with automatic pause on hidden tabs or reduced-motion preferences.'
+                ]
+            }
+        ],
+        notice: '<strong>Live Production Platform:</strong> Engineered and deployed globally on Vercel Edge (<a href="https://collegetripbrochure.vercel.app" target="_blank" rel="noopener noreferrer" style="color:var(--accent-primary); font-weight:600; text-decoration:underline;">collegetripbrochure.vercel.app</a>) with instant WhatsApp dispatch for student reservations.',
+        actions: [
+            { label: 'Live Expedition Platform', icon: 'fas fa-external-link-alt', href: 'https://collegetripbrochure.vercel.app', external: true, primary: true }
+        ]
     }
 
 };
