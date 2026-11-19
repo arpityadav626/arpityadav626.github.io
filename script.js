@@ -1323,107 +1323,148 @@ const projectDetailsData = {
     },
 
     'smart-kitchen': {
-
         index: '02 // EMBEDDED & 3D DIGITAL TWIN',
-
-        badge: '<span class="badge live-badge"><i class="fas fa-circle"></i> Physical Hardware + 3D Twin</span>',
-
-        title: 'SAFETY-FI 96X — Smart Kitchen IoT & 3D Digital Twin',
-
-        subtitle: 'Real-time kitchen telemetry platform pairing microcontroller gas/thermal sensors with an interactive Three.js 3D cooktop digital twin for live spatial hazard monitoring and physical actuation.',
-
+        badge: '<span class="badge live-badge"><i class="fas fa-circle"></i> B.Tech CS-AIML Mini Project • 3D Prototype</span>',
+        title: 'Smart Kitchen Safety System (SAFETY-FI 96X)',
+        subtitle: 'Arduino-based hazard detection and automatic ventilation demonstrated through an 18×15" compact 3D physical kitchen prototype and interactive Three.js digital twin.',
         image: null,
-
         imageCaption: null,
-
         videoEmbed: 'https://www.youtube.com/embed/pivb5MaotJo',
-
         videoCaption: 'Official Hardware Prototype Walkthrough & Hazard Mitigation Demonstration',
-
         blocks: [
-
             {
-
                 title: '<i class="fab fa-youtube" style="color:#ef4444;"></i> Video Demonstration & Shot Breakdown',
-
                 content: 'A comprehensive video presentation demonstrating FlameGuard\'s physical scaled kitchen model, autonomous fire sprinkler actuation, high-RPM gas extraction ventilation, and live 3D web dashboard synchronization (<a href="https://youtu.be/pivb5MaotJo" target="_blank" style="color:var(--accent-primary); font-weight:600; text-decoration:underline;">Watch on YouTube ↗</a>).',
-
                 bullets: [
-
                     '<strong>[0:00 - 0:06] Hardware Architecture:</strong> Scaled physical kitchen model overview with labeled front/back sensors, isolated relays, and 16x2 I2C LCD.',
-
                     '<strong>[0:06 - 0:17] Fire Emergency & Sprinkler:</strong> Optical flame detection immediately triggers submersible pump sprinkler while safety interlock strictly locks exhaust fan OFF.',
-
-                    '<strong>[0:17 - 0:38] Gas Leakage & Ventilation:</strong> MQ-2 sensor detects combustible gas/smoke breach, engaging the exhaust fan and dispatching phone push notifications.',
-
+                    '<strong>[0:17 - 0:38] Gas Leakage & Ventilation:</strong> MQ-2 sensor detects combustible gas/smoke breach, engaging the exhaust fan and dispatching real-time phone alerts.',
                     '<strong>[0:38 - 1:01] 3D Digital Twin:</strong> Three.js kinetic cooktop CAD simulation, 6 modular subsystem monitors, and microcontroller pinout webbing.'
-
                 ]
-
             },
-
             {
-
-                title: '<i class="fas fa-project-diagram"></i> Hardware to Software System Architecture',
-
-                diagram: `[MQ-6 & LOAD SENSORS]
-
-        │
-
-        ▼ (UART / 9600-Baud Serial Bridge)
-
-[PYTHON TELEMETRY BRIDGE: threading.RLock]
-
-        │
-
-        ▼ (Low-Latency WebSockets • <200ms)
-
-[REACT & THREE.JS 3D COOKTOP TWIN]
-
-├── Spatial Heat & Gas Dispersion Shader Lighting
-
-├── Automated Actuation: 5V Solenoid Sprinkler Pump + Exhaust Interlock
-
-└── Smartphone Push Sentinel Notifications via Cloud Gateway`
-
-            },
-
-            {
-
-                title: '<i class="fas fa-sliders-h"></i> ATS Quantifiable Engineering Bullets',
-
+                title: '<i class="fas fa-graduation-cap"></i> Academic Attribution & Project Team',
+                content: '<strong>Axis Institute of Technology and Management (AITM)</strong> · Department of Computer Science & Engineering (AI & ML).',
                 bullets: [
-
-                    '<strong>Architected</strong> a full-stack IoT kitchen safety platform pairing microcontroller sensor arrays with an interactive <strong>Three.js 3D Cooktop Digital Twin</strong> for real-time spatial hazard visualization.',
-
-                    '<strong>Built</strong> a low-latency <strong>Python Serial</strong> and WebSocket data pipeline to stream continuous LPG gas leakage, thermal, and load-cell pantry inventory telemetry at <strong>&lt;200ms</strong> latency.',
-
-                    '<strong>Implemented</strong> automated threshold alerting and predictive inventory tracking, triggering instant web dashboard warnings when LPG concentrations exceed safe PPM limits.'
-
+                    '<strong>Project Scope:</strong> B.Tech CS-AIML Mini Project — Smart Kitchen Safety System.',
+                    '<strong>Presented By:</strong> Arpit Yadav (Lead Embedded Hardware & Systems Architect), Divyansh Jaiswal, and Abhay Upadhyay.',
+                    '<strong>Faculty Guidance:</strong> Guided by Ms. Shrestha Misra.',
+                    '<strong>Core Philosophy:</strong> <em>"Sense the hazard, decide at the controller, then alert and ventilate."</em>'
                 ]
-
             },
-
             {
-
-                title: '<i class="fas fa-shield-alt"></i> Electrical Noise & Power Isolation',
-
-                content: 'Integrated 1000µF decoupling capacitors across the 5V bus to suppress inductive relay coil back-EMF, preventing I2C bus lockups and ensuring continuous ATmega328P stability under motor loads.'
-
+                title: '<i class="fas fa-bullseye"></i> The Problem: Kitchen Hazards Need Faster Response',
+                content: 'Domestic kitchen hazards — combustible LPG leaks, cooking smoke, open flames, and thermal runaway — escalate exponentially when left unnoticed under manual supervision. Conventional detectors provide passive acoustic beeps with zero autonomous physical mitigation. This system replaces delayed human intervention with continuous, low-latency autonomous local actuation.'
+            },
+            {
+                title: '<i class="fas fa-project-diagram"></i> System Flow & Hardware Architecture',
+                diagram: `[INPUT SENSORS & 5V POWER BUS]
+├── MQ-2 Sensor (Combustible Gas & Smoke • Analog Pin A0)
+├── Optical IR Flame Sensor (Fire Detection • Active-LOW Pin 8)
+├── DHT11 Climate Sensor (Ambient Temp °C & Humidity % • Pin 2)
+└── 5V USB Power Bank Bus (Regulated Low-Voltage Distribution)
+        │
+        ▼ (Deterministic Microcontroller Ingestion)
+[ARDUINO UNO ATmega328P LOGIC CONTROLLER]
+├── Continuous Non-Blocking Multi-Hazard Evaluator
+├── Safety Interlock Engine (Locks Exhaust Fan OFF during Fire)
+└── 5-Second One-Shot Flame Sprinkler Timer
+        │
+        ▼ (Parallel Multi-Channel Output Actuation)
+[LOCAL FEEDBACK & PHYSICAL ACTUATION]
+├── 16×2 Character LCD Display (I2C Bus • SDA A4 / SCL A5)
+├── Red Warning LED (Pin 5) & Safe Standby Green LED (Pin 3)
+├── High-Decibel Acoustic Alert Buzzer (Pin 9)
+├── 5V Isolated Relay Module (Inductive Back-EMF Suppressed)
+├── 5V Mini DC Fume Extraction Exhaust Fan (Pin 7)
+└── Submersible Water Pump Sprinkler Actuator (Pin 6)
+        │
+        ▼ (9600-Baud Serial Telemetry Bridge & WebSockets)
+[THREE.JS 3D DIGITAL TWIN & WEB DASHBOARD]
+├── Kinetic 3D Cooktop CAD Simulation & Dynamic Hazard Shaders
+└── Cloud Smartphone Push Sentinel Alerts via Formspree Gateway`
+            },
+            {
+                title: '<i class="fas fa-exchange-alt"></i> Response Logic: Detect Early, Alert Clearly, Act Automatically',
+                content: 'When an environmental threshold is crossed, the controller executes a visible, audible, and automatic cause-and-effect response chain with sub-second execution latency:',
+                bullets: [
+                    '<strong>1. Sensor Trigger:</strong> Combustible gas, smoke, open flame, or thermal shifts alter raw analog/digital signal inputs.',
+                    '<strong>2. Arduino Decision:</strong> ATmega328P controller evaluates signal states deterministically in real time.',
+                    '<strong>3. LCD Message:</strong> Kitchen status and exact hazard telemetry become visible immediately on the 16×2 I2C character display.',
+                    '<strong>4. Warning Alert:</strong> Red warning LED and high-decibel acoustic buzzer activate synchronously.',
+                    '<strong>5. Automated Actuation:</strong> Isolated 5V relay switches on the 5V exhaust fan for gas/smoke evacuation, or triggers the water pump sprinkler for flame events.'
+                ]
+            },
+            {
+                title: '<i class="fas fa-cubes"></i> Physical Prototype: Realistic 18 × 15" Kitchen Shell',
+                content: 'Engineered as an open-front 3D architectural kitchen model rather than a loose breadboard circuit, making live hazard demonstrations clear, realistic, and presentation-ready:',
+                bullets: [
+                    '<strong>18 × 15 Inch Scaled Shell:</strong> Features detailed stove top, overhead chimney exhaust hood, sink, and refrigerator establishing a realistic domestic layout.',
+                    '<strong>Visible Control Ergonomics:</strong> Gas, flame, and climate sensors alongside the 16×2 LCD are positioned precisely where hazard detection and visual feedback naturally happen.',
+                    '<strong>Hidden 2.5-Inch Electronics Bay:</strong> Conceals all Arduino Uno boards, relays, decoupling capacitors, and wiring harnesses beneath an elevated false floor.'
+                ]
+            },
+            {
+                title: '<i class="fas fa-microchip"></i> Safe 5V Demonstration Subsystems',
+                content: 'All working elements operate on an intrinsically safe, portable 5V low-voltage bus suitable for classrooms, auditoriums, and laboratory demonstrations without hazardous live gas or open flame risks:',
+                bullets: [
+                    '<strong>Control Unit:</strong> Arduino Uno microcontroller and breadboard distribution module.',
+                    '<strong>Hazard Sensing:</strong> MQ-2 gas/smoke sensor, optical infrared flame sensor, and DHT11 climate sensor.',
+                    '<strong>Visual & Audio Feedback:</strong> 16×2 I2C character LCD, high-decibel buzzer, and dual status LEDs (Green = Ready, Red = Hazard).',
+                    '<strong>Physical Action:</strong> 5V active-LOW relay modules, high-RPM mini DC exhaust fan, and submersible water pump sprinkler.',
+                    '<strong>Power Source:</strong> Portable 5V USB power bank, eliminating reliance on high-voltage AC mains.'
+                ]
+            },
+            {
+                title: '<i class="fas fa-cogs"></i> Tri-State Demonstration Machine',
+                content: 'The firmware operates on a predictable tri-state finite state machine (FSM) that keeps observers immediately oriented during live demonstrations:',
+                bullets: [
+                    '<strong>State 0: SAFE / READY:</strong> Green status LED ON. Buzzer, fan, and pump OFF. 16×2 LCD continuously renders ambient room climate (Temperature & Humidity) and safe gas baseline.',
+                    '<strong>State 1: GAS ALERT / VENT:</strong> Combustible gas/smoke detected (>600 ADC calibrated threshold). Red LED and buzzer pulse, LCD renders urgent warning text, and relay engages 5V exhaust fan.',
+                    '<strong>State 2: FIRE ALERT / ESCALATE:</strong> Optical IR flame detection. Submersible pump sprinkler activates. <strong>Critical Safety Interlock:</strong> Exhaust fan is strictly locked OFF to avoid drawing fresh oxygen into the fire.'
+                ]
+            },
+            {
+                title: '<i class="fas fa-tasks"></i> 6-Stage Engineering Build Methodology',
+                content: 'The physical prototype followed a disciplined, systematic 6-stage engineering lifecycle from component selection to full integration:',
+                bullets: [
+                    '<strong>Stage 1 — Source Components:</strong> Procured Arduino Uno, calibrated sensors, 5V relay modules, DC fan, pump, and 16×2 I2C LCD.',
+                    '<strong>Stage 2 — Breadboard Circuit Testing:</strong> Bench-tested analog input thresholds, switching logic, and debounce stability.',
+                    '<strong>Stage 3 — Upload Firmware:</strong> Flashed non-blocking C++ embedded firmware (<code>smart_kitchen.ino</code>) with one-shot timers.',
+                    '<strong>Stage 4 — Fabricate Shell:</strong> Constructed the 18 × 15" open-front kitchen shell with custom cabinetry and appliance scales.',
+                    '<strong>Stage 5 — Route Concealed Wiring:</strong> Bundled and dressed all harness wiring within the 2.5" underfloor compartment.',
+                    '<strong>Stage 6 — Validate Hazard States:</strong> Conducted comprehensive simulated smoke, gas, and flame validation trials.'
+                ]
+            },
+            {
+                title: '<i class="fas fa-clipboard-check"></i> Empirical Validation & Benchmark Testing',
+                content: 'Testing confirmed the full closed-loop response under controlled environmental stress:',
+                bullets: [
+                    '<strong>Sensor Triggering:</strong> Verified gas, smoke, optical flame, and climate inputs — controller and alerts responded with &lt;200ms latency.',
+                    '<strong>Gas Threshold Calibration:</strong> Characterized MQ-2 baseline (350–400 ADC counts) and tuned trigger threshold to 600 ADC counts, preventing false alarms from ambient kitchen humidity.',
+                    '<strong>Electrical Noise Isolation:</strong> Tested 1000µF decoupling capacitors across the 5V power bus, suppressing relay coil back-EMF spikes and eliminating I2C LCD bus lockups.',
+                    '<strong>Continuous Runtime Endurance:</strong> Successfully ran the complete integrated system for 60 minutes continuously on a single 5V USB power bank with zero brownout resets.'
+                ]
+            },
+            {
+                title: '<i class="fas fa-sliders-h"></i> ATS Quantifiable Engineering Bullets',
+                bullets: [
+                    '<strong>Architected</strong> an autonomous embedded kitchen safety platform on <strong>Arduino Uno (ATmega328P)</strong>, integrating MQ-2, optical flame, and DHT11 sensors with sub-second hazard mitigation.',
+                    '<strong>Engineered</strong> a safety interlock finite state machine (FSM) in <strong>C++ (Arduino)</strong> that coordinates high-RPM ventilation while strictly isolating exhaust during fire events to starve combustion.',
+                    '<strong>Constructed</strong> an 18×15" physical scale kitchen prototype with a 2.5" false floor concealing all hardware, paired with a real-time <strong>Three.js 3D Digital Twin</strong> and Python serial telemetry pipeline.'
+                ]
+            },
+            {
+                title: '<i class="fas fa-rocket"></i> Project Takeaways & Future Scope',
+                content: 'Demonstrates a practical, low-cost foundation for modern smart home safety. Future engineering upgrades include automated mechanical LPG cylinder regulator shut-off valves, edge computer vision fire detection, cellular GSM (SIM800L) SMS fallback, and Matter / Home Assistant ecosystem integration.'
             }
-
         ],
-
-        notice: '<strong>Deployment Note:</strong> Physical working prototype built with Arduino Uno & sensors. The web dashboard provides an interactive Three.js 3D digital twin and hybrid simulation engine.',
-
+        notice: '<strong>Academic & Engineering Notice:</strong> B.Tech CS-AIML Mini Project developed at Axis Institute of Technology and Management by Arpit Yadav, Divyansh Jaiswal, and Abhay Upadhyay, under the guidance of Ms. Shrestha Misra. Physical working prototype demonstrated live with 5V safe low-voltage hardware and Three.js 3D digital twin.',
         actions: [
-
             { label: 'Watch Video Walkthrough', icon: 'fab fa-youtube', href: 'https://youtu.be/pivb5MaotJo', external: true, primary: true },
-
-            { label: 'Live Interactive Preview', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/smart-kitchen/', external: true }
-
+            { label: 'Live Interactive Preview', icon: 'fas fa-external-link-alt', href: 'https://arpityadav626.github.io/smart-kitchen/', external: true },
+            { label: 'GitHub Repository', icon: 'fab fa-github', href: 'https://github.com/arpityadav626/smart-kitchen', external: true }
         ]
-
     },
 
     'chronofact': {
